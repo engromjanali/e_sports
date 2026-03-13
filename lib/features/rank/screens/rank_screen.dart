@@ -6,6 +6,7 @@ import 'package:e_sports/core/widgets/glass_card_widget.dart';
 import 'package:e_sports/core/widgets/neon_pill_widget.dart';
 import 'package:e_sports/core/widgets/player_avater.dart';
 import 'package:e_sports/core/widgets/pot_banner_widget.dart';
+import 'package:e_sports/core/widgets/score_three_list_widget.dart';
 import 'package:e_sports/core/widgets/section_heading_widget.dart';
 import 'package:e_sports/features/home/screens/home_screen.dart';
 import 'package:flutter/material.dart';
@@ -65,7 +66,7 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> {
             SectionHeadingWidget(title: "Player of the Week", sub: "This week's best"),
             PotBannerWidget(player: players[0], label: "PLAYER OF THE WEEK",
                 gradient: const LinearGradient(colors: [Color(0xFF0D1B4E), Color(0xFF1B4FD8)]),
-                badge: "👑"),
+                badge: "POTW"),
             const SizedBox(height: 16),
 
             // Full Rankings

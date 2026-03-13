@@ -1,6 +1,7 @@
 import 'package:e_sports/core/constants/app_colors.dart';
 import 'package:e_sports/core/data/app_data.dart';
 import 'package:e_sports/core/widgets/app_header_widget.dart';
+import 'package:e_sports/core/widgets/brand_title.dart';
 import 'package:e_sports/core/widgets/glass_card_widget.dart';
 import 'package:e_sports/core/widgets/my_rank_card_widget.dart';
 import 'package:e_sports/core/widgets/news_branner.dart';
@@ -8,8 +9,8 @@ import 'package:e_sports/core/widgets/section_heading_widget.dart';
 import 'package:e_sports/core/widgets/sport_light_card_widget.dart';
 import 'package:e_sports/features/dashboard/screens/dashboard_screen.dart';
 import 'package:e_sports/features/home/widgets/diagonal_slash_printer_widget.dart';
+import 'package:e_sports/features/home/widgets/top_scorer_card.dart';
 import 'package:flutter/material.dart';
-
 
 class HomeScreen extends StatelessWidget {
   final int newsBannerIndex;
@@ -37,9 +38,17 @@ class HomeScreen extends StatelessWidget {
         child: Column(children: [
 
           // ── My Rank ──────────────────────────────────────────────
-          SectionHeadingWidget(title: "📍 My Rank"),
-          MyRankCard(),
-          const SizedBox(height: 14),
+          Padding(
+            padding: const EdgeInsets.symmetric( horizontal: 16,),
+            child: Column(
+              children: [
+                SizedBox(height: 16,),
+                SectionHeadingWidget(title: "📍 My Rank"),
+                MyRankCard(),
+                const SizedBox(height: 14),
+              ],
+            ),
+          ),
 
 
           // ── News Banner ──────────────────────────────────────────────
@@ -76,14 +85,13 @@ class HomeScreen extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 16),
             child: Column(children: [
 
-
               // ── POTW + POTM ──────────────────────────────────────────
               SectionHeadingWidget(title: "⭐ Player of Week / Month", sub: "Season 2025 spotlight"),
               Row(children: [
-                Expanded(child: SpotlightCardWidget(player: players[0], label: "POTW · THIS WEEK", badge: "👑",
+                Expanded(child: SpotlightCardWidget(player: players[0], label: "POTW", badge: "👑",
                     gradient: const LinearGradient(colors: [Color(0xFF0D1B4E), Color(0xFF1B4FD8)]))),
                 const SizedBox(width: 10),
-                Expanded(child: SpotlightCardWidget(player: players[1], label: "POTM · DECEMBER", badge: "🏆",
+                Expanded(child: SpotlightCardWidget(player: players[1], label: "POTM", badge: "🏆",
                     gradient: const LinearGradient(colors: [Color(0xFF7C2D12), Color(0xFFC2410C)]))),
               ]),
               const SizedBox(height: 16),
@@ -110,14 +118,14 @@ class HomeScreen extends StatelessWidget {
               ]),
               const SizedBox(height: 16),
 
-              // ── Overall Top 3 ────────────────────────────────────────
+              // ── Overall Top Scorer ────────────────────────────────────────
               SectionHeadingWidget(title: "🥇 Overall Top 3 Scorer", onAll: () => onNavigate(2)),
-              PodiumCard(players: [players[0], players[2], players[1]], title: "All-Time Rankings"),
+              PodiumCardTwo(players: [players[0], players[2], players[1]], title: "All-Time Rankings"),
               const SizedBox(height: 16),
 
-              // ── Overall Top 3 ────────────────────────────────────────
+              // ── Seasonal Top Scorer ────────────────────────────────────────
               SectionHeadingWidget(title: "🥇 Seasonal Top 3 Scorer", onAll: () => onNavigate(2)),
-              PodiumCard(players: [players[0], players[2], players[1]], title: "Seasonal Rankings"),
+              PodiumCardTwo(players: [players[0], players[2], players[1]], title: "Seasonal Rankings"),
               const SizedBox(height: 16),
 
 
@@ -191,73 +199,833 @@ class PodiumCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Order: 2nd, 1st, 3rd for podium visual
-    final order = [players[1], players[0], players[2]];
-    final medals = ["🥈", "🥇", "🥉"];
-    final colors = [AppColors.silver, AppColors.gold, AppColors.bronze];
-    final heights = [128.0, 152.0, 112.0];
-    final isFirst = [false, true, false];
-
     return GlassCardWidget(
-      padding: const EdgeInsets.all(14),
-      borderColor: AppColors.neonGold.withOpacity(0.15),
-      child: Column(children: [
-        Text(title, style: const TextStyle(
-            fontSize: 14, fontWeight: FontWeight.w800, color: AppColors.textPrimary)),
-        const SizedBox(height: 12),
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.end,
-          children: List.generate(3, (i) {
-            final p = order[i];
-            final c = playerColor(p.name);
-            return Expanded(child: Container(
-              height: heights[i],
-              margin: const EdgeInsets.symmetric(horizontal: 3),
-              padding: const EdgeInsets.fromLTRB(6, 10, 6, 8),
+      padding: const EdgeInsets.fromLTRB(14, 16, 14, 14),
+      borderColor: AppColors.neonGold.withOpacity(0.12),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(children: [
+            Container(
+              width: 3, height: 14,
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(14),
-                gradient: isFirst[i]
-                    ? const LinearGradient(begin: Alignment.topCenter, end: Alignment.bottomCenter,
-                    colors: [Color(0xFF1B3A8A), Color(0xFF0D1B4E)])
-                    : null,
-                color: isFirst[i] ? null : AppColors.bgSurface,
-                border: Border.all(color: colors[i].withOpacity(0.35), width: 1.5),
+                color: AppColors.neonGold,
+                borderRadius: BorderRadius.circular(2),
               ),
+            ),
+            const SizedBox(width: 8),
+            Text(title.toUpperCase(),
+                style: const TextStyle(
+                  fontSize: 10, fontWeight: FontWeight.w900,
+                  letterSpacing: 2.5, color: AppColors.textPrimary,
+                )),
+          ]),
+          const SizedBox(height: 20),
+          Row(
+            children: [
+              Expanded(child: _RankBox(
+                player: players[0],
+                rank: 1,
+                rankLabel: "1ST",
+                medal: "🥇",
+                gradientColors: [
+                  const Color(0xFF3D2400),
+                  const Color(0xFFFFD700),
+                  const Color(0xFFFFF4C2),
+                ],
+                glowColor: const Color(0xFFFFD700),
+                badgeColor: const Color(0xFFFFD700),
+              )),
+              const SizedBox(width: 8),
+              Expanded(child: _RankBox(
+                player: players[1],
+                rank: 2,
+                rankLabel: "2ND",
+                medal: "🥈",
+                gradientColors: [
+                  const Color(0xFF1A1A1A),
+                  const Color(0xFFB8B8B8),
+                  const Color(0xFFEEEEEE),
+                ],
+                glowColor: const Color(0xFFB0B0B0),
+                badgeColor: const Color(0xFFC0C0C0),
+              )),
+              const SizedBox(width: 8),
+              Expanded(child: _RankBox(
+                player: players[2],
+                rank: 3,
+                rankLabel: "3RD",
+                medal: "🥉",
+                gradientColors: [
+                  const Color(0xFF2A0F00),
+                  const Color(0xFFCD7F32),
+                  const Color(0xFFEFBB85),
+                ],
+                glowColor: const Color(0xFFCD7F32),
+                badgeColor: const Color(0xFFCD7F32),
+              )),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+
+class _RankBox extends StatelessWidget {
+  final PlayerModel player;
+  final int rank;
+  final String rankLabel;
+  final String medal;
+  final List<Color> gradientColors;
+  final Color glowColor;
+  final Color badgeColor;
+
+  const _RankBox({
+    required this.player,
+    required this.rank,
+    required this.rankLabel,
+    required this.medal,
+    required this.gradientColors,
+    required this.glowColor,
+    required this.badgeColor,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    const double avatarSize   = 80;
+    const double overflowAmt  = 10.0;
+
+    // ── Demo fallback image ──────────────────────────────────────────────────
+    final demoImages = [
+      "https://i.pravatar.cc/150?img=11",
+      "https://i.pravatar.cc/150?img=32",
+      "https://i.pravatar.cc/150?img=57",
+    ];
+    final imageUrl =  demoImages[rank - 1];
+
+    return Stack(
+      clipBehavior: Clip.none,
+      alignment: Alignment.topCenter,
+      children: [
+        // ── Card ─────────────────────────────────────────────────────────────
+        Container(
+          padding: const EdgeInsets.all(10),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(16),
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [
+                gradientColors[0].withOpacity(0.72),
+                gradientColors[0].withOpacity(0.38),
+                Colors.transparent,
+              ],
+            ),
+            border: Border.all(
+              color: gradientColors[1].withOpacity(0.42), width: 1,
+            ),
+            boxShadow: [
+              BoxShadow(
+                color: glowColor.withOpacity(0.18),
+                blurRadius: 14,
+                offset: const Offset(0, 5),
+              ),
+            ],
+          ),
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(15),
+            child: Stack(
+              children: [
+                // Shimmer top bar
+                Positioned(
+                  top: 0, left: 0, right: 0,
+                  child: Container(
+                    height: 2,
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(colors: [
+                        Colors.transparent,
+                        gradientColors[2].withOpacity(0.9),
+                        Colors.transparent,
+                      ]),
+                    ),
+                  ),
+                ),
+
+                // Rank watermark
+                Positioned(
+                  right: -4, bottom: -14,
+                  child: Text(
+                    rank.toString(),
+                    style: TextStyle(
+                      fontSize: 90, fontWeight: FontWeight.w900,
+                      color: gradientColors[1].withOpacity(0.06), height: 1,
+                    ),
+                  ),
+                ),
+
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    // Space for avatar
+                    const SizedBox(height: overflowAmt + (avatarSize / 2) + 20),
+
+                    // Name
+                    Text(
+                      player.short.toUpperCase(),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.bold,
+                        letterSpacing: 1.2,
+                        color: gradientColors[2].withOpacity(0.95),
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+
+                    // Points pill
+                    Container(
+                      width: double.infinity,
+                      padding: const EdgeInsets.symmetric(vertical: 6),
+                      decoration: BoxDecoration(
+                        color: gradientColors[1].withOpacity(0.12),
+                        borderRadius: BorderRadius.circular(10),
+                        border: Border.all(
+                          color: gradientColors[1].withOpacity(0.35), width: 1,
+                        ),
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          Text(
+                            "${player.pts}",
+                            style: TextStyle(
+                              fontSize: 20, fontWeight: FontWeight.w900,
+                              color: gradientColors[1], height: 1,
+                            ),
+                          ),
+                          const SizedBox(width: 3),
+                          Padding(
+                            padding: const EdgeInsets.only(bottom: 2),
+                            child: Text(
+                              "PTS",
+                              style: TextStyle(
+                                fontSize: 8, fontWeight: FontWeight.w800,
+                                letterSpacing: 1.2,
+                                color: gradientColors[1].withOpacity(0.6),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ),
+
+        // ── Unique Rank Badge ─────────────────────────────────────────────────
+        // Diagonal ribbon in top-right corner
+        Positioned(
+          top: overflowAmt + 4,
+          right: 0,
+          child: ClipRRect(
+            borderRadius: const BorderRadius.only(
+              topRight: Radius.circular(14),
+              bottomLeft: Radius.circular(8),
+            ),
+            child: Container(
+              padding: const EdgeInsets.fromLTRB(8, 3, 8, 4),
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [
+                    badgeColor.withOpacity(0.85),
+                    badgeColor,
+                  ],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                ),
+              ),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    medal,
+                    style: const TextStyle(fontSize: 10),
+                  ),
+                  const SizedBox(width: 3),
+                  Text(
+                    rankLabel,
+                    style: TextStyle(
+                      fontSize: 8,
+                      fontWeight: FontWeight.w900,
+                      letterSpacing: 1.4,
+                      color: rank == 1
+                          ? const Color(0xFF3D2400)
+                          : rank == 2
+                          ? const Color(0xFF1A1A1A)
+                          : const Color(0xFF2A0F00),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+
+        // ── Avatar (10pt overflow) ────────────────────────────────────────────
+        Positioned(
+          top: -overflowAmt,
+          child: Container(
+            width: avatarSize,
+            height: avatarSize,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              border: Border.all(color: gradientColors[1], width: 2.5),
+              boxShadow: [
+                BoxShadow(
+                  color: glowColor.withOpacity(0.5),
+                  blurRadius: 14,
+                  spreadRadius: 1,
+                ),
+              ],
+            ),
+            child: ClipOval(
+              child: Image.network(
+                imageUrl,
+                width: avatarSize,
+                height: avatarSize,
+                fit: BoxFit.cover,
+                loadingBuilder: (ctx, child, progress) {
+                  if (progress == null) return child;
+                  return Container(
+                    color: gradientColors[0].withOpacity(0.5),
+                    child: Center(
+                      child: SizedBox(
+                        width: 20, height: 20,
+                        child: CircularProgressIndicator(
+                          strokeWidth: 2, color: gradientColors[1],
+                          value: progress.expectedTotalBytes != null
+                              ? progress.cumulativeBytesLoaded /
+                              progress.expectedTotalBytes!
+                              : null,
+                        ),
+                      ),
+                    ),
+                  );
+                },
+                errorBuilder: (_, __, ___) => Container(
+                  color: gradientColors[0].withOpacity(0.5),
+                  alignment: Alignment.center,
+                  child: Text(
+                    player.name.isNotEmpty
+                        ? player.name[0].toUpperCase()
+                        : "?",
+                    style: TextStyle(
+                      fontSize: 26, fontWeight: FontWeight.w900,
+                      color: gradientColors[1],
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _CrownPainter extends CustomPainter {
+  final Color color;
+  const _CrownPainter({required this.color});
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final paint = Paint()
+      ..color = color
+      ..style = PaintingStyle.fill;
+
+    final strokePaint = Paint()
+      ..color = color.withOpacity(0.5)
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 1;
+
+    final path = Path();
+    final w = size.width;
+    final h = size.height;
+
+    // Crown base shape
+    path.moveTo(0, h);                    // bottom-left
+    path.lineTo(0, h * 0.45);            // left side up
+    path.lineTo(w * 0.25, h * 0.75);     // left inner dip
+    path.lineTo(w * 0.5, 0);             // top center peak
+    path.lineTo(w * 0.75, h * 0.75);     // right inner dip
+    path.lineTo(w, h * 0.45);            // right side up
+    path.lineTo(w, h);                   // bottom-right
+    path.close();
+
+    canvas.drawPath(path, paint);
+    canvas.drawPath(path, strokePaint);
+
+    // Three jewel dots
+    final jewel = Paint()..color = Colors.white.withOpacity(0.85);
+    canvas.drawCircle(Offset(w * 0.5, h * 0.22), 2.5, jewel);    // center top
+    canvas.drawCircle(Offset(w * 0.12, h * 0.56), 2.0, jewel);   // left peak
+    canvas.drawCircle(Offset(w * 0.88, h * 0.56), 2.0, jewel);   // right peak
+  }
+
+  @override
+  bool shouldRepaint(_CrownPainter old) => old.color != color;
+}
+
+class PodiumCardTwo extends StatelessWidget {
+  final List<PlayerModel> players;
+  final String title;
+  const PodiumCardTwo({required this.players, required this.title});
+
+  @override
+  Widget build(BuildContext context) {
+    return GlassCardWidget(
+      padding: const EdgeInsets.fromLTRB(14, 16, 14, 14),
+      borderColor: AppColors.neonGold.withOpacity(0.12),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // ── Title row ──
+          Row(children: [
+            Container(
+              width: 3, height: 14,
+              decoration: BoxDecoration(
+                color: AppColors.neonGold,
+                borderRadius: BorderRadius.circular(2),
+              ),
+            ),
+            const SizedBox(width: 8),
+            Text(title.toUpperCase(),
+                style: const TextStyle(
+                  fontSize: 10,
+                  fontWeight: FontWeight.w900,
+                  letterSpacing: 2.5,
+                  color: AppColors.textPrimary,
+                )),
+          ]),
+
+          const SizedBox(height: 16),
+
+          // ── All 3 boxes in a single row ──
+          Row(
+            children: [
+              // 1st Place — Gold
+              Expanded(
+                child: _RankBoxTwo(
+                  player: players[0],
+                  rank: 1,
+                  rankLabel: "1ST",
+                  gradientColors: [const Color(0xFFB8860B), const Color(0xFFFFD700), const Color(0xFFFFF0A0)],
+                  glowColor: const Color(0xFFFFD700),
+                  badgeColor: const Color(0xFFFFD700),
+                  badgeIcon: Icons.emoji_events_rounded,
+                ),
+              ),
+              const SizedBox(width: 8),
+              // 2nd Place — Silver
+              Expanded(
+                child: _RankBoxTwo(
+                  player: players[1],
+                  rank: 2,
+                  rankLabel: "2ND",
+                  gradientColors: [const Color(0xFF6B6B6B), const Color(0xFFB0B0B0), const Color(0xFFE8E8E8)],
+                  glowColor: const Color(0xFFB0B0B0),
+                  badgeColor: const Color(0xFFC0C0C0),
+                  badgeIcon: Icons.military_tech_rounded,
+                ),
+              ),
+              const SizedBox(width: 8),
+              // 3rd Place — Bronze
+              Expanded(
+                child: _RankBoxTwo(
+                  player: players[2],
+                  rank: 3,
+                  rankLabel: "3RD",
+                  gradientColors: [const Color(0xFF6B3A1F), const Color(0xFFCD7F32), const Color(0xFFEDA96A)],
+                  glowColor: const Color(0xFFCD7F32),
+                  badgeColor: const Color(0xFFCD7F32),
+                  badgeIcon: Icons.workspace_premium_rounded,
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+}
+class _RankBoxTwo extends StatelessWidget {
+  final PlayerModel player;
+  final int rank;
+  final String rankLabel;
+  final List<Color> gradientColors;
+  final Color glowColor;
+  final Color badgeColor;
+  final IconData badgeIcon;
+
+  const _RankBoxTwo({
+    required this.player,
+    required this.rank,
+    required this.rankLabel,
+    required this.gradientColors,
+    required this.glowColor,
+    required this.badgeColor,
+    required this.badgeIcon,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final avatarColor = playerColor(player.name);
+
+    return Container(
+      height: 120,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(14),
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            gradientColors[0].withOpacity(0.35),
+            gradientColors[1].withOpacity(0.15),
+            Colors.transparent,
+          ],
+        ),
+        border: Border.all(
+          color: gradientColors[1].withOpacity(0.45),
+          width: 1,
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: glowColor.withOpacity(0.18),
+            blurRadius: 12,
+            spreadRadius: 0,
+            offset: const Offset(0, 3),
+          ),
+        ],
+      ),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(14),
+        child: Stack(
+          children: [
+            // ── Shimmer top bar ──
+            Positioned(
+              top: 0, left: 0, right: 0,
+              child: Container(
+                height: 2.5,
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(colors: [
+                    Colors.transparent,
+                    gradientColors[2].withOpacity(0.9),
+                    Colors.transparent,
+                  ]),
+                ),
+              ),
+            ),
+
+            // ── Rank watermark ──
+            Positioned(
+              right: -4, bottom: -10,
+              child: Text(
+                rank.toString(),
+                style: TextStyle(
+                  fontSize: 72,
+                  fontWeight: FontWeight.w900,
+                  color: gradientColors[1].withOpacity(0.07),
+                  height: 1,
+                ),
+              ),
+            ),
+
+            // ── Content (vertical layout for narrow columns) ──
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Column(children: [
-                    Text(medals[i], style: const TextStyle(fontSize: 18)),
-                    const SizedBox(height: 3),
-                    Container(
-                      width: 40, height: 40,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        gradient: LinearGradient(colors: [c, c.withOpacity(0.6)]),
-                        border: Border.all(color: colors[i], width: 2),
-                        boxShadow: [BoxShadow(color: colors[i].withOpacity(0.4), blurRadius: 8)],
+                  // Badge icon + rank pill
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Icon(badgeIcon, color: badgeColor, size: 18),
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                        decoration: BoxDecoration(
+                          color: badgeColor.withOpacity(0.18),
+                          borderRadius: BorderRadius.circular(6),
+                          border: Border.all(
+                            color: badgeColor.withOpacity(0.45),
+                            width: 1,
+                          ),
+                        ),
+                        child: Text(
+                          rankLabel,
+                          style: TextStyle(
+                            fontSize: 9,
+                            fontWeight: FontWeight.w900,
+                            letterSpacing: 1.2,
+                            color: gradientColors[2],
+                          ),
+                        ),
                       ),
-                      alignment: Alignment.center,
-                      child: Text(p.name[0],
-                          style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w800, color: Colors.white)),
+                    ],
+                  ),
+
+                  // Avatar circle
+                  Container(
+                    width: 36,
+                    height: 36,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: avatarColor.withOpacity(0.2),
+                      border: Border.all(
+                        color: gradientColors[1].withOpacity(0.6),
+                        width: 1.5,
+                      ),
                     ),
-                  ]),
-                  Column(children: [
-                    Text(p.short,
-                        style: TextStyle(fontSize: 9, fontWeight: FontWeight.w800,
-                            color: isFirst[i] ? Colors.white : AppColors.textPrimary),
-                        textAlign: TextAlign.center),
-                    Text("${p.pts}",
-                        style: TextStyle(fontSize: 13, fontWeight: FontWeight.w900, color: colors[i])),
-                    Text("pts", style: TextStyle(
-                        fontSize: 7, color: Colors.white.withOpacity(0.4))),
-                  ]),
+                    child: Center(
+                      child: Text(
+                        player.name.isNotEmpty ? player.name[0].toUpperCase() : "?",
+                        style: TextStyle(
+                          fontSize: 15,
+                          fontWeight: FontWeight.w800,
+                          color: gradientColors[2],
+                        ),
+                      ),
+                    ),
+                  ),
+
+                  // Name + score
+                  Column(
+                    children: [
+                      Text(
+                        player.name,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: 11,
+                          fontWeight: FontWeight.w700,
+                          color: gradientColors[2],
+                        ),
+                      ),
+                      const SizedBox(height: 2),
+                      Text(
+                        "${"player.score"} pts",
+                        style: TextStyle(
+                          fontSize: 10,
+                          fontWeight: FontWeight.w500,
+                          color: gradientColors[1].withOpacity(0.85),
+                        ),
+                      ),
+                    ],
+                  ),
                 ],
               ),
-            ));
-          }),
+            ),
+          ],
         ),
-      ]),
+      ),
+    );
+  }
+}
+
+class _PodiumSlot extends StatelessWidget {
+  final PlayerModel player;
+  final String rank;
+  final Color accentColor;
+  final Color avatarColor;
+  final double height;
+  final bool isFirst;
+
+  const _PodiumSlot({
+    required this.player,
+    required this.rank,
+    required this.accentColor,
+    required this.avatarColor,
+    required this.height,
+    required this.isFirst,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      clipBehavior: Clip.none,
+      children: [
+        // ── Card body ──
+        Container(
+          height: height,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(12),
+            gradient: isFirst
+                ? const LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [Color(0xFF1C3F9E), Color(0xFF0A1640)],
+            )
+                : LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [
+                AppColors.bgSurface.withOpacity(0.9),
+                AppColors.bgSurface,
+              ],
+            ),
+            border: Border.all(color: accentColor.withOpacity(isFirst ? 0.6 : 0.25), width: 1),
+            boxShadow: isFirst
+                ? [
+              BoxShadow(color: accentColor.withOpacity(0.25), blurRadius: 20, spreadRadius: -2),
+              BoxShadow(color: accentColor.withOpacity(0.1), blurRadius: 6, offset: const Offset(0, 2)),
+            ]
+                : [
+              BoxShadow(color: accentColor.withOpacity(0.1), blurRadius: 8),
+            ],
+          ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              // Top section: avatar
+              Padding(
+                padding: const EdgeInsets.only(top: 28),
+                child: Column(children: [
+                  // Avatar ring
+                  Container(
+                    width: isFirst ? 46 : 38,
+                    height: isFirst ? 46 : 38,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      gradient: LinearGradient(
+                        colors: [avatarColor, avatarColor.withOpacity(0.5)],
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                      ),
+                      border: Border.all(color: accentColor, width: isFirst ? 2.5 : 1.5),
+                      boxShadow: [
+                        BoxShadow(color: accentColor.withOpacity(0.45), blurRadius: isFirst ? 14 : 8),
+                      ],
+                    ),
+                    alignment: Alignment.center,
+                    child: Text(
+                      player.name[0],
+                      style: TextStyle(
+                        fontSize: isFirst ? 18 : 15,
+                        fontWeight: FontWeight.w900,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                ]),
+              ),
+
+              // Bottom section: name + score
+              Padding(
+                padding: const EdgeInsets.fromLTRB(6, 0, 6, 10),
+                child: Column(children: [
+                  Text(
+                    player.short,
+                    style: TextStyle(
+                      fontSize: isFirst ? 10 : 8.5,
+                      fontWeight: FontWeight.w800,
+                      letterSpacing: 0.4,
+                      color: isFirst ? Colors.white : AppColors.textPrimary,
+                    ),
+                    textAlign: TextAlign.center,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  const SizedBox(height: 4),
+                  // Score pill
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                    decoration: BoxDecoration(
+                      color: accentColor.withOpacity(0.15),
+                      borderRadius: BorderRadius.circular(20),
+                      border: Border.all(color: accentColor.withOpacity(0.4), width: 1),
+                    ),
+                    child: Text(
+                      "${player.pts}",
+                      style: TextStyle(
+                        fontSize: isFirst ? 13 : 11,
+                        fontWeight: FontWeight.w900,
+                        color: accentColor,
+                        letterSpacing: 0.5,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 1),
+                  Text("pts",
+                      style: TextStyle(fontSize: 7, color: Colors.white.withOpacity(0.3), letterSpacing: 1)),
+                ]),
+              ),
+            ],
+          ),
+        ),
+
+        // ── Rank badge (top-center, floating) ──
+        Positioned(
+          top: -12,
+          left: 0,
+          right: 0,
+          child: Center(
+            child: Container(
+              width: isFirst ? 26 : 22,
+              height: isFirst ? 26 : 22,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: accentColor,
+                boxShadow: [
+                  BoxShadow(color: accentColor.withOpacity(0.6), blurRadius: isFirst ? 12 : 6),
+                ],
+              ),
+              alignment: Alignment.center,
+              child: Text(
+                rank,
+                style: TextStyle(
+                  fontSize: isFirst ? 11 : 9,
+                  fontWeight: FontWeight.w900,
+                  color: isFirst ? const Color(0xFF0A1640) : Colors.white,
+                ),
+              ),
+            ),
+          ),
+        ),
+
+        // ── Gold crown glow streak (1st only) ──
+        if (isFirst)
+          Positioned(
+            top: 0,
+            left: 0,
+            right: 0,
+            child: Container(
+              height: 40,
+              decoration: BoxDecoration(
+                borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
+                gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [
+                    AppColors.neonGold.withOpacity(0.08),
+                    Colors.transparent,
+                  ],
+                ),
+              ),
+            ),
+          ),
+      ],
     );
   }
 }
@@ -302,282 +1070,6 @@ class MatchMiniCard extends StatelessWidget {
 }
 
 
-class TopScorerCard extends StatelessWidget {
-  final PlayerModel player;
-  final String label, badge;
-  final Gradient gradient;
-
-  const TopScorerCard({
-    required this.player,
-    required this.label,
-    required this.badge,
-    required this.gradient,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final c = playerColor(player.name);
-    final double ratio = player.matches > 0
-        ? (player.goals / player.matches)
-        : 0.0;
-
-    return Container(
-      width: 160,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(20),
-        gradient: gradient,
-        border: Border.all(color: Colors.white.withOpacity(0.08), width: 1),
-        boxShadow: [
-          BoxShadow(
-            color: c.withOpacity(0.35),
-            blurRadius: 20,
-            offset: const Offset(0, 8),
-          ),
-          BoxShadow(
-            color: Colors.black.withOpacity(0.4),
-            blurRadius: 12,
-            offset: const Offset(0, 4),
-          ),
-        ],
-      ),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(20),
-        child: Stack(
-          children: [
-            // ── Diagonal slash background ──────────────────────────────
-            Positioned.fill(
-              child: CustomPaint(painter: DiagonalSlashPainterWidget(color: c)),
-            ),
-
-            // ── Faint corner glow ──────────────────────────────────────
-            Positioned(
-              top: -30,
-              right: -30,
-              child: Container(
-                width: 100,
-                height: 100,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  gradient: RadialGradient(
-                    colors: [c.withOpacity(0.25), Colors.transparent],
-                  ),
-                ),
-              ),
-            ),
-
-            // ── Content ────────────────────────────────────────────────
-            Padding(
-              padding: const EdgeInsets.fromLTRB(14, 14, 14, 16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  // Label pill + badge
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 8, vertical: 3),
-                        decoration: BoxDecoration(
-                          color: Colors.white.withOpacity(0.12),
-                          borderRadius: BorderRadius.circular(30),
-                          border: Border.all(
-                              color: Colors.white.withOpacity(0.15), width: 1),
-                        ),
-                        child: Text(
-                          label.toUpperCase(),
-                          style: TextStyle(
-                            fontSize: 7,
-                            fontWeight: FontWeight.w900,
-                            color: Colors.white.withOpacity(0.75),
-                            letterSpacing: 1.6,
-                          ),
-                        ),
-                      ),
-                      Text(badge, style: const TextStyle(fontSize: 18)),
-                    ],
-                  ),
-
-                  const SizedBox(height: 14),
-
-                  // Avatar + name block
-                  Row(
-                    children: [
-                      // Avatar circle with initial
-                      Container(
-                        width: 44,
-                        height: 44,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          gradient: LinearGradient(
-                            begin: Alignment.topLeft,
-                            end: Alignment.bottomRight,
-                            colors: [c, c.withOpacity(0.5)],
-                          ),
-                          border: Border.all(
-                              color: Colors.white.withOpacity(0.3), width: 2),
-                          boxShadow: [
-                            BoxShadow(
-                                color: c.withOpacity(0.5), blurRadius: 10)
-                          ],
-                        ),
-                        alignment: Alignment.center,
-                        child: Text(
-                          player.name[0],
-                          style: const TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.w900,
-                            color: Colors.white,
-                          ),
-                        ),
-                      ),
-                      const SizedBox(width: 10),
-
-                      // Name + matches
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              player.short.toUpperCase(),
-                              style: const TextStyle(
-                                fontSize: 11,
-                                fontWeight: FontWeight.w900,
-                                color: Colors.white,
-                                letterSpacing: 0.5,
-                                height: 1.1,
-                              ),
-                              maxLines: 2,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                            const SizedBox(height: 3),
-                            Row(
-                              children: [
-                                Container(
-                                  width: 5,
-                                  height: 5,
-                                  decoration: BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    color: AppColors.neonGold,
-                                  ),
-                                ),
-                                const SizedBox(width: 4),
-                                Text(
-                                  "${player.matches} matches",
-                                  style: TextStyle(
-                                    fontSize: 8.5,
-                                    color: Colors.white.withOpacity(0.55),
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-
-                  const SizedBox(height: 14),
-
-                  // Divider line
-                  Container(
-                    height: 1,
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        colors: [
-                          Colors.white.withOpacity(0.0),
-                          Colors.white.withOpacity(0.15),
-                          Colors.white.withOpacity(0.0),
-                        ],
-                      ),
-                    ),
-                  ),
-
-                  const SizedBox(height: 12),
-
-                  // ── Hero goals number ──────────────────────────────
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: [
-                      Text(
-                        "${player.goals}",
-                        style: TextStyle(
-                          fontSize: 46,
-                          fontWeight: FontWeight.w900,
-                          color: Colors.white,
-                          height: 0.9,
-                          shadows: [
-                            Shadow(
-                                color: c.withOpacity(0.6),
-                                blurRadius: 16)
-                          ],
-                        ),
-                      ),
-                      const SizedBox(width: 6),
-                      Padding(
-                        padding: const EdgeInsets.only(bottom: 6),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              "GOALS",
-                              style: TextStyle(
-                                fontSize: 8,
-                                fontWeight: FontWeight.w800,
-                                color: AppColors.neonGold,
-                                letterSpacing: 1.5,
-                              ),
-                            ),
-                            Text(
-                              "scored",
-                              style: TextStyle(
-                                fontSize: 8,
-                                color: Colors.white.withOpacity(0.4),
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-
-                  const SizedBox(height: 10),
-
-                  // ── Bottom stat row: Matches · Goals · Ratio ──────
-                  Row(
-                    children: [
-                      StatChipWidget(
-                        label: "MTH",
-                        value: "${player.matches}",
-                        color: Colors.white.withOpacity(0.7),
-                      ),
-                      const SizedBox(width: 6),
-                      StatChipWidget(
-                        label: "FA",
-                        value: "${player.fa}",
-                        color: Colors.white.withOpacity(0.7),
-                      ),
-                      const SizedBox(width: 6),
-                      StatChipWidget(
-                        label: "RATIO",
-                        value: ratio.toStringAsFixed(2),
-                        color: AppColors.neonGold,
-                        highlight: true,
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
 
 class StatChipWidget extends StatelessWidget {
   final String label, value;
@@ -635,57 +1127,3 @@ class StatChipWidget extends StatelessWidget {
   }
 }
 
-class Scorer3ListWidget extends StatelessWidget {
-  final List<PlayerModel> players;
-  const Scorer3ListWidget({required this.players});
-
-  @override
-  Widget build(BuildContext context) {
-    final medals = ["🥇", "🥈", "🥉"];
-    final colors = [AppColors.gold, AppColors.silver, AppColors.bronze];
-
-    return GlassCardWidget(
-      padding: const EdgeInsets.all(12),
-      child: Column(children: List.generate(players.length, (i) {
-        final p = players[i];
-        final c = playerColor(p.name);
-        return Container(
-          padding: const EdgeInsets.symmetric(vertical: 9, horizontal: 8),
-          margin: const EdgeInsets.only(bottom: 6),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(10),
-            gradient: i == 0 ? LinearGradient(
-              colors: [AppColors.neonGold.withOpacity(0.08), Colors.transparent],
-            ) : null,
-          ),
-          child: Row(children: [
-            Text(medals[i], style: const TextStyle(fontSize: 18)),
-            const SizedBox(width: 8),
-            Container(
-              width: 34, height: 34,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10),
-                gradient: LinearGradient(colors: [c, c.withOpacity(0.6)]),
-              ),
-              alignment: Alignment.center,
-              child: Text(p.name[0],
-                  style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w800, color: Colors.white)),
-            ),
-            const SizedBox(width: 8),
-            Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              Text(p.name, style: const TextStyle(
-                  fontSize: 11, fontWeight: FontWeight.w800, color: AppColors.textPrimary)),
-              Text("${p.matches}PL · ${p.wins}W",
-                  style: const TextStyle(fontSize: 9, color: AppColors.textMuted)),
-            ])),
-            Column(crossAxisAlignment: CrossAxisAlignment.end, children: [
-              Text("${p.goals}", style: TextStyle(
-                  fontSize: 16, fontWeight: FontWeight.w900, color: colors[i])),
-              const Text("goals", style: TextStyle(fontSize: 7, color: AppColors.textMuted)),
-            ]),
-          ]),
-        );
-      })),
-    );
-  }
-}

@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:e_sports/core/constants/app_colors.dart';
 import 'package:e_sports/core/data/app_data.dart';
 import 'package:e_sports/core/widgets/glass_card_widget.dart';
@@ -45,9 +44,7 @@ class _GameArenaScreenState extends State<DashboardScreen> with SingleTickerProv
 
   @override
   Widget build(BuildContext context) {
-    return Placeholder(
-      color: Colors.red,
-    );
+
     return Scaffold(
       backgroundColor: AppColors.bg,
       body: SafeArea(

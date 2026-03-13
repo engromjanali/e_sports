@@ -1,10 +1,12 @@
 import 'package:e_sports/core/constants/app_colors.dart';
-import 'package:e_sports/main.dart';
 import 'package:flutter/animation.dart';
 
 class AppData {
+
+  static const List<String> appName  = ['The', 'Elites'];
+
   static const players = [
-    PlayerModel(id:1,name:"Tawsif Ul Anam",  short:"Tawsif",   pts:946, goals:164,matches:302,wins:233,losses:42, draws:27,gf:945, ga:312,rank:1,fa:4.4,hattricks:12,cleansheets:34),
+    PlayerModel(id:1,name:"Aryan bhuiyan",  short:"Tawsif",   pts:946, goals:164,matches:302,wins:233,losses:42, draws:27,gf:945, ga:312,rank:1,fa:4.4,hattricks:12,cleansheets:34),
     PlayerModel(id:2,name:"Owasikur Rahman", short:"Owasikur", pts:888, goals:157,matches:482,wins:290,losses:98, draws:94,gf:1257,ga:589,rank:2,fa:8.4,hattricks:9, cleansheets:28),
     PlayerModel(id:3,name:"Asif Reza",       short:"Asif",     pts:859, goals:149,matches:485,wins:338,losses:87, draws:60,gf:1643,ga:741,rank:3,fa:4.4,hattricks:7, cleansheets:22),
     PlayerModel(id:4,name:"Shariq Ul Baari", short:"Shariq",   pts:824, goals:132,matches:390,wins:201,losses:121,draws:68,gf:899, ga:502,rank:4,fa:3.9,hattricks:5, cleansheets:18),

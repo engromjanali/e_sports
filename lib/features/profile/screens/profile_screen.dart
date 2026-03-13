@@ -24,62 +24,259 @@ class ProfileScreen extends StatelessWidget {
         child: Column(children: [
 
           // ── Hero card ────────────────────────────────────────────────
+          // Container(
+          //   padding: const EdgeInsets.all(20),
+          //   decoration: BoxDecoration(
+          //     gradient: const LinearGradient(
+          //       begin: Alignment.topLeft, end: Alignment.bottomRight,
+          //       colors: [Color(0xFF0D1B4E), Color(0xFF1B4FD8), Color(0xFF1440B8)],
+          //     ),
+          //     borderRadius: BorderRadius.circular(22),
+          //     boxShadow: [BoxShadow(color: AppColors.neonBlue.withOpacity(0.25), blurRadius: 20)],
+          //   ),
+          //   child: Column(children: [
+          //     Row(children: [
+          //       Stack(clipBehavior: Clip.none, children: [
+          //         PlayerAvatarWidget(name: p.name, size: 70, borderColor: AppColors.neonGold),
+          //         Positioned(top: -10, right: -8,
+          //           child: Container(
+          //             padding: const EdgeInsets.all(5),
+          //             decoration: BoxDecoration(
+          //               color: AppColors.neonGold,
+          //               shape: BoxShape.circle,
+          //               boxShadow: [BoxShadow(color: AppColors.neonGold.withOpacity(0.5), blurRadius: 8)],
+          //             ),
+          //             child: const Text("👑", style: TextStyle(fontSize: 12)),
+          //           ),
+          //         ),
+          //       ]),
+          //       const SizedBox(width: 16),
+          //       Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          //         Text(p.name, style: const TextStyle(
+          //             fontSize: 18, fontWeight: FontWeight.w900, color: Colors.white)),
+          //         Text("@${p.short.toLowerCase()}",
+          //             style: TextStyle(fontSize: 11, color: Colors.white.withOpacity(0.5))),
+          //         const SizedBox(height: 8),
+          //         Row(children: [
+          //           NeonPillWidget(label: "RANK #1", color: AppColors.neonGold),
+          //           const SizedBox(width: 6),
+          //           NeonPillWidget(label: "VIP", color: AppColors.neonCyan),
+          //         ]),
+          //       ])),
+          //     ]),
+          //     const SizedBox(height: 16),
+          //     Row(children: [
+          //       for (final stat in [
+          //         ("${p.pts}", "POINTS"),
+          //         ("${p.goals}", "GOALS"),
+          //         ("${p.wins}", "WINS"),
+          //         ("${p.matches}", "MATCHES"),
+          //       ]) Expanded(child: Column(children: [
+          //         Text(stat.$1, style: const TextStyle(
+          //             fontSize: 20, fontWeight: FontWeight.w900, color: AppColors.neonGold)),
+          //         Text(stat.$2,
+          //             style: TextStyle(fontSize: 8, color: Colors.white.withOpacity(0.4), letterSpacing: 1)),
+          //       ])),
+          //     ]),
+          //   ]),
+          // ),
+
           Container(
             padding: const EdgeInsets.all(20),
             decoration: BoxDecoration(
               gradient: const LinearGradient(
-                begin: Alignment.topLeft, end: Alignment.bottomRight,
-                colors: [Color(0xFF0D1B4E), Color(0xFF1B4FD8), Color(0xFF1440B8)],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: [
+                  Color(0xFF3D2400),   // deep gold-brown
+                  Color(0xFF1A0F00),   // near black
+                  Color(0xFF2A1800),   // mid warm dark
+                ],
               ),
               borderRadius: BorderRadius.circular(22),
-              boxShadow: [BoxShadow(color: AppColors.neonBlue.withOpacity(0.25), blurRadius: 20)],
+              border: Border.all(
+                color: Color(0xFFFFD700).withOpacity(0.30),
+                width: 1,
+              ),
+              boxShadow: [
+                BoxShadow(
+                  color: Color(0xFFFFD700).withOpacity(0.18),
+                  blurRadius: 24,
+                  offset: Offset(0, 6),
+                ),
+              ],
             ),
-            child: Column(children: [
-              Row(children: [
-                Stack(clipBehavior: Clip.none, children: [
-                  PlayerAvatarWidget(name: p.name, size: 70, borderColor: AppColors.neonGold),
-                  Positioned(top: -10, right: -8,
-                    child: Container(
-                      padding: const EdgeInsets.all(5),
-                      decoration: BoxDecoration(
-                        color: AppColors.neonGold,
-                        shape: BoxShape.circle,
-                        boxShadow: [BoxShadow(color: AppColors.neonGold.withOpacity(0.5), blurRadius: 8)],
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(22),
+              child: Stack(
+                children: [
+                  // ── Watermark ──
+                  Positioned(
+                    right: -10, bottom: -20,
+                    child: Text(
+                      "#1",
+                      style: TextStyle(
+                        fontSize: 110,
+                        fontWeight: FontWeight.w900,
+                        color: const Color(0xFFFFD700).withOpacity(0.05),
+                        height: 1,
                       ),
-                      child: const Text("👑", style: TextStyle(fontSize: 12)),
                     ),
                   ),
-                ]),
-                const SizedBox(width: 16),
-                Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                  Text(p.name, style: const TextStyle(
-                      fontSize: 18, fontWeight: FontWeight.w900, color: Colors.white)),
-                  Text("@${p.short.toLowerCase()}",
-                      style: TextStyle(fontSize: 11, color: Colors.white.withOpacity(0.5))),
-                  const SizedBox(height: 8),
-                  Row(children: [
-                    NeonPillWidget(label: "RANK #1", color: AppColors.neonGold),
-                    const SizedBox(width: 6),
-                    NeonPillWidget(label: "VIP", color: AppColors.neonCyan),
-                  ]),
-                ])),
-              ]),
-              const SizedBox(height: 16),
-              Row(children: [
-                for (final stat in [
-                  ("${p.pts}", "POINTS"),
-                  ("${p.goals}", "GOALS"),
-                  ("${p.wins}", "WINS"),
-                  ("${p.matches}", "MATCHES"),
-                ]) Expanded(child: Column(children: [
-                  Text(stat.$1, style: const TextStyle(
-                      fontSize: 20, fontWeight: FontWeight.w900, color: AppColors.neonGold)),
-                  Text(stat.$2,
-                      style: TextStyle(fontSize: 8, color: Colors.white.withOpacity(0.4), letterSpacing: 1)),
-                ])),
-              ]),
-            ]),
+
+                  // ── Content ──
+                  Column(
+                    children: [
+                      Row(
+                        children: [
+                          Stack(clipBehavior: Clip.none, children: [
+                            PlayerAvatarWidget(
+                              name: p.name,
+                              size: 70,
+                              borderColor: const Color(0xFFFFD700),
+                            ),
+                          ]),
+                          const SizedBox(width: 16),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  p.name,
+                                  style: const TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.w900,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                                Text(
+                                  "@${p.short.toLowerCase()}",
+                                  style: TextStyle(
+                                    fontSize: 11,
+                                    color: Colors.white.withOpacity(0.45),
+                                  ),
+                                ),
+                                const SizedBox(height: 8),
+                                Row(children: [
+                                  // ── Unique ribbon-style rank badge ──
+                                  ClipRRect(
+                                    borderRadius: const BorderRadius.only(
+                                      topLeft: Radius.circular(6),
+                                      bottomLeft: Radius.circular(6),
+                                      topRight: Radius.circular(3),
+                                      bottomRight: Radius.circular(3),
+                                    ),
+                                    child: Container(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 9, vertical: 4),
+                                      decoration: const BoxDecoration(
+                                        gradient: LinearGradient(
+                                          colors: [Color(0xFFB8860B), Color(0xFFFFD700)],
+                                          begin: Alignment.topLeft,
+                                          end: Alignment.bottomRight,
+                                        ),
+                                      ),
+                                      child: const Text(
+                                        "RANK #1",
+                                        style: TextStyle(
+                                          fontSize: 8,
+                                          fontWeight: FontWeight.w900,
+                                          letterSpacing: 1.4,
+                                          color: Color(0xFF3D2400),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  const SizedBox(width: 6),
+                                  // ── VIP badge ──
+                                  ...List.generate(2, (index) => Container(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 9, vertical: 4),
+                                    margin: const EdgeInsets.only(right: 4.5),
+                                    decoration: BoxDecoration(
+                                      color: const Color(0xFFFFD700).withOpacity(0.12),
+                                      borderRadius: BorderRadius.circular(6),
+                                      border: Border.all(
+                                        color: const Color(0xFFFFD700).withOpacity(0.45),
+                                        width: 1,
+                                      ),
+                                    ),
+                                    child: const Text(
+                                      "VIP",
+                                      style: TextStyle(
+                                        fontSize: 8,
+                                        fontWeight: FontWeight.w900,
+                                        letterSpacing: 1.4,
+                                        color: Color(0xFFFFF4C2),
+                                      ),
+                                    ),
+                                  ),),
+                                ]),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+
+                      const SizedBox(height: 16),
+
+                      // ── Divider ──
+                      Container(
+                        height: 1,
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(colors: [
+                            Colors.transparent,
+                            const Color(0xFFFFD700).withOpacity(0.25),
+                            Colors.transparent,
+                          ]),
+                        ),
+                      ),
+
+                      const SizedBox(height: 14),
+
+                      // ── Stats row ──
+                      Row(
+                        children: [
+                          for (final stat in [
+                            ("${p.pts}",     "POINTS"),
+                            ("${p.goals}",   "GOALS"),
+                            ("${p.wins}",    "WINS"),
+                            ("${p.matches}", "MATCHES"),
+                          ])
+                            Expanded(
+                              child: Column(
+                                children: [
+                                  Text(
+                                    stat.$1,
+                                    style: const TextStyle(
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.w900,
+                                      color: Color(0xFFFFD700),
+                                      height: 1,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 3),
+                                  Text(
+                                    stat.$2,
+                                    style: TextStyle(
+                                      fontSize: 7,
+                                      fontWeight: FontWeight.w800,
+                                      color: Colors.white.withOpacity(0.35),
+                                      letterSpacing: 1.2,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
           ),
+
           const SizedBox(height: 16),
 
           // ── Last 15 Results ──────────────────────────────────────────

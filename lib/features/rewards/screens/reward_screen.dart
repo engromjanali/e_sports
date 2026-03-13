@@ -2,6 +2,8 @@ import 'dart:async';
 import 'dart:ui';
 import 'package:e_sports/core/constants/app_colors.dart';
 import 'package:e_sports/core/data/app_data.dart';
+import 'package:e_sports/core/widgets/app_header_widget.dart';
+import 'package:e_sports/core/widgets/brand_title.dart';
 import 'package:e_sports/core/widgets/glass_card_widget.dart';
 import 'package:e_sports/core/widgets/neon_pill_widget.dart';
 import 'package:e_sports/core/widgets/neon_pregress_bar_widget.dart';
@@ -133,76 +135,55 @@ class _RewardsScreenState extends State<RewardsScreen> with TickerProviderStateM
   }
 
   Widget _buildTopHeader() {
-    return Container(
-      padding: const EdgeInsets.fromLTRB(20, 12, 20, 10),
-      decoration: BoxDecoration(
-        gradient: const LinearGradient(
-          begin: Alignment.topCenter, end: Alignment.bottomCenter,
-          colors: [AppColors.bgCard, AppColors.bg],
-        ),
-        border: Border(bottom: BorderSide(color: AppColors.glassBorder)),
-      ),
+    return AppHeader(
+      sub: 'Rewards · Season 2025',
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            RichText(text: const TextSpan(children: [
-              TextSpan(text: "Game", style: TextStyle(
-                  color: AppColors.neonCyan, fontSize: 19, fontWeight: FontWeight.w900)),
-              TextSpan(text: "Arena", style: TextStyle(
-                  color: AppColors.textPrimary, fontSize: 19, fontWeight: FontWeight.w900)),
-            ])),
-            const Text("Rewards · Season 2025",
-                style: TextStyle(fontSize: 9, color: AppColors.textMuted, letterSpacing: 0.5)),
+        mainAxisSize: MainAxisSize.min,
+      children: [
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+          decoration: BoxDecoration(
+            color: AppColors.neonGold.withOpacity(0.1),
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(color: AppColors.neonGold.withOpacity(0.3)),
+            boxShadow: [BoxShadow(color: AppColors.neonGold.withOpacity(0.2), blurRadius: 10)],
+          ),
+          child: Row(children: [
+            const Text("🪙", style: TextStyle(fontSize: 15)),
+            const SizedBox(width: 5),
+            Text("$_coins",
+                style: const TextStyle(
+                    fontSize: 15, fontWeight: FontWeight.w900, color: AppColors.neonGold)),
           ]),
-          Row(children: [
-            // Coin balance badge
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-              decoration: BoxDecoration(
-                color: AppColors.neonGold.withOpacity(0.1),
-                borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: AppColors.neonGold.withOpacity(0.3)),
-                boxShadow: [BoxShadow(color: AppColors.neonGold.withOpacity(0.2), blurRadius: 10)],
-              ),
-              child: Row(children: [
-                const Text("🪙", style: TextStyle(fontSize: 15)),
-                const SizedBox(width: 5),
-                Text("$_coins",
-                    style: const TextStyle(
-                        fontSize: 15, fontWeight: FontWeight.w900, color: AppColors.neonGold)),
-              ]),
+        ),
+        const SizedBox(width: 9),
+        // Notification bell
+        Stack(clipBehavior: Clip.none, children: [
+          Container(
+            width: 34, height: 34,
+            decoration: BoxDecoration(
+              color: AppColors.bgSurface,
+              borderRadius: BorderRadius.circular(10),
+              border: Border.all(color: AppColors.neonCyan.withOpacity(0.2)),
             ),
-            const SizedBox(width: 9),
-            // Notification bell
-            Stack(clipBehavior: Clip.none, children: [
-              Container(
-                width: 34, height: 34,
-                decoration: BoxDecoration(
-                  color: AppColors.bgSurface,
-                  borderRadius: BorderRadius.circular(10),
-                  border: Border.all(color: AppColors.neonCyan.withOpacity(0.2)),
-                ),
-                alignment: Alignment.center,
-                child: const Text("🔔", style: TextStyle(fontSize: 16)),
+            alignment: Alignment.center,
+            child: const Text("🔔", style: TextStyle(fontSize: 16)),
+          ),
+          Positioned(top: -3, right: -3,
+            child: Container(
+              width: 15, height: 15,
+              decoration: BoxDecoration(
+                color: AppColors.neonRed,
+                shape: BoxShape.circle,
+                border: Border.all(color: AppColors.bg, width: 2),
               ),
-              Positioned(top: -3, right: -3,
-                child: Container(
-                  width: 15, height: 15,
-                  decoration: BoxDecoration(
-                    color: AppColors.neonRed,
-                    shape: BoxShape.circle,
-                    border: Border.all(color: AppColors.bg, width: 2),
-                  ),
-                  alignment: Alignment.center,
-                  child: const Text("2",
-                      style: TextStyle(color: Colors.white, fontSize: 8, fontWeight: FontWeight.w800)),
-                ),
-              ),
-            ]),
-          ]),
-        ],
-      ),
+              alignment: Alignment.center,
+              child: const Text("2",
+                  style: TextStyle(color: Colors.white, fontSize: 8, fontWeight: FontWeight.w800)),
+            ),
+          ),
+        ]),
+      ]),
     );
   }
 
@@ -294,19 +275,16 @@ class _EarnTab extends StatelessWidget {
   });
 
   List<TaskModel> get _daily => [
-    TaskModel(id:"d1",icon:"📺",label:"Watch 5 Ads Today", goal:5,  done:ads.clamp(0,5),   pts:5,   isAd:true),
-    TaskModel(id:"d2",icon:"🎮",label:"Play 1 Match",       goal:1,  done:1,                pts:3,   isAd:false),
-    TaskModel(id:"d3",icon:"⚽",label:"Score 3 Goals",      goal:3,  done:2,                pts:5,   isAd:false),
+    TaskModel(id:"d1",icon:"📺",label:"Watch 1 Ads Today", goal:1,  done:ads.clamp(0,1),   pts:1,   isAd:true),
+    TaskModel(id:"d1",icon:"📺",label:"Watch 3 Ads Today", goal:3,  done:ads.clamp(0,3),   pts:3,   isAd:true),
+    TaskModel(id:"d1",icon:"📺",label:"Watch 5 Ads Today", goal:5,  done:ads.clamp(0,5),  pts:5,   isAd:true),
   ];
   List<TaskModel> get _weekly => [
+    TaskModel(id:"w1",icon:"📺",label:"Watch 50 Ads",      goal:50,done:ads.clamp(0,50), pts:50, isAd:true),
     TaskModel(id:"w1",icon:"📺",label:"Watch 100 Ads",      goal:100,done:ads.clamp(0,100), pts:100, isAd:true),
-    TaskModel(id:"w2",icon:"🏆",label:"Win 5 Matches",      goal:5,  done:3,                pts:50,  isAd:false),
-    TaskModel(id:"w3",icon:"🎩",label:"Score a Hat-trick",  goal:1,  done:1,                pts:30,  isAd:false),
   ];
   List<TaskModel> get _monthly => [
     TaskModel(id:"m1",icon:"📺",label:"Watch 400 Ads",      goal:400,done:(ads+120).clamp(0,400),pts:500,isAd:true),
-    TaskModel(id:"m2",icon:"⚽",label:"Score 30 Goals",     goal:30, done:18,               pts:200, isAd:false),
-    TaskModel(id:"m3",icon:"🏆",label:"Win 20 Matches",     goal:20, done:12,               pts:150, isAd:false),
   ];
 
   @override
@@ -534,74 +512,77 @@ class _TaskCard extends StatelessWidget {
     final done = t.done >= t.goal;
     final barColor = done ? AppColors.neonGreen : t.isAd ? AppColors.neonCyan : AppColors.neonPurple;
 
-    return GlassCardWidget(
-      padding: const EdgeInsets.all(13),
-      borderColor: done ? AppColors.neonGreen.withOpacity(0.3) : AppColors.glassBorder,
-      shadows: done ? [BoxShadow(color: AppColors.neonGreen.withOpacity(0.1), blurRadius: 12)] : null,
-      child: Padding(
-        padding: const EdgeInsets.only(bottom: 0),
-        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          Row(children: [
-            Container(
-              width: 36, height: 36,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10),
-                color: barColor.withOpacity(0.1),
-                border: Border.all(color: barColor.withOpacity(0.2)),
-              ),
-              alignment: Alignment.center,
-              child: Text(t.icon, style: const TextStyle(fontSize: 17)),
-            ),
-            const SizedBox(width: 10),
-            Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              Text(t.label,
-                  style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w700, color: AppColors.textPrimary)),
-              Row(children: [
-                const Text("🪙", style: TextStyle(fontSize: 11)),
-                const SizedBox(width: 3),
-                Text("+${t.pts} pts",
-                    style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w800, color: AppColors.neonGold)),
-                if (done) ...[
-                  const SizedBox(width: 6),
-                  NeonPillWidget(label: "✓ DONE", color: AppColors.neonGreen),
-                ],
-              ]),
-            ])),
-            Text("${t.done}/${t.goal}",
-                style: TextStyle(fontSize: 11, fontWeight: FontWeight.w800,
-                    color: done ? AppColors.neonGreen : AppColors.textMuted)),
-          ]),
-          const SizedBox(height: 8),
-          NeonProgressBarWidget(value: t.done.toDouble(), max: t.goal.toDouble(), color: barColor, height: 5),
-          if (t.isAd) ...[
-            const SizedBox(height: 8),
-            GestureDetector(
-              onTap: done ? null : onStartAd,
-              child: AnimatedContainer(
-                duration: const Duration(milliseconds: 180),
-                width: double.infinity,
-                padding: const EdgeInsets.symmetric(vertical: 8),
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 8.0),
+      child: GlassCardWidget(
+        padding: const EdgeInsets.all(13),
+        borderColor: done ? AppColors.neonGreen.withOpacity(0.3) : AppColors.glassBorder,
+        shadows: done ? [BoxShadow(color: AppColors.neonGreen.withOpacity(0.1), blurRadius: 12)] : null,
+        child: Padding(
+          padding: const EdgeInsets.only(bottom: 0),
+          child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            Row(children: [
+              Container(
+                width: 36, height: 36,
                 decoration: BoxDecoration(
-                  color: done ? AppColors.neonGreen.withOpacity(0.1) :
-                  watching ? AppColors.bgSurface : AppColors.neonCyan.withOpacity(0.1),
                   borderRadius: BorderRadius.circular(10),
-                  border: Border.all(
-                      color: done ? AppColors.neonGreen.withOpacity(0.3) :
-                      watching ? AppColors.glassBorder : AppColors.neonCyan.withOpacity(0.3)),
+                  color: barColor.withOpacity(0.1),
+                  border: Border.all(color: barColor.withOpacity(0.2)),
                 ),
                 alignment: Alignment.center,
-                child: Text(
-                    done ? "🎁  Claim ${t.pts} Points" :
-                    watching ? "⏳  Watching… ${timer}s" : "▶  Watch Ad",
-                    style: TextStyle(
-                      color: done ? AppColors.neonGreen :
-                      watching ? AppColors.textMuted : AppColors.neonCyan,
-                      fontSize: 11, fontWeight: FontWeight.w700,
-                    )),
+                child: Text(t.icon, style: const TextStyle(fontSize: 17)),
               ),
-            ),
-          ],
-        ]),
+              const SizedBox(width: 10),
+              Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                Text(t.label,
+                    style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w700, color: AppColors.textPrimary)),
+                Row(children: [
+                  const Text("🪙", style: TextStyle(fontSize: 11)),
+                  const SizedBox(width: 3),
+                  Text("+${t.pts} pts",
+                      style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w800, color: AppColors.neonGold)),
+                  if (done) ...[
+                    const SizedBox(width: 6),
+                    NeonPillWidget(label: "✓ DONE", color: AppColors.neonGreen),
+                  ],
+                ]),
+              ])),
+              Text("${t.done}/${t.goal}",
+                  style: TextStyle(fontSize: 11, fontWeight: FontWeight.w800,
+                      color: done ? AppColors.neonGreen : AppColors.textMuted)),
+            ]),
+            const SizedBox(height: 8),
+            NeonProgressBarWidget(value: t.done.toDouble(), max: t.goal.toDouble(), color: barColor, height: 5),
+            if (t.isAd) ...[
+              const SizedBox(height: 8),
+              GestureDetector(
+                onTap: done ? null : onStartAd,
+                child: AnimatedContainer(
+                  duration: const Duration(milliseconds: 180),
+                  width: double.infinity,
+                  padding: const EdgeInsets.symmetric(vertical: 8),
+                  decoration: BoxDecoration(
+                    color: done ? AppColors.neonGreen.withOpacity(0.1) :
+                    watching ? AppColors.bgSurface : AppColors.neonCyan.withOpacity(0.1),
+                    borderRadius: BorderRadius.circular(10),
+                    border: Border.all(
+                        color: done ? AppColors.neonGreen.withOpacity(0.3) :
+                        watching ? AppColors.glassBorder : AppColors.neonCyan.withOpacity(0.3)),
+                  ),
+                  alignment: Alignment.center,
+                  child: Text(
+                      done ? "🎁  Claim ${t.pts} Points" :
+                      watching ? "⏳  Watching… ${timer}s" : "▶  Watch Ad",
+                      style: TextStyle(
+                        color: done ? AppColors.neonGreen :
+                        watching ? AppColors.textMuted : AppColors.neonCyan,
+                        fontSize: 11, fontWeight: FontWeight.w700,
+                      )),
+                ),
+              ),
+            ],
+          ]),
+        ),
       ),
     );
   }

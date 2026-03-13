@@ -1,11 +1,13 @@
 import 'package:e_sports/core/constants/app_colors.dart';
+import 'package:e_sports/core/data/app_data.dart';
 import 'package:e_sports/core/widgets/player_avater.dart';
 import 'package:e_sports/main.dart';
 import 'package:flutter/material.dart';
 
 class AppHeader extends StatelessWidget {
   final String? sub;
-  const AppHeader({this.sub});
+  final Widget? child;
+  const AppHeader({this.sub, this.child});
 
   @override
   Widget build(BuildContext context) {
@@ -22,18 +24,20 @@ class AppHeader extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            RichText(text: const TextSpan(
+            RichText(text: TextSpan(
               children: [
-                TextSpan(text: "Game", style: TextStyle(
+                TextSpan(text: AppData.appName.first, style: TextStyle(
                     color: AppColors.neonCyan, fontSize: 19, fontWeight: FontWeight.w900)),
-                TextSpan(text: "Arena", style: TextStyle(
+                TextSpan(text: AppData.appName.last, style: TextStyle(
                     color: AppColors.textPrimary, fontSize: 19, fontWeight: FontWeight.w900)),
               ],
             )),
             Text(sub ?? "Play · Compete · Win",
                 style: const TextStyle(fontSize: 9, color: AppColors.textMuted, letterSpacing: 0.5)),
           ]),
-          Row(children: [
+
+
+           child ?? Row(children: [
             _headerIconButton("🔔", badge: 3),
             const SizedBox(width: 8),
             _headerIconButton("🔍"),
