@@ -2,12 +2,14 @@ import 'dart:async';
 import 'dart:ui';
 import 'package:e_sports/core/constants/app_colors.dart';
 import 'package:e_sports/core/data/app_data.dart';
+import 'package:e_sports/core/widgets/glass_card_widget.dart';
+import 'package:e_sports/core/widgets/neon_pill_widget.dart';
+import 'package:e_sports/core/widgets/neon_pregress_bar_widget.dart';
+import 'package:e_sports/core/widgets/player_avater.dart';
+import 'package:e_sports/core/widgets/section_heading_widget.dart';
 import 'package:e_sports/main.dart';
 import 'package:flutter/material.dart';
 
-// ══════════════════════════════════════════════════════════════════════════════
-// REWARDS SCREEN — Root
-// ══════════════════════════════════════════════════════════════════════════════
 class RewardsScreen extends StatefulWidget {
   const RewardsScreen({super.key});
   @override State<RewardsScreen> createState() => _RewardsScreenState();
@@ -119,11 +121,10 @@ class _RewardsScreenState extends State<RewardsScreen> with TickerProviderStateM
   @override
   Widget build(BuildContext context) {
     return Column(children: [
-      // ── Top Header ─────────────────────────────────────────────────
+
       _buildTopHeader(),
-      // ── Section Tabs ───────────────────────────────────────────────
+
       _buildTabBar(),
-      // ── Content ────────────────────────────────────────────────────
       Expanded(child: FadeTransition(
         opacity: _tabAnim,
         child: _buildTabContent(),
@@ -251,7 +252,7 @@ class _RewardsScreenState extends State<RewardsScreen> with TickerProviderStateM
         tncOpen: _tncOpen, onToggleTnc: () => setState(() => _tncOpen = !_tncOpen),
         onStartAd: _startAd,
       );
-      case 1: return _TournamentTab(
+      case 1: return TournamentTabWidget(
         selTrn: _selTrn, joined: _joined, bracketOpen: _bracketOpen, coins: _coins,
         onSelTrn: (i) => setState(() { _selTrn = i; _bracketOpen = false; }),
         onToggleBracket: () => setState(() => _bracketOpen = !_bracketOpen),
@@ -281,9 +282,6 @@ class _RewardsScreenState extends State<RewardsScreen> with TickerProviderStateM
 
 class _TabItem { final String icon, label; const _TabItem({required this.icon, required this.label}); }
 
-// ══════════════════════════════════════════════════════════════════════════════
-// EARN TAB
-// ══════════════════════════════════════════════════════════════════════════════
 class _EarnTab extends StatelessWidget {
   final int ads, coins, timer;
   final bool watching, tncOpen;
@@ -325,7 +323,7 @@ class _EarnTab extends StatelessWidget {
             // T&C accordion
             GestureDetector(
               onTap: onToggleTnc,
-              child: GlassCard(
+              child: GlassCardWidget(
                 padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 9),
                 child: Column(children: [
                   Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
@@ -480,7 +478,7 @@ class _EarnHeroBanner extends StatelessWidget {
                 style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w800, color: AppColors.neonGold)),
           ]),
           const SizedBox(height: 5),
-          NeonProgressBar(value: ads.toDouble(), max: 100, color: AppColors.neonGold, height: 8),
+          NeonProgressBarWidget(value: ads.toDouble(), max: 100, color: AppColors.neonGold, height: 8),
           const SizedBox(height: 3),
           Text("Complete 100 ads this week → earn +100 bonus coins",
               style: TextStyle(fontSize: 9, color: Colors.white.withOpacity(0.4))),
@@ -536,7 +534,7 @@ class _TaskCard extends StatelessWidget {
     final done = t.done >= t.goal;
     final barColor = done ? AppColors.neonGreen : t.isAd ? AppColors.neonCyan : AppColors.neonPurple;
 
-    return GlassCard(
+    return GlassCardWidget(
       padding: const EdgeInsets.all(13),
       borderColor: done ? AppColors.neonGreen.withOpacity(0.3) : AppColors.glassBorder,
       shadows: done ? [BoxShadow(color: AppColors.neonGreen.withOpacity(0.1), blurRadius: 12)] : null,
@@ -565,7 +563,7 @@ class _TaskCard extends StatelessWidget {
                     style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w800, color: AppColors.neonGold)),
                 if (done) ...[
                   const SizedBox(width: 6),
-                  NeonPill(label: "✓ DONE", color: AppColors.neonGreen),
+                  NeonPillWidget(label: "✓ DONE", color: AppColors.neonGreen),
                 ],
               ]),
             ])),
@@ -574,7 +572,7 @@ class _TaskCard extends StatelessWidget {
                     color: done ? AppColors.neonGreen : AppColors.textMuted)),
           ]),
           const SizedBox(height: 8),
-          NeonProgressBar(value: t.done.toDouble(), max: t.goal.toDouble(), color: barColor, height: 5),
+          NeonProgressBarWidget(value: t.done.toDouble(), max: t.goal.toDouble(), color: barColor, height: 5),
           if (t.isAd) ...[
             const SizedBox(height: 8),
             GestureDetector(
@@ -612,7 +610,7 @@ class _TaskCard extends StatelessWidget {
 // ══════════════════════════════════════════════════════════════════════════════
 // TOURNAMENT TAB
 // ══════════════════════════════════════════════════════════════════════════════
-class _TournamentTab extends StatelessWidget {
+class TournamentTabWidget extends StatelessWidget {
   final int selTrn;
   final List<int> joined;
   final bool bracketOpen;
@@ -621,7 +619,7 @@ class _TournamentTab extends StatelessWidget {
   final VoidCallback onToggleBracket;
   final void Function(TournamentModel) onJoin;
 
-  const _TournamentTab({
+  const TournamentTabWidget({
     required this.selTrn, required this.joined, required this.bracketOpen,
     required this.coins, required this.onSelTrn, required this.onToggleBracket,
     required this.onJoin,
@@ -684,8 +682,8 @@ class _TournamentTab extends StatelessWidget {
         const SizedBox(height: 12),
 
         // ── Rewards ────────────────────────────────────────────────────
-        SectionHeading(title: "🎁 Prize Pool"),
-        GlassCard(
+        SectionHeadingWidget(title: "🎁 Prize Pool"),
+        GlassCardWidget(
           child: Column(children: [
             ...List.generate(trn.rewards.length, (i) {
               final r = trn.rewards[i];
@@ -734,7 +732,7 @@ class _TournamentTab extends StatelessWidget {
         if (trn.bracket.isNotEmpty) _BracketSection(trn: trn, open: bracketOpen, onToggle: onToggleBracket),
 
         // ── Leaderboard ────────────────────────────────────────────────
-        SectionHeading(title: "📊 Season Standings"),
+        SectionHeadingWidget(title: "📊 Season Standings"),
         _TournamentLeaderboard(),
         const SizedBox(height: 8),
       ]),
@@ -820,7 +818,7 @@ class _TournamentHeroCard extends StatelessWidget {
               style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w800, color: AppColors.neonGold)),
         ]),
         const SizedBox(height: 5),
-        NeonProgressBar(value: fillPct * trn.slots, max: trn.slots.toDouble(),
+        NeonProgressBarWidget(value: fillPct * trn.slots, max: trn.slots.toDouble(),
             color: trn.status == "ended" ? AppColors.textMuted : AppColors.neonGold),
       ]),
     );
@@ -857,7 +855,7 @@ class _RegisterSection extends StatelessWidget {
     final canAfford = coins >= trn.cost;
 
     if (alreadyJoined) {
-      return GlassCard(
+      return GlassCardWidget(
         padding: const EdgeInsets.symmetric(vertical: 12),
         borderColor: AppColors.neonGreen.withOpacity(0.3),
         child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
@@ -870,7 +868,7 @@ class _RegisterSection extends StatelessWidget {
     }
 
     if (!canAfford) {
-      return GlassCard(
+      return GlassCardWidget(
         padding: const EdgeInsets.symmetric(vertical: 11, horizontal: 14),
         borderColor: AppColors.neonRed.withOpacity(0.3),
         child: Row(children: [
@@ -1014,7 +1012,7 @@ class _TournamentLeaderboard extends StatelessWidget {
     final colors = [AppColors.gold, AppColors.silver, AppColors.bronze,
       AppColors.neonBlue, AppColors.textMuted];
 
-    return GlassCard(
+    return GlassCardWidget(
       child: Column(children: List.generate(players.length, (i) {
         final p = players[i];
         final c = colors[i.clamp(0, colors.length - 1)];
@@ -1032,13 +1030,13 @@ class _TournamentLeaderboard extends StatelessWidget {
               textAlign: TextAlign.center,
             )),
             const SizedBox(width: 11),
-            PlayerAvatar(name: p.name, size: 36),
+            PlayerAvatarWidget(name: p.name, size: 36),
             const SizedBox(width: 10),
             Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
               Row(children: [
                 Text(p.name, style: const TextStyle(
                     fontSize: 12, fontWeight: FontWeight.w700, color: AppColors.textPrimary)),
-                if (i < 2) ...[const SizedBox(width: 5), NeonPill(label: "VIP", color: AppColors.neonGold)],
+                if (i < 2) ...[const SizedBox(width: 5), NeonPillWidget(label: "VIP", color: AppColors.neonGold)],
               ]),
               Text("${p.wins}W · ${p.goals} goals",
                   style: const TextStyle(fontSize: 9, color: AppColors.textMuted)),
@@ -1128,7 +1126,7 @@ class _ShopTab extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.fromLTRB(16, 14, 16, 24),
           child: Column(children: [
-            SectionHeading(
+            SectionHeadingWidget(
               title: "🎖️ Cosmetic Items",
               sub: "Unlock with earned points — cosmetics only",
             ),
@@ -1200,7 +1198,7 @@ class _ShopTab extends StatelessWidget {
                 item: items[selIdx!], coins: coins, idx: selIdx!, onBuy: onBuy),
 
             // ── Disclaimer ─────────────────────────────────────────────
-            GlassCard(
+            GlassCardWidget(
               padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
               borderColor: AppColors.neonCyan.withOpacity(0.15),
               child: Row(children: [
@@ -1230,7 +1228,7 @@ class _ShopItemDetail extends StatelessWidget {
   Widget build(BuildContext context) {
     final canAfford = coins >= item.cost;
 
-    return GlassCard(
+    return GlassCardWidget(
       padding: const EdgeInsets.all(16),
       borderColor: item.accent.withOpacity(0.3),
       shadows: [BoxShadow(color: item.accent.withOpacity(0.1), blurRadius: 20)],
@@ -1330,7 +1328,7 @@ class _ChatTab extends StatelessWidget {
       padding: const EdgeInsets.all(14),
       child: Column(children: [
         // Admin info card
-        GlassCard(
+        GlassCardWidget(
           padding: const EdgeInsets.all(12),
           borderColor: AppColors.neonBlue.withOpacity(0.2),
           child: Row(children: [
@@ -1365,7 +1363,7 @@ class _ChatTab extends StatelessWidget {
               Text("● Online · Replies within 5 minutes",
                   style: TextStyle(fontSize: 10, color: AppColors.neonGreen, fontWeight: FontWeight.w600)),
             ])),
-            NeonPill(label: "OFFICIAL", color: AppColors.neonBlue),
+            NeonPillWidget(label: "OFFICIAL", color: AppColors.neonBlue),
           ]),
         ),
         const SizedBox(height: 12),

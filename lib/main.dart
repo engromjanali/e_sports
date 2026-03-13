@@ -18,14 +18,12 @@ void main() {
   runApp(const GameArenaApp());
 }
 
-// ─── APP ROOT ──────────────────────────────────────────────────────────────────
 class GameArenaApp extends StatelessWidget {
   const GameArenaApp({super.key});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'GameArena',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         brightness: Brightness.dark,

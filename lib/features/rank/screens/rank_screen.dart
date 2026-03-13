@@ -7,7 +7,7 @@ import 'package:e_sports/core/widgets/neon_pill_widget.dart';
 import 'package:e_sports/core/widgets/player_avater.dart';
 import 'package:e_sports/core/widgets/pot_banner_widget.dart';
 import 'package:e_sports/core/widgets/section_heading_widget.dart';
-import 'package:e_sports/game_arena_screen.dart';
+import 'package:e_sports/features/home/screens/home_screen.dart';
 import 'package:flutter/material.dart';
 
 class LeaderboardScreen extends StatefulWidget {
@@ -77,7 +77,7 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> {
           if (_type == "scorers") ...[
             // Top Scorers
             SectionHeadingWidget(title: "Overall Top 3 Scorers", sub: "Most goals all-time"),
-            Scorer3List(players: [players[0], players[2], players[1]]),
+            Scorer3ListWidget(players: [players[0], players[2], players[1]]),
             const SizedBox(height: 16),
 
             // Full scorer list

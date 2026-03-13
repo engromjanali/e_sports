@@ -40,11 +40,11 @@ class PotBannerWidget extends StatelessWidget {
               style: TextStyle(fontSize: 11, color: Colors.white.withOpacity(0.5))),
           const SizedBox(height: 8),
           Row(children: [
-            _StatMini(label: "Goals", value: "${player.goals}", color: AppColors.neonGold),
+            StatMiniWidget(label: "Goals", value: "${player.goals}", color: AppColors.neonGold),
             const SizedBox(width: 16),
-            _StatMini(label: "Pts",   value: "${player.pts}",   color: Colors.white),
+            StatMiniWidget(label: "Pts",   value: "${player.pts}",   color: Colors.white),
             const SizedBox(width: 16),
-            _StatMini(label: "FA",    value: "${player.fa}",    color: AppColors.neonGold),
+            StatMiniWidget(label: "FA",    value: "${player.fa}",    color: AppColors.neonGold),
           ]),
         ])),
       ]),
@@ -52,10 +52,10 @@ class PotBannerWidget extends StatelessWidget {
   }
 }
 
-class _StatMini extends StatelessWidget {
+class StatMiniWidget extends StatelessWidget {
   final String label, value;
   final Color color;
-  const _StatMini({required this.label, required this.value, required this.color});
+  const StatMiniWidget({required this.label, required this.value, required this.color});
   @override
   Widget build(BuildContext context) => Column(children: [
     Text(value, style: TextStyle(fontSize: 15, fontWeight: FontWeight.w900, color: color)),

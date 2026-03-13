@@ -2,14 +2,12 @@ import 'dart:async';
 
 import 'package:e_sports/core/constants/app_colors.dart';
 import 'package:e_sports/core/data/app_data.dart';
-import 'package:e_sports/core/widgets/app_header_widget.dart';
-import 'package:e_sports/core/widgets/my_rank_card_widget.dart';
+import 'package:e_sports/core/widgets/glass_card_widget.dart';
 import 'package:e_sports/features/home/screens/home_screen.dart';
 import 'package:e_sports/features/matches/screens/matches_screen.dart';
+import 'package:e_sports/features/profile/screens/profile_screen.dart';
 import 'package:e_sports/features/rank/screens/rank_screen.dart';
 import 'package:e_sports/features/rewards/screens/reward_screen.dart';
-import 'package:e_sports/game_arena_screen.dart';
-import 'package:e_sports/main.dart';
 import 'package:flutter/material.dart';
 
 class DashboardScreen extends StatefulWidget {
@@ -47,6 +45,9 @@ class _GameArenaScreenState extends State<DashboardScreen> with SingleTickerProv
 
   @override
   Widget build(BuildContext context) {
+    return Placeholder(
+      color: Colors.red,
+    );
     return Scaffold(
       backgroundColor: AppColors.bg,
       body: SafeArea(
@@ -170,3 +171,36 @@ class _GameArenaScreenState extends State<DashboardScreen> with SingleTickerProv
 }
 
 class _TabDef { final String icon, label; const _TabDef({required this.icon, required this.label}); }
+
+class QuickNavItem extends StatelessWidget {
+  final String icon, label, sub;
+  final Color color;
+  final VoidCallback onTap;
+  const QuickNavItem({required this.icon, required this.label, required this.sub, required this.color, required this.onTap});
+
+  @override
+  Widget build(BuildContext context) {
+    return Expanded(child: GestureDetector(
+      onTap: onTap,
+      child: GlassCardWidget(
+        padding: const EdgeInsets.symmetric(vertical: 11, horizontal: 4),
+        borderColor: color.withOpacity(0.2),
+        child: Column(children: [
+          Container(
+            width: 40, height: 40,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(11),
+              color: color.withOpacity(0.12),
+              border: Border.all(color: color.withOpacity(0.2)),
+            ),
+            alignment: Alignment.center,
+            child: Text(icon, style: const TextStyle(fontSize: 18)),
+          ),
+          const SizedBox(height: 5),
+          Text(label, style: const TextStyle(fontSize: 10, fontWeight: FontWeight.w700, color: AppColors.textPrimary)),
+          Text(sub, style: const TextStyle(fontSize: 8, color: AppColors.textMuted)),
+        ]),
+      ),
+    ));
+  }
+}

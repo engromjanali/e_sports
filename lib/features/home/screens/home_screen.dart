@@ -5,8 +5,9 @@ import 'package:e_sports/core/widgets/glass_card_widget.dart';
 import 'package:e_sports/core/widgets/my_rank_card_widget.dart';
 import 'package:e_sports/core/widgets/news_branner.dart';
 import 'package:e_sports/core/widgets/section_heading_widget.dart';
-import 'package:e_sports/game_arena_screen.dart';
-import 'package:e_sports/main.dart';
+import 'package:e_sports/core/widgets/sport_light_card_widget.dart';
+import 'package:e_sports/features/dashboard/screens/dashboard_screen.dart';
+import 'package:e_sports/features/home/widgets/diagonal_slash_printer_widget.dart';
 import 'package:flutter/material.dart';
 
 
@@ -79,10 +80,10 @@ class HomeScreen extends StatelessWidget {
               // ── POTW + POTM ──────────────────────────────────────────
               SectionHeadingWidget(title: "⭐ Player of Week / Month", sub: "Season 2025 spotlight"),
               Row(children: [
-                Expanded(child: SpotlightCard(player: players[0], label: "POTW · THIS WEEK", badge: "👑",
+                Expanded(child: SpotlightCardWidget(player: players[0], label: "POTW · THIS WEEK", badge: "👑",
                     gradient: const LinearGradient(colors: [Color(0xFF0D1B4E), Color(0xFF1B4FD8)]))),
                 const SizedBox(width: 10),
-                Expanded(child: SpotlightCard(player: players[1], label: "POTM · DECEMBER", badge: "🏆",
+                Expanded(child: SpotlightCardWidget(player: players[1], label: "POTM · DECEMBER", badge: "🏆",
                     gradient: const LinearGradient(colors: [Color(0xFF7C2D12), Color(0xFFC2410C)]))),
               ]),
               const SizedBox(height: 16),
@@ -296,6 +297,395 @@ class MatchMiniCard extends StatelessWidget {
           ]),
         ],
       ),
+    );
+  }
+}
+
+
+class TopScorerCard extends StatelessWidget {
+  final PlayerModel player;
+  final String label, badge;
+  final Gradient gradient;
+
+  const TopScorerCard({
+    required this.player,
+    required this.label,
+    required this.badge,
+    required this.gradient,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final c = playerColor(player.name);
+    final double ratio = player.matches > 0
+        ? (player.goals / player.matches)
+        : 0.0;
+
+    return Container(
+      width: 160,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(20),
+        gradient: gradient,
+        border: Border.all(color: Colors.white.withOpacity(0.08), width: 1),
+        boxShadow: [
+          BoxShadow(
+            color: c.withOpacity(0.35),
+            blurRadius: 20,
+            offset: const Offset(0, 8),
+          ),
+          BoxShadow(
+            color: Colors.black.withOpacity(0.4),
+            blurRadius: 12,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(20),
+        child: Stack(
+          children: [
+            // ── Diagonal slash background ──────────────────────────────
+            Positioned.fill(
+              child: CustomPaint(painter: DiagonalSlashPainterWidget(color: c)),
+            ),
+
+            // ── Faint corner glow ──────────────────────────────────────
+            Positioned(
+              top: -30,
+              right: -30,
+              child: Container(
+                width: 100,
+                height: 100,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  gradient: RadialGradient(
+                    colors: [c.withOpacity(0.25), Colors.transparent],
+                  ),
+                ),
+              ),
+            ),
+
+            // ── Content ────────────────────────────────────────────────
+            Padding(
+              padding: const EdgeInsets.fromLTRB(14, 14, 14, 16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  // Label pill + badge
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 8, vertical: 3),
+                        decoration: BoxDecoration(
+                          color: Colors.white.withOpacity(0.12),
+                          borderRadius: BorderRadius.circular(30),
+                          border: Border.all(
+                              color: Colors.white.withOpacity(0.15), width: 1),
+                        ),
+                        child: Text(
+                          label.toUpperCase(),
+                          style: TextStyle(
+                            fontSize: 7,
+                            fontWeight: FontWeight.w900,
+                            color: Colors.white.withOpacity(0.75),
+                            letterSpacing: 1.6,
+                          ),
+                        ),
+                      ),
+                      Text(badge, style: const TextStyle(fontSize: 18)),
+                    ],
+                  ),
+
+                  const SizedBox(height: 14),
+
+                  // Avatar + name block
+                  Row(
+                    children: [
+                      // Avatar circle with initial
+                      Container(
+                        width: 44,
+                        height: 44,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          gradient: LinearGradient(
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                            colors: [c, c.withOpacity(0.5)],
+                          ),
+                          border: Border.all(
+                              color: Colors.white.withOpacity(0.3), width: 2),
+                          boxShadow: [
+                            BoxShadow(
+                                color: c.withOpacity(0.5), blurRadius: 10)
+                          ],
+                        ),
+                        alignment: Alignment.center,
+                        child: Text(
+                          player.name[0],
+                          style: const TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.w900,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 10),
+
+                      // Name + matches
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              player.short.toUpperCase(),
+                              style: const TextStyle(
+                                fontSize: 11,
+                                fontWeight: FontWeight.w900,
+                                color: Colors.white,
+                                letterSpacing: 0.5,
+                                height: 1.1,
+                              ),
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                            const SizedBox(height: 3),
+                            Row(
+                              children: [
+                                Container(
+                                  width: 5,
+                                  height: 5,
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    color: AppColors.neonGold,
+                                  ),
+                                ),
+                                const SizedBox(width: 4),
+                                Text(
+                                  "${player.matches} matches",
+                                  style: TextStyle(
+                                    fontSize: 8.5,
+                                    color: Colors.white.withOpacity(0.55),
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+
+                  const SizedBox(height: 14),
+
+                  // Divider line
+                  Container(
+                    height: 1,
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        colors: [
+                          Colors.white.withOpacity(0.0),
+                          Colors.white.withOpacity(0.15),
+                          Colors.white.withOpacity(0.0),
+                        ],
+                      ),
+                    ),
+                  ),
+
+                  const SizedBox(height: 12),
+
+                  // ── Hero goals number ──────────────────────────────
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      Text(
+                        "${player.goals}",
+                        style: TextStyle(
+                          fontSize: 46,
+                          fontWeight: FontWeight.w900,
+                          color: Colors.white,
+                          height: 0.9,
+                          shadows: [
+                            Shadow(
+                                color: c.withOpacity(0.6),
+                                blurRadius: 16)
+                          ],
+                        ),
+                      ),
+                      const SizedBox(width: 6),
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 6),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              "GOALS",
+                              style: TextStyle(
+                                fontSize: 8,
+                                fontWeight: FontWeight.w800,
+                                color: AppColors.neonGold,
+                                letterSpacing: 1.5,
+                              ),
+                            ),
+                            Text(
+                              "scored",
+                              style: TextStyle(
+                                fontSize: 8,
+                                color: Colors.white.withOpacity(0.4),
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+
+                  const SizedBox(height: 10),
+
+                  // ── Bottom stat row: Matches · Goals · Ratio ──────
+                  Row(
+                    children: [
+                      StatChipWidget(
+                        label: "MTH",
+                        value: "${player.matches}",
+                        color: Colors.white.withOpacity(0.7),
+                      ),
+                      const SizedBox(width: 6),
+                      StatChipWidget(
+                        label: "FA",
+                        value: "${player.fa}",
+                        color: Colors.white.withOpacity(0.7),
+                      ),
+                      const SizedBox(width: 6),
+                      StatChipWidget(
+                        label: "RATIO",
+                        value: ratio.toStringAsFixed(2),
+                        color: AppColors.neonGold,
+                        highlight: true,
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class StatChipWidget extends StatelessWidget {
+  final String label, value;
+  final Color color;
+  final bool highlight;
+
+  const StatChipWidget({
+    required this.label,
+    required this.value,
+    required this.color,
+    this.highlight = false,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Expanded(
+      child: Container(
+        padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 4),
+        decoration: BoxDecoration(
+          color: highlight
+              ? AppColors.neonGold.withOpacity(0.15)
+              : Colors.white.withOpacity(0.07),
+          borderRadius: BorderRadius.circular(8),
+          border: Border.all(
+            color: highlight
+                ? AppColors.neonGold.withOpacity(0.35)
+                : Colors.white.withOpacity(0.08),
+            width: 1,
+          ),
+        ),
+        child: Column(
+          children: [
+            Text(
+              value,
+              style: TextStyle(
+                fontSize: 11,
+                fontWeight: FontWeight.w900,
+                color: color,
+              ),
+            ),
+            const SizedBox(height: 1),
+            Text(
+              label,
+              style: TextStyle(
+                fontSize: 6.5,
+                fontWeight: FontWeight.w700,
+                color: Colors.white.withOpacity(0.4),
+                letterSpacing: 0.8,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class Scorer3ListWidget extends StatelessWidget {
+  final List<PlayerModel> players;
+  const Scorer3ListWidget({required this.players});
+
+  @override
+  Widget build(BuildContext context) {
+    final medals = ["🥇", "🥈", "🥉"];
+    final colors = [AppColors.gold, AppColors.silver, AppColors.bronze];
+
+    return GlassCardWidget(
+      padding: const EdgeInsets.all(12),
+      child: Column(children: List.generate(players.length, (i) {
+        final p = players[i];
+        final c = playerColor(p.name);
+        return Container(
+          padding: const EdgeInsets.symmetric(vertical: 9, horizontal: 8),
+          margin: const EdgeInsets.only(bottom: 6),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(10),
+            gradient: i == 0 ? LinearGradient(
+              colors: [AppColors.neonGold.withOpacity(0.08), Colors.transparent],
+            ) : null,
+          ),
+          child: Row(children: [
+            Text(medals[i], style: const TextStyle(fontSize: 18)),
+            const SizedBox(width: 8),
+            Container(
+              width: 34, height: 34,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+                gradient: LinearGradient(colors: [c, c.withOpacity(0.6)]),
+              ),
+              alignment: Alignment.center,
+              child: Text(p.name[0],
+                  style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w800, color: Colors.white)),
+            ),
+            const SizedBox(width: 8),
+            Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              Text(p.name, style: const TextStyle(
+                  fontSize: 11, fontWeight: FontWeight.w800, color: AppColors.textPrimary)),
+              Text("${p.matches}PL · ${p.wins}W",
+                  style: const TextStyle(fontSize: 9, color: AppColors.textMuted)),
+            ])),
+            Column(crossAxisAlignment: CrossAxisAlignment.end, children: [
+              Text("${p.goals}", style: TextStyle(
+                  fontSize: 16, fontWeight: FontWeight.w900, color: colors[i])),
+              const Text("goals", style: TextStyle(fontSize: 7, color: AppColors.textMuted)),
+            ]),
+          ]),
+        );
+      })),
     );
   }
 }
