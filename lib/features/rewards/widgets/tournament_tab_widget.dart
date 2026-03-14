@@ -89,7 +89,7 @@ class TournamentTabWidget extends StatelessWidget {
                           style: TextStyle(
                               fontSize: 11,
                               fontWeight: FontWeight.w700,
-                              color: active ? Colors.white : AppColors.textSecondary)),
+                              color: active ? AppColors.white : AppColors.textSecondary)),
                     ]),
                   ),
                 );
@@ -248,14 +248,14 @@ class _TournamentHeroCard extends StatelessWidget {
         const SizedBox(height: 12),
         Text(trn.name,
             style: const TextStyle(
-                fontSize: 20, fontWeight: FontWeight.w900, color: Colors.white)),
+                fontSize: 20, fontWeight: FontWeight.w900, color: AppColors.white)),
         const SizedBox(height: 4),
         Text("🏅  ${trn.prize}",
             style: const TextStyle(
                 fontSize: 13, color: AppColors.neonGold, fontWeight: FontWeight.w700)),
         const SizedBox(height: 4),
         Text("🏟️  ${trn.sponsor}",
-            style: TextStyle(fontSize: 11, color: Colors.white.withOpacity(0.55))),
+            style: TextStyle(fontSize: 11, color: AppColors.white.withOpacity(0.55))),
         const SizedBox(height: 12),
         Row(children: [
           _TrnInfoItem(icon: "📅", label: "Starts", value: trn.starts),
@@ -269,7 +269,7 @@ class _TournamentHeroCard extends StatelessWidget {
         const SizedBox(height: 14),
         Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
           Text("👥  Slots Filled",
-              style: TextStyle(fontSize: 10, color: Colors.white.withOpacity(0.55))),
+              style: TextStyle(fontSize: 10, color: AppColors.white.withOpacity(0.55))),
           Text("${trn.filled} / ${trn.slots}",
               style: const TextStyle(
                   fontSize: 11, fontWeight: FontWeight.w800, color: AppColors.neonGold)),

@@ -31,7 +31,7 @@ class NewsBannerWidget extends StatelessWidget {
         // Decorative rings
         Positioned(top: -55, right: -55, child: RingWidget(size: 200, opacity: 0.12)),
         Positioned(top: -25, right: -25, child: RingWidget(size: 130, opacity: 0.08)),
-        Positioned(bottom: -60, left: -40, child: GlowCircleWidget(size: 180, color: Colors.white.withOpacity(0.03))),
+        Positioned(bottom: -60, left: -40, child: GlowCircleWidget(size: 180, color: AppColors.white.withOpacity(0.03))),
 
         Padding(
           padding: const EdgeInsets.all(18),
@@ -42,7 +42,7 @@ class NewsBannerWidget extends StatelessWidget {
             const SizedBox(height: 5),
             Text("${n.emoji}  ${n.title}",
                 maxLines: 2, overflow: TextOverflow.ellipsis,
-                style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w900, color: Colors.white, height: 1.25)),
+                style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w900, color: AppColors.white, height: 1.25)),
             const SizedBox(height: 10),
             Row(children: [
               if (n.hot) Container(
@@ -50,21 +50,18 @@ class NewsBannerWidget extends StatelessWidget {
                 decoration: BoxDecoration(color: AppColors.neonRed, borderRadius: BorderRadius.circular(20)),
                 child: Text(
                   "🔥 BREAKING",
-                  style: robotoBold.copyWith(color: Colors.white, 
-                  // fontSize: MediaQuery.of(context).size.width >700 ? 30 : 10,
-                  fontSize: Dimensions.fontSizeExtraSmall
-                   )
+                  style: robotoBold.copyWith(color: AppColors.white, fontSize: Dimensions.fontSizeExtraSmall)
                 ), 
               ),
               if (n.hot) const SizedBox(width: 6),
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 5),
                 decoration: BoxDecoration(
-                  color: Colors.white.withOpacity(0.14),
+                  color: AppColors.white.withOpacity(0.14),
                   borderRadius: BorderRadius.circular(20),
                 ),
                 child: const Text("Read More →",
-                    style: TextStyle(color: Colors.white, fontSize: 11, fontWeight: FontWeight.w700)),
+                    style: TextStyle(color: AppColors.white, fontSize: 11, fontWeight: FontWeight.w700)),
               ),
             ]),
           ]),
@@ -80,7 +77,7 @@ class NewsBannerWidget extends StatelessWidget {
               margin: const EdgeInsets.only(left: 3),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(3),
-                color: i == index ? Colors.white : Colors.white.withOpacity(0.3),
+                color: i == index ? AppColors.white : AppColors.white.withOpacity(0.3),
               ),
             ),
           ))),

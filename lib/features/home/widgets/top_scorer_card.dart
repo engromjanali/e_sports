@@ -28,7 +28,7 @@ class TopScorerCard extends StatelessWidget {
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(20),
         gradient: gradient,
-        border: Border.all(color: Colors.white.withOpacity(0.08), width: 1),
+        border: Border.all(color: AppColors.white.withOpacity(0.08), width: 1),
         boxShadow: [
           BoxShadow(
             color: c.withOpacity(0.35),
@@ -82,17 +82,17 @@ class TopScorerCard extends StatelessWidget {
                         padding: const EdgeInsets.symmetric(
                             horizontal: 8, vertical: 3),
                         decoration: BoxDecoration(
-                          color: Colors.white.withOpacity(0.12),
+                          color: AppColors.white.withOpacity(0.12),
                           borderRadius: BorderRadius.circular(30),
                           border: Border.all(
-                              color: Colors.white.withOpacity(0.15), width: 1),
+                              color: AppColors.white.withOpacity(0.15), width: 1),
                         ),
                         child: Text(
                           label.toUpperCase(),
                           style: TextStyle(
                             fontSize: 7,
                             fontWeight: FontWeight.w900,
-                            color: Colors.white.withOpacity(0.75),
+                            color: AppColors.white.withOpacity(0.75),
                             letterSpacing: 1.6,
                           ),
                         ),
@@ -118,7 +118,7 @@ class TopScorerCard extends StatelessWidget {
                             colors: [c, c.withOpacity(0.5)],
                           ),
                           border: Border.all(
-                              color: Colors.white.withOpacity(0.3), width: 2),
+                              color: AppColors.white.withOpacity(0.3), width: 2),
                           boxShadow: [
                             BoxShadow(
                                 color: c.withOpacity(0.5), blurRadius: 10)
@@ -130,7 +130,7 @@ class TopScorerCard extends StatelessWidget {
                           style: const TextStyle(
                             fontSize: 20,
                             fontWeight: FontWeight.w900,
-                            color: Colors.white,
+                            color: AppColors.white,
                           ),
                         ),
                       ),
@@ -146,7 +146,7 @@ class TopScorerCard extends StatelessWidget {
                               style: const TextStyle(
                                 fontSize: 11,
                                 fontWeight: FontWeight.w900,
-                                color: Colors.white,
+                                color: AppColors.white,
                                 letterSpacing: 0.5,
                                 height: 1.1,
                               ),
@@ -169,7 +169,7 @@ class TopScorerCard extends StatelessWidget {
                                   "${player.matches} matches",
                                   style: TextStyle(
                                     fontSize: 8.5,
-                                    color: Colors.white.withOpacity(0.55),
+                                    color: AppColors.white.withOpacity(0.55),
                                     fontWeight: FontWeight.w600,
                                   ),
                                 ),
@@ -189,9 +189,9 @@ class TopScorerCard extends StatelessWidget {
                     decoration: BoxDecoration(
                       gradient: LinearGradient(
                         colors: [
-                          Colors.white.withOpacity(0.0),
-                          Colors.white.withOpacity(0.15),
-                          Colors.white.withOpacity(0.0),
+                          AppColors.white.withOpacity(0.0),
+                          AppColors.white.withOpacity(0.15),
+                          AppColors.white.withOpacity(0.0),
                         ],
                       ),
                     ),
@@ -208,7 +208,7 @@ class TopScorerCard extends StatelessWidget {
                         style: TextStyle(
                           fontSize: 46,
                           fontWeight: FontWeight.w900,
-                          color: Colors.white,
+                          color: AppColors.white,
                           height: 0.9,
                           shadows: [
                             Shadow(
@@ -236,7 +236,7 @@ class TopScorerCard extends StatelessWidget {
                               "scored",
                               style: TextStyle(
                                 fontSize: 8,
-                                color: Colors.white.withOpacity(0.4),
+                                color: AppColors.white.withOpacity(0.4),
                                 fontWeight: FontWeight.w500,
                               ),
                             ),
@@ -254,13 +254,13 @@ class TopScorerCard extends StatelessWidget {
                       StatChipWidget(
                         label: "MTH",
                         value: "${player.matches}",
-                        color: Colors.white.withOpacity(0.7),
+                        color: AppColors.white.withOpacity(0.7),
                       ),
                       const SizedBox(width: 6),
                       StatChipWidget(
                         label: "Win",
                         value: "${player.wins}",
-                        color: Colors.white.withOpacity(0.7),
+                        color: AppColors.white.withOpacity(0.7),
                       ),
                       const SizedBox(width: 6),
                       StatChipWidget(

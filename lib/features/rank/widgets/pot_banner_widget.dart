@@ -191,7 +191,7 @@ class PotBannerWidget extends StatelessWidget {
                               style: const TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.w900,
-                                color: Colors.white,
+                                color: AppColors.white,
                               ),
                             ),
 
@@ -200,7 +200,7 @@ class PotBannerWidget extends StatelessWidget {
                               "${player.matches} matches",
                               style: TextStyle(
                                 fontSize: 10,
-                                color: Colors.white.withOpacity(0.4),
+                                color: AppColors.white.withOpacity(0.4),
                                 letterSpacing: 0.3,
                               ),
                             ),
@@ -302,7 +302,7 @@ class StatMiniWidget extends StatelessWidget {
                 fontSize: 7,
                 fontWeight: FontWeight.w800,
                 letterSpacing: 1.1,
-                color: Colors.white.withOpacity(0.35),
+                color: AppColors.white.withOpacity(0.35),
               ),
             ),
           ],

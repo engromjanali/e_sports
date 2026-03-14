@@ -21,12 +21,12 @@ class StatChipWidget extends StatelessWidget {
         decoration: BoxDecoration(
           color: highlight
               ? AppColors.neonGold.withOpacity(0.15)
-              : Colors.white.withOpacity(0.07),
+              : AppColors.white.withOpacity(0.07),
           borderRadius: BorderRadius.circular(8),
           border: Border.all(
             color: highlight
                 ? AppColors.neonGold.withOpacity(0.35)
-                : Colors.white.withOpacity(0.08),
+                : AppColors.white.withOpacity(0.08),
             width: 1,
           ),
         ),
@@ -46,7 +46,7 @@ class StatChipWidget extends StatelessWidget {
               style: TextStyle(
                 fontSize: 6.5,
                 fontWeight: FontWeight.w700,
-                color: Colors.white.withOpacity(0.4),
+                color: AppColors.white.withOpacity(0.4),
                 letterSpacing: 0.8,
               ),
             ),

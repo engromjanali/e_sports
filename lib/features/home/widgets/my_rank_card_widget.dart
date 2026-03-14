@@ -1,3 +1,4 @@
+import 'package:e_sports/core/constants/app_colors.dart';
 import 'package:flutter/material.dart';
 
 class MyRankCard extends StatelessWidget {
@@ -120,14 +121,14 @@ class MyRankCard extends StatelessWidget {
                               style: TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.w900,
-                                color: Colors.white,
+                                color: AppColors.white,
                               ),
                             ),
                             Text(
                               "@yourhandle",
                               style: TextStyle(
                                 fontSize: 10,
-                                color: Colors.white.withOpacity(0.4),
+                                color: AppColors.white.withOpacity(0.4),
                                 letterSpacing: 0.3,
                               ),
                             ),
@@ -234,7 +235,7 @@ class MyRankCard extends StatelessWidget {
                           fontSize: 8,
                           fontWeight: FontWeight.w800,
                           letterSpacing: 1.3,
-                          color: Colors.white.withOpacity(0.35),
+                          color: AppColors.white.withOpacity(0.35),
                         ),
                       ),
                       const Spacer(),
@@ -243,7 +244,7 @@ class MyRankCard extends StatelessWidget {
                         style: TextStyle(
                           fontSize: 8,
                           fontWeight: FontWeight.w700,
-                          color: Colors.white.withOpacity(0.35),
+                          color: AppColors.white.withOpacity(0.35),
                         ),
                       ),
                     ],
@@ -255,7 +256,7 @@ class MyRankCard extends StatelessWidget {
                       children: [
                         Container(
                           height: 6,
-                          color: Colors.white.withOpacity(0.07),
+                          color: AppColors.white.withOpacity(0.07),
                         ),
                         FractionallySizedBox(
                           widthFactor: 0.82,
@@ -328,7 +329,7 @@ class _StatChip extends StatelessWidget {
                 fontSize: 7,
                 fontWeight: FontWeight.w800,
                 letterSpacing: 1.1,
-                color: Colors.white.withOpacity(0.35),
+                color: AppColors.white.withOpacity(0.35),
               ),
             ),
           ],

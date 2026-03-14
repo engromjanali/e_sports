@@ -35,7 +35,7 @@ class PlayerAvatarWidget extends StatelessWidget {
           child: Text(
             name[0].toUpperCase(),
             style: TextStyle(
-              color: Colors.white,
+              color: AppColors.white,
               fontSize: size * 0.38,
               fontWeight: FontWeight.w900,
             ),

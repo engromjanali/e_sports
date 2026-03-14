@@ -53,9 +53,9 @@ class ProfileScreen extends StatelessWidget {
           //       const SizedBox(width: 16),
           //       Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
           //         Text(p.name, style: const TextStyle(
-          //             fontSize: 18, fontWeight: FontWeight.w900, color: Colors.white)),
+          //             fontSize: 18, fontWeight: FontWeight.w900, color: AppColors.white)),
           //         Text("@${p.short.toLowerCase()}",
-          //             style: TextStyle(fontSize: 11, color: Colors.white.withOpacity(0.5))),
+          //             style: TextStyle(fontSize: 11, color: AppColors.white.withOpacity(0.5))),
           //         const SizedBox(height: 8),
           //         Row(children: [
           //           NeonPillWidget(label: "RANK #1", color: AppColors.neonGold),
@@ -75,7 +75,7 @@ class ProfileScreen extends StatelessWidget {
           //         Text(stat.$1, style: const TextStyle(
           //             fontSize: 20, fontWeight: FontWeight.w900, color: AppColors.neonGold)),
           //         Text(stat.$2,
-          //             style: TextStyle(fontSize: 8, color: Colors.white.withOpacity(0.4), letterSpacing: 1)),
+          //             style: TextStyle(fontSize: 8, color: AppColors.white.withOpacity(0.4), letterSpacing: 1)),
           //       ])),
           //     ]),
           //   ]),
@@ -146,14 +146,14 @@ class ProfileScreen extends StatelessWidget {
                                   style: const TextStyle(
                                     fontSize: 18,
                                     fontWeight: FontWeight.w900,
-                                    color: Colors.white,
+                                    color: AppColors.white,
                                   ),
                                 ),
                                 Text(
                                   "@${p.short.toLowerCase()}",
                                   style: TextStyle(
                                     fontSize: 11,
-                                    color: Colors.white.withOpacity(0.45),
+                                    color: AppColors.white.withOpacity(0.45),
                                   ),
                                 ),
                                 const SizedBox(height: 8),
@@ -261,7 +261,7 @@ class ProfileScreen extends StatelessWidget {
                                     style: TextStyle(
                                       fontSize: 7,
                                       fontWeight: FontWeight.w800,
-                                      color: Colors.white.withOpacity(0.35),
+                                      color: AppColors.white.withOpacity(0.35),
                                       letterSpacing: 1.2,
                                     ),
                                   ),
@@ -318,7 +318,7 @@ class ProfileScreen extends StatelessWidget {
                   width: 74,
                   padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
                   decoration: BoxDecoration(
-                    color: unlocked ? AppColors.neonGold.withOpacity(0.08) : Colors.white.withOpacity(0.03),
+                    color: unlocked ? AppColors.neonGold.withOpacity(0.08) : AppColors.white.withOpacity(0.03),
                     borderRadius: BorderRadius.circular(14),
                     border: Border.all(
                         color: unlocked ? AppColors.neonGold.withOpacity(0.3) : AppColors.glassBorder),

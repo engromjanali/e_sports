@@ -1,4 +1,7 @@
+import 'package:e_sports/core/constants/app_colors.dart';
 import 'package:e_sports/core/data/app_data.dart';
+import 'package:e_sports/core/utils/dimensions.dart';
+import 'package:e_sports/core/utils/styles.dart';
 import 'package:flutter/material.dart';
 
 class TopThreeScorersWidget extends StatelessWidget {
@@ -78,7 +81,7 @@ class TopThreeScorersWidget extends StatelessWidget {
                       borderRadius: BorderRadius.circular(14),
                       color: isFirst
                           ? gold.withOpacity(0.08)
-                          : Colors.white.withOpacity(0.03),
+                          : AppColors.white.withOpacity(0.03),
                       border: Border.all(
                         color: accent.withOpacity(isFirst ? 0.38 : 0.18),
                         width: 1,
@@ -151,14 +154,8 @@ class TopThreeScorersWidget extends StatelessWidget {
                                 color: goldDeep,
                                 alignment: Alignment.center,
                                 child: Text(
-                                  p.name.isNotEmpty
-                                      ? p.name[0].toUpperCase()
-                                      : "?",
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w900,
-                                    color: accent,
-                                  ),
+                                  p.name.isNotEmpty ? p.name[0].toUpperCase() : "?",
+                                  style: robotoBold.copyWith(color: accent, fontSize: Dimensions.fontSizeLarge),
                                 ),
                               ),
                             ),
@@ -177,7 +174,7 @@ class TopThreeScorersWidget extends StatelessWidget {
                                 style: const TextStyle(
                                   fontSize: 12,
                                   fontWeight: FontWeight.w900,
-                                  color: Colors.white,
+                                  color: AppColors.white,
                                 ),
                               ),
                               const SizedBox(height: 2),
@@ -185,7 +182,7 @@ class TopThreeScorersWidget extends StatelessWidget {
                                 "${p.matches}PL · ${p.wins}W",
                                 style: TextStyle(
                                   fontSize: 9,
-                                  color: Colors.white.withOpacity(0.38),
+                                  color: AppColors.white.withOpacity(0.38),
                                   letterSpacing: 0.3,
                                 ),
                               ),
@@ -222,7 +219,7 @@ class TopThreeScorersWidget extends StatelessWidget {
                                   fontSize: 7,
                                   fontWeight: FontWeight.w800,
                                   letterSpacing: 1.1,
-                                  color: Colors.white.withOpacity(0.35),
+                                  color: AppColors.white.withOpacity(0.35),
                                 ),
                               ),
                             ],

@@ -31,6 +31,9 @@ class AppColors {
   // Glass
   static const Color glassBorder    = Color(0x1AFFFFFF);
   static const Color glassHighlight = Color(0x08FFFFFF);
+
+  static const Color white      = Color(0xFFFFFFFF);
+
 }
 
 Color playerColor(String name) {

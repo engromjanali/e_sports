@@ -179,7 +179,7 @@ class _RewardsScreenState extends State<RewardsScreen> with TickerProviderStateM
               ),
               alignment: Alignment.center,
               child: const Text("2",
-                  style: TextStyle(color: Colors.white, fontSize: 8, fontWeight: FontWeight.w800)),
+                  style: TextStyle(color: AppColors.white, fontSize: 8, fontWeight: FontWeight.w800)),
             ),
           ),
         ]),
@@ -391,12 +391,12 @@ class _EarnHeroBanner extends StatelessWidget {
                       color: AppColors.neonGold, letterSpacing: 2.5)),
               const SizedBox(height: 7),
               const Text("Watch Ads,",
-                  style: TextStyle(fontSize: 26, fontWeight: FontWeight.w900, color: Colors.white, height: 1.15)),
+                  style: TextStyle(fontSize: 26, fontWeight: FontWeight.w900, color: AppColors.white, height: 1.15)),
               const Text("Earn Points!",
                   style: TextStyle(fontSize: 26, fontWeight: FontWeight.w900, color: AppColors.neonGold, height: 1.2)),
               const SizedBox(height: 9),
               Text("Complete tasks to earn points. Spend them entering tournaments.",
-                  style: TextStyle(fontSize: 11, color: Colors.white.withOpacity(0.55), height: 1.7),
+                  style: TextStyle(fontSize: 11, color: AppColors.white.withOpacity(0.55), height: 1.7),
                   maxLines: 2),
             ])),
             Column(children: [
@@ -431,7 +431,7 @@ class _EarnHeroBanner extends StatelessWidget {
               decoration: BoxDecoration(
                 gradient: watching ? null : const LinearGradient(
                     colors: [AppColors.neonGold, Color(0xFFF59E0B)]),
-                color: watching ? Colors.white.withOpacity(0.1) : null,
+                color: watching ? AppColors.white.withOpacity(0.1) : null,
                 borderRadius: BorderRadius.circular(16),
                 boxShadow: watching ? [] : [
                   BoxShadow(color: AppColors.neonGold.withOpacity(0.4), blurRadius: 16, offset: const Offset(0, 4)),
@@ -441,7 +441,7 @@ class _EarnHeroBanner extends StatelessWidget {
               child: Text(
                   watching ? "⏳  Watching... ${timer}s" : "▶  WATCH AD  —  +1 COIN",
                   style: TextStyle(
-                    color: watching ? Colors.white.withOpacity(0.4) : Colors.black,
+                    color: watching ? AppColors.white.withOpacity(0.4) : Colors.black,
                     fontSize: 14, fontWeight: FontWeight.w900,
                   )),
             ),
@@ -451,7 +451,7 @@ class _EarnHeroBanner extends StatelessWidget {
           // Weekly ad progress
           Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
             Text("📆 Weekly Ad Goal",
-                style: TextStyle(fontSize: 10, color: Colors.white.withOpacity(0.6), fontWeight: FontWeight.w600)),
+                style: TextStyle(fontSize: 10, color: AppColors.white.withOpacity(0.6), fontWeight: FontWeight.w600)),
             Text("${ads.clamp(0,100)}/100 ads",
                 style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w800, color: AppColors.neonGold)),
           ]),
@@ -459,7 +459,7 @@ class _EarnHeroBanner extends StatelessWidget {
           NeonProgressBarWidget(value: ads.toDouble(), max: 100, color: AppColors.neonGold, height: 8),
           const SizedBox(height: 3),
           Text("Complete 100 ads this week → earn +100 bonus coins",
-              style: TextStyle(fontSize: 9, color: Colors.white.withOpacity(0.4))),
+              style: TextStyle(fontSize: 9, color: AppColors.white.withOpacity(0.4))),
         ]),
       ]),
     );
@@ -645,7 +645,7 @@ class TournamentTabWidget extends StatelessWidget {
                   ),
                   Text(t.name,
                       style: TextStyle(fontSize: 11, fontWeight: FontWeight.w700,
-                          color: active ? Colors.white : AppColors.textSecondary)),
+                          color: active ? AppColors.white : AppColors.textSecondary)),
                 ]),
               ),
             );
@@ -770,13 +770,13 @@ class _TournamentHeroCard extends StatelessWidget {
         ]),
         const SizedBox(height: 12),
         Text(trn.name,
-            style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w900, color: Colors.white)),
+            style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w900, color: AppColors.white)),
         const SizedBox(height: 4),
         Text("🏅  ${trn.prize}",
             style: const TextStyle(fontSize: 13, color: AppColors.neonGold, fontWeight: FontWeight.w700)),
         const SizedBox(height: 4),
         Text("🏟️  ${trn.sponsor}",
-            style: TextStyle(fontSize: 11, color: Colors.white.withOpacity(0.55))),
+            style: TextStyle(fontSize: 11, color: AppColors.white.withOpacity(0.55))),
         const SizedBox(height: 12),
 
         // Info grid
@@ -794,7 +794,7 @@ class _TournamentHeroCard extends StatelessWidget {
         // Slots progress
         Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
           Text("👥  Slots Filled",
-              style: TextStyle(fontSize: 10, color: Colors.white.withOpacity(0.55))),
+              style: TextStyle(fontSize: 10, color: AppColors.white.withOpacity(0.55))),
           Text("${trn.filled} / ${trn.slots}",
               style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w800, color: AppColors.neonGold)),
         ]),
@@ -1075,15 +1075,15 @@ class _ShopTab extends StatelessWidget {
                         color: AppColors.neonPurple, letterSpacing: 2)),
                 const SizedBox(height: 6),
                 const Text("Spend Points,",
-                    style: TextStyle(fontSize: 22, fontWeight: FontWeight.w900, color: Colors.white)),
+                    style: TextStyle(fontSize: 22, fontWeight: FontWeight.w900, color: AppColors.white)),
                 const Text("Look Elite! 🛒",
                     style: TextStyle(fontSize: 22, fontWeight: FontWeight.w900, color: AppColors.neonGold)),
                 const SizedBox(height: 5),
                 Text("Cosmetics only · Points are earned, never sold",
-                    style: TextStyle(fontSize: 10, color: Colors.white.withOpacity(0.4))),
+                    style: TextStyle(fontSize: 10, color: AppColors.white.withOpacity(0.4))),
               ]),
               Column(crossAxisAlignment: CrossAxisAlignment.end, children: [
-                Text("BALANCE", style: TextStyle(fontSize: 9, color: Colors.white.withOpacity(0.4))),
+                Text("BALANCE", style: TextStyle(fontSize: 9, color: AppColors.white.withOpacity(0.4))),
                 const SizedBox(height: 4),
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
@@ -1148,7 +1148,7 @@ class _ShopTab extends StatelessWidget {
                             borderRadius: BorderRadius.circular(6),
                           ),
                           child: const Text("✓",
-                              style: TextStyle(fontSize: 7, fontWeight: FontWeight.w900, color: Colors.white)),
+                              style: TextStyle(fontSize: 7, fontWeight: FontWeight.w900, color: AppColors.white)),
                         ),
                       ),
                       Column(mainAxisAlignment: MainAxisAlignment.center, children: [
@@ -1269,7 +1269,7 @@ class _ShopItemDetail extends StatelessWidget {
               ),
               alignment: Alignment.center,
               child: Text("Buy Now  —  🪙 ${item.cost} Points",
-                  style: const TextStyle(color: Colors.white, fontSize: 14, fontWeight: FontWeight.w900)),
+                  style: const TextStyle(color: AppColors.white, fontSize: 14, fontWeight: FontWeight.w900)),
             ),
           )
         else
@@ -1395,14 +1395,14 @@ class _ChatTab extends StatelessWidget {
                         Text(m.text,
                             style: TextStyle(
                               fontSize: 12,
-                              color: m.me ? Colors.white : AppColors.textPrimary,
+                              color: m.me ? AppColors.white : AppColors.textPrimary,
                               height: 1.55,
                             )),
                         const SizedBox(height: 4),
                         Text("${m.time} ago",
                             style: TextStyle(
                               fontSize: 9,
-                              color: m.me ? Colors.white.withOpacity(0.4) : AppColors.textMuted,
+                              color: m.me ? AppColors.white.withOpacity(0.4) : AppColors.textMuted,
                             )),
                       ]),
                     ),
@@ -1446,7 +1446,7 @@ class _ChatTab extends StatelessWidget {
                   boxShadow: [BoxShadow(color: AppColors.neonCyan.withOpacity(0.4), blurRadius: 10)],
                 ),
                 alignment: Alignment.center,
-                child: const Icon(Icons.send_rounded, color: Colors.white, size: 18),
+                child: const Icon(Icons.send_rounded, color: AppColors.white, size: 18),
               ),
             ),
           ]),

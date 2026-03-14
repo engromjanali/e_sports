@@ -1,3 +1,4 @@
+import 'package:e_sports/core/constants/app_colors.dart';
 import 'package:e_sports/core/data/app_data.dart';
 import 'package:flutter/material.dart';
 
@@ -205,7 +206,7 @@ class SpotlightCardWidget extends StatelessWidget {
                         style: const TextStyle(
                           fontSize: 14,
                           fontWeight: FontWeight.w900,
-                          color: Colors.white,
+                          color: AppColors.white,
                           height: 1.2,
                         ),
                       ),
@@ -214,7 +215,7 @@ class SpotlightCardWidget extends StatelessWidget {
                         "${player.matches} matches",
                         style: TextStyle(
                           fontSize: 12,
-                          color: Colors.white.withOpacity(0.45),
+                          color: AppColors.white.withOpacity(0.45),
                           letterSpacing: 0.4,
                         ),
                       ),
@@ -282,7 +283,7 @@ class _StatRow extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.fromLTRB(9, 7, 9, 7),
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.04),
+        color: AppColors.white.withOpacity(0.04),
         borderRadius: BorderRadius.circular(10),
         border: Border.all(
             color: accentColor.withOpacity(0.18), width: 1),
@@ -299,7 +300,7 @@ class _StatRow extends StatelessWidget {
                   fontSize: 7,
                   fontWeight: FontWeight.w800,
                   letterSpacing: 1.3,
-                  color: Colors.white.withOpacity(0.45),
+                  color: AppColors.white.withOpacity(0.45),
                 ),
               ),
               Text(
@@ -322,7 +323,7 @@ class _StatRow extends StatelessWidget {
                 // Track
                 Container(
                   height: 3,
-                  color: Colors.white.withOpacity(0.08),
+                  color: AppColors.white.withOpacity(0.08),
                 ),
                 // Fill
                 FractionallySizedBox(

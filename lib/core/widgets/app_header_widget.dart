@@ -75,7 +75,7 @@ class AppHeader extends StatelessWidget {
             ),
             alignment: Alignment.center,
             child: Text("$badge",
-                style: const TextStyle(color: Colors.white, fontSize: 8, fontWeight: FontWeight.w800)),
+                style: const TextStyle(color: AppColors.white, fontSize: 8, fontWeight: FontWeight.w800)),
           ),
         ),
       ],

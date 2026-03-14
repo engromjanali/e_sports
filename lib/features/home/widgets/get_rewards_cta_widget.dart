@@ -34,7 +34,7 @@ class GetRewardsCta extends StatelessWidget {
                 style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.w900,
-                    color: Colors.white)),
+                    color: AppColors.white)),
             const SizedBox(height: 10),
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 8),
@@ -48,7 +48,7 @@ class GetRewardsCta extends StatelessWidget {
               ),
               child: const Text("Claim Now →",
                   style: TextStyle(
-                      color: Colors.white,
+                      color: AppColors.white,
                       fontSize: 12,
                       fontWeight: FontWeight.w700)),
             ),
