@@ -1,66 +1,9 @@
-import 'package:e_sports/core/constants/app_colors.dart';
 import 'package:e_sports/core/data/app_data.dart';
-import 'package:e_sports/core/widgets/glass_card_widget.dart';
 import 'package:flutter/material.dart';
 
-// class Scorer3ListWidget extends StatelessWidget {
-//   final List<PlayerModel> players;
-//   const Scorer3ListWidget({required this.players});
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     final medals = ["🥇", "🥈", "🥉"];
-//     final colors = [AppColors.gold, AppColors.silver, AppColors.bronze];
-//
-//     return GlassCardWidget(
-//       padding: const EdgeInsets.all(12),
-//       child: Column(children: List.generate(players.length, (i) {
-//         final p = players[i];
-//         final c = playerColor(p.name);
-//         return Container(
-//           padding: const EdgeInsets.symmetric(vertical: 9, horizontal: 8),
-//           margin: const EdgeInsets.only(bottom: 6),
-//           decoration: BoxDecoration(
-//             borderRadius: BorderRadius.circular(10),
-//             gradient: i == 0 ? LinearGradient(
-//               colors: [AppColors.neonGold.withOpacity(0.08), Colors.transparent],
-//             ) : null,
-//           ),
-//           child: Row(children: [
-//             Text(medals[i], style: const TextStyle(fontSize: 18)),
-//             const SizedBox(width: 8),
-//             Container(
-//               width: 34, height: 34,
-//               decoration: BoxDecoration(
-//                 borderRadius: BorderRadius.circular(10),
-//                 gradient: LinearGradient(colors: [c, c.withOpacity(0.6)]),
-//               ),
-//               alignment: Alignment.center,
-//               child: Text(p.name[0],
-//                   style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w800, color: Colors.white)),
-//             ),
-//             const SizedBox(width: 8),
-//             Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-//               Text(p.name, style: const TextStyle(
-//                   fontSize: 11, fontWeight: FontWeight.w800, color: AppColors.textPrimary)),
-//               Text("${p.matches}PL · ${p.wins}W",
-//                   style: const TextStyle(fontSize: 9, color: AppColors.textMuted)),
-//             ])),
-//             Column(crossAxisAlignment: CrossAxisAlignment.end, children: [
-//               Text("${p.goals}", style: TextStyle(
-//                   fontSize: 16, fontWeight: FontWeight.w900, color: colors[i])),
-//               const Text("goals", style: TextStyle(fontSize: 7, color: AppColors.textMuted)),
-//             ]),
-//           ]),
-//         );
-//       })),
-//     );
-//   }
-// }
-
-class Scorer3ListWidget extends StatelessWidget {
+class TopThreeScorersWidget extends StatelessWidget {
   final List<PlayerModel> players;
-  const Scorer3ListWidget({required this.players});
+  const TopThreeScorersWidget({super.key, required this.players});
 
   @override
   Widget build(BuildContext context) {

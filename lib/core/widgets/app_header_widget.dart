@@ -1,7 +1,6 @@
 import 'package:e_sports/core/constants/app_colors.dart';
 import 'package:e_sports/core/data/app_data.dart';
 import 'package:e_sports/core/widgets/player_avater.dart';
-import 'package:e_sports/main.dart';
 import 'package:flutter/material.dart';
 
 class AppHeader extends StatelessWidget {

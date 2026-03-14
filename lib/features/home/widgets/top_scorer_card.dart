@@ -1,7 +1,7 @@
 import 'package:e_sports/core/constants/app_colors.dart';
 import 'package:e_sports/core/data/app_data.dart';
-import 'package:e_sports/features/home/screens/home_screen.dart';
 import 'package:e_sports/features/home/widgets/diagonal_slash_printer_widget.dart';
+import 'package:e_sports/features/home/widgets/stat_chip_widget.dart';
 import 'package:flutter/material.dart';
 
 class TopScorerCard extends StatelessWidget {

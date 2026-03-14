@@ -3,14 +3,14 @@ import 'dart:ui';
 import 'package:e_sports/core/constants/app_colors.dart';
 import 'package:e_sports/core/data/app_data.dart';
 import 'package:e_sports/core/widgets/app_header_widget.dart';
-import 'package:e_sports/core/widgets/brand_title.dart';
 import 'package:e_sports/core/widgets/glass_card_widget.dart';
 import 'package:e_sports/core/widgets/neon_pill_widget.dart';
 import 'package:e_sports/core/widgets/neon_pregress_bar_widget.dart';
 import 'package:e_sports/core/widgets/player_avater.dart';
 import 'package:e_sports/core/widgets/section_heading_widget.dart';
-import 'package:e_sports/main.dart';
+import 'package:e_sports/features/rewards/widgets/tournament_tab_widget.dart';
 import 'package:flutter/material.dart';
+
 
 class RewardsScreen extends StatefulWidget {
   const RewardsScreen({super.key});
