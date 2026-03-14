@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "270104643692",
+    "project_id": "e-ports-d00e1",
+    "storage_bucket": "e-ports-d00e1.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:270104643692:android:41b2c58a9f95b5a675f049",
+        "android_client_info": {
+          "package_name": "com.example.e_sports"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDdmhJG4DPrbTL6DIusva6RCtOnDsxWTRM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
