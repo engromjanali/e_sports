@@ -1,10 +1,10 @@
-import 'dart:ui';
 import 'package:e_sports/core/constants/app_colors.dart';
 import 'package:e_sports/features/dashboard/screens/dashboard_screen.dart';
 import 'package:e_sports/firebase_options.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:get/get_navigation/src/root/get_material_app.dart';
 
 void main() async{
 
@@ -30,7 +30,7 @@ class GameArenaApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return GetMaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         brightness: Brightness.dark,

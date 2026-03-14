@@ -1,5 +1,7 @@
 import 'package:e_sports/core/constants/app_colors.dart';
+import 'package:e_sports/core/utils/dimensions.dart';
 import 'package:e_sports/core/data/app_data.dart';
+import 'package:e_sports/core/utils/styles.dart';
 import 'package:e_sports/core/widgets/glow_circle_widget.dart';
 import 'package:e_sports/features/home/widgets/ring_widget.dart';
 import 'package:flutter/material.dart';
@@ -46,8 +48,13 @@ class NewsBannerWidget extends StatelessWidget {
               if (n.hot) Container(
                 padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 3),
                 decoration: BoxDecoration(color: AppColors.neonRed, borderRadius: BorderRadius.circular(20)),
-                child: const Text("🔥 BREAKING",
-                    style: TextStyle(color: Colors.white, fontSize: 9, fontWeight: FontWeight.w800)),
+                child: Text(
+                  "🔥 BREAKING",
+                  style: robotoBold.copyWith(color: Colors.white, 
+                  // fontSize: MediaQuery.of(context).size.width >700 ? 30 : 10,
+                  fontSize: Dimensions.fontSizeExtraSmall
+                   )
+                ), 
               ),
               if (n.hot) const SizedBox(width: 6),
               Container(

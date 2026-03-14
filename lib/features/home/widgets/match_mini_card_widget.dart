@@ -2,6 +2,7 @@ import 'package:e_sports/core/constants/app_colors.dart';
 import 'package:e_sports/core/data/app_data.dart';
 import 'package:e_sports/core/widgets/glass_card_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class MatchMiniCard extends StatelessWidget {
   final MatchModel match;
