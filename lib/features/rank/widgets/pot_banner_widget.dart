@@ -1,7 +1,6 @@
 import 'package:e_sports/core/utils/dimensions.dart';
 import 'package:e_sports/core/constants/app_colors.dart';
 import 'package:e_sports/core/data/app_data.dart';
-import 'package:e_sports/main.dart';
 import 'package:flutter/material.dart';
 
 class PotBannerWidget extends StatelessWidget {
@@ -20,7 +19,6 @@ class PotBannerWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     const gold      = Color(0xFFFFD700);
-    const goldDark  = Color(0xFFB8860B);
     const goldDeep  = Color(0xFF3D2400);
     const goldLight = Color(0xFFFFF4C2);
     const bgDark    = Color(0xFF1A0F00);
@@ -272,7 +270,6 @@ class StatMiniWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     const gold      = Color(0xFFFFD700);
-    const goldDeep  = Color(0xFF3D2400);
 
     return Expanded(
       child: Container(

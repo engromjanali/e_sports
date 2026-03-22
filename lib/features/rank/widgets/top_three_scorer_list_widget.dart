@@ -17,7 +17,6 @@ class TopThreeScorersWidget extends StatelessWidget {
     const bgDark    = Color(0xFF1A0F00);
 
     const rankLabels = ["1ST", "2ND", "3RD"];
-    const rankEmoji  = ["🥇", "🥈", "🥉"];
     const medalColors = [gold, Color(0xFFB8B8B8), Color(0xFFCD7F32)];
 
     final demoImages = [

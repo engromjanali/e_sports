@@ -3,14 +3,11 @@ import 'package:e_sports/core/constants/app_colors.dart';
 import 'package:e_sports/core/data/app_data.dart';
 import 'package:e_sports/core/widgets/app_header_widget.dart';
 import 'package:e_sports/features/rank/widgets/full_score_widget.dart';
-import 'package:e_sports/core/widgets/neon_pill_widget.dart';
-import 'package:e_sports/core/widgets/player_avater.dart';
 import 'package:e_sports/features/rank/widgets/pot_banner_widget.dart';
 import 'package:e_sports/features/rank/widgets/top_three_scorer_list_widget.dart';
 import 'package:e_sports/core/widgets/section_heading_widget.dart';
 import 'package:e_sports/features/rank/widgets/full_ranking_list_widget.dart';
 import 'package:flutter/material.dart';
-
 
 class LeaderboardScreen extends StatefulWidget {
   const LeaderboardScreen({super.key});

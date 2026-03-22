@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'package:e_sports/core/constants/app_colors.dart';
 import 'package:e_sports/core/data/app_data.dart';
-import 'package:e_sports/core/widgets/quick_nav_item_widget.dart';
 import 'package:e_sports/features/home/screens/home_screen.dart';
 import 'package:e_sports/features/matches/screens/matches_screen.dart';
 import 'package:e_sports/features/profile/screens/profile_screen.dart';

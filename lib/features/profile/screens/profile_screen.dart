@@ -3,7 +3,6 @@ import 'package:e_sports/core/constants/app_colors.dart';
 import 'package:e_sports/core/data/app_data.dart';
 import 'package:e_sports/core/widgets/app_header_widget.dart';
 import 'package:e_sports/core/widgets/glass_card_widget.dart';
-import 'package:e_sports/core/widgets/neon_pill_widget.dart';
 import 'package:e_sports/core/widgets/neon_pregress_bar_widget.dart';
 import 'package:e_sports/core/widgets/player_avater.dart';
 import 'package:e_sports/core/widgets/section_heading_widget.dart';
@@ -23,64 +22,6 @@ class ProfileScreen extends StatelessWidget {
       Expanded(child: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
         child: Column(children: [
-
-          // ── Hero card ────────────────────────────────────────────────
-          // Container(
-          //   padding: const EdgeInsets.all(20),
-          //   decoration: BoxDecoration(
-          //     gradient: const LinearGradient(
-          //       begin: Alignment.topLeft, end: Alignment.bottomRight,
-          //       colors: [Color(0xFF0D1B4E), Color(0xFF1B4FD8), Color(0xFF1440B8)],
-          //     ),
-          //     borderRadius: BorderRadius.circular(22),
-          //     boxShadow: [BoxShadow(color: AppColors.neonBlue.withOpacity(0.25), blurRadius: 20)],
-          //   ),
-          //   child: Column(children: [
-          //     Row(children: [
-          //       Stack(clipBehavior: Clip.none, children: [
-          //         PlayerAvatarWidget(name: p.name, size: 70, borderColor: AppColors.neonGold),
-          //         Positioned(top: -10, right: -8,
-          //           child: Container(
-          //             padding: const EdgeInsets.all(5),
-          //             decoration: BoxDecoration(
-          //               color: AppColors.neonGold,
-          //               shape: BoxShape.circle,
-          //               boxShadow: [BoxShadow(color: AppColors.neonGold.withOpacity(0.5), blurRadius: 8)],
-          //             ),
-          //             child: const Text("👑", style: TextStyle(fontSize: 12)),
-          //           ),
-          //         ),
-          //       ]),
-          //       const SizedBox(width: 16),
-          //       Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          //         Text(p.name, style: const TextStyle(
-          //             fontSize: 18, fontWeight: FontWeight.w900, color: AppColors.white)),
-          //         Text("@${p.short.toLowerCase()}",
-          //             style: TextStyle(fontSize: 11, color: AppColors.white.withOpacity(0.5))),
-          //         const SizedBox(height: 8),
-          //         Row(children: [
-          //           NeonPillWidget(label: "RANK #1", color: AppColors.neonGold),
-          //           const SizedBox(width: 6),
-          //           NeonPillWidget(label: "VIP", color: AppColors.neonCyan),
-          //         ]),
-          //       ])),
-          //     ]),
-          //     const SizedBox(height: 16),
-          //     Row(children: [
-          //       for (final stat in [
-          //         ("${p.pts}", "POINTS"),
-          //         ("${p.goals}", "GOALS"),
-          //         ("${p.wins}", "WINS"),
-          //         ("${p.matches}", "MATCHES"),
-          //       ]) Expanded(child: Column(children: [
-          //         Text(stat.$1, style: const TextStyle(
-          //             fontSize: 20, fontWeight: FontWeight.w900, color: AppColors.neonGold)),
-          //         Text(stat.$2,
-          //             style: TextStyle(fontSize: 8, color: AppColors.white.withOpacity(0.4), letterSpacing: 1)),
-          //       ])),
-          //     ]),
-          //   ]),
-          // ),
 
           Container(
             padding: const EdgeInsets.all(20),
