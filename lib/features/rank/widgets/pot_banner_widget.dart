@@ -1,3 +1,4 @@
+import 'package:e_sports/core/utils/dimensions.dart';
 import 'package:e_sports/core/constants/app_colors.dart';
 import 'package:e_sports/core/data/app_data.dart';
 import 'package:e_sports/main.dart';
@@ -28,7 +29,7 @@ class PotBannerWidget extends StatelessWidget {
 
     return Container(
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(Dimensions.radiusExtraLarge),
         gradient: const LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
@@ -44,7 +45,7 @@ class PotBannerWidget extends StatelessWidget {
         ],
       ),
       child: ClipRRect(
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(Dimensions.radiusExtraLarge),
         child: Stack(
           children: [
             // ── Shimmer top bar ────────────────────────────────────────────
@@ -167,7 +168,7 @@ class PotBannerWidget extends StatelessWidget {
                                   horizontal: 7, vertical: 3),
                               decoration: BoxDecoration(
                                 color: gold.withOpacity(0.10),
-                                borderRadius: BorderRadius.circular(5),
+                                borderRadius: BorderRadius.circular(Dimensions.radiusSmall),
                                 border: Border.all(
                                   color: gold.withOpacity(0.35),
                                   width: 1,
@@ -278,7 +279,7 @@ class StatMiniWidget extends StatelessWidget {
         padding: const EdgeInsets.symmetric(vertical: 8),
         decoration: BoxDecoration(
           color: gold.withOpacity(0.07),
-          borderRadius: BorderRadius.circular(10),
+          borderRadius: BorderRadius.circular(Dimensions.radiusDefault),
           border: Border.all(
             color: gold.withOpacity(0.20),
             width: 1,

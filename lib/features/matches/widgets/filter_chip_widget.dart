@@ -1,3 +1,4 @@
+import 'package:e_sports/core/utils/dimensions.dart';
 import 'package:e_sports/core/constants/app_colors.dart';
 import 'package:flutter/material.dart';
 
@@ -13,7 +14,7 @@ class FilterChipWidget extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       decoration: BoxDecoration(
         color: active ? color.withOpacity(0.15) : Colors.transparent,
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(Dimensions.radiusExtraLarge),
         border: Border.all(color: active ? color : AppColors.glassBorder),
         boxShadow: active ? [BoxShadow(color: color.withOpacity(0.2), blurRadius: 8)] : [],
       ),

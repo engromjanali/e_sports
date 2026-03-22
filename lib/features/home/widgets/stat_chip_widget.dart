@@ -1,3 +1,4 @@
+import 'package:e_sports/core/utils/dimensions.dart';
 import 'package:e_sports/core/constants/app_colors.dart';
 import 'package:flutter/material.dart';
 
@@ -22,7 +23,7 @@ class StatChipWidget extends StatelessWidget {
           color: highlight
               ? AppColors.neonGold.withOpacity(0.15)
               : AppColors.white.withOpacity(0.07),
-          borderRadius: BorderRadius.circular(8),
+          borderRadius: BorderRadius.circular(Dimensions.radiusMedium),
           border: Border.all(
             color: highlight
                 ? AppColors.neonGold.withOpacity(0.35)

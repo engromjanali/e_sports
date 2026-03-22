@@ -1,3 +1,4 @@
+import 'package:e_sports/core/utils/dimensions.dart';
 import 'package:e_sports/core/constants/app_colors.dart';
 import 'package:e_sports/core/data/app_data.dart';
 import 'package:flutter/material.dart';
@@ -284,7 +285,7 @@ class _StatRow extends StatelessWidget {
       padding: const EdgeInsets.fromLTRB(9, 7, 9, 7),
       decoration: BoxDecoration(
         color: AppColors.white.withOpacity(0.04),
-        borderRadius: BorderRadius.circular(10),
+        borderRadius: BorderRadius.circular(Dimensions.radiusDefault),
         border: Border.all(
             color: accentColor.withOpacity(0.18), width: 1),
       ),

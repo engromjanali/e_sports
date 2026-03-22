@@ -47,7 +47,7 @@ class NewsBannerWidget extends StatelessWidget {
             Row(children: [
               if (n.hot) Container(
                 padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 3),
-                decoration: BoxDecoration(color: AppColors.neonRed, borderRadius: BorderRadius.circular(20)),
+                decoration: BoxDecoration(color: AppColors.neonRed, borderRadius: BorderRadius.circular(Dimensions.radiusExtraLarge)),
                 child: Text(
                   "🔥 BREAKING",
                   style: robotoBold.copyWith(color: AppColors.white, fontSize: Dimensions.fontSizeExtraSmall)
@@ -58,7 +58,7 @@ class NewsBannerWidget extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 5),
                 decoration: BoxDecoration(
                   color: AppColors.white.withOpacity(0.14),
-                  borderRadius: BorderRadius.circular(20),
+                  borderRadius: BorderRadius.circular(Dimensions.radiusExtraLarge),
                 ),
                 child: const Text("Read More →",
                     style: TextStyle(color: AppColors.white, fontSize: 11, fontWeight: FontWeight.w700)),

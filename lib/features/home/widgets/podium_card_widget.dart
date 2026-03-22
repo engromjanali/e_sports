@@ -1,3 +1,4 @@
+import 'package:e_sports/core/utils/dimensions.dart';
 import 'package:e_sports/core/constants/app_colors.dart';
 import 'package:e_sports/core/data/app_data.dart';
 import 'package:e_sports/core/widgets/glass_card_widget.dart';
@@ -144,7 +145,7 @@ class _RankBox extends StatelessWidget {
             ],
           ),
           child: ClipRRect(
-            borderRadius: BorderRadius.circular(15),
+            borderRadius: BorderRadius.circular(Dimensions.radiusLarge),
             child: Stack(
               children: [
                 Positioned(
@@ -194,7 +195,7 @@ class _RankBox extends StatelessWidget {
                       padding: const EdgeInsets.symmetric(vertical: 6),
                       decoration: BoxDecoration(
                         color: gradientColors[1].withOpacity(0.12),
-                        borderRadius: BorderRadius.circular(10),
+                        borderRadius: BorderRadius.circular(Dimensions.radiusDefault),
                         border: Border.all(
                           color: gradientColors[1].withOpacity(0.35), width: 1,
                         ),

@@ -1,3 +1,4 @@
+import 'package:e_sports/core/utils/dimensions.dart';
 import 'package:e_sports/core/constants/app_colors.dart';
 import 'package:flutter/material.dart';
 
@@ -32,7 +33,7 @@ class SectionHeadingWidget extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                 decoration: BoxDecoration(
                   color: AppColors.neonBlue.withOpacity(0.1),
-                  borderRadius: BorderRadius.circular(20),
+                  borderRadius: BorderRadius.circular(Dimensions.radiusExtraLarge),
                   border: Border.all(color: AppColors.neonBlue.withOpacity(0.25)),
                 ),
                 child: const Text("View All →",

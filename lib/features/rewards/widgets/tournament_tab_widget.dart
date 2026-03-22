@@ -1,5 +1,6 @@
 import 'package:e_sports/core/constants/app_colors.dart';
 import 'package:e_sports/core/data/app_data.dart';
+import 'package:e_sports/core/utils/dimensions.dart';
 import 'package:e_sports/core/widgets/glass_card_widget.dart';
 import 'package:e_sports/core/widgets/neon_pill_widget.dart';
 import 'package:e_sports/core/widgets/neon_pregress_bar_widget.dart';
@@ -58,7 +59,7 @@ class TournamentTabWidget extends StatelessWidget {
                           colors: [Color(0xFF1B4FD8), Color(0xFF0D1B4E)])
                           : null,
                       color: active ? null : AppColors.bgSurface,
-                      borderRadius: BorderRadius.circular(20),
+                      borderRadius: BorderRadius.circular(Dimensions.radiusExtraLarge),
                       border: Border.all(
                           color: active
                               ? AppColors.neonCyan.withOpacity(0.4)
@@ -207,7 +208,7 @@ class _TournamentHeroCard extends StatelessWidget {
           end: Alignment.bottomRight,
           colors: [Color(0xFF0D1B4E), Color(0xFF1B4FD8)],
         ),
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(Dimensions.radiusExtraLarge),
         border: Border.all(color: AppColors.neonGold.withOpacity(0.2)),
         boxShadow: [
           BoxShadow(color: AppColors.neonBlue.withOpacity(0.2), blurRadius: 20)
@@ -235,7 +236,7 @@ class _TournamentHeroCard extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
             decoration: BoxDecoration(
               color: statusColor.withOpacity(0.12),
-              borderRadius: BorderRadius.circular(20),
+              borderRadius: BorderRadius.circular(Dimensions.radiusExtraLarge),
               border: Border.all(color: statusColor.withOpacity(0.3)),
             ),
             child: Text(trn.status.toUpperCase(),
@@ -419,7 +420,7 @@ class _BracketSection extends StatelessWidget {
                       height: 36,
                       decoration: BoxDecoration(
                         color: AppColors.neonCyan.withOpacity(0.1),
-                        borderRadius: BorderRadius.circular(10),
+                        borderRadius: BorderRadius.circular(Dimensions.radiusDefault),
                         border: Border.all(
                             color: AppColors.neonCyan.withOpacity(0.2)),
                       ),
@@ -498,7 +499,7 @@ class _BracketSection extends StatelessWidget {
                                   horizontal: 10, vertical: 3),
                               decoration: BoxDecoration(
                                 color: AppColors.neonBlue.withOpacity(0.15),
-                                borderRadius: BorderRadius.circular(8),
+                                borderRadius: BorderRadius.circular(Dimensions.radiusMedium),
                                 border: Border.all(
                                     color: AppColors.neonBlue.withOpacity(0.3)),
                               ),

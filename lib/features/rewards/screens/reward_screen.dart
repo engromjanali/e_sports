@@ -1,14 +1,13 @@
 import 'dart:async';
-import 'dart:ui';
 import 'package:e_sports/core/constants/app_colors.dart';
 import 'package:e_sports/core/data/app_data.dart';
+import 'package:e_sports/core/utils/dimensions.dart';
 import 'package:e_sports/core/widgets/app_header_widget.dart';
 import 'package:e_sports/core/widgets/glass_card_widget.dart';
 import 'package:e_sports/core/widgets/neon_pill_widget.dart';
 import 'package:e_sports/core/widgets/neon_pregress_bar_widget.dart';
 import 'package:e_sports/core/widgets/player_avater.dart';
 import 'package:e_sports/core/widgets/section_heading_widget.dart';
-import 'package:e_sports/features/rewards/widgets/tournament_tab_widget.dart';
 import 'package:flutter/material.dart';
 
 
@@ -163,7 +162,7 @@ class _RewardsScreenState extends State<RewardsScreen> with TickerProviderStateM
             width: 34, height: 34,
             decoration: BoxDecoration(
               color: AppColors.bgSurface,
-              borderRadius: BorderRadius.circular(10),
+              borderRadius: BorderRadius.circular(Dimensions.radiusDefault),
               border: Border.all(color: AppColors.neonCyan.withOpacity(0.2)),
             ),
             alignment: Alignment.center,
@@ -486,7 +485,7 @@ class _TaskGroupHeader extends StatelessWidget {
     margin: const EdgeInsets.only(bottom: 8),
     decoration: BoxDecoration(
       color: color.withOpacity(0.08),
-      borderRadius: BorderRadius.circular(10),
+      borderRadius: BorderRadius.circular(Dimensions.radiusDefault),
       border: Border.all(color: color.withOpacity(0.2)),
     ),
     child: Row(children: [
@@ -525,7 +524,7 @@ class _TaskCard extends StatelessWidget {
               Container(
                 width: 36, height: 36,
                 decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10),
+                  borderRadius: BorderRadius.circular(Dimensions.radiusDefault),
                   color: barColor.withOpacity(0.1),
                   border: Border.all(color: barColor.withOpacity(0.2)),
                 ),
@@ -564,7 +563,7 @@ class _TaskCard extends StatelessWidget {
                   decoration: BoxDecoration(
                     color: done ? AppColors.neonGreen.withOpacity(0.1) :
                     watching ? AppColors.bgSurface : AppColors.neonCyan.withOpacity(0.1),
-                    borderRadius: BorderRadius.circular(10),
+                    borderRadius: BorderRadius.circular(Dimensions.radiusDefault),
                     border: Border.all(
                         color: done ? AppColors.neonGreen.withOpacity(0.3) :
                         watching ? AppColors.glassBorder : AppColors.neonCyan.withOpacity(0.3)),
@@ -632,7 +631,7 @@ class TournamentTabWidget extends StatelessWidget {
                   gradient: active ? const LinearGradient(
                       colors: [Color(0xFF1B4FD8), Color(0xFF0D1B4E)]) : null,
                   color: active ? null : AppColors.bgSurface,
-                  borderRadius: BorderRadius.circular(20),
+                  borderRadius: BorderRadius.circular(Dimensions.radiusExtraLarge),
                   border: Border.all(
                       color: active ? AppColors.neonCyan.withOpacity(0.4) : AppColors.glassBorder),
                   boxShadow: active ? [BoxShadow(color: AppColors.neonBlue.withOpacity(0.3), blurRadius: 12)] : [],
@@ -738,7 +737,7 @@ class _TournamentHeroCard extends StatelessWidget {
           begin: Alignment.topLeft, end: Alignment.bottomRight,
           colors: [Color(0xFF0D1B4E), Color(0xFF1B4FD8)],
         ),
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(Dimensions.radiusExtraLarge),
         border: Border.all(color: AppColors.neonGold.withOpacity(0.2)),
         boxShadow: [BoxShadow(color: AppColors.neonBlue.withOpacity(0.2), blurRadius: 20)],
       ),
@@ -761,7 +760,7 @@ class _TournamentHeroCard extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
             decoration: BoxDecoration(
               color: statusColor.withOpacity(0.12),
-              borderRadius: BorderRadius.circular(20),
+              borderRadius: BorderRadius.circular(Dimensions.radiusExtraLarge),
               border: Border.all(color: statusColor.withOpacity(0.3)),
             ),
             child: Text(trn.status.toUpperCase(),
@@ -904,7 +903,7 @@ class _BracketSection extends StatelessWidget {
                   width: 36, height: 36,
                   decoration: BoxDecoration(
                     color: AppColors.neonCyan.withOpacity(0.1),
-                    borderRadius: BorderRadius.circular(10),
+                    borderRadius: BorderRadius.circular(Dimensions.radiusDefault),
                     border: Border.all(color: AppColors.neonCyan.withOpacity(0.2)),
                   ),
                   alignment: Alignment.center,
@@ -963,7 +962,7 @@ class _BracketSection extends StatelessWidget {
                       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 3),
                       decoration: BoxDecoration(
                         color: AppColors.neonBlue.withOpacity(0.15),
-                        borderRadius: BorderRadius.circular(8),
+                        borderRadius: BorderRadius.circular(Dimensions.radiusMedium),
                         border: Border.all(color: AppColors.neonBlue.withOpacity(0.3)),
                       ),
                       child: const Text("VS",
@@ -1218,7 +1217,7 @@ class _ShopItemDetail extends StatelessWidget {
           Container(
             width: 52, height: 52,
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(15),
+              borderRadius: BorderRadius.circular(Dimensions.radiusLarge),
               color: item.accent.withOpacity(0.1),
               border: Border.all(color: item.accent.withOpacity(0.3), width: 2),
             ),
@@ -1365,7 +1364,7 @@ class _ChatTab extends StatelessWidget {
                     Container(
                       width: 28, height: 28,
                       decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(8),
+                        borderRadius: BorderRadius.circular(Dimensions.radiusMedium),
                         gradient: const LinearGradient(
                             colors: [AppColors.neonBlue, Color(0xFF2563EB)]),
                       ),

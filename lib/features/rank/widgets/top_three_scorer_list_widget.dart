@@ -28,7 +28,7 @@ class TopThreeScorersWidget extends StatelessWidget {
 
     return Container(
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(Dimensions.radiusExtraLarge),
         gradient: const LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
@@ -44,7 +44,7 @@ class TopThreeScorersWidget extends StatelessWidget {
         ],
       ),
       child: ClipRRect(
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(Dimensions.radiusExtraLarge),
         child: Stack(
           children: [
             // ── Shimmer top bar ──────────────────────────────────────────
@@ -196,7 +196,7 @@ class TopThreeScorersWidget extends StatelessWidget {
                               horizontal: 10, vertical: 6),
                           decoration: BoxDecoration(
                             color: accent.withOpacity(0.10),
-                            borderRadius: BorderRadius.circular(10),
+                            borderRadius: BorderRadius.circular(Dimensions.radiusDefault),
                             border: Border.all(
                               color: accent.withOpacity(0.30),
                               width: 1,

@@ -1,3 +1,4 @@
+import 'package:e_sports/core/utils/dimensions.dart';
 import 'package:e_sports/core/constants/app_colors.dart';
 import 'package:e_sports/core/data/app_data.dart';
 import 'package:e_sports/features/home/widgets/diagonal_slash_printer_widget.dart';
@@ -26,7 +27,7 @@ class TopScorerCard extends StatelessWidget {
     return Container(
       width: 160,
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(Dimensions.radiusExtraLarge),
         gradient: gradient,
         border: Border.all(color: AppColors.white.withOpacity(0.08), width: 1),
         boxShadow: [
@@ -43,7 +44,7 @@ class TopScorerCard extends StatelessWidget {
         ],
       ),
       child: ClipRRect(
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(Dimensions.radiusExtraLarge),
         child: Stack(
           children: [
             // ── Diagonal slash background ──────────────────────────────

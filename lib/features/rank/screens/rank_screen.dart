@@ -1,3 +1,4 @@
+import 'package:e_sports/core/utils/dimensions.dart';
 import 'package:e_sports/core/constants/app_colors.dart';
 import 'package:e_sports/core/data/app_data.dart';
 import 'package:e_sports/core/widgets/app_header_widget.dart';
@@ -45,7 +46,7 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> {
                     padding: const EdgeInsets.symmetric(vertical: 9),
                     decoration: BoxDecoration(
                       color: _type == t.$1 ? AppColors.bgCard : Colors.transparent,
-                      borderRadius: BorderRadius.circular(10),
+                      borderRadius: BorderRadius.circular(Dimensions.radiusDefault),
                       border: _type == t.$1 ? Border.all(color: AppColors.glassBorder) : null,
                       boxShadow: _type == t.$1 ? [BoxShadow(color: AppColors.neonGold.withOpacity(0.06), blurRadius: 8)] : [],
                     ),

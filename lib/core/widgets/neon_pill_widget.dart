@@ -1,4 +1,5 @@
 import 'package:e_sports/core/constants/app_colors.dart';
+import 'package:e_sports/core/utils/dimensions.dart';
 import 'package:flutter/material.dart';
 
 class NeonPillWidget extends StatelessWidget {
@@ -14,7 +15,7 @@ class NeonPillWidget extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
       decoration: BoxDecoration(
         color: color.withOpacity(0.12),
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(Dimensions.radiusExtraLarge),
         border: Border.all(color: color.withOpacity(0.3)),
       ),
       child: Text(

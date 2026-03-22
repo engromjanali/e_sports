@@ -1,3 +1,4 @@
+import 'package:e_sports/core/utils/dimensions.dart';
 import 'package:e_sports/core/constants/app_colors.dart';
 import 'package:flutter/material.dart';
 
@@ -13,7 +14,7 @@ class MyRankCard extends StatelessWidget {
     String wlabel = "300075";
     return Container(
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(Dimensions.radiusExtraLarge),
         gradient: const LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
@@ -29,7 +30,7 @@ class MyRankCard extends StatelessWidget {
         ],
       ),
       child: ClipRRect(
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(Dimensions.radiusExtraLarge),
         child: Stack(
           children: [
             // ── Shimmer top bar ──────────────────────────────────────────────
@@ -171,7 +172,7 @@ class MyRankCard extends StatelessWidget {
                                       horizontal: 8, vertical: 3),
                                   decoration: BoxDecoration(
                                     color: gold.withOpacity(0.10),
-                                    borderRadius: BorderRadius.circular(5),
+                                    borderRadius: BorderRadius.circular(Dimensions.radiusSmall),
                                     border: Border.all(
                                       color: gold.withOpacity(0.35),
                                       width: 1,
@@ -305,7 +306,7 @@ class _StatChip extends StatelessWidget {
         padding: const EdgeInsets.symmetric(vertical: 8),
         decoration: BoxDecoration(
           color: gold.withOpacity(0.07),
-          borderRadius: BorderRadius.circular(10),
+          borderRadius: BorderRadius.circular(Dimensions.radiusDefault),
           border: Border.all(
             color: gold.withOpacity(0.22),
             width: 1,

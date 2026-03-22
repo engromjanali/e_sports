@@ -1,3 +1,4 @@
+import 'package:e_sports/core/utils/dimensions.dart';
 import 'package:e_sports/core/constants/app_colors.dart';
 import 'package:flutter/material.dart';
 
@@ -40,7 +41,7 @@ class GetRewardsCta extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 8),
               decoration: BoxDecoration(
                 color: AppColors.neonPurple.withOpacity(0.8),
-                borderRadius: BorderRadius.circular(10),
+                borderRadius: BorderRadius.circular(Dimensions.radiusDefault),
                 boxShadow: [
                   BoxShadow(
                       color: AppColors.neonPurple.withOpacity(0.4), blurRadius: 12)

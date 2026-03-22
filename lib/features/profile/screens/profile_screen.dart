@@ -1,3 +1,4 @@
+import 'package:e_sports/core/utils/dimensions.dart';
 import 'package:e_sports/core/constants/app_colors.dart';
 import 'package:e_sports/core/data/app_data.dart';
 import 'package:e_sports/core/widgets/app_header_widget.dart';
@@ -293,7 +294,7 @@ class ProfileScreen extends StatelessWidget {
                   width: 32, height: 32,
                   decoration: BoxDecoration(
                     color: color.withOpacity(0.15),
-                    borderRadius: BorderRadius.circular(8),
+                    borderRadius: BorderRadius.circular(Dimensions.radiusMedium),
                     border: Border.all(color: color.withOpacity(0.4)),
                     boxShadow: [BoxShadow(color: color.withOpacity(0.1), blurRadius: 6)],
                   ),

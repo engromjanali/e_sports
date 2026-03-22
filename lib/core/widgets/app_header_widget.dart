@@ -1,3 +1,4 @@
+import 'package:e_sports/core/utils/dimensions.dart';
 import 'package:e_sports/core/constants/app_colors.dart';
 import 'package:e_sports/core/data/app_data.dart';
 import 'package:e_sports/core/widgets/player_avater.dart';
@@ -58,7 +59,7 @@ class AppHeader extends StatelessWidget {
           width: 34, height: 34,
           decoration: BoxDecoration(
             color: AppColors.bgSurface,
-            borderRadius: BorderRadius.circular(10),
+            borderRadius: BorderRadius.circular(Dimensions.radiusDefault),
             border: Border.all(color: AppColors.glassBorder),
           ),
           alignment: Alignment.center,

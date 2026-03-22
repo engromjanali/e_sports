@@ -1,3 +1,4 @@
+import 'package:e_sports/core/utils/dimensions.dart';
 import 'package:e_sports/core/constants/app_colors.dart';
 import 'package:e_sports/core/data/app_data.dart';
 import 'package:e_sports/core/widgets/glass_card_widget.dart';
@@ -35,7 +36,7 @@ class FullMatchCard extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 3),
             decoration: BoxDecoration(
               color: statusColor.withOpacity(0.12),
-              borderRadius: BorderRadius.circular(20),
+              borderRadius: BorderRadius.circular(Dimensions.radiusExtraLarge),
               border: Border.all(color: statusColor.withOpacity(0.3)),
             ),
             child: Row(mainAxisSize: MainAxisSize.min, children: [
@@ -103,7 +104,7 @@ class FullMatchCard extends StatelessWidget {
                   : match.resultType == "loss"
                   ? AppColors.neonRed.withOpacity(0.1)
                   : AppColors.neonGold.withOpacity(0.1),
-              borderRadius: BorderRadius.circular(10),
+              borderRadius: BorderRadius.circular(Dimensions.radiusDefault),
             ),
             child: Text(match.resultLabel!,
                 textAlign: TextAlign.center,
