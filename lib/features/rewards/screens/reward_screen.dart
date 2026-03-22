@@ -197,29 +197,31 @@ class _RewardsScreenState extends State<RewardsScreen> with TickerProviderStateM
         return Expanded(child: GestureDetector(
           onTap: () => _switchTab(i),
           behavior: HitTestBehavior.opaque,
-          child: Column(mainAxisSize: MainAxisSize.min, children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 9),
-              child: Column(children: [
-                Text(_tabs[i].icon, style: TextStyle(fontSize: active ? 17 : 16)),
-                const SizedBox(height: 3),
-                Text(_tabs[i].label, style: TextStyle(
-                  fontSize: 9,
-                  fontWeight: active ? FontWeight.w800 : FontWeight.w500,
-                  color: active ? AppColors.neonCyan : AppColors.textMuted,
-                )),
-              ]),
-            ),
-            AnimatedContainer(
-              duration: const Duration(milliseconds: 200),
-              height: 2.5,
-              width: active ? double.infinity : 0,
-              decoration: BoxDecoration(
-                color: AppColors.neonCyan,
-                boxShadow: active ? [BoxShadow(color: AppColors.neonCyan.withOpacity(0.6), blurRadius: 6)] : [],
+          child: LayoutBuilder(builder: (context, constraints) {
+            return Column(mainAxisSize: MainAxisSize.min, children: [
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 9),
+                child: Column(children: [
+                  Text(_tabs[i].icon, style: TextStyle(fontSize: active ? 17 : 16)),
+                  const SizedBox(height: 3),
+                  Text(_tabs[i].label, style: TextStyle(
+                    fontSize: 9,
+                    fontWeight: active ? FontWeight.w800 : FontWeight.w500,
+                    color: active ? AppColors.neonCyan : AppColors.textMuted,
+                  )),
+                ]),
               ),
-            ),
-          ]),
+              AnimatedContainer(
+                duration: const Duration(milliseconds: 200),
+                height: 2.5,
+                width: active ? constraints.maxWidth : 0,
+                decoration: BoxDecoration(
+                  color: AppColors.neonCyan,
+                  boxShadow: active ? [BoxShadow(color: AppColors.neonCyan.withOpacity(0.6), blurRadius: 6)] : [],
+                ),
+              ),
+            ]);
+          }),
         ));
       })),
     );
