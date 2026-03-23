@@ -297,7 +297,9 @@ class ProfileScreen extends StatelessWidget {
                 ("🧤", "Clean Sheets", p.cleansheets, 50),
               ]) Padding(
                 padding: const EdgeInsets.only(bottom: 12),
-                child: Column(children: [
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
                   Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
                     Row(children: [
                       Text(stat.$1, style: const TextStyle(fontSize: 14)),

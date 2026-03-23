@@ -25,6 +25,7 @@ class NeonProgressBarWidget extends StatelessWidget {
       builder: (context, v, _) {
         return Container(
           height: height,
+          width: double.infinity,
           decoration: BoxDecoration(
             color: AppColors.white.withOpacity(0.08),
             borderRadius: BorderRadius.circular(height),
