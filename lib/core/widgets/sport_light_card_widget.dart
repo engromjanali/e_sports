@@ -1,11 +1,11 @@
-import 'package:e_sports/core/utils/dimensions.dart';
-import 'package:e_sports/core/constants/app_colors.dart';
-import 'package:e_sports/core/data/app_data.dart';
+import 'package:e_sports/core/theme/app_theme.dart';
+import 'package:e_sports/core/data/models/computed_player_stats.dart';
+import 'package:e_sports/core/widgets/player_tags_widget.dart';
 import 'package:flutter/material.dart';
 
 
 class SpotlightCardWidget extends StatelessWidget {
-  final PlayerModel player;
+  final ComputedPlayerStats player;
   final String label;
   final String badge;
   final Gradient gradient;
@@ -19,129 +19,113 @@ class SpotlightCardWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Demo image fallback
     final imageUrl = "https://i.pravatar.cc/150?img=15";
-
-    // Gold accent consistent with PodiumCardTwo
-    const accentColor  = Color(0xFFFFD700);
-    const accentDark   = Color(0xFF3D2400);
-    const accentLight  = Color(0xFFFFF4C2);
 
     return Container(
       decoration: BoxDecoration(
         gradient: gradient,
-        borderRadius: BorderRadius.circular(18),
-        border: Border.all(color: accentColor.withOpacity(0.32), width: 1),
-        boxShadow: [
-          BoxShadow(
-            color: accentColor.withOpacity(0.14),
-            blurRadius: 18,
-            offset: const Offset(0, 6),
-          ),
-        ],
+        borderRadius: AppRadius.borderXl,
+        border: Border.all(
+          color: AppColors.neonGold.withOpacity(0.32),
+          width: AppSizing.borderThin,
+        ),
+        boxShadow: AppElevation.accentGlow(AppColors.neonGold, opacity: 0.14),
       ),
       child: ClipRRect(
-        borderRadius: BorderRadius.circular(18),
+        borderRadius: AppRadius.borderXl,
         child: Stack(
           children: [
-            // ── Shimmer top bar ──────────────────────────────────────────────
+            // ── Shimmer top bar
             Positioned(
               top: 0, left: 0, right: 0,
               child: Container(
-                height: 2,
-                decoration: const BoxDecoration(
-                  gradient: LinearGradient(colors: [
-                    Colors.transparent,
-                    accentLight,
-                    Colors.transparent,
-                  ]),
+                height: AppSizing.shimmerHeight,
+                decoration: BoxDecoration(
+                  gradient: AppColors.shimmerGradient(color: AppColors.goldLight),
                 ),
               ),
             ),
 
-            // ── Watermark label ──────────────────────────────────────────────
+            // ── Watermark label
             Positioned(
               right: 2, bottom: 0, top: 2,
               child: Text(
                 label.toUpperCase(),
                 style: TextStyle(
                   fontSize: 44,
-                  fontWeight: FontWeight.w900,
-                  color: accentColor.withOpacity(0.08),
-                  height: 1,
-                  letterSpacing: 2,
+                  fontWeight: AppTypography.black,
+                  color: AppColors.neonGold.withOpacity(AppColors.opacity8),
+                  height: AppTypography.lineHeightCompact,
+                  letterSpacing: AppTypography.trackingUltra,
                 ),
               ),
             ),
 
-            // ── Main content ─────────────────────────────────────────────────
+            // ── Main content
             Padding(
-              padding: const EdgeInsets.fromLTRB(13, 14, 13, 14),
+              padding: EdgeInsets.fromLTRB(
+                AppSpacing.cardInnerPadding - 1,
+                AppSpacing.cardInnerPadding,
+                AppSpacing.cardInnerPadding - 1,
+                AppSpacing.cardInnerPadding,
+              ),
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // ── Left: avatar + name + matches ──
+                  // ── Left: avatar + name + matches
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       // Label pill
                       Container(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 8, vertical: 3),
+                        padding: AppSpacing.pillPadding,
                         decoration: BoxDecoration(
-                          color: accentColor.withOpacity(0.12),
-                          borderRadius: BorderRadius.circular(6),
+                          color: AppColors.neonGold.withOpacity(AppColors.opacity12),
+                          borderRadius: AppRadius.borderSm,
                           border: Border.all(
-                              color: accentColor.withOpacity(0.35), width: 1),
+                            color: AppColors.neonGold.withOpacity(AppColors.opacity35),
+                            width: AppSizing.borderThin,
+                          ),
                         ),
                         child: Text(
                           label.toUpperCase(),
-                          style: TextStyle(
-                            fontSize: 7,
-                            fontWeight: FontWeight.w900,
-                            letterSpacing: 1.6,
-                            color: accentColor.withOpacity(0.9),
-                          ),
+                          style: AppTypography.pillLabel(context),
                         ),
                       ),
-                      const SizedBox(height: 12),
+                      SizedBox(height: AppSpacing.xl),
 
                       // Avatar with badge
                       Stack(
                         clipBehavior: Clip.none,
                         children: [
-                          // Outer glow ring
                           Container(
-                            width: 68,
-                            height: 68,
+                            width: AppSizing.avatarXxl,
+                            height: AppSizing.avatarXxl,
                             decoration: BoxDecoration(
                               shape: BoxShape.circle,
                               border: Border.all(
-                                  color: accentColor, width: 2.5),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: accentColor.withOpacity(0.45),
-                                  blurRadius: 14,
-                                  spreadRadius: 1,
-                                ),
-                              ],
+                                color: AppColors.neonGold,
+                                width: AppSizing.borderAvatar,
+                              ),
+                              boxShadow: AppElevation.ringGlow(AppColors.neonGold),
                             ),
                             child: ClipOval(
                               child: Image.network(
                                 imageUrl,
-                                width: 68,
-                                height: 68,
+                                width: AppSizing.avatarXxl,
+                                height: AppSizing.avatarXxl,
                                 fit: BoxFit.cover,
                                 loadingBuilder: (ctx, child, progress) {
                                   if (progress == null) return child;
                                   return Container(
-                                    color: accentDark.withOpacity(0.5),
+                                    color: AppColors.goldDeep.withOpacity(0.5),
                                     child: Center(
                                       child: SizedBox(
-                                        width: 20, height: 20,
+                                        width: AppSpacing.massive,
+                                        height: AppSpacing.massive,
                                         child: CircularProgressIndicator(
-                                          strokeWidth: 2,
-                                          color: accentColor,
+                                          strokeWidth: AppSizing.borderThick,
+                                          color: AppColors.neonGold,
                                           value: progress.expectedTotalBytes != null
                                               ? progress.cumulativeBytesLoaded /
                                               progress.expectedTotalBytes!
@@ -152,16 +136,16 @@ class SpotlightCardWidget extends StatelessWidget {
                                   );
                                 },
                                 errorBuilder: (_, __, ___) => Container(
-                                  color: accentDark.withOpacity(0.5),
+                                  color: AppColors.goldDeep.withOpacity(0.5),
                                   alignment: Alignment.center,
                                   child: Text(
                                     player.name.isNotEmpty
                                         ? player.name[0].toUpperCase()
                                         : "?",
-                                    style: const TextStyle(
-                                      fontSize: 24,
-                                      fontWeight: FontWeight.w900,
-                                      color: accentColor,
+                                    style: TextStyle(
+                                      fontSize: AppTypography.sizeDisplay - 2,
+                                      fontWeight: AppTypography.black,
+                                      color: AppColors.neonGold,
                                     ),
                                   ),
                                 ),
@@ -171,85 +155,84 @@ class SpotlightCardWidget extends StatelessWidget {
 
                           // Badge — corner ribbon style
                           Positioned(
-                            top: -2,
-                            right: -2,
+                            top: -2, right: -2,
                             child: ClipRRect(
-                              borderRadius: const BorderRadius.only(
-                                topRight: Radius.circular(10),
-                                bottomLeft: Radius.circular(6),
-                              ),
+                              borderRadius: AppRadius.ribbonTopRight,
                               child: Container(
-                                padding: const EdgeInsets.fromLTRB(5, 2, 5, 3),
-                                decoration: const BoxDecoration(
-                                  gradient: LinearGradient(
-                                    colors: [
-                                      Color(0xFFB8860B),
-                                      accentColor,
-                                    ],
-                                    begin: Alignment.topLeft,
-                                    end: Alignment.bottomRight,
-                                  ),
+                                padding: EdgeInsets.fromLTRB(
+                                  AppSpacing.sm, AppSpacing.xxs, AppSpacing.sm, AppSpacing.xs,
+                                ),
+                                decoration: BoxDecoration(
+                                  gradient: AppColors.goldRibbonGradient,
                                 ),
                                 child: Text(
                                   badge,
-                                  style: const TextStyle(fontSize: 10),
+                                  style: TextStyle(fontSize: AppTypography.sizeSmall),
                                 ),
                               ),
                             ),
                           ),
                         ],
                       ),
-                      const SizedBox(height: 10),
+                      SizedBox(height: AppSpacing.lg),
 
                       // Name
                       Text(
                         player.short,
-                        style: const TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w900,
+                        style: TextStyle(
+                          fontSize: AppTypography.sizeSubtitle,
+                          fontWeight: AppTypography.black,
                           color: AppColors.white,
-                          height: 1.2,
+                          height: AppTypography.lineHeightNormal,
                         ),
                       ),
-                      const SizedBox(height: 2),
+                      SizedBox(height: AppSpacing.xs),
+                      
+                      // Dynamic Tags
+                      PlayerTagsWidget(
+                        tags: player.tags,
+                        accentColor: AppColors.neonGold,
+                      ),
+                      
+                      SizedBox(height: AppSpacing.sm),
                       Text(
                         "${player.matches} matches",
                         style: TextStyle(
-                          fontSize: 12,
-                          color: AppColors.white.withOpacity(0.45),
-                          letterSpacing: 0.4,
+                          fontSize: AppTypography.sizeBody,
+                          color: AppColors.white.withOpacity(AppColors.opacity45),
+                          letterSpacing: AppTypography.trackingTight + 0.1,
                         ),
                       ),
                     ],
                   ),
 
-                  const SizedBox(width: 14),
+                  SizedBox(width: AppSpacing.xxl),
 
-                  // ── Right: vertical stats ──────────────────────────────────
+                  // ── Right: vertical stats
                   Expanded(
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const SizedBox(height: 32), // align with avatar top
+                        SizedBox(height: AppSpacing.xxxl * 2),
                         _StatRow(
                           label: "Goals",
                           value: "${player.goals}",
-                          accentColor: accentColor,
+                          accentColor: AppColors.neonGold,
                           fillFraction: (player.goals / 20).clamp(0.0, 1.0),
                         ),
-                        const SizedBox(height: 8),
+                        SizedBox(height: AppSpacing.md),
                         _StatRow(
                           label: "Points",
                           value: "${player.pts}",
-                          accentColor: accentColor,
+                          accentColor: AppColors.neonGold,
                           fillFraction: (player.pts / 100).clamp(0.0, 1.0),
                         ),
-                        const SizedBox(height: 8),
+                        SizedBox(height: AppSpacing.md),
                         _StatRow(
                           label: "Win",
                           value: "${player.wins}",
-                          accentColor: accentColor,
+                          accentColor: AppColors.neonGold,
                           fillFraction: (player.wins / 10).clamp(0.0, 1.0),
                         ),
                       ],
@@ -270,7 +253,7 @@ class _StatRow extends StatelessWidget {
   final String label;
   final String value;
   final Color accentColor;
-  final double fillFraction; // 0.0 – 1.0
+  final double fillFraction;
 
   const _StatRow({
     required this.label,
@@ -282,12 +265,16 @@ class _StatRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.fromLTRB(9, 7, 9, 7),
+      padding: EdgeInsets.fromLTRB(
+        AppSpacing.caption, AppSpacing.micro, AppSpacing.caption, AppSpacing.micro,
+      ),
       decoration: BoxDecoration(
-        color: AppColors.white.withOpacity(0.04),
-        borderRadius: BorderRadius.circular(Dimensions.radiusDefault),
+        color: AppColors.white.withOpacity(AppColors.opacity4),
+        borderRadius: AppRadius.borderDef,
         border: Border.all(
-            color: accentColor.withOpacity(0.18), width: 1),
+          color: accentColor.withOpacity(AppColors.opacity18),
+          width: AppSizing.borderThin,
+        ),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -295,47 +282,45 @@ class _StatRow extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(
-                label.toUpperCase(),
-                style: TextStyle(
-                  fontSize: 7,
-                  fontWeight: FontWeight.w800,
-                  letterSpacing: 1.3,
-                  color: AppColors.white.withOpacity(0.45),
+              Expanded(
+                child: Text(
+                  label.toUpperCase(),
+                  style: AppTypography.labelUppercase(context, color: AppColors.white.withOpacity(AppColors.opacity45)),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                 ),
               ),
+              SizedBox(width: AppSpacing.xs),
               Text(
                 value,
                 style: TextStyle(
-                  fontSize: 13,
-                  fontWeight: FontWeight.w900,
+                  fontSize: AppTypography.sizeBodyLarge,
+                  fontWeight: AppTypography.black,
                   color: accentColor,
-                  height: 1,
+                  height: AppTypography.lineHeightCompact,
                 ),
               ),
             ],
           ),
-          const SizedBox(height: 5),
+          SizedBox(height: AppSpacing.sm),
           // Progress bar
           ClipRRect(
-            borderRadius: BorderRadius.circular(4),
+            borderRadius: AppRadius.borderXs,
             child: Stack(
               children: [
-                // Track
                 Container(
-                  height: 3,
-                  color: AppColors.white.withOpacity(0.08),
+                  height: AppSizing.progressBarSm,
+                  color: AppColors.white.withOpacity(AppColors.opacity8),
                 ),
-                // Fill
                 FractionallySizedBox(
                   widthFactor: fillFraction,
                   child: Container(
-                    height: 3,
+                    height: AppSizing.progressBarSm,
                     decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(4),
+                      borderRadius: AppRadius.borderXs,
                       gradient: LinearGradient(
                         colors: [
-                          accentColor.withOpacity(0.6),
+                          accentColor.withOpacity(AppColors.opacity60),
                           accentColor,
                         ],
                       ),

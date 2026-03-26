@@ -1,40 +1,45 @@
-import 'package:e_sports/core/constants/app_colors.dart';
-import 'package:e_sports/core/data/app_data.dart';
+import 'package:e_sports/core/theme/app_theme.dart';
+import 'package:e_sports/core/data/models/computed_player_stats.dart';
 import 'package:e_sports/core/widgets/glass_card_widget.dart';
 import 'package:flutter/material.dart';
 
 class PodiumCardTwo extends StatelessWidget {
-  final List<PlayerModel> players;
+  final List<ComputedPlayerStats> players;
   final String title;
   const PodiumCardTwo({required this.players, required this.title});
 
   @override
   Widget build(BuildContext context) {
     return GlassCardWidget(
-      padding: const EdgeInsets.fromLTRB(14, 16, 14, 14),
-      borderColor: AppColors.neonGold.withOpacity(0.12),
+      padding: EdgeInsets.fromLTRB(
+        AppSpacing.cardInnerPadding,
+        AppSpacing.xxxl,
+        AppSpacing.cardInnerPadding,
+        AppSpacing.cardInnerPadding,
+      ),
+      borderColor: AppColors.neonGold.withOpacity(AppColors.opacity12),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(children: [
             Container(
-              width: 3,
-              height: 14,
+              width: AppSpacing.xs,
+              height: AppSpacing.xxl,
               decoration: BoxDecoration(
                 color: AppColors.neonGold,
-                borderRadius: BorderRadius.circular(2),
+                borderRadius: AppRadius.borderXxs,
               ),
             ),
-            const SizedBox(width: 8),
+            SizedBox(width: AppSpacing.md),
             Text(title.toUpperCase(),
-                style: const TextStyle(
-                  fontSize: 10,
-                  fontWeight: FontWeight.w900,
-                  letterSpacing: 2.5,
+                style: TextStyle(
+                  fontSize: AppTypography.sizeSmall,
+                  fontWeight: AppTypography.black,
+                  letterSpacing: AppTypography.trackingMax,
                   color: AppColors.textPrimary,
                 )),
           ]),
-          const SizedBox(height: 16),
+          SizedBox(height: AppSpacing.xxxl),
           Row(
             children: [
               Expanded(
@@ -42,45 +47,33 @@ class PodiumCardTwo extends StatelessWidget {
                   player: players[0],
                   rank: 1,
                   rankLabel: "1ST",
-                  gradientColors: [
-                    const Color(0xFFB8860B),
-                    const Color(0xFFFFD700),
-                    const Color(0xFFFFF0A0)
-                  ],
-                  glowColor: const Color(0xFFFFD700),
-                  badgeColor: const Color(0xFFFFD700),
+                  gradientColors: [AppColors.goldDark, AppColors.neonGold, AppColors.goldLight],
+                  glowColor: AppColors.neonGold,
+                  badgeColor: AppColors.neonGold,
                   badgeIcon: Icons.emoji_events_rounded,
                 ),
               ),
-              const SizedBox(width: 8),
+              SizedBox(width: AppSpacing.md),
               Expanded(
                 child: _RankBoxTwo(
                   player: players[1],
                   rank: 2,
                   rankLabel: "2ND",
-                  gradientColors: [
-                    const Color(0xFF6B6B6B),
-                    const Color(0xFFB0B0B0),
-                    const Color(0xFFE8E8E8)
-                  ],
-                  glowColor: const Color(0xFFB0B0B0),
-                  badgeColor: const Color(0xFFC0C0C0),
+                  gradientColors: [AppColors.silverDark, AppColors.silverMid, AppColors.silverLight],
+                  glowColor: AppColors.silverMid,
+                  badgeColor: AppColors.silverMid,
                   badgeIcon: Icons.military_tech_rounded,
                 ),
               ),
-              const SizedBox(width: 8),
+              SizedBox(width: AppSpacing.md),
               Expanded(
                 child: _RankBoxTwo(
                   player: players[2],
                   rank: 3,
                   rankLabel: "3RD",
-                  gradientColors: [
-                    const Color(0xFF6B3A1F),
-                    const Color(0xFFCD7F32),
-                    const Color(0xFFEDA96A)
-                  ],
-                  glowColor: const Color(0xFFCD7F32),
-                  badgeColor: const Color(0xFFCD7F32),
+                  gradientColors: [AppColors.bronzeDark, AppColors.bronzeMid, AppColors.bronzeLight],
+                  glowColor: AppColors.bronzeMid,
+                  badgeColor: AppColors.bronzeMid,
                   badgeIcon: Icons.workspace_premium_rounded,
                 ),
               ),
@@ -93,7 +86,7 @@ class PodiumCardTwo extends StatelessWidget {
 }
 
 class _RankBoxTwo extends StatelessWidget {
-  final PlayerModel player;
+  final ComputedPlayerStats player;
   final int rank;
   final String rankLabel;
   final List<Color> gradientColors;
@@ -116,42 +109,34 @@ class _RankBoxTwo extends StatelessWidget {
     final avatarColor = playerColor(player.name);
 
     return Container(
-      height: 120,
+      height: AppSizing.rankBoxHeight,
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(14),
+        borderRadius: AppRadius.borderLg,
         gradient: LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
           colors: [
-            gradientColors[0].withOpacity(0.35),
-            gradientColors[1].withOpacity(0.15),
+            gradientColors[0].withOpacity(AppColors.opacity35),
+            gradientColors[1].withOpacity(AppColors.opacity15),
             Colors.transparent,
           ],
         ),
-        border: Border.all(color: gradientColors[1].withOpacity(0.45), width: 1),
-        boxShadow: [
-          BoxShadow(
-            color: glowColor.withOpacity(0.18),
-            blurRadius: 12,
-            spreadRadius: 0,
-            offset: const Offset(0, 3),
-          ),
-        ],
+        border: Border.all(
+          color: gradientColors[1].withOpacity(AppColors.opacity45),
+          width: AppSizing.borderThin,
+        ),
+        boxShadow: AppElevation.accentGlow(glowColor, opacity: AppColors.opacity18, blur: 12, offset: const Offset(0, 3)),
       ),
       child: ClipRRect(
-        borderRadius: BorderRadius.circular(14),
+        borderRadius: AppRadius.borderLg,
         child: Stack(
           children: [
             Positioned(
               top: 0, left: 0, right: 0,
               child: Container(
-                height: 2.5,
+                height: AppSizing.shimmerThick,
                 decoration: BoxDecoration(
-                  gradient: LinearGradient(colors: [
-                    Colors.transparent,
-                    gradientColors[2].withOpacity(0.9),
-                    Colors.transparent,
-                  ]),
+                  gradient: AppColors.shimmerGradient(color: gradientColors[2].withOpacity(AppColors.opacity90)),
                 ),
               ),
             ),
@@ -161,36 +146,43 @@ class _RankBoxTwo extends StatelessWidget {
                 rank.toString(),
                 style: TextStyle(
                   fontSize: 72,
-                  fontWeight: FontWeight.w900,
-                  color: gradientColors[1].withOpacity(0.07),
-                  height: 1,
+                  fontWeight: AppTypography.black,
+                  color: gradientColors[1].withOpacity(AppColors.opacity7),
+                  height: AppTypography.lineHeightCompact,
                 ),
               ),
             ),
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+              padding: EdgeInsets.symmetric(
+                horizontal: AppSpacing.lg,
+                vertical: AppSpacing.lg,
+              ),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Icon(badgeIcon, color: badgeColor, size: 18),
+                      Icon(badgeIcon, color: badgeColor, size: AppSizing.iconLg),
                       Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                        padding: EdgeInsets.symmetric(
+                          horizontal: AppSpacing.iconGap,
+                          vertical: AppSpacing.xxs,
+                        ),
                         decoration: BoxDecoration(
-                          color: badgeColor.withOpacity(0.18),
-                          borderRadius: BorderRadius.circular(6),
+                          color: badgeColor.withOpacity(AppColors.opacity18),
+                          borderRadius: AppRadius.borderSm,
                           border: Border.all(
-                            color: badgeColor.withOpacity(0.45), width: 1,
+                            color: badgeColor.withOpacity(AppColors.opacity45),
+                            width: AppSizing.borderThin,
                           ),
                         ),
                         child: Text(
                           rankLabel,
                           style: TextStyle(
-                            fontSize: 9,
-                            fontWeight: FontWeight.w900,
-                            letterSpacing: 1.2,
+                            fontSize: AppTypography.sizeCaption,
+                            fontWeight: AppTypography.black,
+                            letterSpacing: AppTypography.trackingWider,
                             color: gradientColors[2],
                           ),
                         ),
@@ -198,21 +190,22 @@ class _RankBoxTwo extends StatelessWidget {
                     ],
                   ),
                   Container(
-                    width: 36,
-                    height: 36,
+                    width: AppSizing.avatarXs + 4,
+                    height: AppSizing.avatarXs + 4,
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
                       color: avatarColor.withOpacity(0.2),
                       border: Border.all(
-                        color: gradientColors[1].withOpacity(0.6), width: 1.5,
+                        color: gradientColors[1].withOpacity(AppColors.opacity60),
+                        width: AppSizing.borderMedium,
                       ),
                     ),
                     child: Center(
                       child: Text(
                         player.name.isNotEmpty ? player.name[0].toUpperCase() : "?",
                         style: TextStyle(
-                          fontSize: 15,
-                          fontWeight: FontWeight.w800,
+                          fontSize: AppTypography.sizeTitle,
+                          fontWeight: AppTypography.extraBold,
                           color: gradientColors[2],
                         ),
                       ),
@@ -226,17 +219,17 @@ class _RankBoxTwo extends StatelessWidget {
                         overflow: TextOverflow.ellipsis,
                         textAlign: TextAlign.center,
                         style: TextStyle(
-                          fontSize: 11,
-                          fontWeight: FontWeight.w700,
+                          fontSize: AppTypography.sizeBody2,
+                          fontWeight: AppTypography.bold,
                           color: gradientColors[2],
                         ),
                       ),
-                      const SizedBox(height: 2),
+                      SizedBox(height: AppSpacing.xxs),
                       Text(
-                        "player.score pts",
+                        "${player.goals} goals",
                         style: TextStyle(
-                          fontSize: 10,
-                          fontWeight: FontWeight.w500,
+                          fontSize: AppTypography.sizeSmall,
+                          fontWeight: AppTypography.medium,
                           color: gradientColors[1].withOpacity(0.85),
                         ),
                       ),

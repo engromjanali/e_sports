@@ -1,5 +1,5 @@
 import 'dart:ui';
-import 'package:e_sports/core/constants/app_colors.dart';
+import 'package:e_sports/core/theme/app_theme.dart';
 import 'package:flutter/material.dart';
 
 class GlassCardWidget extends StatelessWidget {
@@ -10,14 +10,19 @@ class GlassCardWidget extends StatelessWidget {
   final List<BoxShadow>? shadows;
   final Gradient? gradient;
 
+  final double? width;
+  final double? height;
+
   const GlassCardWidget({
     super.key,
     required this.child,
     this.padding,
-    this.radius = 18,
+    this.radius = AppRadius.xl,
     this.borderColor,
     this.shadows,
     this.gradient,
+    this.width,
+    this.height,
   });
 
   @override
@@ -25,27 +30,19 @@ class GlassCardWidget extends StatelessWidget {
     return ClipRRect(
       borderRadius: BorderRadius.circular(radius),
       child: BackdropFilter(
-        filter: ImageFilter.blur(sigmaX: 12, sigmaY: 12),
+        filter: ImageFilter.blur(sigmaX: AppElevation.glassBlur, sigmaY: AppElevation.glassBlur),
         child: Container(
+          width: width,
+          height: height,
           padding: padding,
           decoration: BoxDecoration(
-            gradient: gradient ?? const LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: [Color(0x12FFFFFF), Color(0x06FFFFFF)],
-            ),
+            gradient: gradient ?? AppColors.glassGradient,
             borderRadius: BorderRadius.circular(radius),
             border: Border.all(
               color: borderColor ?? AppColors.glassBorder,
-              width: 1,
+              width: AppSizing.borderThin,
             ),
-            boxShadow: shadows ?? [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.3),
-                blurRadius: 20,
-                spreadRadius: 0,
-              ),
-            ],
+            boxShadow: shadows ?? AppElevation.high,
           ),
           child: child,
         ),

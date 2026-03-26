@@ -1,6 +1,7 @@
-import 'package:e_sports/core/utils/dimensions.dart';
-import 'package:e_sports/core/constants/app_colors.dart';
-import 'package:e_sports/core/data/app_data.dart';
+import 'package:e_sports/core/theme/app_theme.dart';
+import "package:e_sports/core/controllers/app_data_controller.dart";
+import "package:e_sports/core/data/models/match_model.dart";
+import "package:get/get.dart";
 import 'package:e_sports/core/widgets/glass_card_widget.dart';
 import 'package:flutter/material.dart';
 
@@ -11,7 +12,7 @@ class FullMatchCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isLive = match.status == "live";
-    final isCompleted = match.status == "completed";
+    final isCompleted = match.status == "completed" || match.status == "finished";
     Color statusColor = isLive
         ? AppColors.neonRed
         : isCompleted
@@ -19,98 +20,104 @@ class FullMatchCard extends StatelessWidget {
         : AppColors.neonBlue;
 
     return GlassCardWidget(
-      padding: const EdgeInsets.all(14),
-      borderColor: isLive ? AppColors.neonRed.withOpacity(0.3) : AppColors.glassBorder,
-      shadows: [
-        BoxShadow(
-            color: (isLive ? AppColors.neonRed : Colors.black).withOpacity(0.2),
-            blurRadius: 16,
-            offset: const Offset(0, 4)),
-      ],
+      padding: EdgeInsets.all(AppSpacing.cardInnerPadding),
+      borderColor: isLive ? AppColors.neonRed.withOpacity(AppColors.opacity30) : AppColors.glassBorder,
+      shadows: AppElevation.accentGlow(
+        isLive ? AppColors.neonRed : Colors.black,
+        opacity: AppColors.opacity20,
+        blur: 16,
+        offset: const Offset(0, 4),
+      ),
       child: Column(children: [
         // Status row
         Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
           Text("${match.date} · ${match.time}",
-              style: const TextStyle(fontSize: 10, color: AppColors.textMuted)),
+              style: TextStyle(fontSize: AppTypography.sizeSmall, color: AppColors.textMuted)),
           Container(
-            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 3),
+            padding: EdgeInsets.symmetric(
+              horizontal: AppSpacing.lg,
+              vertical: AppSpacing.xs,
+            ),
             decoration: BoxDecoration(
-              color: statusColor.withOpacity(0.12),
-              borderRadius: BorderRadius.circular(Dimensions.radiusExtraLarge),
-              border: Border.all(color: statusColor.withOpacity(0.3)),
+              color: statusColor.withOpacity(AppColors.opacity12),
+              borderRadius: AppRadius.borderPill,
+              border: Border.all(color: statusColor.withOpacity(AppColors.opacity30)),
             ),
             child: Row(mainAxisSize: MainAxisSize.min, children: [
               if (isLive)
                 Container(
-                  width: 6,
-                  height: 6,
-                  margin: const EdgeInsets.only(right: 4),
-                  decoration:
-                  BoxDecoration(shape: BoxShape.circle, color: statusColor),
+                  width: AppSizing.dotMd,
+                  height: AppSizing.dotMd,
+                  margin: EdgeInsets.only(right: AppSpacing.xs + 1),
+                  decoration: BoxDecoration(shape: BoxShape.circle, color: statusColor),
                 ),
               Text(match.status.toUpperCase(),
                   style: TextStyle(
-                      color: statusColor,
-                      fontSize: 9,
-                      fontWeight: FontWeight.w800)),
+                    color: statusColor,
+                    fontSize: AppTypography.sizeCaption,
+                    fontWeight: AppTypography.extraBold,
+                  )),
             ]),
           ),
         ]),
-        const SizedBox(height: 12),
+        SizedBox(height: AppSpacing.xl),
 
         // Teams row
         Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
           Expanded(
               child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                Text(match.i1, style: const TextStyle(fontSize: 28)),
-                Text(match.t1,
-                    style: const TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w800,
+                const Text("⚽", style: TextStyle(fontSize: 28)),
+                Text(match.team1,
+                    style: TextStyle(
+                        fontSize: AppTypography.sizeSubtitle,
+                        fontWeight: AppTypography.extraBold,
                         color: AppColors.textPrimary)),
               ])),
           Container(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+            padding: EdgeInsets.symmetric(
+              horizontal: AppSpacing.xxxl,
+              vertical: AppSpacing.iconGap,
+            ),
             decoration: BoxDecoration(
               color: AppColors.bgSurface,
-              borderRadius: BorderRadius.circular(12),
+              borderRadius: AppRadius.borderMd + const BorderRadius.all(Radius.circular(4)),
               border: Border.all(color: AppColors.glassBorder),
             ),
-            child: Text(isCompleted ? (match.score ?? "VS") : "VS",
-                style: const TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w900,
+            child: Text(isCompleted ? ("${match.score1} - ${match.score2}") : "VS",
+                style: TextStyle(
+                    fontSize: AppTypography.sizeTitleLarge,
+                    fontWeight: AppTypography.black,
                     color: AppColors.textPrimary)),
           ),
           Expanded(
               child: Column(crossAxisAlignment: CrossAxisAlignment.end, children: [
-                Text(match.i2, style: const TextStyle(fontSize: 28)),
-                Text(match.t2,
-                    style: const TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w800,
+                const Text("⚽", style: TextStyle(fontSize: 28)),
+                Text(match.team2,
+                    style: TextStyle(
+                        fontSize: AppTypography.sizeSubtitle,
+                        fontWeight: AppTypography.extraBold,
                         color: AppColors.textPrimary)),
               ])),
         ]),
 
         if (isCompleted && match.resultLabel != null) ...[
-          const SizedBox(height: 10),
+          SizedBox(height: AppSpacing.lg),
           Container(
             width: double.infinity,
-            padding: const EdgeInsets.symmetric(vertical: 7),
+            padding: EdgeInsets.symmetric(vertical: AppSizing.dotLg),
             decoration: BoxDecoration(
               color: match.resultType == "win"
-                  ? AppColors.neonGreen.withOpacity(0.1)
+                  ? AppColors.neonGreen.withOpacity(AppColors.opacity10)
                   : match.resultType == "loss"
-                  ? AppColors.neonRed.withOpacity(0.1)
-                  : AppColors.neonGold.withOpacity(0.1),
-              borderRadius: BorderRadius.circular(Dimensions.radiusDefault),
+                  ? AppColors.neonRed.withOpacity(AppColors.opacity10)
+                  : AppColors.neonGold.withOpacity(AppColors.opacity10),
+              borderRadius: AppRadius.borderDef,
             ),
             child: Text(match.resultLabel!,
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                  fontSize: 12,
-                  fontWeight: FontWeight.w800,
+                  fontSize: AppTypography.sizeBody,
+                  fontWeight: AppTypography.extraBold,
                   color: match.resultType == "win"
                       ? AppColors.neonGreen
                       : match.resultType == "loss"
@@ -121,10 +128,10 @@ class FullMatchCard extends StatelessWidget {
         ],
 
         if (!isCompleted && match.slots != null) ...[
-          const SizedBox(height: 8),
+          SizedBox(height: AppSpacing.md),
           Row(mainAxisAlignment: MainAxisAlignment.center, children: [
             Text("👥 ${match.slots} players joined",
-                style: const TextStyle(fontSize: 10, color: AppColors.textMuted)),
+                style: TextStyle(fontSize: AppTypography.sizeSmall, color: AppColors.textMuted)),
           ]),
         ],
       ]),

@@ -1,4 +1,4 @@
-import 'package:e_sports/core/constants/app_colors.dart';
+import 'package:e_sports/core/theme/app_theme.dart';
 import 'package:flutter/material.dart';
 
 class NeonProgressBarWidget extends StatelessWidget {
@@ -12,7 +12,7 @@ class NeonProgressBarWidget extends StatelessWidget {
     required this.value,
     required this.max,
     this.color = AppColors.neonGold,
-    this.height = 6,
+    this.height = AppSizing.progressBarDefault,
   });
 
   @override
@@ -27,7 +27,7 @@ class NeonProgressBarWidget extends StatelessWidget {
           height: height,
           width: double.infinity,
           decoration: BoxDecoration(
-            color: AppColors.white.withOpacity(0.08),
+            color: AppColors.white.withOpacity(AppColors.opacity8),
             borderRadius: BorderRadius.circular(height),
           ),
           child: FractionallySizedBox(
