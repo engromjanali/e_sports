@@ -1,54 +1,41 @@
-import 'package:e_sports/core/utils/dimensions.dart';
-import 'package:e_sports/core/constants/app_colors.dart';
+import 'package:e_sports/core/theme/app_theme.dart';
+import 'package:e_sports/core/controllers/app_data_controller.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class MyRankCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    const gold       = Color(0xFFFFD700);
-    const goldDark   = Color(0xFFB8860B);
-    const goldDeep   = Color(0xFF3D2400);
-    const goldLight  = Color(0xFFFFF4C2);
-    const bgDark     = Color(0xFF1A0F00);
-
-    String wlabel = "300075";
-    return Container(
+    return Obx(() {
+      final appData = Get.find<AppDataController>();
+      if (appData.rankedPlayers.isEmpty) return const SizedBox.shrink();
+      
+      final me = appData.rankedPlayers.first; // Default authenticated player
+      String wlabel = "${me.rank}";
+      
+      return Container(
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(Dimensions.radiusExtraLarge),
-        gradient: const LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [goldDeep, bgDark, Color(0xFF2A1800)],
-        ),
-        border: Border.all(color: gold.withOpacity(0.28), width: 1),
-        boxShadow: [
-          BoxShadow(
-            color: gold.withOpacity(0.16),
-            blurRadius: 22,
-            offset: const Offset(0, 7),
-          ),
-        ],
+        borderRadius: AppRadius.borderXl,
+        gradient: AppColors.goldGradient,
+        border: Border.all(color: AppColors.neonGold.withOpacity(0.28), width: AppSizing.borderThin),
+        boxShadow: AppElevation.accentGlow(AppColors.neonGold, opacity: 0.16, blur: 22, offset: const Offset(0, 7)),
       ),
       child: ClipRRect(
-        borderRadius: BorderRadius.circular(Dimensions.radiusExtraLarge),
+        borderRadius: AppRadius.borderXl,
         child: Stack(
           children: [
-            // ── Shimmer top bar ──────────────────────────────────────────────
+            // Shimmer top bar
             Positioned(
               top: 0, left: 0, right: 0,
               child: Container(
-                height: 2,
-                decoration: const BoxDecoration(
-                  gradient: LinearGradient(colors: [
-                    Colors.transparent,
-                    goldLight,
-                    Colors.transparent,
-                  ]),
+                height: AppSizing.shimmerHeight,
+                decoration: BoxDecoration(
+                  gradient: AppColors.shimmerGradient(color: AppColors.goldLight),
                 ),
               ),
             ),
 
-            // ── Giant ghost rank number ──────────────────────────────────────
+            // Giant ghost rank number
             Positioned(
               right: 0, top: 10,
               child: SizedBox(
@@ -58,133 +45,116 @@ class MyRankCard extends StatelessWidget {
                   textAlign: TextAlign.right,
                   style: TextStyle(
                     fontSize: wlabel.length > 5 ? 60 : 80,
-                    fontWeight: FontWeight.w900,
-                    color: gold.withOpacity(0.07),
-                    height: 1,
-                    overflow: TextOverflow.ellipsis
+                    fontWeight: AppTypography.black,
+                    color: AppColors.neonGold.withOpacity(AppColors.opacity7),
+                    height: AppTypography.lineHeightCompact,
+                    overflow: TextOverflow.ellipsis,
                   ),
                 ),
               ),
             ),
 
-            // ── Content ─────────────────────────────────────────────────────
+            // Content
             Padding(
-              padding: const EdgeInsets.all(16),
+              padding: EdgeInsets.all(AppSpacing.xxxl),
               child: Column(
                 children: [
-                  // ── Top row: avatar left, rank center, tier right ──
+                  // Top row: avatar left, rank center, tier right
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       // Network Avatar
                       Container(
-                        width: 60,
-                        height: 60,
+                        width: AppSizing.avatarLg,
+                        height: AppSizing.avatarLg,
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
-                          border: Border.all(color: gold, width: 2.5),
-                          boxShadow: [
-                            BoxShadow(
-                              color: gold.withOpacity(0.4),
-                              blurRadius: 12,
-                              spreadRadius: 1,
-                            ),
-                          ],
+                          border: Border.all(color: AppColors.neonGold, width: AppSizing.borderAvatar),
+                          boxShadow: AppElevation.ringGlow(AppColors.neonGold, opacity: AppColors.opacity40),
                         ),
                         child: ClipOval(
                           child: Image.network(
                             "https://i.pravatar.cc/150?img=8",
-                            width: 60,
-                            height: 60,
+                            width: AppSizing.avatarLg,
+                            height: AppSizing.avatarLg,
                             fit: BoxFit.cover,
                             errorBuilder: (_, __, ___) => Container(
-                              color: goldDeep,
+                              color: AppColors.goldDeep,
                               alignment: Alignment.center,
-                              child: const Text("A",
+                              child: Text("A",
                                   style: TextStyle(
-                                    fontSize: 24,
-                                    fontWeight: FontWeight.w900,
-                                    color: gold,
+                                    fontSize: AppTypography.sizeDisplay - 2,
+                                    fontWeight: AppTypography.black,
+                                    color: AppColors.neonGold,
                                   )),
                             ),
                           ),
                         ),
                       ),
-                      const SizedBox(width: 14),
+                      SizedBox(width: AppSpacing.xxl),
 
                       // Name + handle + badges
                       Expanded(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            const Text(
-                              "Aryan Bhuiyan",
+                            Text(
+                              me.name,
                               style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.w900,
+                                fontSize: AppTypography.sizeTitleLarge,
+                                fontWeight: AppTypography.black,
                                 color: AppColors.white,
                               ),
                             ),
                             Text(
-                              "@yourhandle",
+                              "@${me.short.toLowerCase()}",
                               style: TextStyle(
-                                fontSize: 10,
-                                color: AppColors.white.withOpacity(0.4),
-                                letterSpacing: 0.3,
+                                fontSize: AppTypography.sizeSmall,
+                                color: AppColors.white.withOpacity(AppColors.opacity40),
+                                letterSpacing: AppTypography.trackingTight,
                               ),
                             ),
-                            const SizedBox(height: 7),
+                            SizedBox(height: AppSizing.dotLg),
                             Row(
                               children: [
                                 // Ribbon rank badge
                                 ClipRRect(
-                                  borderRadius: const BorderRadius.only(
-                                    topLeft: Radius.circular(6),
-                                    bottomLeft: Radius.circular(6),
-                                    topRight: Radius.circular(3),
-                                    bottomRight: Radius.circular(3),
-                                  ),
+                                  borderRadius: AppRadius.ribbonLeft,
                                   child: Container(
-                                    padding: const EdgeInsets.fromLTRB(
-                                        8, 3, 8, 4),
-                                    decoration: const BoxDecoration(
-                                      gradient: LinearGradient(
-                                        colors: [goldDark, gold],
-                                        begin: Alignment.topLeft,
-                                        end: Alignment.bottomRight,
-                                      ),
+                                    padding: EdgeInsets.fromLTRB(
+                                      AppSpacing.md, AppSpacing.xs,
+                                      AppSpacing.md, AppSpacing.xs + 1,
                                     ),
-                                    child: const Text(
+                                    decoration: BoxDecoration(
+                                      gradient: AppColors.goldRibbonGradient,
+                                    ),
+                                    child: Text(
                                       "RANK #1",
                                       style: TextStyle(
-                                        fontSize: 8,
-                                        fontWeight: FontWeight.w900,
+                                        fontSize: AppTypography.sizeTiny,
+                                        fontWeight: AppTypography.black,
                                         letterSpacing: 1.4,
-                                        color: goldDeep,
+                                        color: AppColors.goldDeep,
                                       ),
                                     ),
                                   ),
                                 ),
-                                const SizedBox(width: 6),
+                                SizedBox(width: AppSpacing.iconGap),
                                 // Elite ghost pill
                                 Container(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 8, vertical: 3),
+                                  padding: AppSpacing.pillPadding,
                                   decoration: BoxDecoration(
-                                    color: gold.withOpacity(0.10),
-                                    borderRadius: BorderRadius.circular(Dimensions.radiusSmall),
+                                    color: AppColors.neonGold.withOpacity(AppColors.opacity10),
+                                    borderRadius: AppRadius.borderSm,
                                     border: Border.all(
-                                      color: gold.withOpacity(0.35),
-                                      width: 1,
+                                      color: AppColors.neonGold.withOpacity(AppColors.opacity35),
+                                      width: AppSizing.borderThin,
                                     ),
                                   ),
                                   child: Text(
                                     "ELITE GAMER",
-                                    style: TextStyle(
-                                      fontSize: 7,
-                                      fontWeight: FontWeight.w900,
-                                      letterSpacing: 1.2,
-                                      color: goldLight.withOpacity(0.9),
+                                    style: AppTypography.pillLabel(context,
+                                      color: AppColors.goldLight.withOpacity(AppColors.opacity90),
                                     ),
                                   ),
                                 ),
@@ -196,84 +166,32 @@ class MyRankCard extends StatelessWidget {
                     ],
                   ),
 
-                  const SizedBox(height: 14),
+                  SizedBox(height: AppSpacing.xxl),
 
-                  // ── Gold divider ─────────────────────────────────────────
+                  // Gold divider
                   Container(
-                    height: 1,
+                    height: AppSizing.dividerHeight,
                     decoration: BoxDecoration(
-                      gradient: LinearGradient(colors: [
-                        Colors.transparent,
-                        gold.withOpacity(0.25),
-                        Colors.transparent,
-                      ]),
+                      gradient: AppColors.dividerGradient(color: AppColors.neonGold, opacity: AppColors.opacity25),
                     ),
                   ),
 
-                  const SizedBox(height: 14),
+                  SizedBox(height: AppSpacing.xxl),
 
-                  // ── Stat chips row ───────────────────────────────────────
+                  // Stat chips row
                   Row(
                     children: [
-                      _StatChip(label: "PTS",     value: "946",  gold: gold, goldDeep: goldDeep),
-                      const SizedBox(width: 8),
-                      _StatChip(label: "GOALS",   value: "34",   gold: gold, goldDeep: goldDeep),
-                      const SizedBox(width: 8),
-                      _StatChip(label: "WINS",    value: "21",   gold: gold, goldDeep: goldDeep),
-                      const SizedBox(width: 8),
-                      _StatChip(label: "MATCHES", value: "38",   gold: gold, goldDeep: goldDeep),
+                      _StatChip(label: "PTS", value: "${me.pts}"),
+                      SizedBox(width: AppSpacing.md),
+                      _StatChip(label: "GOALS", value: "${me.goals}"),
+                      SizedBox(width: AppSpacing.md),
+                      _StatChip(label: "WINS", value: "${me.wins}"),
+                      SizedBox(width: AppSpacing.md),
+                      _StatChip(label: "MATCHES", value: "${me.matches}"),
                     ],
                   ),
 
-                  const SizedBox(height: 14),
 
-                  // ── Progress row ─────────────────────────────────────────
-                  Row(
-                    children: [
-                      Text(
-                        "SEASON XP",
-                        style: TextStyle(
-                          fontSize: 8,
-                          fontWeight: FontWeight.w800,
-                          letterSpacing: 1.3,
-                          color: AppColors.white.withOpacity(0.35),
-                        ),
-                      ),
-                      const Spacer(),
-                      Text(
-                        "82 / 100",
-                        style: TextStyle(
-                          fontSize: 8,
-                          fontWeight: FontWeight.w700,
-                          color: AppColors.white.withOpacity(0.35),
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 5),
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(6),
-                    child: Stack(
-                      children: [
-                        Container(
-                          height: 6,
-                          color: AppColors.white.withOpacity(0.07),
-                        ),
-                        FractionallySizedBox(
-                          widthFactor: 0.82,
-                          child: Container(
-                            height: 6,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(6),
-                              gradient: const LinearGradient(
-                                colors: [goldDark, gold, goldLight],
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
                 ],
               ),
             ),
@@ -281,57 +199,39 @@ class MyRankCard extends StatelessWidget {
         ),
       ),
     );
+    });
   }
 }
-
-// ─────────────────────────────────────────────────────────────────────────────
 
 class _StatChip extends StatelessWidget {
   final String label;
   final String value;
-  final Color gold;
-  final Color goldDeep;
 
-  const _StatChip({
-    required this.label,
-    required this.value,
-    required this.gold,
-    required this.goldDeep,
-  });
+  const _StatChip({required this.label, required this.value});
 
   @override
   Widget build(BuildContext context) {
     return Expanded(
       child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 8),
+        padding: EdgeInsets.symmetric(vertical: AppSpacing.md),
         decoration: BoxDecoration(
-          color: gold.withOpacity(0.07),
-          borderRadius: BorderRadius.circular(Dimensions.radiusDefault),
+          color: AppColors.neonGold.withOpacity(AppColors.opacity7),
+          borderRadius: AppRadius.borderDef,
           border: Border.all(
-            color: gold.withOpacity(0.22),
-            width: 1,
+            color: AppColors.neonGold.withOpacity(0.22),
+            width: AppSizing.borderThin,
           ),
         ),
         child: Column(
           children: [
             Text(
               value,
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.w900,
-                color: gold,
-                height: 1,
-              ),
+              style: AppTypography.statValue(context),
             ),
-            const SizedBox(height: 3),
+            SizedBox(height: AppSpacing.xs),
             Text(
               label,
-              style: TextStyle(
-                fontSize: 7,
-                fontWeight: FontWeight.w800,
-                letterSpacing: 1.1,
-                color: AppColors.white.withOpacity(0.35),
-              ),
+              style: AppTypography.labelUppercase(context),
             ),
           ],
         ),
@@ -339,4 +239,3 @@ class _StatChip extends StatelessWidget {
     );
   }
 }
-

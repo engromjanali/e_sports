@@ -1,5 +1,4 @@
-import 'package:e_sports/core/utils/dimensions.dart';
-import 'package:e_sports/core/constants/app_colors.dart';
+import 'package:e_sports/core/theme/app_theme.dart';
 import 'package:flutter/material.dart';
 
 class GetRewardsCta extends StatelessWidget {
@@ -11,50 +10,46 @@ class GetRewardsCta extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        padding: const EdgeInsets.all(18),
+        padding: EdgeInsets.all(AppSpacing.huge),
         decoration: BoxDecoration(
-          gradient: const LinearGradient(
-            colors: [Color(0xFF1a0a2e), Color(0xFF2d1b5e)],
-          ),
-          borderRadius: BorderRadius.circular(18),
-          border: Border.all(color: AppColors.neonPurple.withOpacity(0.25)),
-          boxShadow: [
-            BoxShadow(color: AppColors.neonPurple.withOpacity(0.15), blurRadius: 20)
-          ],
+          gradient: AppColors.purpleGradient,
+          borderRadius: AppRadius.borderXl,
+          border: Border.all(color: AppColors.neonPurple.withOpacity(AppColors.opacity25)),
+          boxShadow: AppElevation.accentGlow(AppColors.neonPurple, opacity: AppColors.opacity15, blur: 20),
         ),
         child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
           Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
             Text("GET REWARDS",
                 style: TextStyle(
-                    fontSize: 9,
-                    fontWeight: FontWeight.w800,
+                    fontSize: AppTypography.sizeCaption,
+                    fontWeight: AppTypography.extraBold,
                     color: AppColors.neonGold,
-                    letterSpacing: 1.5)),
-            const SizedBox(height: 3),
-            const Text("Unlock Badges & Trophies",
+                    letterSpacing: AppTypography.trackingWidest)),
+            SizedBox(height: AppSpacing.xs),
+            Text("Unlock Badges & Trophies",
                 style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w900,
+                    fontSize: AppTypography.sizeTitleLarge,
+                    fontWeight: AppTypography.black,
                     color: AppColors.white)),
-            const SizedBox(height: 10),
+            SizedBox(height: AppSpacing.lg),
             Container(
-              padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 8),
-              decoration: BoxDecoration(
-                color: AppColors.neonPurple.withOpacity(0.8),
-                borderRadius: BorderRadius.circular(Dimensions.radiusDefault),
-                boxShadow: [
-                  BoxShadow(
-                      color: AppColors.neonPurple.withOpacity(0.4), blurRadius: 12)
-                ],
+              padding: EdgeInsets.symmetric(
+                horizontal: AppSpacing.huge,
+                vertical: AppSpacing.md,
               ),
-              child: const Text("Claim Now →",
+              decoration: BoxDecoration(
+                color: AppColors.neonPurple.withOpacity(AppColors.opacity80),
+                borderRadius: AppRadius.borderDef,
+                boxShadow: AppElevation.subtleGlow(AppColors.neonPurple, opacity: AppColors.opacity40, blur: 12),
+              ),
+              child: Text("Claim Now →",
                   style: TextStyle(
                       color: AppColors.white,
-                      fontSize: 12,
-                      fontWeight: FontWeight.w700)),
+                      fontSize: AppTypography.sizeBody,
+                      fontWeight: AppTypography.bold)),
             ),
           ]),
-          const Text("🏆", style: TextStyle(fontSize: 52)),
+          Text("🏆", style: TextStyle(fontSize: AppSizing.iconEmoji)),
         ]),
       ),
     );

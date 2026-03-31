@@ -1,6 +1,7 @@
 import 'dart:ui';
-import 'package:e_sports/core/constants/app_colors.dart';
+import 'package:e_sports/core/theme/app_theme.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 
 class GlassCardWidget extends StatelessWidget {
   final Widget child;
@@ -10,44 +11,56 @@ class GlassCardWidget extends StatelessWidget {
   final List<BoxShadow>? shadows;
   final Gradient? gradient;
 
+  final double? width;
+  final double? height;
+
   const GlassCardWidget({
     super.key,
     required this.child,
     this.padding,
-    this.radius = 18,
+    this.radius = AppRadius.xl,
     this.borderColor,
     this.shadows,
     this.gradient,
+    this.width,
+    this.height,
   });
 
   @override
   Widget build(BuildContext context) {
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(radius),
-      child: BackdropFilter(
-        filter: ImageFilter.blur(sigmaX: 12, sigmaY: 12),
-        child: Container(
-          padding: padding,
-          decoration: BoxDecoration(
-            gradient: gradient ?? const LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: [Color(0x12FFFFFF), Color(0x06FFFFFF)],
-            ),
-            borderRadius: BorderRadius.circular(radius),
-            border: Border.all(
-              color: borderColor ?? AppColors.glassBorder,
-              width: 1,
-            ),
-            boxShadow: shadows ?? [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.3),
-                blurRadius: 20,
-                spreadRadius: 0,
-              ),
-            ],
-          ),
-          child: child,
+    final Widget container = Container(
+      width: width,
+      height: height,
+      padding: padding,
+      decoration: BoxDecoration(
+        gradient: gradient ?? AppColors.glassGradient,
+        borderRadius: BorderRadius.circular(radius),
+        border: Border.all(
+          color: borderColor ?? AppColors.glassBorder,
+          width: AppSizing.borderThin,
+        ),
+        boxShadow: shadows ?? AppElevation.high,
+      ),
+      child: child,
+    );
+
+    // CanvasKit on Web often crashes with LateInitializationError during context loss (handledContextLostEvent).
+    // Using a RepaintBoundary helps isolate the heavy BackdropFilter layer.
+    if (kIsWeb) {
+      return RepaintBoundary(
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(radius),
+          child: container,
+        ),
+      );
+    }
+
+    return RepaintBoundary(
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(radius),
+        child: BackdropFilter(
+          filter: ImageFilter.blur(sigmaX: AppElevation.glassBlur, sigmaY: AppElevation.glassBlur),
+          child: container,
         ),
       ),
     );

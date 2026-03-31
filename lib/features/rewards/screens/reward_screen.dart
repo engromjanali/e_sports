@@ -1,18 +1,22 @@
 import 'dart:async';
-import 'package:e_sports/core/constants/app_colors.dart';
-import 'package:e_sports/core/data/app_data.dart';
-import 'package:e_sports/core/utils/dimensions.dart';
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:e_sports/core/controllers/app_data_controller.dart';
+import 'package:e_sports/core/data/models/tournament_model.dart';
+import 'package:e_sports/core/data/models/player_model.dart';
+import 'package:e_sports/core/theme/app_theme.dart';
 import 'package:e_sports/core/widgets/app_header_widget.dart';
 import 'package:e_sports/core/widgets/glass_card_widget.dart';
 import 'package:e_sports/core/widgets/neon_pill_widget.dart';
 import 'package:e_sports/core/widgets/neon_pregress_bar_widget.dart';
-import 'package:e_sports/core/widgets/player_avater.dart';
 import 'package:e_sports/core/widgets/section_heading_widget.dart';
-import 'package:flutter/material.dart';
+import 'package:e_sports/core/widgets/player_avater.dart';
 
 
 class RewardsScreen extends StatefulWidget {
-  const RewardsScreen({super.key});
+  final VoidCallback? onSearchTap;
+  final VoidCallback? onProfileTap;
+  const RewardsScreen({super.key, this.onSearchTap, this.onProfileTap});
   @override State<RewardsScreen> createState() => _RewardsScreenState();
 }
 
@@ -52,9 +56,17 @@ class _RewardsScreenState extends State<RewardsScreen> with TickerProviderStateM
   @override
   void initState() {
     super.initState();
-    _shopItems = AppData.defaultShopItems();
+    _shopItems = _defaultShopItems();
     _tabAnim = AnimationController(vsync: this, duration: const Duration(milliseconds: 280));
     _tabAnim.forward();
+  }
+
+  List<ShopItem> _defaultShopItems() {
+    return [
+      ShopItem(icon: "🎫", name: "Premium Pass", info: "Unlocks premium rewards for Season 2025", cost: 1500, accent: AppColors.neonGold),
+      ShopItem(icon: "🎨", name: "Neon Profile Theme", info: "Exclusive purple neon theme", cost: 800, accent: AppColors.neonPurple),
+      ShopItem(icon: "🏆", name: "Tournament Ticket", info: "Free entry to any weekend tournament", cost: 500, accent: AppColors.neonCyan),
+    ];
   }
 
   @override
@@ -136,52 +148,27 @@ class _RewardsScreenState extends State<RewardsScreen> with TickerProviderStateM
   Widget _buildTopHeader() {
     return AppHeader(
       sub: 'Rewards · Season 2025',
+      onSearchTap: widget.onSearchTap,
+      onProfileTap: widget.onProfileTap,
       child: Row(
         mainAxisSize: MainAxisSize.min,
       children: [
         Container(
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+          padding: EdgeInsets.symmetric(horizontal: AppSpacing.lg, vertical: AppSpacing.sm),
           decoration: BoxDecoration(
-            color: AppColors.neonGold.withOpacity(0.1),
-            borderRadius: BorderRadius.circular(12),
-            border: Border.all(color: AppColors.neonGold.withOpacity(0.3)),
-            boxShadow: [BoxShadow(color: AppColors.neonGold.withOpacity(0.2), blurRadius: 10)],
+            color: AppColors.neonGold.withOpacity(AppColors.opacity10),
+            borderRadius: AppRadius.borderMd,
+            border: Border.all(color: AppColors.neonGold.withOpacity(AppColors.opacity30)),
+            boxShadow: [BoxShadow(color: AppColors.neonGold.withOpacity(AppColors.opacity20), blurRadius: 10)],
           ),
           child: Row(children: [
-            const Text("🪙", style: TextStyle(fontSize: 15)),
-            const SizedBox(width: 5),
+            Text("🪙", style: TextStyle(fontSize: AppTypography.sizeBody)),
+            SizedBox(width: AppSpacing.xs),
             Text("$_coins",
-                style: const TextStyle(
-                    fontSize: 15, fontWeight: FontWeight.w900, color: AppColors.neonGold)),
+                style: TextStyle(
+                    fontSize: AppTypography.sizeBody, fontWeight: AppTypography.black, color: AppColors.neonGold)),
           ]),
         ),
-        const SizedBox(width: 9),
-        // Notification bell
-        Stack(clipBehavior: Clip.none, children: [
-          Container(
-            width: 34, height: 34,
-            decoration: BoxDecoration(
-              color: AppColors.bgSurface,
-              borderRadius: BorderRadius.circular(Dimensions.radiusDefault),
-              border: Border.all(color: AppColors.neonCyan.withOpacity(0.2)),
-            ),
-            alignment: Alignment.center,
-            child: const Text("🔔", style: TextStyle(fontSize: 16)),
-          ),
-          Positioned(top: -3, right: -3,
-            child: Container(
-              width: 15, height: 15,
-              decoration: BoxDecoration(
-                color: AppColors.neonRed,
-                shape: BoxShape.circle,
-                border: Border.all(color: AppColors.bg, width: 2),
-              ),
-              alignment: Alignment.center,
-              child: const Text("2",
-                  style: TextStyle(color: AppColors.white, fontSize: 8, fontWeight: FontWeight.w800)),
-            ),
-          ),
-        ]),
       ]),
     );
   }
@@ -200,24 +187,24 @@ class _RewardsScreenState extends State<RewardsScreen> with TickerProviderStateM
           child: LayoutBuilder(builder: (context, constraints) {
             return Column(mainAxisSize: MainAxisSize.min, children: [
               Padding(
-                padding: const EdgeInsets.symmetric(vertical: 9),
+                padding: EdgeInsets.symmetric(vertical: AppSpacing.md + 1),
                 child: Column(children: [
-                  Text(_tabs[i].icon, style: TextStyle(fontSize: active ? 17 : 16)),
-                  const SizedBox(height: 3),
+                  Text(_tabs[i].icon, style: TextStyle(fontSize: active ? AppTypography.sizeBody + 2 : AppTypography.sizeBody + 1)),
+                  SizedBox(height: AppSpacing.xxs + 1),
                   Text(_tabs[i].label, style: TextStyle(
-                    fontSize: 9,
-                    fontWeight: active ? FontWeight.w800 : FontWeight.w500,
+                    fontSize: AppTypography.sizeCaption,
+                    fontWeight: active ? AppTypography.extraBold : AppTypography.medium,
                     color: active ? AppColors.neonCyan : AppColors.textMuted,
                   )),
                 ]),
               ),
               AnimatedContainer(
                 duration: const Duration(milliseconds: 200),
-                height: 2.5,
+                height: AppSizing.navIndicatorHeight,
                 width: active ? constraints.maxWidth : 0,
                 decoration: BoxDecoration(
                   color: AppColors.neonCyan,
-                  boxShadow: active ? [BoxShadow(color: AppColors.neonCyan.withOpacity(0.6), blurRadius: 6)] : [],
+                  boxShadow: active ? [BoxShadow(color: AppColors.neonCyan.withOpacity(AppColors.opacity60), blurRadius: 6)] : [],
                 ),
               ),
             ]);
@@ -238,7 +225,7 @@ class _RewardsScreenState extends State<RewardsScreen> with TickerProviderStateM
         selTrn: _selTrn, joined: _joined, bracketOpen: _bracketOpen, coins: _coins,
         onSelTrn: (i) => setState(() { _selTrn = i; _bracketOpen = false; }),
         onToggleBracket: () => setState(() => _bracketOpen = !_bracketOpen),
-        onJoin: (trn) {
+        onJoin: (TournamentModel trn) {
           if (_coins >= trn.cost && !_joined.contains(trn.id)) {
             setState(() { _coins -= trn.cost; _joined.add(trn.id); });
           }
@@ -306,26 +293,26 @@ class _EarnTab extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 9),
                 child: Column(children: [
                   Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-                    const Text("ℹ️  Terms & Conditions",
-                        style: TextStyle(fontSize: 11, fontWeight: FontWeight.w600, color: AppColors.textSecondary)),
+                    Text("ℹ️  Terms & Conditions",
+                        style: TextStyle(fontSize: AppTypography.sizeSmall, fontWeight: AppTypography.semiBold, color: AppColors.textSecondary)),
                     AnimatedRotation(
                       turns: tncOpen ? 0.5 : 0,
                       duration: const Duration(milliseconds: 200),
-                      child: const Icon(Icons.keyboard_arrow_down, color: AppColors.textMuted, size: 16),
+                      child: Icon(Icons.keyboard_arrow_down, color: AppColors.textMuted, size: AppSizing.iconSm),
                     ),
                   ]),
                   AnimatedCrossFade(
                     firstChild: const SizedBox(height: 0),
                     secondChild: Padding(
-                      padding: const EdgeInsets.only(top: 8),
-                      child: const Text(
+                      padding: EdgeInsets.only(top: AppSpacing.sm),
+                      child: Text(
                         "• 1 ad = 1 coin. Daily cap: 20 coins from ads.\n"
                             "• Weekly: 100 ads = +100 bonus coins.\n"
                             "• Monthly: 400 ads = +500 bonus coins.\n"
                             "• Coins are non-transferable, no monetary value.\n"
                             "• Redeemable for in-game items only.\n"
                             "• Abuse will result in account suspension.",
-                        style: TextStyle(fontSize: 10, color: AppColors.textMuted, height: 1.8),
+                        style: TextStyle(fontSize: AppTypography.sizeCaption, color: AppColors.textMuted, height: 1.8),
                       ),
                     ),
                     crossFadeState: tncOpen ? CrossFadeState.showSecond : CrossFadeState.showFirst,
@@ -372,11 +359,8 @@ class _EarnHeroBanner extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.fromLTRB(20, 24, 20, 22),
       decoration: const BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topLeft, end: Alignment.bottomRight,
-          colors: [Color(0xFF0D1B4E), Color(0xFF1B4FD8), Color(0xFF1440B8)],
+          gradient: AppColors.blueHeroGradient,
         ),
-      ),
       child: Stack(children: [
         // Decorative rings
         Positioned(top: -55, right: -55,
@@ -387,35 +371,35 @@ class _EarnHeroBanner extends StatelessWidget {
         Column(children: [
           Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
             Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              const Text("EARN CENTER · 2025",
-                  style: TextStyle(fontSize: 9, fontWeight: FontWeight.w800,
+              Text("EARN CENTER · 2025",
+                  style: TextStyle(fontSize: AppTypography.sizeCaption, fontWeight: AppTypography.black,
                       color: AppColors.neonGold, letterSpacing: 2.5)),
-              const SizedBox(height: 7),
-              const Text("Watch Ads,",
-                  style: TextStyle(fontSize: 26, fontWeight: FontWeight.w900, color: AppColors.white, height: 1.15)),
-              const Text("Earn Points!",
-                  style: TextStyle(fontSize: 26, fontWeight: FontWeight.w900, color: AppColors.neonGold, height: 1.2)),
-              const SizedBox(height: 9),
+              SizedBox(height: AppSpacing.sm - 1),
+              Text("Watch Ads,",
+                  style: TextStyle(fontSize: AppTypography.sizeDisplay, fontWeight: AppTypography.black, color: AppColors.white, height: 1.15)),
+              Text("Earn Points!",
+                  style: TextStyle(fontSize: AppTypography.sizeDisplay, fontWeight: AppTypography.black, color: AppColors.neonGold, height: 1.2)),
+              SizedBox(height: AppSpacing.md + 1),
               Text("Complete tasks to earn points. Spend them entering tournaments.",
-                  style: TextStyle(fontSize: 11, color: AppColors.white.withOpacity(0.55), height: 1.7),
+                  style: TextStyle(fontSize: AppTypography.sizeSmall, color: AppColors.white.withOpacity(AppColors.opacity55), height: 1.7),
                   maxLines: 2),
             ])),
             Column(children: [
               Text("🪙", style: TextStyle(fontSize: 58,
-                  shadows: [Shadow(color: AppColors.neonGold.withOpacity(0.5), blurRadius: 22)])),
+                  shadows: [Shadow(color: AppColors.neonGold.withOpacity(AppColors.opacity50), blurRadius: 22)])),
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                padding: EdgeInsets.symmetric(horizontal: AppSpacing.xxxl, vertical: AppSpacing.md),
                 decoration: BoxDecoration(
-                  color: AppColors.neonGold.withOpacity(0.15),
-                  borderRadius: BorderRadius.circular(16),
-                  border: Border.all(color: AppColors.neonGold.withOpacity(0.3)),
+                  color: AppColors.neonGold.withOpacity(AppColors.opacity15),
+                  borderRadius: AppRadius.borderXl,
+                  border: Border.all(color: AppColors.neonGold.withOpacity(AppColors.opacity30)),
                 ),
                 child: Column(children: [
-                  const Text("BALANCE", style: TextStyle(
-                      fontSize: 8, color: AppColors.neonGold, letterSpacing: 1)),
-                  Text("$coins", style: const TextStyle(
-                      fontSize: 26, fontWeight: FontWeight.w900, color: AppColors.neonGold)),
-                  const Text("coins", style: TextStyle(fontSize: 10, color: AppColors.textSecondary)),
+                  Text("BALANCE", style: TextStyle(
+                      fontSize: AppTypography.sizeTiny, color: AppColors.neonGold, letterSpacing: 1)),
+                  Text("$coins", style: TextStyle(
+                      fontSize: AppTypography.sizeDisplay, fontWeight: AppTypography.black, color: AppColors.neonGold)),
+                  Text("coins", style: TextStyle(fontSize: AppTypography.sizeCaption, color: AppColors.textSecondary)),
                 ]),
               ),
             ]),
@@ -428,22 +412,21 @@ class _EarnHeroBanner extends StatelessWidget {
             child: AnimatedContainer(
               duration: const Duration(milliseconds: 200),
               width: double.infinity,
-              padding: const EdgeInsets.symmetric(vertical: 14),
+              padding: EdgeInsets.symmetric(vertical: AppSpacing.cardInnerPadding),
               decoration: BoxDecoration(
-                gradient: watching ? null : const LinearGradient(
-                    colors: [AppColors.neonGold, Color(0xFFF59E0B)]),
-                color: watching ? AppColors.white.withOpacity(0.1) : null,
-                borderRadius: BorderRadius.circular(16),
+                gradient: watching ? null : AppColors.goldHeroGradient,
+                color: watching ? AppColors.white.withOpacity(AppColors.opacity10) : null,
+                borderRadius: AppRadius.borderXl,
                 boxShadow: watching ? [] : [
-                  BoxShadow(color: AppColors.neonGold.withOpacity(0.4), blurRadius: 16, offset: const Offset(0, 4)),
+                  BoxShadow(color: AppColors.neonGold.withOpacity(AppColors.opacity40), blurRadius: 16, offset: const Offset(0, 4)),
                 ],
               ),
               alignment: Alignment.center,
               child: Text(
                   watching ? "⏳  Watching... ${timer}s" : "▶  WATCH AD  —  +1 COIN",
                   style: TextStyle(
-                    color: watching ? AppColors.white.withOpacity(0.4) : Colors.black,
-                    fontSize: 14, fontWeight: FontWeight.w900,
+                    color: watching ? AppColors.white.withOpacity(AppColors.opacity40) : Colors.black,
+                    fontSize: AppTypography.sizeBody, fontWeight: AppTypography.black,
                   )),
             ),
           ),
@@ -452,15 +435,15 @@ class _EarnHeroBanner extends StatelessWidget {
           // Weekly ad progress
           Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
             Text("📆 Weekly Ad Goal",
-                style: TextStyle(fontSize: 10, color: AppColors.white.withOpacity(0.6), fontWeight: FontWeight.w600)),
+                style: TextStyle(fontSize: AppTypography.sizeCaption, color: AppColors.white.withOpacity(AppColors.opacity60), fontWeight: AppTypography.semiBold)),
             Text("${ads.clamp(0,100)}/100 ads",
-                style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w800, color: AppColors.neonGold)),
+                style: TextStyle(fontSize: AppTypography.sizeSmall, fontWeight: AppTypography.extraBold, color: AppColors.neonGold)),
           ]),
-          const SizedBox(height: 5),
-          NeonProgressBarWidget(value: ads.toDouble(), max: 100, color: AppColors.neonGold, height: 8),
-          const SizedBox(height: 3),
+          SizedBox(height: AppSpacing.xs + 1),
+          NeonProgressBarWidget(value: ads.toDouble(), max: 100, color: AppColors.neonGold, height: AppSizing.progressHeightLg),
+          SizedBox(height: AppSpacing.xxs + 1),
           Text("Complete 100 ads this week → earn +100 bonus coins",
-              style: TextStyle(fontSize: 9, color: AppColors.white.withOpacity(0.4))),
+              style: TextStyle(fontSize: AppTypography.sizeTiny, color: AppColors.white.withOpacity(AppColors.opacity40))),
         ]),
       ]),
     );
@@ -483,19 +466,19 @@ class _TaskGroupHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Container(
-    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 7),
-    margin: const EdgeInsets.only(bottom: 8),
+    padding: EdgeInsets.symmetric(horizontal: AppSpacing.lg, vertical: AppSpacing.md - 1),
+    margin: EdgeInsets.only(bottom: AppSpacing.md),
     decoration: BoxDecoration(
-      color: color.withOpacity(0.08),
-      borderRadius: BorderRadius.circular(Dimensions.radiusDefault),
-      border: Border.all(color: color.withOpacity(0.2)),
+      color: color.withOpacity(AppColors.opacity8),
+      borderRadius: AppRadius.borderDef,
+      border: Border.all(color: color.withOpacity(AppColors.opacity20)),
     ),
     child: Row(children: [
-      Text(emoji, style: const TextStyle(fontSize: 14)),
-      const SizedBox(width: 8),
+      Text(emoji, style: TextStyle(fontSize: AppTypography.sizeBody)),
+      SizedBox(width: AppSpacing.md),
       Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        Text(title, style: TextStyle(fontSize: 11, fontWeight: FontWeight.w800, color: color)),
-        Text(sub, style: const TextStyle(fontSize: 9, color: AppColors.textMuted)),
+        Text(title, style: TextStyle(fontSize: AppTypography.sizeSmall, fontWeight: AppTypography.extraBold, color: color)),
+        Text(sub, style: TextStyle(fontSize: AppTypography.sizeCaption, color: AppColors.textMuted)),
       ]),
     ]),
   );
@@ -516,59 +499,59 @@ class _TaskCard extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.only(bottom: 8.0),
       child: GlassCardWidget(
-        padding: const EdgeInsets.all(13),
-        borderColor: done ? AppColors.neonGreen.withOpacity(0.3) : AppColors.glassBorder,
-        shadows: done ? [BoxShadow(color: AppColors.neonGreen.withOpacity(0.1), blurRadius: 12)] : null,
+        padding: EdgeInsets.all(AppSpacing.lg + 1),
+        borderColor: done ? AppColors.neonGreen.withOpacity(AppColors.opacity30) : AppColors.glassBorder,
+        shadows: done ? [BoxShadow(color: AppColors.neonGreen.withOpacity(AppColors.opacity10), blurRadius: 12)] : null,
         child: Padding(
           padding: const EdgeInsets.only(bottom: 0),
           child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
             Row(children: [
               Container(
-                width: 36, height: 36,
+                width: AppSizing.iconBtnMd, height: AppSizing.iconBtnMd,
                 decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(Dimensions.radiusDefault),
-                  color: barColor.withOpacity(0.1),
-                  border: Border.all(color: barColor.withOpacity(0.2)),
+                  borderRadius: AppRadius.borderDef,
+                  color: barColor.withOpacity(AppColors.opacity10),
+                  border: Border.all(color: barColor.withOpacity(AppColors.opacity20)),
                 ),
                 alignment: Alignment.center,
-                child: Text(t.icon, style: const TextStyle(fontSize: 17)),
+                child: Text(t.icon, style: TextStyle(fontSize: AppTypography.sizeBody + 2)),
               ),
-              const SizedBox(width: 10),
+              SizedBox(width: AppSpacing.lg),
               Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                 Text(t.label,
-                    style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w700, color: AppColors.textPrimary)),
+                    style: TextStyle(fontSize: AppTypography.sizeSmall, fontWeight: AppTypography.bold, color: AppColors.textPrimary)),
                 Row(children: [
-                  const Text("🪙", style: TextStyle(fontSize: 11)),
-                  const SizedBox(width: 3),
+                  Text("🪙", style: TextStyle(fontSize: AppTypography.sizeSmall)),
+                  SizedBox(width: AppSpacing.xxs + 1),
                   Text("+${t.pts} pts",
-                      style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w800, color: AppColors.neonGold)),
+                      style: TextStyle(fontSize: AppTypography.sizeSmall, fontWeight: AppTypography.extraBold, color: AppColors.neonGold)),
                   if (done) ...[
-                    const SizedBox(width: 6),
+                    SizedBox(width: AppSpacing.iconGap),
                     NeonPillWidget(label: "✓ DONE", color: AppColors.neonGreen),
                   ],
                 ]),
               ])),
               Text("${t.done}/${t.goal}",
-                  style: TextStyle(fontSize: 11, fontWeight: FontWeight.w800,
+                  style: TextStyle(fontSize: AppTypography.sizeSmall, fontWeight: AppTypography.extraBold,
                       color: done ? AppColors.neonGreen : AppColors.textMuted)),
             ]),
-            const SizedBox(height: 8),
-            NeonProgressBarWidget(value: t.done.toDouble(), max: t.goal.toDouble(), color: barColor, height: 5),
+            SizedBox(height: AppSpacing.md),
+            NeonProgressBarWidget(value: t.done.toDouble(), max: t.goal.toDouble(), color: barColor, height: AppSizing.progressHeightSm),
             if (t.isAd) ...[
-              const SizedBox(height: 8),
+              SizedBox(height: AppSpacing.md),
               GestureDetector(
                 onTap: done ? null : onStartAd,
                 child: AnimatedContainer(
                   duration: const Duration(milliseconds: 180),
                   width: double.infinity,
-                  padding: const EdgeInsets.symmetric(vertical: 8),
+                  padding: EdgeInsets.symmetric(vertical: AppSpacing.md),
                   decoration: BoxDecoration(
-                    color: done ? AppColors.neonGreen.withOpacity(0.1) :
-                    watching ? AppColors.bgSurface : AppColors.neonCyan.withOpacity(0.1),
-                    borderRadius: BorderRadius.circular(Dimensions.radiusDefault),
+                    color: done ? AppColors.neonGreen.withOpacity(AppColors.opacity10) :
+                    watching ? AppColors.bgSurface : AppColors.neonCyan.withOpacity(AppColors.opacity10),
+                    borderRadius: AppRadius.borderDef,
                     border: Border.all(
-                        color: done ? AppColors.neonGreen.withOpacity(0.3) :
-                        watching ? AppColors.glassBorder : AppColors.neonCyan.withOpacity(0.3)),
+                        color: done ? AppColors.neonGreen.withOpacity(AppColors.opacity30) :
+                        watching ? AppColors.glassBorder : AppColors.neonCyan.withOpacity(AppColors.opacity30)),
                   ),
                   alignment: Alignment.center,
                   child: Text(
@@ -577,7 +560,7 @@ class _TaskCard extends StatelessWidget {
                       style: TextStyle(
                         color: done ? AppColors.neonGreen :
                         watching ? AppColors.textMuted : AppColors.neonCyan,
-                        fontSize: 11, fontWeight: FontWeight.w700,
+                        fontSize: AppTypography.sizeSmall, fontWeight: AppTypography.bold,
                       )),
                 ),
               ),
@@ -609,11 +592,11 @@ class TournamentTabWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final tournaments = AppData.tournaments;
+    final tournaments = Get.find<AppDataController>().tournaments;
     final trn = tournaments[selTrn];
 
     return SingleChildScrollView(
-      padding: const EdgeInsets.fromLTRB(16, 14, 16, 24),
+      padding: EdgeInsets.fromLTRB(AppSpacing.xxxl, AppSpacing.cardInnerPadding, AppSpacing.xxxl, AppSpacing.massive),
       child: Column(children: [
         // ── Tournament selector ────────────────────────────────────────
         SingleChildScrollView(
@@ -627,16 +610,15 @@ class TournamentTabWidget extends StatelessWidget {
               onTap: () => onSelTrn(i),
               child: AnimatedContainer(
                 duration: const Duration(milliseconds: 180),
-                margin: const EdgeInsets.only(right: 8),
-                padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+                margin: EdgeInsets.only(right: AppSpacing.md),
+                padding: EdgeInsets.symmetric(horizontal: AppSpacing.xl, vertical: AppSpacing.md),
                 decoration: BoxDecoration(
-                  gradient: active ? const LinearGradient(
-                      colors: [Color(0xFF1B4FD8), Color(0xFF0D1B4E)]) : null,
+                  gradient: active ? AppColors.blueHeroGradient : null,
                   color: active ? null : AppColors.bgSurface,
-                  borderRadius: BorderRadius.circular(Dimensions.radiusExtraLarge),
+                  borderRadius: AppRadius.borderPill,
                   border: Border.all(
-                      color: active ? AppColors.neonCyan.withOpacity(0.4) : AppColors.glassBorder),
-                  boxShadow: active ? [BoxShadow(color: AppColors.neonBlue.withOpacity(0.3), blurRadius: 12)] : [],
+                      color: active ? AppColors.neonCyan.withOpacity(AppColors.opacity40) : AppColors.glassBorder),
+                  boxShadow: active ? [BoxShadow(color: AppColors.neonBlue.withOpacity(AppColors.opacity30), blurRadius: 12)] : [],
                 ),
                 child: Row(mainAxisSize: MainAxisSize.min, children: [
                   Container(
@@ -669,21 +651,21 @@ class TournamentTabWidget extends StatelessWidget {
           child: Column(children: [
             ...List.generate(trn.rewards.length, (i) {
               final r = trn.rewards[i];
-              return Container(
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            return Container(
+                padding: EdgeInsets.symmetric(horizontal: AppSpacing.xxxl, vertical: AppSpacing.lg),
                 decoration: BoxDecoration(
                   border: i < trn.rewards.length - 1
                       ? Border(bottom: BorderSide(color: AppColors.glassBorder)) : null,
                   gradient: i == 0 ? LinearGradient(
-                      colors: [AppColors.neonGold.withOpacity(0.08), Colors.transparent]) : null,
+                      colors: [AppColors.neonGold.withOpacity(AppColors.opacity8), Colors.transparent]) : null,
                 ),
                 child: Row(children: [
-                  Text(r.icon, style: const TextStyle(fontSize: 26)),
-                  const SizedBox(width: 12),
+                  Text(r.icon, style: TextStyle(fontSize: AppTypography.sizeHeading)),
+                  SizedBox(width: AppSpacing.xl),
                   Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                    Text(r.pos, style: const TextStyle(
-                        fontSize: 12, fontWeight: FontWeight.w800, color: AppColors.textPrimary)),
-                    Text(r.detail, style: const TextStyle(fontSize: 10, color: AppColors.textMuted)),
+                    Text(r.pos, style: TextStyle(
+                        fontSize: AppTypography.sizeSmall, fontWeight: AppTypography.black, color: AppColors.textPrimary)),
+                    Text(r.detail, style: TextStyle(fontSize: AppTypography.sizeCaption, color: AppColors.textMuted)),
                   ])),
                   Container(width: 10, height: 10, decoration: BoxDecoration(
                     shape: BoxShape.circle, color: r.color,
@@ -693,9 +675,9 @@ class TournamentTabWidget extends StatelessWidget {
               );
             }),
             Container(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+              padding: EdgeInsets.symmetric(horizontal: AppSpacing.xxxl, vertical: AppSpacing.md + 1),
               decoration: BoxDecoration(
-                color: AppColors.neonCyan.withOpacity(0.05),
+                color: AppColors.neonCyan.withOpacity(AppColors.opacity5),
                 border: Border(top: BorderSide(color: AppColors.glassBorder)),
               ),
               child: Row(children: [
@@ -733,51 +715,48 @@ class _TournamentHeroCard extends StatelessWidget {
     final fillPct = trn.slots > 0 ? trn.filled / trn.slots : 0.0;
 
     return Container(
-      padding: const EdgeInsets.all(18),
+      padding: EdgeInsets.all(AppSpacing.xl + 2),
       decoration: BoxDecoration(
-        gradient: const LinearGradient(
-          begin: Alignment.topLeft, end: Alignment.bottomRight,
-          colors: [Color(0xFF0D1B4E), Color(0xFF1B4FD8)],
-        ),
-        borderRadius: BorderRadius.circular(Dimensions.radiusExtraLarge),
-        border: Border.all(color: AppColors.neonGold.withOpacity(0.2)),
-        boxShadow: [BoxShadow(color: AppColors.neonBlue.withOpacity(0.2), blurRadius: 20)],
+        gradient: AppColors.blueHeroGradient,
+        borderRadius: AppRadius.borderXl,
+        border: Border.all(color: AppColors.neonGold.withOpacity(AppColors.opacity20)),
+        boxShadow: [BoxShadow(color: AppColors.neonBlue.withOpacity(AppColors.opacity20), blurRadius: 20)],
       ),
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-          Row(children: [
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-              decoration: BoxDecoration(
-                color: AppColors.neonGold.withOpacity(0.15),
-                borderRadius: BorderRadius.circular(6),
-                border: Border.all(color: AppColors.neonGold.withOpacity(0.3)),
+          Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+            Row(children: [
+              Container(
+                padding: EdgeInsets.symmetric(horizontal: AppSpacing.md, vertical: AppSpacing.xs + 1),
+                decoration: BoxDecoration(
+                  color: AppColors.neonGold.withOpacity(AppColors.opacity15),
+                  borderRadius: AppRadius.borderSm,
+                  border: Border.all(color: AppColors.neonGold.withOpacity(AppColors.opacity30)),
+                ),
+                child: Text(trn.tag,
+                    style: TextStyle(fontSize: AppTypography.sizeTiny, fontWeight: AppTypography.black,
+                        color: AppColors.neonGold, letterSpacing: 1.2)),
               ),
-              child: Text(trn.tag,
-                  style: const TextStyle(fontSize: 9, fontWeight: FontWeight.w800,
-                      color: AppColors.neonGold, letterSpacing: 1.2)),
+            ]),
+            Container(
+              padding: EdgeInsets.symmetric(horizontal: AppSpacing.lg + 2, vertical: AppSpacing.xs + 1),
+              decoration: BoxDecoration(
+                color: statusColor.withOpacity(AppColors.opacity12),
+                borderRadius: AppRadius.borderPill,
+                border: Border.all(color: statusColor.withOpacity(AppColors.opacity30)),
+              ),
+              child: Text(trn.status.toUpperCase(),
+                  style: TextStyle(fontSize: AppTypography.sizeTiny, fontWeight: AppTypography.black, color: statusColor)),
             ),
           ]),
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-            decoration: BoxDecoration(
-              color: statusColor.withOpacity(0.12),
-              borderRadius: BorderRadius.circular(Dimensions.radiusExtraLarge),
-              border: Border.all(color: statusColor.withOpacity(0.3)),
-            ),
-            child: Text(trn.status.toUpperCase(),
-                style: TextStyle(fontSize: 9, fontWeight: FontWeight.w800, color: statusColor)),
-          ),
-        ]),
-        const SizedBox(height: 12),
+        SizedBox(height: AppSpacing.xl),
         Text(trn.name,
-            style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w900, color: AppColors.white)),
-        const SizedBox(height: 4),
+            style: TextStyle(fontSize: AppTypography.sizeTitleLarge, fontWeight: AppTypography.black, color: AppColors.white)),
+        SizedBox(height: AppSpacing.xs + 1),
         Text("🏅  ${trn.prize}",
-            style: const TextStyle(fontSize: 13, color: AppColors.neonGold, fontWeight: FontWeight.w700)),
-        const SizedBox(height: 4),
+            style: TextStyle(fontSize: AppTypography.sizeBody, color: AppColors.neonGold, fontWeight: AppTypography.bold)),
+        SizedBox(height: AppSpacing.xs + 1),
         Text("🏟️  ${trn.sponsor}",
-            style: TextStyle(fontSize: 11, color: AppColors.white.withOpacity(0.55))),
+            style: TextStyle(fontSize: AppTypography.sizeSmall, color: AppColors.white.withOpacity(AppColors.opacity55))),
         const SizedBox(height: 12),
 
         // Info grid
@@ -795,9 +774,9 @@ class _TournamentHeroCard extends StatelessWidget {
         // Slots progress
         Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
           Text("👥  Slots Filled",
-              style: TextStyle(fontSize: 10, color: AppColors.white.withOpacity(0.55))),
+              style: TextStyle(fontSize: AppTypography.sizeCaption, color: AppColors.white.withOpacity(AppColors.opacity55))),
           Text("${trn.filled} / ${trn.slots}",
-              style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w800, color: AppColors.neonGold)),
+              style: TextStyle(fontSize: AppTypography.sizeSmall, fontWeight: AppTypography.black, color: AppColors.neonGold)),
         ]),
         const SizedBox(height: 5),
         NeonProgressBarWidget(value: fillPct * trn.slots, max: trn.slots.toDouble(),
@@ -812,13 +791,13 @@ class _TrnInfoItem extends StatelessWidget {
   const _TrnInfoItem({required this.icon, required this.label, required this.value});
   @override
   Widget build(BuildContext context) => Expanded(child: Padding(
-    padding: const EdgeInsets.only(bottom: 4),
+    padding: EdgeInsets.only(bottom: AppSpacing.xs + 1),
     child: Row(children: [
-      Text(icon, style: const TextStyle(fontSize: 13)),
-      const SizedBox(width: 6),
+      Text(icon, style: TextStyle(fontSize: AppTypography.sizeBody)),
+      SizedBox(width: AppSpacing.md - 1),
       Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        Text(label, style: const TextStyle(fontSize: 9, color: AppColors.textMuted)),
-        Text(value, style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w700, color: AppColors.textPrimary)),
+        Text(label, style: TextStyle(fontSize: AppTypography.sizeCaption, color: AppColors.textMuted)),
+        Text(value, style: TextStyle(fontSize: AppTypography.sizeSmall, fontWeight: AppTypography.bold, color: AppColors.textPrimary)),
       ])),
     ]),
   ));
@@ -838,27 +817,27 @@ class _RegisterSection extends StatelessWidget {
 
     if (alreadyJoined) {
       return GlassCardWidget(
-        padding: const EdgeInsets.symmetric(vertical: 12),
-        borderColor: AppColors.neonGreen.withOpacity(0.3),
+        padding: EdgeInsets.symmetric(vertical: AppSpacing.lg),
+        borderColor: AppColors.neonGreen.withOpacity(AppColors.opacity30),
         child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-          const Text("✅", style: TextStyle(fontSize: 16)),
-          const SizedBox(width: 8),
-          const Text("You're Registered!", style: TextStyle(
-              fontSize: 13, fontWeight: FontWeight.w800, color: AppColors.neonGreen)),
+          Text("✅", style: TextStyle(fontSize: AppTypography.sizeSubtitle)),
+          SizedBox(width: AppSpacing.md),
+          Text("You're Registered!", style: TextStyle(
+              fontSize: AppTypography.sizeBody, fontWeight: AppTypography.black, color: AppColors.neonGreen)),
         ]),
       );
     }
 
     if (!canAfford) {
       return GlassCardWidget(
-        padding: const EdgeInsets.symmetric(vertical: 11, horizontal: 14),
-        borderColor: AppColors.neonRed.withOpacity(0.3),
+        padding: EdgeInsets.symmetric(vertical: AppSpacing.lg - 1, horizontal: AppSpacing.xl),
+        borderColor: AppColors.neonRed.withOpacity(AppColors.opacity30),
         child: Row(children: [
-          const Text("⚠️", style: TextStyle(fontSize: 14)),
-          const SizedBox(width: 8),
+          Text("⚠️", style: TextStyle(fontSize: AppTypography.sizeSmall)),
+          SizedBox(width: AppSpacing.md),
           Expanded(child: Text(
               "Need ${trn.cost - coins} more points — watch ads to earn!",
-              style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w700, color: AppColors.neonRed))),
+              style: TextStyle(fontSize: AppTypography.sizeSmall, fontWeight: AppTypography.bold, color: AppColors.neonRed))),
         ]),
       );
     }
@@ -867,15 +846,15 @@ class _RegisterSection extends StatelessWidget {
       onTap: () => onJoin(trn),
       child: Container(
         width: double.infinity,
-        padding: const EdgeInsets.symmetric(vertical: 14),
+        padding: EdgeInsets.symmetric(vertical: AppSpacing.cardInnerPadding),
         decoration: BoxDecoration(
-          gradient: const LinearGradient(colors: [AppColors.neonGold, Color(0xFFF59E0B)]),
-          borderRadius: BorderRadius.circular(16),
-          boxShadow: [BoxShadow(color: AppColors.neonGold.withOpacity(0.4), blurRadius: 16, offset: const Offset(0,4))],
+          gradient: AppColors.goldHeroGradient,
+          borderRadius: AppRadius.borderXl,
+          boxShadow: [BoxShadow(color: AppColors.neonGold.withOpacity(AppColors.opacity40), blurRadius: 16, offset: const Offset(0,4))],
         ),
         alignment: Alignment.center,
         child: Text("Register Now  —  🪙 ${trn.cost} Points",
-            style: const TextStyle(color: Colors.black, fontSize: 14, fontWeight: FontWeight.w900)),
+            style: TextStyle(color: Colors.black, fontSize: AppTypography.sizeBody, fontWeight: AppTypography.black)),
       ),
     );
   }
@@ -888,41 +867,41 @@ class _BracketSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 12),
+      padding: EdgeInsets.only(bottom: AppSpacing.lg),
       child: Column(children: [
         GestureDetector(
           onTap: onToggle,
           child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 13),
+            padding: EdgeInsets.symmetric(horizontal: AppSpacing.xxxl, vertical: AppSpacing.lg + 1),
             decoration: BoxDecoration(
               color: AppColors.bgCard,
-              borderRadius: open ? const BorderRadius.vertical(top: Radius.circular(16)) : BorderRadius.circular(16),
+              borderRadius: open ? AppRadius.borderXlOnlyTop : AppRadius.borderXl,
               border: Border.all(color: AppColors.glassBorder),
             ),
             child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
               Row(children: [
                 Container(
-                  width: 36, height: 36,
+                  width: AppSizing.iconBtnMd, height: AppSizing.iconBtnMd,
                   decoration: BoxDecoration(
-                    color: AppColors.neonCyan.withOpacity(0.1),
-                    borderRadius: BorderRadius.circular(Dimensions.radiusDefault),
-                    border: Border.all(color: AppColors.neonCyan.withOpacity(0.2)),
+                    color: AppColors.neonCyan.withOpacity(AppColors.opacity10),
+                    borderRadius: AppRadius.borderDef,
+                    border: Border.all(color: AppColors.neonCyan.withOpacity(AppColors.opacity20)),
                   ),
                   alignment: Alignment.center,
-                  child: const Text("🏟️", style: TextStyle(fontSize: 18)),
+                  child: Text("🏟️", style: TextStyle(fontSize: AppTypography.sizeTitleLarge)),
                 ),
-                const SizedBox(width: 10),
+                SizedBox(width: AppSpacing.lg),
                 Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                  const Text("Tournament Bracket",
-                      style: TextStyle(fontSize: 14, fontWeight: FontWeight.w800, color: AppColors.textPrimary)),
+                  Text("Tournament Bracket",
+                      style: TextStyle(fontSize: AppTypography.sizeSmall, fontWeight: AppTypography.black, color: AppColors.textPrimary)),
                   Text(trn.rounds.join(" → "),
-                      style: const TextStyle(fontSize: 10, color: AppColors.textMuted)),
+                      style: TextStyle(fontSize: AppTypography.sizeCaption, color: AppColors.textMuted)),
                 ]),
               ]),
               AnimatedRotation(
                 turns: open ? 0.5 : 0,
                 duration: const Duration(milliseconds: 220),
-                child: const Icon(Icons.keyboard_arrow_down, color: AppColors.textMuted),
+                child: Icon(Icons.keyboard_arrow_down, color: AppColors.textMuted),
               ),
             ]),
           ),
@@ -949,29 +928,29 @@ class _BracketSection extends StatelessWidget {
                           color: AppColors.neonCyan, letterSpacing: 1.5)),
                 ),
                 ...rnd.matches.map((m) => Container(
-                  margin: const EdgeInsets.only(bottom: 6),
-                  padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 9),
+                  margin: EdgeInsets.only(bottom: AppSpacing.xs + 2),
+                  padding: EdgeInsets.symmetric(horizontal: AppSpacing.xxxl, vertical: AppSpacing.md - 1),
                   decoration: BoxDecoration(
                     color: AppColors.bgSurface,
-                    borderRadius: BorderRadius.circular(12),
+                    borderRadius: AppRadius.borderMd,
                     border: Border.all(color: AppColors.glassBorder),
                   ),
                   child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
                     Text(m[0], style: TextStyle(
-                        fontSize: 12, fontWeight: FontWeight.w700,
+                        fontSize: AppTypography.sizeSmall, fontWeight: AppTypography.bold,
                         color: m[0] == "TBD" ? AppColors.textMuted : AppColors.textPrimary)),
                     Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 3),
+                      padding: EdgeInsets.symmetric(horizontal: AppSpacing.lg - 2, vertical: AppSpacing.xxs + 1),
                       decoration: BoxDecoration(
-                        color: AppColors.neonBlue.withOpacity(0.15),
-                        borderRadius: BorderRadius.circular(Dimensions.radiusMedium),
+                        color: AppColors.neonBlue.withOpacity(AppColors.opacity15),
+                        borderRadius: AppRadius.borderSm,
                         border: Border.all(color: AppColors.neonBlue.withOpacity(0.3)),
                       ),
-                      child: const Text("VS",
-                          style: TextStyle(fontSize: 10, fontWeight: FontWeight.w800, color: AppColors.neonBlue)),
+                      child: Text("VS",
+                          style: TextStyle(fontSize: AppTypography.sizeCaption, fontWeight: AppTypography.black, color: AppColors.neonBlue)),
                     ),
                     Text(m[1], style: TextStyle(
-                        fontSize: 12, fontWeight: FontWeight.w700,
+                        fontSize: AppTypography.sizeSmall, fontWeight: AppTypography.bold,
                         color: m[1] == "TBD" ? AppColors.textMuted : AppColors.textPrimary)),
                   ]),
                 )),
@@ -989,7 +968,7 @@ class _BracketSection extends StatelessWidget {
 class _TournamentLeaderboard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final players = AppData.players;
+    final players = Get.find<AppDataController>().rankedPlayers;
     final medals = ["🥇", "🥈", "🥉"];
     final colors = [AppColors.gold, AppColors.silver, AppColors.bronze,
       AppColors.neonBlue, AppColors.textMuted];
@@ -999,33 +978,33 @@ class _TournamentLeaderboard extends StatelessWidget {
         final p = players[i];
         final c = colors[i.clamp(0, colors.length - 1)];
         return Container(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 11),
+          padding: EdgeInsets.symmetric(horizontal: AppSpacing.xxxl, vertical: AppSpacing.lg - 1),
           decoration: BoxDecoration(
             border: i < players.length - 1 ? Border(bottom: BorderSide(color: AppColors.glassBorder)) : null,
             gradient: i == 0 ? LinearGradient(
-                colors: [AppColors.neonGold.withOpacity(0.07), Colors.transparent]) : null,
+                colors: [AppColors.neonGold.withOpacity(AppColors.opacity8), Colors.transparent]) : null,
           ),
           child: Row(children: [
-            SizedBox(width: 24, child: Text(
+            SizedBox(width: AppSpacing.xl + 4, child: Text(
               i < 3 ? medals[i] : "${i + 1}",
-              style: TextStyle(fontSize: i < 3 ? 20 : 13, fontWeight: FontWeight.w800, color: c),
+              style: TextStyle(fontSize: i < 3 ? AppTypography.sizeTitleLarge : AppTypography.sizeSmall, fontWeight: AppTypography.black, color: c),
               textAlign: TextAlign.center,
             )),
-            const SizedBox(width: 11),
-            PlayerAvatarWidget(name: p.name, size: 36),
-            const SizedBox(width: 10),
+            SizedBox(width: AppSpacing.lg + 1),
+            PlayerAvatarWidget(name: p.name, size: AppSizing.avatarSm),
+            SizedBox(width: AppSpacing.lg),
             Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
               Row(children: [
-                Text(p.name, style: const TextStyle(
-                    fontSize: 12, fontWeight: FontWeight.w700, color: AppColors.textPrimary)),
-                if (i < 2) ...[const SizedBox(width: 5), NeonPillWidget(label: "VIP", color: AppColors.neonGold)],
+                Text(p.name, style: TextStyle(
+                    fontSize: AppTypography.sizeSmall, fontWeight: AppTypography.bold, color: AppColors.textPrimary)),
+                if (i < 2) ...[SizedBox(width: AppSpacing.xs + 1), NeonPillWidget(label: "VIP", color: AppColors.neonGold)],
               ]),
               Text("${p.wins}W · ${p.goals} goals",
-                  style: const TextStyle(fontSize: 9, color: AppColors.textMuted)),
+                  style: TextStyle(fontSize: AppTypography.sizeCaption, color: AppColors.textMuted)),
             ])),
             Column(crossAxisAlignment: CrossAxisAlignment.end, children: [
-              Text("${p.pts}", style: TextStyle(fontSize: 15, fontWeight: FontWeight.w900, color: c)),
-              const Text("pts", style: TextStyle(fontSize: 8, color: AppColors.textMuted)),
+              Text("${p.pts}", style: TextStyle(fontSize: AppTypography.sizeSubtitle, fontWeight: AppTypography.black, color: c)),
+              Text("pts", style: TextStyle(fontSize: AppTypography.sizeTiny, color: AppColors.textMuted)),
             ]),
           ]),
         );
@@ -1055,49 +1034,46 @@ class _ShopTab extends StatelessWidget {
       child: Column(children: [
         // ── Shop Hero Banner ───────────────────────────────────────────
         Container(
-          padding: const EdgeInsets.fromLTRB(20, 22, 20, 20),
-          decoration: const BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topLeft, end: Alignment.bottomRight,
-              colors: [Color(0xFF0D1B4E), Color(0xFF2d1b5e)],
-            ),
+          padding: EdgeInsets.fromLTRB(AppSpacing.xxxl, AppSpacing.massive, AppSpacing.xxxl, AppSpacing.xxxl),
+          decoration: BoxDecoration(
+            gradient: AppColors.blueDeepHeroGradient,
           ),
           child: Stack(children: [
             Positioned(top: -30, right: -30,
                 child: Container(width: 140, height: 140,
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
-                      color: AppColors.neonPurple.withOpacity(0.12),
+                      color: AppColors.neonPurple.withOpacity(AppColors.opacity12),
                     ))),
             Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
               Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                const Text("POINTS SHOP",
-                    style: TextStyle(fontSize: 9, fontWeight: FontWeight.w800,
+                Text("POINTS SHOP",
+                    style: TextStyle(fontSize: AppTypography.sizeCaption, fontWeight: AppTypography.black,
                         color: AppColors.neonPurple, letterSpacing: 2)),
-                const SizedBox(height: 6),
-                const Text("Spend Points,",
-                    style: TextStyle(fontSize: 22, fontWeight: FontWeight.w900, color: AppColors.white)),
-                const Text("Look Elite! 🛒",
-                    style: TextStyle(fontSize: 22, fontWeight: FontWeight.w900, color: AppColors.neonGold)),
-                const SizedBox(height: 5),
+                SizedBox(height: AppSpacing.xs + 1),
+                Text("Spend Points,",
+                    style: TextStyle(fontSize: AppTypography.sizeDisplay, fontWeight: AppTypography.black, color: AppColors.white)),
+                Text("Look Elite! 🛒",
+                    style: TextStyle(fontSize: AppTypography.sizeDisplay, fontWeight: AppTypography.black, color: AppColors.neonGold)),
+                SizedBox(height: AppSpacing.xs),
                 Text("Cosmetics only · Points are earned, never sold",
-                    style: TextStyle(fontSize: 10, color: AppColors.white.withOpacity(0.4))),
+                    style: TextStyle(fontSize: AppTypography.sizeCaption, color: AppColors.white.withOpacity(AppColors.opacity40))),
               ]),
               Column(crossAxisAlignment: CrossAxisAlignment.end, children: [
-                Text("BALANCE", style: TextStyle(fontSize: 9, color: AppColors.white.withOpacity(0.4))),
-                const SizedBox(height: 4),
+                Text("BALANCE", style: TextStyle(fontSize: AppTypography.sizeCaption, color: AppColors.white.withOpacity(AppColors.opacity40))),
+                SizedBox(height: AppSpacing.xs + 1),
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+                  padding: EdgeInsets.symmetric(horizontal: AppSpacing.xl, vertical: AppSpacing.md),
                   decoration: BoxDecoration(
-                    color: AppColors.neonGold.withOpacity(0.15),
-                    borderRadius: BorderRadius.circular(13),
-                    border: Border.all(color: AppColors.neonGold.withOpacity(0.3)),
+                    color: AppColors.neonGold.withOpacity(AppColors.opacity15),
+                    borderRadius: AppRadius.borderMd + const BorderRadius.all(Radius.circular(1)),
+                    border: Border.all(color: AppColors.neonGold.withOpacity(AppColors.opacity30)),
                   ),
                   child: Row(children: [
-                    const Text("🪙", style: TextStyle(fontSize: 18)),
-                    const SizedBox(width: 6),
+                    Text("🪙", style: TextStyle(fontSize: AppTypography.sizeSubtitle)),
+                    SizedBox(width: AppSpacing.xs + 2),
                     Text("$coins",
-                        style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w900, color: AppColors.neonGold)),
+                        style: TextStyle(fontSize: AppTypography.sizeDisplay, fontWeight: AppTypography.black, color: AppColors.neonGold)),
                   ]),
                 ),
               ]),
@@ -1106,7 +1082,7 @@ class _ShopTab extends StatelessWidget {
         ),
 
         Padding(
-          padding: const EdgeInsets.fromLTRB(16, 14, 16, 24),
+          padding: EdgeInsets.fromLTRB(AppSpacing.xxxl, AppSpacing.cardInnerPadding, AppSpacing.xxxl, AppSpacing.massive),
           child: Column(children: [
             SectionHeadingWidget(
               title: "🎖️ Cosmetic Items",
@@ -1117,9 +1093,9 @@ class _ShopTab extends StatelessWidget {
             GridView.builder(
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 3, mainAxisSpacing: 10, crossAxisSpacing: 10,
-                childAspectRatio: 0.85,
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 3, mainAxisSpacing: AppSpacing.md, crossAxisSpacing: AppSpacing.md,
+                childAspectRatio: 0.82,
               ),
               itemCount: items.length,
               itemBuilder: (ctx, i) {
@@ -1129,43 +1105,43 @@ class _ShopTab extends StatelessWidget {
                   onTap: () => onSel(i),
                   child: AnimatedContainer(
                     duration: const Duration(milliseconds: 180),
-                    padding: const EdgeInsets.fromLTRB(8, 14, 8, 12),
+                    padding: EdgeInsets.fromLTRB(AppSpacing.md, AppSpacing.cardInnerPadding, AppSpacing.md, AppSpacing.lg),
                     decoration: BoxDecoration(
-                      color: sel ? item.accent.withOpacity(0.1) : AppColors.bgCard,
-                      borderRadius: BorderRadius.circular(18),
+                      color: sel ? item.accent.withOpacity(AppColors.opacity10) : AppColors.bgCard,
+                      borderRadius: AppRadius.borderXl + const BorderRadius.all(Radius.circular(2)),
                       border: Border.all(
-                        color: sel ? item.accent.withOpacity(0.5) : AppColors.glassBorder,
+                        color: sel ? item.accent.withOpacity(AppColors.opacity50) : AppColors.glassBorder,
                         width: sel ? 1.5 : 1,
                       ),
                       boxShadow: sel ? [BoxShadow(
-                          color: item.accent.withOpacity(0.2), blurRadius: 16)] : [],
+                          color: item.accent.withOpacity(AppColors.opacity20), blurRadius: 16)] : [],
                     ),
                     child: Stack(children: [
                       if (item.owned) Positioned(top: 0, right: 0,
                         child: Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 2),
+                          padding: EdgeInsets.symmetric(horizontal: AppSpacing.xs + 1, vertical: AppSpacing.xxs + 1),
                           decoration: BoxDecoration(
                             color: AppColors.neonGreen,
-                            borderRadius: BorderRadius.circular(6),
+                            borderRadius: AppRadius.borderSm,
                           ),
-                          child: const Text("✓",
-                              style: TextStyle(fontSize: 7, fontWeight: FontWeight.w900, color: AppColors.white)),
+                          child: Text("✓",
+                              style: TextStyle(fontSize: AppTypography.sizeTiny - 2, fontWeight: AppTypography.black, color: AppColors.white)),
                         ),
                       ),
                       Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-                        Text(item.icon, style: TextStyle(fontSize: 28,
-                            shadows: sel ? [Shadow(color: item.accent.withOpacity(0.8), blurRadius: 12)] : [])),
-                        const SizedBox(height: 8),
+                        Text(item.icon, style: TextStyle(fontSize: AppTypography.sizeHeading + 2,
+                            shadows: sel ? [Shadow(color: item.accent.withOpacity(AppColors.opacity80), blurRadius: 12)] : [])),
+                        SizedBox(height: AppSpacing.md),
                         Text(item.name,
                             textAlign: TextAlign.center,
-                            style: const TextStyle(fontSize: 10, fontWeight: FontWeight.w700,
+                            style: TextStyle(fontSize: AppTypography.sizeCaption + 1, fontWeight: AppTypography.bold,
                                 color: AppColors.textPrimary, height: 1.2)),
-                        const SizedBox(height: 5),
+                        SizedBox(height: AppSpacing.xs + 1),
                         Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-                          const Text("🪙", style: TextStyle(fontSize: 11)),
-                          const SizedBox(width: 3),
+                          Text("🪙", style: TextStyle(fontSize: AppTypography.sizeSmall - 1)),
+                          SizedBox(width: AppSpacing.xxs + 1),
                           Text("${item.cost}",
-                              style: TextStyle(fontSize: 11, fontWeight: FontWeight.w900, color: item.accent)),
+                              style: TextStyle(fontSize: AppTypography.sizeSmall - 1, fontWeight: AppTypography.black, color: item.accent)),
                         ]),
                       ]),
                     ]),
@@ -1181,17 +1157,17 @@ class _ShopTab extends StatelessWidget {
 
             // ── Disclaimer ─────────────────────────────────────────────
             GlassCardWidget(
-              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
-              borderColor: AppColors.neonCyan.withOpacity(0.15),
+              padding: EdgeInsets.symmetric(horizontal: AppSpacing.xxxl, vertical: AppSpacing.lg),
+              borderColor: AppColors.neonCyan.withOpacity(AppColors.opacity15),
               child: Row(children: [
-                const Text("🛡️", style: TextStyle(fontSize: 24)),
-                const SizedBox(width: 12),
-                const Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                Text("🛡️", style: TextStyle(fontSize: AppTypography.sizeHeading)),
+                SizedBox(width: AppSpacing.xl),
+                Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                   Text("Points are earned — never purchased",
-                      style: TextStyle(fontSize: 12, fontWeight: FontWeight.w800, color: AppColors.textPrimary)),
-                  SizedBox(height: 2),
+                      style: TextStyle(fontSize: AppTypography.sizeSmall, fontWeight: AppTypography.black, color: AppColors.textPrimary)),
+                  SizedBox(height: AppSpacing.xxs),
                   Text("All points come from watching ads & completing tasks. No real money. Cosmetics only.",
-                      style: TextStyle(fontSize: 10, color: AppColors.textMuted, height: 1.6)),
+                      style: TextStyle(fontSize: AppTypography.sizeTiny + 1, color: AppColors.textMuted, height: 1.6)),
                 ])),
               ]),
             ),
@@ -1211,79 +1187,79 @@ class _ShopItemDetail extends StatelessWidget {
     final canAfford = coins >= item.cost;
 
     return GlassCardWidget(
-      padding: const EdgeInsets.all(16),
-      borderColor: item.accent.withOpacity(0.3),
-      shadows: [BoxShadow(color: item.accent.withOpacity(0.1), blurRadius: 20)],
+      padding: EdgeInsets.all(AppSpacing.xxxl),
+      borderColor: item.accent.withOpacity(AppColors.opacity30),
+      shadows: [BoxShadow(color: item.accent.withOpacity(AppColors.opacity10), blurRadius: 20)],
       child: Column(children: [
         Row(children: [
           Container(
-            width: 52, height: 52,
+            width: AppSizing.iconBtnLg, height: AppSizing.iconBtnLg,
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(Dimensions.radiusLarge),
-              color: item.accent.withOpacity(0.1),
-              border: Border.all(color: item.accent.withOpacity(0.3), width: 2),
+              borderRadius: AppRadius.borderXl,
+              color: item.accent.withOpacity(AppColors.opacity10),
+              border: Border.all(color: item.accent.withOpacity(AppColors.opacity30), width: 2),
             ),
             alignment: Alignment.center,
-            child: Text(item.icon, style: TextStyle(fontSize: 26,
-                shadows: [Shadow(color: item.accent.withOpacity(0.8), blurRadius: 12)])),
+            child: Text(item.icon, style: TextStyle(fontSize: AppTypography.sizeHeading,
+                shadows: [Shadow(color: item.accent.withOpacity(AppColors.opacity80), blurRadius: 12)])),
           ),
-          const SizedBox(width: 12),
+          SizedBox(width: AppSpacing.xl),
           Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
             Text(item.name,
-                style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w800, color: AppColors.textPrimary)),
+                style: TextStyle(fontSize: AppTypography.sizeBody + 2, fontWeight: AppTypography.black, color: AppColors.textPrimary)),
             Text(item.info,
-                style: const TextStyle(fontSize: 11, color: AppColors.textMuted)),
-            const SizedBox(height: 4),
+                style: TextStyle(fontSize: AppTypography.sizeSmall - 1, color: AppColors.textMuted)),
+            SizedBox(height: AppSpacing.xs + 1),
             Row(children: [
-              const Text("🪙"),
-              const SizedBox(width: 4),
+              Text("🪙"),
+              SizedBox(width: AppSpacing.xs),
               Text("${item.cost}",
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.w900, color: item.accent)),
-              const SizedBox(width: 5),
-              const Text("points", style: TextStyle(fontSize: 10, color: AppColors.textMuted)),
+                  style: TextStyle(fontSize: AppTypography.sizeSubtitle + 2, fontWeight: AppTypography.black, color: item.accent)),
+              SizedBox(width: AppSpacing.xs + 1),
+              Text("points", style: TextStyle(fontSize: AppTypography.sizeTiny + 1, color: AppColors.textMuted)),
             ]),
           ])),
         ]),
-        const SizedBox(height: 14),
+        SizedBox(height: AppSpacing.cardInnerPadding),
 
         if (item.owned)
           Container(
-            width: double.infinity, padding: const EdgeInsets.symmetric(vertical: 11),
+            width: double.infinity, padding: EdgeInsets.symmetric(vertical: AppSpacing.md + 1),
             decoration: BoxDecoration(
-              color: AppColors.neonGreen.withOpacity(0.1),
-              borderRadius: BorderRadius.circular(12),
-              border: Border.all(color: AppColors.neonGreen.withOpacity(0.25)),
+              color: AppColors.neonGreen.withOpacity(AppColors.opacity10),
+              borderRadius: AppRadius.borderDef + const BorderRadius.all(Radius.circular(2)),
+              border: Border.all(color: AppColors.neonGreen.withOpacity(AppColors.opacity25)),
             ),
             alignment: Alignment.center,
-            child: const Text("✓  Already in your collection",
-                style: TextStyle(color: AppColors.neonGreen, fontSize: 12, fontWeight: FontWeight.w700)),
+            child: Text("✓  Already in your collection",
+                style: TextStyle(color: AppColors.neonGreen, fontSize: AppTypography.sizeSmall, fontWeight: AppTypography.bold)),
           )
         else if (canAfford)
           GestureDetector(
             onTap: () => onBuy(idx),
             child: Container(
-              width: double.infinity, padding: const EdgeInsets.symmetric(vertical: 12),
+              width: double.infinity, padding: EdgeInsets.symmetric(vertical: AppSpacing.lg),
               decoration: BoxDecoration(
                 gradient: LinearGradient(colors: [item.accent, item.accent.withOpacity(0.75)]),
-                borderRadius: BorderRadius.circular(12),
-                boxShadow: [BoxShadow(color: item.accent.withOpacity(0.4), blurRadius: 16)],
+                borderRadius: AppRadius.borderDef + const BorderRadius.all(Radius.circular(2)),
+                boxShadow: [BoxShadow(color: item.accent.withOpacity(AppColors.opacity40), blurRadius: 16)],
               ),
               alignment: Alignment.center,
               child: Text("Buy Now  —  🪙 ${item.cost} Points",
-                  style: const TextStyle(color: AppColors.white, fontSize: 14, fontWeight: FontWeight.w900)),
+                  style: TextStyle(color: AppColors.white, fontSize: AppTypography.sizeBody, fontWeight: AppTypography.extraBold)),
             ),
           )
         else
           Container(
-            width: double.infinity, padding: const EdgeInsets.symmetric(vertical: 11),
+            width: double.infinity, padding: EdgeInsets.symmetric(vertical: AppSpacing.md + 1),
             decoration: BoxDecoration(
-              color: AppColors.neonRed.withOpacity(0.1),
-              borderRadius: BorderRadius.circular(12),
-              border: Border.all(color: AppColors.neonRed.withOpacity(0.25)),
+              color: AppColors.neonRed.withOpacity(AppColors.opacity10),
+              borderRadius: AppRadius.borderDef + const BorderRadius.all(Radius.circular(2)),
+              border: Border.all(color: AppColors.neonRed.withOpacity(AppColors.opacity25)),
             ),
             alignment: Alignment.center,
             child: Text("⚠️  Need ${item.cost - coins} more points — watch ads to earn!",
-                style: const TextStyle(color: AppColors.neonRed, fontSize: 11, fontWeight: FontWeight.w700)),
+                style: TextStyle(color: AppColors.neonRed, fontSize: AppTypography.sizeCaption + 1, fontWeight: AppTypography.bold)),
           ),
       ]),
     );
@@ -1307,24 +1283,23 @@ class _ChatTab extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(14),
+      padding: EdgeInsets.all(AppSpacing.xxxl),
       child: Column(children: [
         // Admin info card
         GlassCardWidget(
-          padding: const EdgeInsets.all(12),
-          borderColor: AppColors.neonBlue.withOpacity(0.2),
+          padding: EdgeInsets.all(AppSpacing.lg),
+          borderColor: AppColors.neonBlue.withOpacity(AppColors.opacity20),
           child: Row(children: [
             Stack(children: [
               Container(
-                width: 44, height: 44,
+                width: AppSizing.iconBtnMd + 10, height: AppSizing.iconBtnMd + 10,
                 decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(13),
-                  gradient: const LinearGradient(
-                      colors: [AppColors.neonBlue, Color(0xFF2563EB)]),
-                  boxShadow: [BoxShadow(color: AppColors.neonBlue.withOpacity(0.4), blurRadius: 10)],
+                  borderRadius: AppRadius.borderMd + const BorderRadius.all(Radius.circular(1)),
+                  gradient: AppColors.blueHeroGradient,
+                  boxShadow: [BoxShadow(color: AppColors.neonBlue.withOpacity(AppColors.opacity40), blurRadius: 10)],
                 ),
                 alignment: Alignment.center,
-                child: const Text("🛡️", style: TextStyle(fontSize: 20)),
+                child: Text("🛡️", style: TextStyle(fontSize: AppTypography.sizeTitleLarge)),
               ),
               Positioned(bottom: 2, right: 2,
                 child: Container(
@@ -1338,17 +1313,17 @@ class _ChatTab extends StatelessWidget {
                 ),
               ),
             ]),
-            const SizedBox(width: 12),
-            const Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            SizedBox(width: AppSpacing.lg),
+            Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
               Text("GameArena Admin",
-                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.w800, color: AppColors.textPrimary)),
+                  style: TextStyle(fontSize: AppTypography.sizeSmall, fontWeight: AppTypography.black, color: AppColors.textPrimary)),
               Text("● Online · Replies within 5 minutes",
-                  style: TextStyle(fontSize: 10, color: AppColors.neonGreen, fontWeight: FontWeight.w600)),
+                  style: TextStyle(fontSize: AppTypography.sizeCaption, color: AppColors.neonGreen, fontWeight: AppTypography.extraBold)),
             ])),
             NeonPillWidget(label: "OFFICIAL", color: AppColors.neonBlue),
           ]),
         ),
-        const SizedBox(height: 12),
+        SizedBox(height: AppSpacing.lg),
 
         // Messages
         Expanded(child: ListView.builder(
@@ -1357,53 +1332,51 @@ class _ChatTab extends StatelessWidget {
           itemBuilder: (ctx, i) {
             final m = chats[i];
             return Padding(
-              padding: const EdgeInsets.only(bottom: 10),
+              padding: EdgeInsets.only(bottom: AppSpacing.md + 1),
               child: Row(
                 mainAxisAlignment: m.me ? MainAxisAlignment.end : MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
                   if (!m.me) ...[
                     Container(
-                      width: 28, height: 28,
+                      width: AppSizing.avatarXs, height: AppSizing.avatarXs,
                       decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(Dimensions.radiusMedium),
-                        gradient: const LinearGradient(
-                            colors: [AppColors.neonBlue, Color(0xFF2563EB)]),
+                        borderRadius: AppRadius.borderSm,
+                        gradient: AppColors.blueHeroGradient,
                       ),
                       alignment: Alignment.center,
-                      child: const Text("🛡️", style: TextStyle(fontSize: 13)),
+                      child: Text("🛡️", style: TextStyle(fontSize: AppTypography.sizeSmall + 1)),
                     ),
-                    const SizedBox(width: 8),
+                    SizedBox(width: AppSpacing.md),
                   ],
                   ConstrainedBox(
                     constraints: BoxConstraints(maxWidth: MediaQuery.of(ctx).size.width * 0.66),
                     child: Container(
-                      padding: const EdgeInsets.fromLTRB(13, 10, 13, 10),
+                      padding: EdgeInsets.symmetric(horizontal: AppSpacing.xl - 1, vertical: AppSpacing.md),
                       decoration: BoxDecoration(
-                        gradient: m.me ? const LinearGradient(
-                            colors: [AppColors.neonCyan, Color(0xFF0077AA)]) : null,
+                        gradient: m.me ? AppColors.blueHeroGradient : null,
                         color: m.me ? null : AppColors.bgCard,
                         borderRadius: BorderRadius.only(
-                          topLeft: const Radius.circular(16),
-                          topRight: const Radius.circular(16),
-                          bottomLeft: m.me ? const Radius.circular(16) : const Radius.circular(4),
-                          bottomRight: m.me ? const Radius.circular(4) : const Radius.circular(16),
+                          topLeft: AppRadius.radiusXl,
+                          topRight: AppRadius.radiusXl,
+                          bottomLeft: m.me ? AppRadius.radiusXl : AppRadius.radiusDef,
+                          bottomRight: m.me ? AppRadius.radiusDef : AppRadius.radiusXl,
                         ),
                         border: m.me ? null : Border.all(color: AppColors.glassBorder),
-                        boxShadow: m.me ? [BoxShadow(color: AppColors.neonCyan.withOpacity(0.25), blurRadius: 10)] : [],
+                        boxShadow: m.me ? [BoxShadow(color: AppColors.neonCyan.withOpacity(AppColors.opacity25), blurRadius: 10)] : [],
                       ),
                       child: Column(crossAxisAlignment: m.me ? CrossAxisAlignment.end : CrossAxisAlignment.start, children: [
                         Text(m.text,
                             style: TextStyle(
-                              fontSize: 12,
+                              fontSize: AppTypography.sizeSmall,
                               color: m.me ? AppColors.white : AppColors.textPrimary,
                               height: 1.55,
                             )),
-                        const SizedBox(height: 4),
+                        SizedBox(height: AppSpacing.xs),
                         Text("${m.time} ago",
                             style: TextStyle(
-                              fontSize: 9,
-                              color: m.me ? AppColors.white.withOpacity(0.4) : AppColors.textMuted,
+                              fontSize: AppTypography.sizeTiny,
+                              color: m.me ? AppColors.white.withOpacity(AppColors.opacity40) : AppColors.textMuted,
                             )),
                       ]),
                     ),
@@ -1417,20 +1390,20 @@ class _ChatTab extends StatelessWidget {
 
         // Input bar
         Container(
-          padding: const EdgeInsets.fromLTRB(14, 8, 8, 8),
+          padding: EdgeInsets.fromLTRB(AppSpacing.xxxl, AppSpacing.md, AppSpacing.md, AppSpacing.md),
           decoration: BoxDecoration(
             color: AppColors.bgCard,
-            borderRadius: BorderRadius.circular(16),
+            borderRadius: AppRadius.borderXl,
             border: Border.all(color: AppColors.glassBorder),
-            boxShadow: [BoxShadow(color: AppColors.neonCyan.withOpacity(0.06), blurRadius: 12)],
+            boxShadow: [BoxShadow(color: AppColors.neonCyan.withOpacity(AppColors.opacity6), blurRadius: 12)],
           ),
           child: Row(children: [
             Expanded(child: TextField(
               controller: ctrl,
-              style: const TextStyle(color: AppColors.textPrimary, fontSize: 13),
-              decoration: const InputDecoration(
+              style: TextStyle(color: AppColors.textPrimary, fontSize: AppTypography.sizeSmall + 1),
+              decoration: InputDecoration(
                 hintText: "Ask admin anything…",
-                hintStyle: TextStyle(color: AppColors.textMuted, fontSize: 13),
+                hintStyle: TextStyle(color: AppColors.textMuted, fontSize: AppTypography.sizeSmall + 1),
                 border: InputBorder.none,
                 isDense: true,
               ),
@@ -1439,15 +1412,14 @@ class _ChatTab extends StatelessWidget {
             GestureDetector(
               onTap: onSend,
               child: Container(
-                width: 38, height: 38,
+                width: AppSizing.iconBtnMd + 2, height: AppSizing.iconBtnMd + 2,
                 decoration: BoxDecoration(
-                  gradient: const LinearGradient(
-                      colors: [AppColors.neonCyan, Color(0xFF0077AA)]),
-                  borderRadius: BorderRadius.circular(11),
-                  boxShadow: [BoxShadow(color: AppColors.neonCyan.withOpacity(0.4), blurRadius: 10)],
+                  gradient: AppColors.blueHeroGradient,
+                  borderRadius: AppRadius.borderMd + const BorderRadius.all(Radius.circular(2)),
+                  boxShadow: [BoxShadow(color: AppColors.neonCyan.withOpacity(AppColors.opacity40), blurRadius: 10)],
                 ),
                 alignment: Alignment.center,
-                child: const Icon(Icons.send_rounded, color: AppColors.white, size: 18),
+                child: Icon(Icons.send_rounded, color: AppColors.white, size: AppSizing.iconSm + 2),
               ),
             ),
           ]),
@@ -1455,4 +1427,25 @@ class _ChatTab extends StatelessWidget {
       ]),
     );
   }
+}
+
+class ShopItem {
+  final String icon, name, info;
+  final int cost;
+  final Color accent;
+  bool owned;
+  ShopItem({required this.icon, required this.name, required this.info, required this.cost, required this.accent, this.owned = false});
+}
+
+class ChatMessage {
+  final bool me;
+  final String text, time;
+  const ChatMessage({required this.me, required this.text, required this.time});
+}
+
+class TaskModel {
+  final String id, icon, label;
+  final int goal, done, pts;
+  final bool isAd;
+  const TaskModel({required this.id, required this.icon, required this.label, required this.goal, required this.done, required this.pts, this.isAd = false});
 }

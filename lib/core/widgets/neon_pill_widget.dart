@@ -1,5 +1,4 @@
-import 'package:e_sports/core/constants/app_colors.dart';
-import 'package:e_sports/core/utils/dimensions.dart';
+import 'package:e_sports/core/theme/app_theme.dart';
 import 'package:flutter/material.dart';
 
 class NeonPillWidget extends StatelessWidget {
@@ -7,20 +6,29 @@ class NeonPillWidget extends StatelessWidget {
   final Color color;
   final double fontSize;
 
-  const NeonPillWidget({super.key, required this.label, this.color = AppColors.neonGold, this.fontSize = 9});
+  const NeonPillWidget({
+    super.key,
+    required this.label,
+    this.color = AppColors.neonGold,
+    this.fontSize = AppTypography.sizeCaption,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+      padding: AppSpacing.pillPadding,
       decoration: BoxDecoration(
-        color: color.withOpacity(0.12),
-        borderRadius: BorderRadius.circular(Dimensions.radiusExtraLarge),
-        border: Border.all(color: color.withOpacity(0.3)),
+        color: color.withOpacity(AppColors.opacity12),
+        borderRadius: AppRadius.borderPill,
+        border: Border.all(color: color.withOpacity(AppColors.opacity30)),
       ),
       child: Text(
         label,
-        style: TextStyle(color: color, fontSize: fontSize, fontWeight: FontWeight.w800),
+        style: TextStyle(
+          color: color,
+          fontSize: fontSize,
+          fontWeight: AppTypography.extraBold,
+        ),
       ),
     );
   }

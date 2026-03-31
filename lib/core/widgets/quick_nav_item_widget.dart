@@ -1,4 +1,4 @@
-import 'package:e_sports/core/constants/app_colors.dart';
+import 'package:e_sports/core/theme/app_theme.dart';
 import 'package:e_sports/core/widgets/glass_card_widget.dart';
 import 'package:flutter/material.dart';
 
@@ -16,35 +16,39 @@ class QuickNavItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-      child: GestureDetector(
-        onTap: onTap,
-        child: GlassCardWidget(
-          padding: const EdgeInsets.symmetric(vertical: 11, horizontal: 4),
-          borderColor: color.withOpacity(0.2),
+    return GestureDetector(
+      onTap: onTap,
+      child: GlassCardWidget(
+          padding: EdgeInsets.symmetric(
+            vertical: AppSpacing.body2,
+            horizontal: AppSpacing.xs + 1,
+          ),
+          borderColor: color.withOpacity(AppColors.opacity20),
           child: Column(children: [
             Container(
-              width: 40,
-              height: 40,
+              width: AppSizing.quickNavIconSize,
+              height: AppSizing.quickNavIconSize,
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(11),
-                color: color.withOpacity(0.12),
-                border: Border.all(color: color.withOpacity(0.2)),
+                borderRadius: BorderRadius.circular(AppRadius.def + 1),
+                color: color.withOpacity(AppColors.opacity12),
+                border: Border.all(color: color.withOpacity(AppColors.opacity20)),
               ),
               alignment: Alignment.center,
-              child: Text(icon, style: const TextStyle(fontSize: 18)),
+              child: Text(icon, style: TextStyle(fontSize: AppTypography.sizeHeading)),
             ),
-            const SizedBox(height: 5),
+            SizedBox(height: AppSpacing.sm),
             Text(label,
-                style: const TextStyle(
-                    fontSize: 10,
-                    fontWeight: FontWeight.w700,
+                style: TextStyle(
+                    fontSize: AppTypography.sizeSmall,
+                    fontWeight: AppTypography.bold,
                     color: AppColors.textPrimary)),
             Text(sub,
-                style: const TextStyle(fontSize: 8, color: AppColors.textMuted)),
+                style: TextStyle(
+                  fontSize: AppTypography.sizeTiny,
+                  color: AppColors.textMuted,
+                )),
           ]),
         ),
-      ),
-    );
+      );
   }
 }

@@ -1,4 +1,4 @@
-import 'package:e_sports/core/constants/app_colors.dart';
+import 'package:e_sports/core/theme/app_theme.dart';
 import 'package:flutter/material.dart';
 
 class RingWidget extends StatelessWidget {

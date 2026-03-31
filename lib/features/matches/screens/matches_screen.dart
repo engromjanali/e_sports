@@ -1,13 +1,15 @@
-import 'package:e_sports/core/constants/app_colors.dart';
-import 'package:e_sports/core/data/app_data.dart';
+import 'package:e_sports/core/theme/app_theme.dart';
+import 'package:e_sports/core/controllers/app_data_controller.dart';
+import 'package:get/get.dart';
 import 'package:e_sports/core/widgets/app_header_widget.dart';
 import 'package:e_sports/features/matches/widgets/filter_chip_widget.dart';
 import 'package:e_sports/features/matches/widgets/full_match_card_widget.dart';
 import 'package:flutter/material.dart';
 
-
 class MatchesScreen extends StatefulWidget {
-  const MatchesScreen({super.key});
+  final VoidCallback? onSearchTap;
+  final VoidCallback? onProfileTap;
+  const MatchesScreen({super.key, this.onSearchTap, this.onProfileTap});
   @override State<MatchesScreen> createState() => _MatchesScreenState();
 }
 
@@ -16,13 +18,17 @@ class _MatchesScreenState extends State<MatchesScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final all = AppData.matches;
+    final all = Get.find<AppDataController>().matches;
     final filtered = _filter == "all" ? all : all.where((m) => m.status == _filter).toList();
 
     return Column(children: [
-      const AppHeader(sub: "Live & Upcoming Matches"),
+      AppHeader(
+        sub: "Live & Upcoming Matches",
+        onSearchTap: widget.onSearchTap,
+        onProfileTap: widget.onProfileTap,
+      ),
       Expanded(child: SingleChildScrollView(
-        padding: const EdgeInsets.all(16),
+        padding: AppSpacing.screenAll,
         child: Column(children: [
           // Filter chips
           SingleChildScrollView(
@@ -30,7 +36,7 @@ class _MatchesScreenState extends State<MatchesScreen> {
             child: Row(children: [
               for (final f in ["live", "upcoming", "completed", "all"])
                 Padding(
-                  padding: const EdgeInsets.only(right: 8),
+                  padding: EdgeInsets.only(right: AppSpacing.md),
                   child: FilterChipWidget(
                     label: f[0].toUpperCase() + f.substring(1),
                     active: _filter == f,
@@ -42,10 +48,10 @@ class _MatchesScreenState extends State<MatchesScreen> {
                 ),
             ]),
           ),
-          const SizedBox(height: 14),
+          SizedBox(height: AppSpacing.cardInnerPadding),
 
           ...filtered.map((m) => Padding(
-            padding: const EdgeInsets.only(bottom: 10),
+            padding: EdgeInsets.only(bottom: AppSpacing.lg),
             child: FullMatchCard(match: m),
           )),
         ]),
@@ -53,4 +59,3 @@ class _MatchesScreenState extends State<MatchesScreen> {
     ]);
   }
 }
-

@@ -1,10 +1,9 @@
-import 'package:e_sports/core/utils/dimensions.dart';
-import 'package:e_sports/core/constants/app_colors.dart';
-import 'package:e_sports/core/data/app_data.dart';
+import 'package:e_sports/core/theme/app_theme.dart';
+import 'package:e_sports/core/data/models/computed_player_stats.dart';
 import 'package:flutter/material.dart';
 
 class PotBannerWidget extends StatelessWidget {
-  final PlayerModel player;
+  final ComputedPlayerStats player;
   final String label;
   final String badge;
   final Gradient gradient;
@@ -18,178 +17,128 @@ class PotBannerWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const gold      = Color(0xFFFFD700);
-    const goldDeep  = Color(0xFF3D2400);
-    const goldLight = Color(0xFFFFF4C2);
-    const bgDark    = Color(0xFF1A0F00);
-
-    final imageUrl = "https://i.pravatar.cc/150?img=20";
+    final imageUrl = player.player.imageUrl;
 
     return Container(
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(Dimensions.radiusExtraLarge),
-        gradient: const LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [goldDeep, bgDark, Color(0xFF2A1800)],
+        borderRadius: AppRadius.borderXl,
+        gradient: AppColors.goldGradient,
+        border: Border.all(
+          color: AppColors.neonGold.withOpacity(0.28),
+          width: AppSizing.borderThin,
         ),
-        border: Border.all(color: gold.withOpacity(0.28), width: 1),
-        boxShadow: [
-          BoxShadow(
-            color: gold.withOpacity(0.15),
-            blurRadius: 20,
-            offset: const Offset(0, 6),
-          ),
-        ],
+        boxShadow: AppElevation.accentGlow(AppColors.neonGold, opacity: AppColors.opacity15, blur: 20, offset: const Offset(0, 6)),
       ),
       child: ClipRRect(
-        borderRadius: BorderRadius.circular(Dimensions.radiusExtraLarge),
+        borderRadius: AppRadius.borderXl,
         child: Stack(
           children: [
-            // ── Shimmer top bar ────────────────────────────────────────────
+            // Shimmer top bar
             Positioned(
               top: 0, left: 0, right: 0,
               child: Container(
-                height: 2,
-                decoration: const BoxDecoration(
-                  gradient: LinearGradient(colors: [
-                    Colors.transparent,
-                    goldLight,
-                    Colors.transparent,
-                  ]),
+                height: AppSizing.shimmerHeight,
+                decoration: BoxDecoration(
+                  gradient: AppColors.shimmerGradient(color: AppColors.goldLight),
                 ),
               ),
             ),
 
-            // ── Ghost watermark ────────────────────────────────────────────
+            // Ghost watermark
             Positioned(
               right: 2, top: 2,
               child: Text(
                 badge,
                 style: TextStyle(
-                  fontSize: 75,
-                  color: gold.withOpacity(0.05),
-                  height: 1,
+                  fontSize: AppTypography.sizeWatermark,
+                  color: AppColors.neonGold.withOpacity(0.05),
+                  height: AppTypography.lineHeightCompact,
                 ),
               ),
             ),
 
-            // ── Content ────────────────────────────────────────────────────
+            // Content
             Padding(
-              padding: const EdgeInsets.all(16),
+              padding: EdgeInsets.all(AppSpacing.xxxl),
               child: Column(
                 children: [
                   // Top: avatar + info
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      // ── Avatar with 10pt overflow badge ──
+                      // Avatar
                       Stack(
                         clipBehavior: Clip.none,
                         alignment: Alignment.topCenter,
                         children: [
                           Container(
-                            width: 64,
-                            height: 64,
+                            width: AppSizing.avatarXl,
+                            height: AppSizing.avatarXl,
                             decoration: BoxDecoration(
                               shape: BoxShape.circle,
-                              border: Border.all(color: gold, width: 2.5),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: gold.withOpacity(0.42),
-                                  blurRadius: 14,
-                                  spreadRadius: 1,
-                                ),
-                              ],
+                              border: Border.all(color: AppColors.neonGold, width: AppSizing.borderAvatar),
+                              boxShadow: AppElevation.ringGlow(AppColors.neonGold, opacity: 0.42),
                             ),
                             child: ClipOval(
                               child: Image.network(
                                 imageUrl,
-                                width: 64,
-                                height: 64,
+                                width: AppSizing.avatarXl,
+                                height: AppSizing.avatarXl,
                                 fit: BoxFit.cover,
                                 errorBuilder: (_, __, ___) => Container(
-                                  color: goldDeep,
+                                  color: AppColors.goldDeep,
                                   alignment: Alignment.center,
                                   child: Text(
                                     player.name.isNotEmpty
                                         ? player.name[0].toUpperCase()
                                         : "?",
-                                    style: const TextStyle(
-                                      fontSize: 24,
-                                      fontWeight: FontWeight.w900,
-                                      color: gold,
+                                    style: TextStyle(
+                                      fontSize: AppTypography.sizeDisplay - 2,
+                                      fontWeight: AppTypography.black,
+                                      color: AppColors.neonGold,
                                     ),
                                   ),
                                 ),
                               ),
                             ),
                           ),
-
-                          // Corner ribbon badge
-                          // Positioned(
-                          //   top: -2, right: -2,
-                          //   child: ClipRRect(
-                          //     borderRadius: const BorderRadius.only(
-                          //       topRight: Radius.circular(10),
-                          //       bottomLeft: Radius.circular(6),
-                          //     ),
-                          //     child: Container(
-                          //       padding: const EdgeInsets.fromLTRB(5, 2, 5, 3),
-                          //       decoration: const BoxDecoration(
-                          //         gradient: LinearGradient(
-                          //           colors: [goldDark, gold],
-                          //           begin: Alignment.topLeft,
-                          //           end: Alignment.bottomRight,
-                          //         ),
-                          //       ),
-                          //       child: Text(
-                          //         badge,
-                          //         style: const TextStyle(fontSize: 11),
-                          //       ),
-                          //     ),
-                          //   ),
-                          // ),
                         ],
                       ),
 
-                      const SizedBox(width: 14),
+                      SizedBox(width: AppSpacing.xxl),
 
-                      // ── Name + label + badges ──
+                      // Name + label + badges
                       Expanded(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             // Label pill
                             Container(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 7, vertical: 3),
+                              padding: EdgeInsets.symmetric(
+                                horizontal: AppSizing.dotLg,
+                                vertical: AppSpacing.xs,
+                              ),
                               decoration: BoxDecoration(
-                                color: gold.withOpacity(0.10),
-                                borderRadius: BorderRadius.circular(Dimensions.radiusSmall),
+                                color: AppColors.neonGold.withOpacity(AppColors.opacity10),
+                                borderRadius: AppRadius.borderSm,
                                 border: Border.all(
-                                  color: gold.withOpacity(0.35),
-                                  width: 1,
+                                  color: AppColors.neonGold.withOpacity(AppColors.opacity35),
+                                  width: AppSizing.borderThin,
                                 ),
                               ),
                               child: Text(
                                 label.toUpperCase(),
-                                style: TextStyle(
-                                  fontSize: 7,
-                                  fontWeight: FontWeight.w900,
-                                  letterSpacing: 1.5,
-                                  color: gold.withOpacity(0.9),
-                                ),
+                                style: AppTypography.pillLabel(context, letterSpacing: AppTypography.trackingWidest),
                               ),
                             ),
-                            const SizedBox(height: 5),
+                            SizedBox(height: AppSpacing.sm),
 
                             // Player name
                             Text(
                               player.name,
-                              style: const TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.w900,
+                              style: TextStyle(
+                                fontSize: AppTypography.sizeTitleLarge,
+                                fontWeight: AppTypography.black,
                                 color: AppColors.white,
                               ),
                             ),
@@ -198,9 +147,9 @@ class PotBannerWidget extends StatelessWidget {
                             Text(
                               "${player.matches} matches",
                               style: TextStyle(
-                                fontSize: 10,
-                                color: AppColors.white.withOpacity(0.4),
-                                letterSpacing: 0.3,
+                                fontSize: AppTypography.sizeSmall,
+                                color: AppColors.white.withOpacity(AppColors.opacity40),
+                                letterSpacing: AppTypography.trackingTight,
                               ),
                             ),
                           ],
@@ -209,39 +158,35 @@ class PotBannerWidget extends StatelessWidget {
                     ],
                   ),
 
-                  const SizedBox(height: 14),
+                  SizedBox(height: AppSpacing.xxl),
 
-                  // ── Gold divider ──────────────────────────────────────────
+                  // Gold divider
                   Container(
-                    height: 1,
+                    height: AppSizing.dividerHeight,
                     decoration: BoxDecoration(
-                      gradient: LinearGradient(colors: [
-                        Colors.transparent,
-                        gold.withOpacity(0.22),
-                        Colors.transparent,
-                      ]),
+                      gradient: AppColors.dividerGradient(color: AppColors.neonGold, opacity: 0.22),
                     ),
                   ),
 
-                  const SizedBox(height: 12),
+                  SizedBox(height: AppSpacing.xl),
 
-                  // ── Stat chips ────────────────────────────────────────────
+                  // Stat chips
                   Row(
                     children: [
-                      StatMiniWidget(
+                      _StatMiniWidget(
                           label: "Goals",
                           value: "${player.goals}",
-                          color: gold),
-                      const SizedBox(width: 8),
-                      StatMiniWidget(
+                          color: AppColors.neonGold),
+                      SizedBox(width: AppSpacing.md),
+                      _StatMiniWidget(
                           label: "Points",
                           value: "${player.pts}",
-                          color: gold),
-                      const SizedBox(width: 8),
-                      StatMiniWidget(
+                          color: AppColors.neonGold),
+                      SizedBox(width: AppSpacing.md),
+                      _StatMiniWidget(
                           label: "FA",
                           value: "${player.fa}",
-                          color: gold),
+                          color: AppColors.neonGold),
                     ],
                   ),
                 ],
@@ -254,14 +199,12 @@ class PotBannerWidget extends StatelessWidget {
   }
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
-
-class StatMiniWidget extends StatelessWidget {
+class _StatMiniWidget extends StatelessWidget {
   final String label;
   final String value;
   final Color color;
 
-  const StatMiniWidget({
+  const _StatMiniWidget({
     required this.label,
     required this.value,
     required this.color,
@@ -269,39 +212,27 @@ class StatMiniWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const gold      = Color(0xFFFFD700);
-
     return Expanded(
       child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 8),
+        padding: EdgeInsets.symmetric(vertical: AppSpacing.md),
         decoration: BoxDecoration(
-          color: gold.withOpacity(0.07),
-          borderRadius: BorderRadius.circular(Dimensions.radiusDefault),
+          color: AppColors.neonGold.withOpacity(AppColors.opacity7),
+          borderRadius: AppRadius.borderDef,
           border: Border.all(
-            color: gold.withOpacity(0.20),
-            width: 1,
+            color: AppColors.neonGold.withOpacity(AppColors.opacity20),
+            width: AppSizing.borderThin,
           ),
         ),
         child: Column(
           children: [
             Text(
               value,
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.w900,
-                color: color,
-                height: 1,
-              ),
+              style: AppTypography.statValue(context, color: color),
             ),
-            const SizedBox(height: 3),
+            SizedBox(height: AppSpacing.xs),
             Text(
               label.toUpperCase(),
-              style: TextStyle(
-                fontSize: 7,
-                fontWeight: FontWeight.w800,
-                letterSpacing: 1.1,
-                color: AppColors.white.withOpacity(0.35),
-              ),
+              style: AppTypography.labelUppercase(context),
             ),
           ],
         ),

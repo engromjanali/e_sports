@@ -1,18 +1,24 @@
-import 'package:e_sports/core/utils/dimensions.dart';
-import 'package:e_sports/core/constants/app_colors.dart';
+import 'package:e_sports/core/theme/app_theme.dart';
 import 'package:flutter/material.dart';
 
 class SectionHeadingWidget extends StatelessWidget {
   final String title;
   final String? sub;
   final VoidCallback? onAll;
+  final Widget? trailing;
 
-  const SectionHeadingWidget({super.key, required this.title, this.sub, this.onAll});
+  const SectionHeadingWidget({
+    super.key, 
+    required this.title, 
+    this.sub, 
+    this.onAll,
+    this.trailing,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 10),
+      padding: EdgeInsets.only(bottom: AppSpacing.lg),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.end,
@@ -20,24 +26,36 @@ class SectionHeadingWidget extends StatelessWidget {
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(title, style: const TextStyle(
-                  fontSize: 15, fontWeight: FontWeight.w800, color: AppColors.textPrimary)),
-              if (sub != null) Text(sub!, style: const TextStyle(
-                  fontSize: 10, color: AppColors.textSecondary)),
+              Text(title, style: TextStyle(
+                  fontSize: AppTypography.sizeTitle,
+                  fontWeight: AppTypography.extraBold,
+                  color: AppColors.textPrimary)),
+              if (sub != null) Text(sub!, style: TextStyle(
+                  fontSize: AppTypography.sizeSmall,
+                  color: AppColors.textSecondary)),
             ],
           ),
-          if (onAll != null)
+          if (trailing != null)
+            trailing!
+          else if (onAll != null)
             GestureDetector(
               onTap: onAll,
               child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                decoration: BoxDecoration(
-                  color: AppColors.neonBlue.withOpacity(0.1),
-                  borderRadius: BorderRadius.circular(Dimensions.radiusExtraLarge),
-                  border: Border.all(color: AppColors.neonBlue.withOpacity(0.25)),
+                padding: EdgeInsets.symmetric(
+                  horizontal: AppSpacing.lg,
+                  vertical: AppSpacing.xs + 1,
                 ),
-                child: const Text("View All →",
-                    style: TextStyle(color: AppColors.neonBlue, fontSize: 11, fontWeight: FontWeight.w700)),
+                decoration: BoxDecoration(
+                  color: AppColors.neonBlue.withOpacity(AppColors.opacity10),
+                  borderRadius: AppRadius.borderPill,
+                  border: Border.all(color: AppColors.neonBlue.withOpacity(AppColors.opacity25)),
+                ),
+                child: Text("View All →",
+                    style: TextStyle(
+                      color: AppColors.neonBlue,
+                      fontSize: AppTypography.sizeBody2,
+                      fontWeight: AppTypography.bold,
+                    )),
               ),
             ),
         ],

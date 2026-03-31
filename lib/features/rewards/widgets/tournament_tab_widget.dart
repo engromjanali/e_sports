@@ -1,12 +1,13 @@
-import 'package:e_sports/core/constants/app_colors.dart';
-import 'package:e_sports/core/data/app_data.dart';
-import 'package:e_sports/core/utils/dimensions.dart';
-import 'package:e_sports/core/widgets/glass_card_widget.dart';
-import 'package:e_sports/core/widgets/neon_pill_widget.dart';
-import 'package:e_sports/core/widgets/neon_pregress_bar_widget.dart';
-import 'package:e_sports/core/widgets/player_avater.dart';
-import 'package:e_sports/core/widgets/section_heading_widget.dart';
+import 'package:e_sports/core/controllers/app_data_controller.dart';
+import 'package:e_sports/core/data/models/tournament_model.dart';
+import 'package:get/get.dart';
 import 'package:flutter/material.dart';
+import '../../../core/theme/app_theme.dart';
+import '../../../core/widgets/section_heading_widget.dart';
+import '../../../core/widgets/glass_card_widget.dart';
+import '../../../core/widgets/neon_pregress_bar_widget.dart';
+import '../../../core/widgets/neon_pill_widget.dart';
+import '../../../core/widgets/player_avater.dart';
 
 class TournamentTabWidget extends StatelessWidget {
   final int selTrn;
@@ -29,11 +30,14 @@ class TournamentTabWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final tournaments = AppData.tournaments;
+    final tournaments = Get.find<AppDataController>().tournaments;
     final trn = tournaments[selTrn];
 
     return SingleChildScrollView(
-      padding: const EdgeInsets.fromLTRB(16, 14, 16, 24),
+      padding: EdgeInsets.fromLTRB(
+        AppSpacing.screenPadding, AppSpacing.cardOuterGap,
+        AppSpacing.screenPadding, AppSpacing.giant,
+      ),
       child: Column(children: [
         // Tournament selector
         SingleChildScrollView(
@@ -51,61 +55,64 @@ class TournamentTabWidget extends StatelessWidget {
                   onTap: () => onSelTrn(i),
                   child: AnimatedContainer(
                     duration: const Duration(milliseconds: 180),
-                    margin: const EdgeInsets.only(right: 8),
-                    padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+                    margin: EdgeInsets.only(right: AppSpacing.md),
+                    padding: EdgeInsets.symmetric(
+                      horizontal: AppSpacing.cardInnerPadding,
+                      vertical: AppSpacing.md,
+                    ),
                     decoration: BoxDecoration(
-                      gradient: active
-                          ? const LinearGradient(
-                          colors: [Color(0xFF1B4FD8), Color(0xFF0D1B4E)])
-                          : null,
+                      gradient: active ? AppColors.blueGradient : null,
                       color: active ? null : AppColors.bgSurface,
-                      borderRadius: BorderRadius.circular(Dimensions.radiusExtraLarge),
+                      borderRadius: AppRadius.borderXl,
                       border: Border.all(
-                          color: active
-                              ? AppColors.neonCyan.withOpacity(0.4)
-                              : AppColors.glassBorder),
+                        color: active
+                            ? AppColors.neonCyan.withOpacity(AppColors.opacity40)
+                            : AppColors.glassBorder,
+                      ),
                       boxShadow: active
                           ? [
-                        BoxShadow(
-                            color: AppColors.neonBlue.withOpacity(0.3),
-                            blurRadius: 12)
-                      ]
+                              BoxShadow(
+                                color: AppColors.neonBlue.withOpacity(AppColors.opacity30),
+                                blurRadius: AppElevation.blurLg,
+                              )
+                            ]
                           : [],
                     ),
                     child: Row(mainAxisSize: MainAxisSize.min, children: [
                       Container(
-                        width: 7,
-                        height: 7,
-                        margin: const EdgeInsets.only(right: 6),
+                        width: AppSizing.dotLg,
+                        height: AppSizing.dotLg,
+                        margin: EdgeInsets.only(right: AppSpacing.iconGap),
                         decoration: BoxDecoration(
                             shape: BoxShape.circle,
                             color: statusColor,
                             boxShadow: [
                               BoxShadow(
-                                  color: statusColor.withOpacity(0.6),
-                                  blurRadius: 4)
+                                color: statusColor.withOpacity(AppColors.opacity60),
+                                blurRadius: AppRadius.xs,
+                              )
                             ]),
                       ),
                       Text(t.name,
                           style: TextStyle(
-                              fontSize: 11,
-                              fontWeight: FontWeight.w700,
+                              fontSize: AppTypography.sizeBody2,
+                              fontWeight: AppTypography.bold,
                               color: active ? AppColors.white : AppColors.textSecondary)),
                     ]),
                   ),
                 );
               })),
         ),
-        const SizedBox(height: 14),
+        SizedBox(height: AppSpacing.cardInnerPadding),
 
         // Tournament Hero Card
         _TournamentHeroCard(trn: trn),
-        const SizedBox(height: 12),
+        SizedBox(height: AppSpacing.xl),
 
         // Register button
         if (trn.status != "ended")
           _RegisterSection(trn: trn, coins: coins, joined: joined, onJoin: onJoin),
-        const SizedBox(height: 12),
+        SizedBox(height: AppSpacing.xl),
 
         // Rewards / Prize Pool
         SectionHeadingWidget(title: "🎁 Prize Pool"),
@@ -114,65 +121,72 @@ class TournamentTabWidget extends StatelessWidget {
             ...List.generate(trn.rewards.length, (i) {
               final r = trn.rewards[i];
               return Container(
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                padding: AppSpacing.cardPadding,
                 decoration: BoxDecoration(
                   border: i < trn.rewards.length - 1
                       ? Border(bottom: BorderSide(color: AppColors.glassBorder))
                       : null,
                   gradient: i == 0
                       ? LinearGradient(colors: [
-                    AppColors.neonGold.withOpacity(0.08),
-                    Colors.transparent
-                  ])
+                          AppColors.neonGold.withOpacity(AppColors.opacity8),
+                          Colors.transparent
+                        ])
                       : null,
                 ),
                 child: Row(children: [
-                  Text(r.icon, style: const TextStyle(fontSize: 26)),
-                  const SizedBox(width: 12),
+                  Text(r.icon, style: TextStyle(fontSize: AppTypography.sizeDisplay)),
+                  SizedBox(width: AppSpacing.xl),
                   Expanded(
                       child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(r.pos,
-                                style: const TextStyle(
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.w800,
+                                style: TextStyle(
+                                    fontSize: AppTypography.sizeBody,
+                                    fontWeight: AppTypography.extraBold,
                                     color: AppColors.textPrimary)),
                             Text(r.detail,
-                                style: const TextStyle(
-                                    fontSize: 10, color: AppColors.textMuted)),
+                                style: AppTypography.mutedText(context).copyWith(
+                                  fontSize: AppTypography.sizeSmall,
+                                )),
                           ])),
                   Container(
-                      width: 10,
-                      height: 10,
+                      width: AppSpacing.lg,
+                      height: AppSpacing.lg,
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
                         color: r.color,
                         boxShadow: [
-                          BoxShadow(color: r.color.withOpacity(0.6), blurRadius: 6)
+                          BoxShadow(color: r.color.withOpacity(AppColors.opacity60), blurRadius: AppSpacing.xs + 3)
                         ],
                       )),
                 ]),
               );
             }),
             Container(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+              padding: EdgeInsets.symmetric(
+                horizontal: AppSpacing.screenPadding,
+                vertical: AppSpacing.lg,
+              ),
               decoration: BoxDecoration(
-                color: AppColors.neonCyan.withOpacity(0.05),
+                color: AppColors.neonCyan.withOpacity(AppColors.opacity5),
                 border: Border(top: BorderSide(color: AppColors.glassBorder)),
               ),
               child: Row(children: [
-                const Text("🎁", style: TextStyle(fontSize: 14)),
-                const SizedBox(width: 8),
-                const Expanded(
+                Text("🎁", style: TextStyle(fontSize: AppTypography.sizeSubtitle)),
+                SizedBox(width: AppSpacing.md),
+                Expanded(
                     child: Text(
                         "All prizes provided by the club & sponsor. Platform organises only.",
-                        style: TextStyle(fontSize: 10, color: AppColors.neonCyan))),
+                        style: TextStyle(
+                          fontSize: AppTypography.sizeSmall,
+                          color: AppColors.neonCyan,
+                        ))),
               ]),
             ),
           ]),
         ),
-        const SizedBox(height: 12),
+        SizedBox(height: AppSpacing.xl),
 
         // Tournament Bracket
         if (trn.bracket.isNotEmpty)
@@ -181,7 +195,7 @@ class TournamentTabWidget extends StatelessWidget {
         // Leaderboard
         SectionHeadingWidget(title: "📊 Season Standings"),
         _TournamentLeaderboard(),
-        const SizedBox(height: 8),
+        SizedBox(height: AppSpacing.cardOuterGap),
       ]),
     );
   }
@@ -201,81 +215,92 @@ class _TournamentHeroCard extends StatelessWidget {
     final fillPct = trn.slots > 0 ? trn.filled / trn.slots : 0.0;
 
     return Container(
-      padding: const EdgeInsets.all(18),
+      padding: AppSpacing.hugePadding, // Use a custom padding or existing
       decoration: BoxDecoration(
-        gradient: const LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [Color(0xFF0D1B4E), Color(0xFF1B4FD8)],
-        ),
-        borderRadius: BorderRadius.circular(Dimensions.radiusExtraLarge),
-        border: Border.all(color: AppColors.neonGold.withOpacity(0.2)),
+        gradient: AppColors.blueGradient,
+        borderRadius: AppRadius.borderXl,
+        border: Border.all(color: AppColors.neonGold.withOpacity(AppColors.opacity20)),
         boxShadow: [
-          BoxShadow(color: AppColors.neonBlue.withOpacity(0.2), blurRadius: 20)
+          BoxShadow(
+            color: AppColors.neonBlue.withOpacity(AppColors.opacity20),
+            blurRadius: AppElevation.blurXl,
+          )
         ],
       ),
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
           Row(children: [
             Container(
-              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+              padding: EdgeInsets.symmetric(horizontal: AppSpacing.md, vertical: AppSpacing.xs + 1),
               decoration: BoxDecoration(
-                color: AppColors.neonGold.withOpacity(0.15),
-                borderRadius: BorderRadius.circular(6),
-                border: Border.all(color: AppColors.neonGold.withOpacity(0.3)),
+                color: AppColors.neonGold.withOpacity(AppColors.opacity15),
+                borderRadius: AppRadius.borderSm,
+                border: Border.all(color: AppColors.neonGold.withOpacity(AppColors.opacity30)),
               ),
               child: Text(trn.tag,
-                  style: const TextStyle(
-                      fontSize: 9,
-                      fontWeight: FontWeight.w800,
+                  style: TextStyle(
+                      fontSize: AppTypography.sizeCaption,
+                      fontWeight: AppTypography.extraBold,
                       color: AppColors.neonGold,
-                      letterSpacing: 1.2)),
+                      letterSpacing: AppTypography.trackingWider)),
             ),
           ]),
           Container(
-            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+            padding: EdgeInsets.symmetric(horizontal: AppSpacing.lg, vertical: AppSpacing.xs + 1),
             decoration: BoxDecoration(
-              color: statusColor.withOpacity(0.12),
-              borderRadius: BorderRadius.circular(Dimensions.radiusExtraLarge),
-              border: Border.all(color: statusColor.withOpacity(0.3)),
+              color: statusColor.withOpacity(AppColors.opacity12),
+              borderRadius: AppRadius.borderXl,
+              border: Border.all(color: statusColor.withOpacity(AppColors.opacity30)),
             ),
             child: Text(trn.status.toUpperCase(),
                 style: TextStyle(
-                    fontSize: 9,
-                    fontWeight: FontWeight.w800,
+                    fontSize: AppTypography.sizeCaption,
+                    fontWeight: AppTypography.extraBold,
                     color: statusColor)),
           ),
         ]),
-        const SizedBox(height: 12),
+        SizedBox(height: AppSpacing.xl),
         Text(trn.name,
-            style: const TextStyle(
-                fontSize: 20, fontWeight: FontWeight.w900, color: AppColors.white)),
-        const SizedBox(height: 4),
+            style: TextStyle(
+                fontSize: AppTypography.sizeHeadingLg,
+                fontWeight: AppTypography.black,
+                color: AppColors.white)),
+        SizedBox(height: AppSpacing.xs + 1),
         Text("🏅  ${trn.prize}",
-            style: const TextStyle(
-                fontSize: 13, color: AppColors.neonGold, fontWeight: FontWeight.w700)),
-        const SizedBox(height: 4),
+            style: TextStyle(
+                fontSize: AppTypography.sizeBodyLarge,
+                color: AppColors.neonGold,
+                fontWeight: AppTypography.bold)),
+        SizedBox(height: AppSpacing.xs + 1),
         Text("🏟️  ${trn.sponsor}",
-            style: TextStyle(fontSize: 11, color: AppColors.white.withOpacity(0.55))),
-        const SizedBox(height: 12),
+            style: TextStyle(
+              fontSize: AppTypography.sizeBody2,
+              color: AppColors.white.withOpacity(AppColors.opacity55),
+            )),
+        SizedBox(height: AppSpacing.xl),
         Row(children: [
           _TrnInfoItem(icon: "📅", label: "Starts", value: trn.starts),
           _TrnInfoItem(icon: "⏰", label: "Reg. Closes", value: trn.regDeadline),
         ]),
-        const SizedBox(height: 10),
+        SizedBox(height: AppSpacing.cardOuterGap),
         Row(children: [
           _TrnInfoItem(icon: "🎮", label: "Format", value: trn.format),
           _TrnInfoItem(icon: "🪙", label: "Entry Cost", value: "${trn.cost} pts"),
         ]),
-        const SizedBox(height: 14),
+        SizedBox(height: AppSpacing.cardInnerPadding),
         Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
           Text("👥  Slots Filled",
-              style: TextStyle(fontSize: 10, color: AppColors.white.withOpacity(0.55))),
+              style: TextStyle(
+                fontSize: AppTypography.sizeSmall,
+                color: AppColors.white.withOpacity(AppColors.opacity55),
+              )),
           Text("${trn.filled} / ${trn.slots}",
-              style: const TextStyle(
-                  fontSize: 11, fontWeight: FontWeight.w800, color: AppColors.neonGold)),
+              style: TextStyle(
+                  fontSize: AppTypography.sizeBody2,
+                  fontWeight: AppTypography.extraBold,
+                  color: AppColors.neonGold)),
         ]),
-        const SizedBox(height: 5),
+        SizedBox(height: AppSpacing.sm),
         NeonProgressBarWidget(
             value: fillPct * trn.slots,
             max: trn.slots.toDouble(),
@@ -293,20 +318,21 @@ class _TrnInfoItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Expanded(
       child: Padding(
-        padding: const EdgeInsets.only(bottom: 4),
+        padding: EdgeInsets.only(bottom: AppSpacing.xs + 1),
         child: Row(children: [
-          Text(icon, style: const TextStyle(fontSize: 13)),
-          const SizedBox(width: 6),
+          Text(icon, style: TextStyle(fontSize: AppTypography.sizeBodyLarge)),
+          SizedBox(width: AppSpacing.iconGap),
           Expanded(
               child:
               Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                 Text(label,
-                    style: const TextStyle(
-                        fontSize: 9, color: AppColors.textMuted)),
+                    style: TextStyle(
+                        fontSize: AppTypography.sizeCaption,
+                        color: AppColors.textMuted)),
                 Text(value,
-                    style: const TextStyle(
-                        fontSize: 11,
-                        fontWeight: FontWeight.w700,
+                    style: TextStyle(
+                        fontSize: AppTypography.sizeBody2,
+                        fontWeight: AppTypography.bold,
                         color: AppColors.textPrimary)),
               ])),
         ]),
@@ -331,15 +357,15 @@ class _RegisterSection extends StatelessWidget {
 
     if (alreadyJoined) {
       return GlassCardWidget(
-        padding: const EdgeInsets.symmetric(vertical: 12),
-        borderColor: AppColors.neonGreen.withOpacity(0.3),
+        padding: EdgeInsets.symmetric(vertical: AppSpacing.xl),
+        borderColor: AppColors.neonGreen.withOpacity(AppColors.opacity30),
         child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-          const Text("✅", style: TextStyle(fontSize: 16)),
-          const SizedBox(width: 8),
-          const Text("You're Registered!",
+          Text("✅", style: TextStyle(fontSize: AppTypography.sizeTitleLarge)),
+          SizedBox(width: AppSpacing.cardOuterGap),
+          Text("You're Registered!",
               style: TextStyle(
-                  fontSize: 13,
-                  fontWeight: FontWeight.w800,
+                  fontSize: AppTypography.sizeBodyLarge,
+                  fontWeight: AppTypography.extraBold,
                   color: AppColors.neonGreen)),
         ]),
       );
@@ -347,17 +373,20 @@ class _RegisterSection extends StatelessWidget {
 
     if (!canAfford) {
       return GlassCardWidget(
-        padding: const EdgeInsets.symmetric(vertical: 11, horizontal: 14),
-        borderColor: AppColors.neonRed.withOpacity(0.3),
+        padding: EdgeInsets.symmetric(
+          vertical: AppSpacing.body2,
+          horizontal: AppSpacing.cardInnerPadding,
+        ),
+        borderColor: AppColors.neonRed.withOpacity(AppColors.opacity30),
         child: Row(children: [
-          const Text("⚠️", style: TextStyle(fontSize: 14)),
-          const SizedBox(width: 8),
+          Text("⚠️", style: TextStyle(fontSize: AppTypography.sizeSubtitle)),
+          SizedBox(width: AppSpacing.cardOuterGap),
           Expanded(
               child: Text(
                   "Need ${trn.cost - coins} more points — watch ads to earn!",
-                  style: const TextStyle(
-                      fontSize: 11,
-                      fontWeight: FontWeight.w700,
+                  style: TextStyle(
+                      fontSize: AppTypography.sizeBody2,
+                      fontWeight: AppTypography.bold,
                       color: AppColors.neonRed))),
         ]),
       );
@@ -367,22 +396,23 @@ class _RegisterSection extends StatelessWidget {
       onTap: () => onJoin(trn),
       child: Container(
         width: double.infinity,
-        padding: const EdgeInsets.symmetric(vertical: 14),
+        padding: EdgeInsets.symmetric(vertical: AppSpacing.cardInnerPadding),
         decoration: BoxDecoration(
-          gradient: const LinearGradient(
-              colors: [AppColors.neonGold, Color(0xFFF59E0B)]),
-          borderRadius: BorderRadius.circular(16),
+          gradient: AppColors.goldRibbonGradient,
+          borderRadius: AppRadius.borderTitle, // Using title radius for buttons
           boxShadow: [
             BoxShadow(
-                color: AppColors.neonGold.withOpacity(0.4),
-                blurRadius: 16,
+                color: AppColors.neonGold.withOpacity(AppColors.opacity40),
+                blurRadius: AppElevation.blurLg,
                 offset: const Offset(0, 4))
           ],
         ),
         alignment: Alignment.center,
         child: Text("Register Now  —  🪙 ${trn.cost} Points",
-            style: const TextStyle(
-                color: Colors.black, fontSize: 14, fontWeight: FontWeight.w900)),
+            style: TextStyle(
+                color: Colors.black,
+                fontSize: AppTypography.sizeSubtitle,
+                fontWeight: AppTypography.black)),
       ),
     );
   }
@@ -398,17 +428,20 @@ class _BracketSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 12),
+      padding: EdgeInsets.only(bottom: AppSpacing.xl),
       child: Column(children: [
         GestureDetector(
           onTap: onToggle,
           child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 13),
+            padding: EdgeInsets.symmetric(
+              horizontal: AppSpacing.screenPadding,
+              vertical: AppSpacing.bodyLarge,
+            ),
             decoration: BoxDecoration(
               color: AppColors.bgCard,
               borderRadius: open
-                  ? const BorderRadius.vertical(top: Radius.circular(16))
-                  : BorderRadius.circular(16),
+                  ? BorderRadius.vertical(top: AppRadius.radiusXl)
+                  : AppRadius.borderXl,
               border: Border.all(color: AppColors.glassBorder),
             ),
             child: Row(
@@ -416,27 +449,28 @@ class _BracketSection extends StatelessWidget {
                 children: [
                   Row(children: [
                     Container(
-                      width: 36,
-                      height: 36,
+                      width: AppSizing.resultChipSize + 4,
+                      height: AppSizing.resultChipSize + 4,
                       decoration: BoxDecoration(
-                        color: AppColors.neonCyan.withOpacity(0.1),
-                        borderRadius: BorderRadius.circular(Dimensions.radiusDefault),
+                        color: AppColors.neonCyan.withOpacity(AppColors.opacity10),
+                        borderRadius: AppRadius.borderDef,
                         border: Border.all(
-                            color: AppColors.neonCyan.withOpacity(0.2)),
+                            color: AppColors.neonCyan.withOpacity(AppColors.opacity20)),
                       ),
                       alignment: Alignment.center,
-                      child: const Text("🏟️", style: TextStyle(fontSize: 18)),
+                      child: Text("🏟️", style: TextStyle(fontSize: AppTypography.sizeHeading)),
                     ),
-                    const SizedBox(width: 10),
+                    SizedBox(width: AppSpacing.cardOuterGap),
                     Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                      const Text("Tournament Bracket",
+                      Text("Tournament Bracket",
                           style: TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.w800,
+                              fontSize: AppTypography.sizeSubtitle,
+                              fontWeight: AppTypography.extraBold,
                               color: AppColors.textPrimary)),
                       Text(trn.rounds.join(" → "),
-                          style: const TextStyle(
-                              fontSize: 10, color: AppColors.textMuted)),
+                          style: AppTypography.mutedText(context).copyWith(
+                            fontSize: AppTypography.sizeSmall,
+                          )),
                     ]),
                   ]),
                   AnimatedRotation(
@@ -451,11 +485,13 @@ class _BracketSection extends StatelessWidget {
         AnimatedCrossFade(
           firstChild: const SizedBox(height: 0),
           secondChild: Container(
-            padding: const EdgeInsets.fromLTRB(14, 0, 14, 14),
+            padding: EdgeInsets.fromLTRB(
+              AppSpacing.cardInnerPadding, 0,
+              AppSpacing.cardInnerPadding, AppSpacing.cardInnerPadding,
+            ),
             decoration: BoxDecoration(
               color: AppColors.bgCard,
-              borderRadius:
-              const BorderRadius.vertical(bottom: Radius.circular(16)),
+              borderRadius: BorderRadius.vertical(bottom: AppRadius.radiusXl),
               border: Border(
                 left: BorderSide(color: AppColors.glassBorder),
                 right: BorderSide(color: AppColors.glassBorder),
@@ -467,21 +503,23 @@ class _BracketSection extends StatelessWidget {
                 children: trn.bracket.map((rnd) {
                   return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                     Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 12),
+                      padding: EdgeInsets.symmetric(vertical: AppSpacing.xl),
                       child: Text(rnd.roundName,
-                          style: const TextStyle(
-                              fontSize: 10,
-                              fontWeight: FontWeight.w800,
+                          style: TextStyle(
+                              fontSize: AppTypography.sizeSmall,
+                              fontWeight: AppTypography.extraBold,
                               color: AppColors.neonCyan,
-                              letterSpacing: 1.5)),
+                              letterSpacing: AppTypography.trackingWidest)),
                     ),
                     ...rnd.matches.map((m) => Container(
-                      margin: const EdgeInsets.only(bottom: 6),
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 14, vertical: 9),
+                      margin: EdgeInsets.only(bottom: AppSpacing.iconGap),
+                      padding: EdgeInsets.symmetric(
+                        horizontal: AppSpacing.cardInnerPadding,
+                        vertical: AppSpacing.lg,
+                      ),
                       decoration: BoxDecoration(
                         color: AppColors.bgSurface,
-                        borderRadius: BorderRadius.circular(12),
+                        borderRadius: AppRadius.borderXl,
                         border: Border.all(color: AppColors.glassBorder),
                       ),
                       child: Row(
@@ -489,30 +527,30 @@ class _BracketSection extends StatelessWidget {
                           children: [
                             Text(m[0],
                                 style: TextStyle(
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.w700,
+                                    fontSize: AppTypography.sizeBody,
+                                    fontWeight: AppTypography.bold,
                                     color: m[0] == "TBD"
                                         ? AppColors.textMuted
                                         : AppColors.textPrimary)),
                             Container(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 10, vertical: 3),
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: AppSpacing.lg, vertical: AppSpacing.xs),
                               decoration: BoxDecoration(
-                                color: AppColors.neonBlue.withOpacity(0.15),
-                                borderRadius: BorderRadius.circular(Dimensions.radiusMedium),
+                                color: AppColors.neonBlue.withOpacity(AppColors.opacity15),
+                                borderRadius: AppRadius.borderMd,
                                 border: Border.all(
-                                    color: AppColors.neonBlue.withOpacity(0.3)),
+                                    color: AppColors.neonBlue.withOpacity(AppColors.opacity30)),
                               ),
-                              child: const Text("VS",
+                              child: Text("VS",
                                   style: TextStyle(
-                                      fontSize: 10,
-                                      fontWeight: FontWeight.w800,
+                                      fontSize: AppTypography.sizeSmall,
+                                      fontWeight: AppTypography.extraBold,
                                       color: AppColors.neonBlue)),
                             ),
                             Text(m[1],
                                 style: TextStyle(
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.w700,
+                                    fontSize: AppTypography.sizeBody,
+                                    fontWeight: AppTypography.bold,
                                     color: m[1] == "TBD"
                                         ? AppColors.textMuted
                                         : AppColors.textPrimary)),
@@ -533,7 +571,7 @@ class _BracketSection extends StatelessWidget {
 class _TournamentLeaderboard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final players = AppData.players;
+    final players = Get.find<AppDataController>().rankedPlayers;
     final medals = ["🥇", "🥈", "🥉"];
     final colors = [
       AppColors.gold,
@@ -549,57 +587,65 @@ class _TournamentLeaderboard extends StatelessWidget {
             final p = players[i];
             final c = colors[i.clamp(0, colors.length - 1)];
             return Container(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 11),
+              padding: EdgeInsets.symmetric(
+                horizontal: AppSpacing.screenPadding,
+                vertical: AppSpacing.body2,
+              ),
               decoration: BoxDecoration(
                 border: i < players.length - 1
                     ? Border(bottom: BorderSide(color: AppColors.glassBorder))
                     : null,
                 gradient: i == 0
                     ? LinearGradient(colors: [
-                  AppColors.neonGold.withOpacity(0.07),
+                  AppColors.neonGold.withOpacity(AppColors.opacity7),
                   Colors.transparent
                 ])
                     : null,
               ),
               child: Row(children: [
                 SizedBox(
-                    width: 24,
+                    width: AppSpacing.giant,
                     child: Text(
                       i < 3 ? medals[i] : "${i + 1}",
                       style: TextStyle(
-                          fontSize: i < 3 ? 20 : 13,
-                          fontWeight: FontWeight.w800,
+                          fontSize: i < 3 ? AppSizing.iconEmojiSm : AppTypography.sizeBodyLarge,
+                          fontWeight: AppTypography.extraBold,
                           color: c),
                       textAlign: TextAlign.center,
                     )),
-                const SizedBox(width: 11),
-                PlayerAvatarWidget(name: p.name, size: 36),
-                const SizedBox(width: 10),
+                SizedBox(width: AppSpacing.bodyLarge),
+                PlayerAvatarWidget(name: p.name, imageUrl: p.player.imageUrl, size: AppSizing.resultChipSize + 4),
+                SizedBox(width: AppSpacing.cardOuterGap),
                 Expanded(
                     child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Row(children: [
                             Text(p.name,
-                                style: const TextStyle(
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.w700,
+                                style: TextStyle(
+                                    fontSize: AppTypography.sizeBody,
+                                    fontWeight: AppTypography.bold,
                                     color: AppColors.textPrimary)),
                             if (i < 2) ...[
-                              const SizedBox(width: 5),
+                              SizedBox(width: AppSpacing.sm),
                               NeonPillWidget(label: "VIP", color: AppColors.neonGold)
                             ],
                           ]),
                           Text("${p.wins}W · ${p.goals} goals",
-                              style: const TextStyle(
-                                  fontSize: 9, color: AppColors.textMuted)),
+                              style: AppTypography.mutedText(context).copyWith(
+                                fontSize: AppTypography.sizeCaption,
+                              )),
                         ])),
                 Column(crossAxisAlignment: CrossAxisAlignment.end, children: [
                   Text("${p.pts}",
                       style: TextStyle(
-                          fontSize: 15, fontWeight: FontWeight.w900, color: c)),
-                  const Text("pts",
-                      style: TextStyle(fontSize: 8, color: AppColors.textMuted)),
+                          fontSize: AppTypography.sizeTitle,
+                          fontWeight: AppTypography.black,
+                          color: c)),
+                  Text("pts",
+                      style: AppTypography.mutedText(context).copyWith(
+                        fontSize: AppTypography.sizeTiny,
+                      )),
                 ]),
               ]),
             );
