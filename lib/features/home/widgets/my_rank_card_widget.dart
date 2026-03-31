@@ -191,50 +191,7 @@ class MyRankCard extends StatelessWidget {
                     ],
                   ),
 
-                  SizedBox(height: AppSpacing.xxl),
 
-                  // Progress row
-                  Row(
-                    children: [
-                      Text(
-                        "SEASON XP",
-                        style: AppTypography.labelUppercase(context, letterSpacing: 1.3),
-                      ),
-                      const Spacer(),
-                      Text(
-                        "82 / 100",
-                        style: TextStyle(
-                          fontSize: AppTypography.sizeTiny,
-                          fontWeight: AppTypography.bold,
-                          color: AppColors.white.withOpacity(AppColors.opacity35),
-                        ),
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: AppSpacing.sm),
-                  ClipRRect(
-                    borderRadius: AppRadius.borderSm,
-                    child: Stack(
-                      children: [
-                        Container(
-                          height: AppSizing.progressBarDefault,
-                          color: AppColors.white.withOpacity(AppColors.opacity7),
-                        ),
-                        FractionallySizedBox(
-                          widthFactor: 0.82,
-                          child: Container(
-                            height: AppSizing.progressBarDefault,
-                            decoration: BoxDecoration(
-                              borderRadius: AppRadius.borderSm,
-                              gradient: LinearGradient(
-                                colors: [AppColors.goldDark, AppColors.neonGold, AppColors.goldLight],
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
                 ],
               ),
             ),

@@ -16,7 +16,7 @@ class MockDataSource {
           imageUrl: "https://imageio.forbes.com/specials-images/imageserve/663e595b4509f97fdafb95f5/0x0.jpg?format=jpg&crop=383,383,x1045,y23,safe&height=416&width=416&fit=bounds"),
         const PlayerModel(id: 4, name: "Shariq Ul Baari", short: "Shariq", team: "Legends", jerseyNumber: 11, tags: ["VIP", "STRIKER"],
           imageUrl: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQqgucNaWMtVt_NB5N3XSZF7UPFnz8TmtSuvQ&s"),
-        const PlayerModel(id: 5, name: "Suran Lohani", short: "Suran", team: "PBCC", jerseyNumber: 8, tags: ["PRO"],
+        const PlayerModel(id: 5, name: "Suran Lohani", short: "Suran", team: "PBCC", jerseyNumber: 8, tags: ["PRO","Season 1 champion","MVP","player of the month aplir 24","player of the month may 24","player of the month june 24","player of the month july 24","player of the month august 24","PRO","Season 1 champion","MVP","player of the month aplir 24","player of the month may 24","player of the month june 24","player of the month july 24","player of the month august 24","PRO","Season 1 champion","MVP","player of the month aplir 24","player of the month may 24","player of the month june 24","player of the month july 24","player of the month august 24","PRO","Season 1 champion","MVP","player of the month aplir 24","player of the month may 24","player of the month june 24","player of the month july 24","player of the month august 24",],
           imageUrl: "https://imageio.forbes.com/specials-images/imageserve/663e595b4509f97fdafb95f5/0x0.jpg?format=jpg&crop=383,383,x1045,y23,safe&height=416&width=416&fit=bounds"),
         const PlayerModel(id: 6, name: "Farhan Ahmed", short: "Farhan", team: "Rebels", jerseyNumber: 22, tags: ["MEMBER"],
           imageUrl: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQqgucNaWMtVt_NB5N3XSZF7UPFnz8TmtSuvQ&s"),
@@ -30,29 +30,73 @@ class MockDataSource {
           imageUrl: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQqgucNaWMtVt_NB5N3XSZF7UPFnz8TmtSuvQ&s"),
       ];
 
+  // static List<MatchEntryModel> getMatchEntries() {
+  //   final now = DateTime.now();
+  //   final List<MatchEntryModel> entries = [];
+  //   final random = Random();
+    
+  //   // Generate 22 matches for each of the 10 players
+  //   for (int pId = 1; pId <= 10; pId++) {
+  //     for (int i = 0; i < 22; i++) {
+  //       final date = now.subtract(Duration(days: i + (pId * 2)));
+  //       final r = random.nextInt(10);
+  //       String result;
+  //       int goals;
+  //       int goalsConceded;
+        
+  //       if (r < 6) { // 60% Win
+  //         result = 'win';
+  //         goals = random.nextInt(4) + (i % 2); 
+  //         goalsConceded = random.nextInt(max(1, goals));
+  //       } else if (r < 8) { // 20% Draw
+  //         result = 'draw';
+  //         goals = random.nextInt(3);
+  //         goalsConceded = goals;
+  //       } else { // 20% Loss
+  //         result = 'loss';
+  //         goals = random.nextInt(2);
+  //         goalsConceded = goals + random.nextInt(3) + 1;
+  //       }
+
+  //       entries.add(MatchEntryModel(
+  //         id: 'm_${pId}_$i',
+  //         playerId: pId,
+  //         date: date,
+  //         result: result,
+  //         goals: goals,
+  //         goalsConceded: goalsConceded,
+  //         hattrick: goals >= 3,
+  //         cleanSheet: goalsConceded == 0,
+  //         motm: (result == 'win' && random.nextDouble() > 0.3) || (result == 'draw' && random.nextDouble() > 0.7),
+  //       ));
+  //     }
+  //   }
+  //   return entries;
+  // }
+
   static List<MatchEntryModel> getMatchEntries() {
     final now = DateTime.now();
     final List<MatchEntryModel> entries = [];
     final random = Random();
-    
-    // Generate 22 matches for each of the 10 players
+
     for (int pId = 1; pId <= 10; pId++) {
-      for (int i = 0; i < 22; i++) {
+      final int matchCount = random.nextInt(21) + 10; // 10 to 30
+      for (int i = 0; i < matchCount; i++) {
         final date = now.subtract(Duration(days: i + (pId * 2)));
         final r = random.nextInt(10);
         String result;
         int goals;
         int goalsConceded;
-        
-        if (r < 6) { // 60% Win
+
+        if (r < 6) {
           result = 'win';
-          goals = random.nextInt(4) + (i % 2); 
+          goals = random.nextInt(4) + (i % 2);
           goalsConceded = random.nextInt(max(1, goals));
-        } else if (r < 8) { // 20% Draw
+        } else if (r < 8) {
           result = 'draw';
           goals = random.nextInt(3);
           goalsConceded = goals;
-        } else { // 20% Loss
+        } else {
           result = 'loss';
           goals = random.nextInt(2);
           goalsConceded = goals + random.nextInt(3) + 1;
@@ -67,7 +111,8 @@ class MockDataSource {
           goalsConceded: goalsConceded,
           hattrick: goals >= 3,
           cleanSheet: goalsConceded == 0,
-          motm: (result == 'win' && random.nextDouble() > 0.3) || (result == 'draw' && random.nextDouble() > 0.7),
+          motm: (result == 'win' && random.nextDouble() > 0.3) ||
+              (result == 'draw' && random.nextDouble() > 0.7),
         ));
       }
     }
@@ -180,11 +225,11 @@ class MockDataSource {
         ),
       ];
 
-      static List<AchievementModel> getAchievements() => [
-        const AchievementModel(id: 1, title: "First Blood", description: "Score the first goal of a match.", icon: 'assets/icons/ach_1.png', date: '2024-01-15', category: 'Special', color: Colors.red),
-        const AchievementModel(id: 2, title: "Hat-trick Hero", description: "Score 3 goals in a single match.", icon: 'assets/icons/ach_2.png', date: '2024-02-10', category: 'Personal', color: Colors.amber),
-        const AchievementModel(id: 3, title: "Clean Sheet", description: "Win a match without conceding.", icon: 'assets/icons/ach_3.png', date: '2024-03-05', category: 'Team', color: Colors.blue),
-        const AchievementModel(id: 4, title: "Top Scorer", description: "Become the league's leading scorer.", icon: 'assets/icons/ach_4.png', date: '2024-12-01', category: 'Global', color: Colors.purple),
-        const AchievementModel(id: 5, title: "Captain Lead", description: "Win 5 matches as a team captain.", icon: 'assets/icons/ach_5.png', date: '2025-01-20', category: 'Social', color: Colors.teal),
-      ];
+      // static List<AchievementModel> getAchievements() => [
+      //   const AchievementModel(id: 1, title: "First Blood", description: "Score the first goal of a match.", icon: 'assets/icons/ach_1.png', date: '2024-01-15', category: 'Special', color: Colors.red),
+      //   const AchievementModel(id: 2, title: "Hat-trick Hero", description: "Score 3 goals in a single match.", icon: 'assets/icons/ach_2.png', date: '2024-02-10', category: 'Personal', color: Colors.amber),
+      //   const AchievementModel(id: 3, title: "Clean Sheet", description: "Win a match without conceding.", icon: 'assets/icons/ach_3.png', date: '2024-03-05', category: 'Team', color: Colors.blue),
+      //   const AchievementModel(id: 4, title: "Top Scorer", description: "Become the league's leading scorer.", icon: 'assets/icons/ach_4.png', date: '2024-12-01', category: 'Global', color: Colors.purple),
+      //   const AchievementModel(id: 5, title: "Captain Lead", description: "Win 5 matches as a team captain.", icon: 'assets/icons/ach_5.png', date: '2025-01-20', category: 'Social', color: Colors.teal),
+      // ];
 }

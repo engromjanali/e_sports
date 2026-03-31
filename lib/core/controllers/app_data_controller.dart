@@ -1,10 +1,46 @@
+// import 'package:e_sports/core/data/models/computed_player_stats.dart';
+// import 'package:e_sports/core/data/models/match_entry_model.dart';
+// import 'package:e_sports/core/data/models/player_model.dart';
+// import 'package:e_sports/core/data/models/news_model.dart';
+// import 'package:e_sports/core/data/models/match_model.dart';
+// import 'package:e_sports/core/data/models/tournament_model.dart';
+// import 'package:e_sports/core/data/models/achievement_model.dart';
+// import 'package:e_sports/core/services/filter_service.dart';
+// import 'package:e_sports/core/services/mock_data_source.dart';
+// import 'package:get/get.dart';
+
+// class AppDataController extends GetxController {
+//   final RxList<PlayerModel> players = <PlayerModel>[].obs;
+//   final RxList<MatchEntryModel> matchEntries = <MatchEntryModel>[].obs;
+  
+//   final RxList<NewsModel> news = <NewsModel>[].obs;
+//   final RxList<MatchModel> matches = <MatchModel>[].obs;
+//   final RxList<TournamentModel> tournaments = <TournamentModel>[].obs;
+//   final RxList<AchievementModel> achievements = <AchievementModel>[].obs;
+
+//   final Rx<TimeFilter> currentFilter = TimeFilter.season.obs;
+//   final Rx<DateTime> seasonStartDate = DateTime(DateTime.now().year, 1, 1).obs;
+
+//   @override
+//   void onInit() {
+//     super.onInit();
+//     _loadData();
+//   }
+
+//   void _loadData() {
+//     players.assignAll(MockDataSource.getPlayers());
+//     matchEntries.assignAll(MockDataSource.getMatchEntries());
+//     news.assignAll(MockDataSource.getNews());
+//     tournaments.assignAll(MockDataSource.getTournaments());
+//     achievements.assignAll(MockDataSource.getAchievements());
+//     matches.assignAll(_getMockMatches());
+//   }
 import 'package:e_sports/core/data/models/computed_player_stats.dart';
 import 'package:e_sports/core/data/models/match_entry_model.dart';
 import 'package:e_sports/core/data/models/player_model.dart';
 import 'package:e_sports/core/data/models/news_model.dart';
 import 'package:e_sports/core/data/models/match_model.dart';
 import 'package:e_sports/core/data/models/tournament_model.dart';
-import 'package:e_sports/core/data/models/achievement_model.dart';
 import 'package:e_sports/core/services/filter_service.dart';
 import 'package:e_sports/core/services/mock_data_source.dart';
 import 'package:get/get.dart';
@@ -12,11 +48,10 @@ import 'package:get/get.dart';
 class AppDataController extends GetxController {
   final RxList<PlayerModel> players = <PlayerModel>[].obs;
   final RxList<MatchEntryModel> matchEntries = <MatchEntryModel>[].obs;
-  
   final RxList<NewsModel> news = <NewsModel>[].obs;
   final RxList<MatchModel> matches = <MatchModel>[].obs;
   final RxList<TournamentModel> tournaments = <TournamentModel>[].obs;
-  final RxList<AchievementModel> achievements = <AchievementModel>[].obs;
+  // ✅ achievements removed — now auto-computed via AchievementGenerator
 
   final Rx<TimeFilter> currentFilter = TimeFilter.season.obs;
   final Rx<DateTime> seasonStartDate = DateTime(DateTime.now().year, 1, 1).obs;
@@ -32,10 +67,11 @@ class AppDataController extends GetxController {
     matchEntries.assignAll(MockDataSource.getMatchEntries());
     news.assignAll(MockDataSource.getNews());
     tournaments.assignAll(MockDataSource.getTournaments());
-    achievements.assignAll(MockDataSource.getAchievements());
     matches.assignAll(_getMockMatches());
+    // ✅ no achievements load needed
   }
 
+  // ... rest stays exactly the same
   // --- Actions ---
 
   void addMatchEntry(MatchEntryModel entry) {

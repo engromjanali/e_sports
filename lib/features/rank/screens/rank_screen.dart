@@ -24,6 +24,8 @@ class LeaderboardScreen extends StatelessWidget {
           onProfileTap: onProfileTap,
         ),
         
+        SizedBox(height: AppSpacing.md),
+
         // Custom animated toggle
         Padding(
           padding: EdgeInsets.symmetric(horizontal: AppSpacing.screenPadding),

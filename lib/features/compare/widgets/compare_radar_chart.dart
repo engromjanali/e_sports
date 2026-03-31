@@ -38,25 +38,19 @@ class CompareRadarChart extends StatelessWidget {
   }
 
   List<double> _getNormalizedStats(ComputedPlayerStats p) {
-    final appData = Get.find<AppDataController>();
-    final m = appData.maxStats;
-    
-    num safeDiv(num val, String key, num fallback) {
-        final maxVal = (m[key] ?? 0) > 0 ? m[key]! : fallback;
-        return (val / maxVal).clamp(0.0, 1.0);
-    }
+    final double m = p.matches > 0 ? p.matches.toDouble() : 1.0;
 
     return [
-      safeDiv(p.matches, 'matches', 40).toDouble(),
-      safeDiv(p.wins, 'wins', 25).toDouble(),
-      safeDiv(p.losses, 'losses', 20).toDouble(),
-      safeDiv(p.draws, 'draws', 15).toDouble(),
-      safeDiv(p.goals, 'goals', 30).toDouble(),
-      safeDiv(p.hattricks, 'hattricks', 5).toDouble(),
-      safeDiv(p.cleansheets, 'cleansheets', 15).toDouble(),
-      safeDiv(p.motm, 'motm', 10).toDouble(),
-      safeDiv(p.pts, 'pts', 100).toDouble(),
-      safeDiv(p.ga, 'ga', 50).toDouble(), // Using GA instead of FA
+      (p.matches / 40).clamp(0.0, 1.0),
+      (p.wins / m).clamp(0.0, 1.0), // Win Rate
+      (p.losses / m).clamp(0.0, 1.0), // Loss Rate
+      (p.draws / m).clamp(0.0, 1.0), // Draw Rate
+      ((p.goals / m) / 3.0).clamp(0.0, 1.0), // Goals / Match (max 3.0)
+      ((p.hattricks / m) / 0.5).clamp(0.0, 1.0), // Hattricks / Match (max 0.5)
+      (p.cleansheets / m).clamp(0.0, 1.0), // Clean Sheet Rate
+      (p.motm / m).clamp(0.0, 1.0), // MOTM Rate
+      ((p.pts / m) / 3.0).clamp(0.0, 1.0), // Points / Match (max 3.0)
+      ((p.ga / m) / 3.0).clamp(0.0, 1.0), // GA / Match (max 3.0)
     ];
   }
 }

@@ -40,7 +40,7 @@ class _CompareScreenState extends State<CompareScreen> {
         child: Column(
           children: [
             AppHeader(
-              title: "HEAD-TO-HEAD",
+              title: "Performance Battle",
               sub: "Player Comparison",
               onBack: () => Navigator.pop(context),
             ),
@@ -270,7 +270,7 @@ class _CompareScreenState extends State<CompareScreen> {
               child: CompareRadarChart(
                 p1: _p1!, 
                 p2: _p2!, 
-                labels: const ["MATCHES", "WINS", "LOSSES", "DRAWS", "GOALS", "HAT-TRICKS", "CLEANSHEETS", "MOTM", "POINTS", "GA"]
+                labels: const ["MATCHES", "WIN %", "LOSS %", "DRAW %", "GOALS/M", "HT/M", "CS %", "MOTM %", "PTS/M", "GA/M"]
               ),
             ),
             
@@ -280,12 +280,16 @@ class _CompareScreenState extends State<CompareScreen> {
             Expanded(
               flex: 3,
               child: CompareBarChartsColumn(
-                goals1: _p1!.gf,
-                goals2: _p2!.gf,
-                wins1: _p1!.wins,
-                wins2: _p2!.wins,
-                winRate1: _p1!.matches > 0 ? _p1!.wins / _p1!.matches : 0.0,
-                winRate2: _p2!.matches > 0 ? _p2!.wins / _p2!.matches : 0.0,
+                goalsPerMatch1: _p1!.gf / (_p1!.matches > 0 ? _p1!.matches : 1),
+                goalsPerMatch2: _p2!.gf / (_p2!.matches > 0 ? _p2!.matches : 1),
+                winRate1: _p1!.wins / (_p1!.matches > 0 ? _p1!.matches : 1),
+                winRate2: _p2!.wins / (_p2!.matches > 0 ? _p2!.matches : 1),
+                drawRate1: _p1!.draws / (_p1!.matches > 0 ? _p1!.matches : 1),
+                drawRate2: _p2!.draws / (_p2!.matches > 0 ? _p2!.matches : 1),
+                lossRate1: _p1!.losses / (_p1!.matches > 0 ? _p1!.matches : 1),
+                lossRate2: _p2!.losses / (_p2!.matches > 0 ? _p2!.matches : 1),
+                csRate1: _p1!.cleansheets / (_p1!.matches > 0 ? _p1!.matches : 1),
+                csRate2: _p2!.cleansheets / (_p2!.matches > 0 ? _p2!.matches : 1),
               ),
             ),
           ],
@@ -296,24 +300,37 @@ class _CompareScreenState extends State<CompareScreen> {
         _buildLeaderSummary(),
         SizedBox(height: AppSpacing.massive),
 
-        // ── Detailed Stats ──
-        _buildSectionHeader("SIDE-BY-SIDE STATS"),
+        // ── Performance Rates ──
+        _buildSectionHeader("PERFORMANCE RATES"),
         _buildCompareStatBubbles(),
+
+        SizedBox(height: AppSpacing.massive),
+
+        // ── Raw Stats ──
+        _buildSectionHeader("LIFETIME RAW STATS"),
+        _buildRawStatsGrid(),
       ],
     );
   }
 
   Widget _buildCompareStatBubbles() {
+    final double m1 = _p1!.matches > 0 ? _p1!.matches.toDouble() : 1.0;
+    final double m2 = _p2!.matches > 0 ? _p2!.matches.toDouble() : 1.0;
+
+    int getLarger(num v1, num v2) {
+      if (v1 == v2) return 0;
+      return v1 > v2 ? 1 : 2;
+    }
+
     final stats = [
-      ("🕒", "MATCHES", "${_p1!.matches}", "${_p2!.matches}"),
-      ("🏆", "WINS", "${_p1!.wins}", "${_p2!.wins}"),
-      ("➖", "DRAWS", "${_p1!.draws}", "${_p2!.draws}"),
-      ("✖️", "LOSSES", "${_p1!.losses}", "${_p2!.losses}"),
-      ("📈", "WIN RATE", "${(_p1!.wins / _p1!.matches * 100).toStringAsFixed(1)}%", "${(_p2!.wins / _p2!.matches * 100).toStringAsFixed(1)}%"),
-      ("⚽", "GOALS FOR", "${_p1!.gf}", "${_p2!.gf}"),
-      ("🥅", "GOALS AGST", "${_p1!.ga}", "${_p2!.ga}"),
-      ("🛡️", "CLEAN SHEET", "${_p1!.cleansheets}", "${_p2!.cleansheets}"),
-      ("🎖️", "MOTM", "${_p1!.motm}", "${_p2!.motm}"),
+      ("🕒", "MATCH FREQUENCY", "${_p1!.matches}", "${_p2!.matches}", getLarger(_p1!.matches, _p2!.matches)),
+      ("🏆", "WIN RATE", "${(_p1!.wins / m1 * 100).toStringAsFixed(1)}%", "${(_p2!.wins / m2 * 100).toStringAsFixed(1)}%", getLarger(_p1!.wins / m1, _p2!.wins / m2)),
+      ("➖", "DRAW RATE", "${(_p1!.draws / m1 * 100).toStringAsFixed(1)}%", "${(_p2!.draws / m2 * 100).toStringAsFixed(1)}%", getLarger(_p1!.draws / m1, _p2!.draws / m2)),
+      ("✖️", "LOSS RATE", "${(_p1!.losses / m1 * 100).toStringAsFixed(1)}%", "${(_p2!.losses / m2 * 100).toStringAsFixed(1)}%", getLarger(_p1!.losses / m1, _p2!.losses / m2)),
+      ("⚽", "GOALS/MATCH", "${(_p1!.gf / m1).toStringAsFixed(2)}", "${(_p2!.gf / m2).toStringAsFixed(2)}", getLarger(_p1!.gf / m1, _p2!.gf / m2)),
+      ("🥅", "GA/MATCH", "${(_p1!.ga / m1).toStringAsFixed(2)}", "${(_p2!.ga / m2).toStringAsFixed(2)}", getLarger(_p2!.ga / m2, _p1!.ga / m1)), // Conceding less is better
+      ("🛡️", "CS RATE", "${(_p1!.cleansheets / m1 * 100).toStringAsFixed(1)}%", "${(_p2!.cleansheets / m2 * 100).toStringAsFixed(1)}%", getLarger(_p1!.cleansheets / m1, _p2!.cleansheets / m2)),
+      ("🎖️", "MOTM RATE", "${(_p1!.motm / m1 * 100).toStringAsFixed(1)}%", "${(_p2!.motm / m2 * 100).toStringAsFixed(1)}%", getLarger(_p1!.motm / m1, _p2!.motm / m2)),
     ];
 
     return Container(
@@ -323,46 +340,129 @@ class _CompareScreenState extends State<CompareScreen> {
           padding: EdgeInsets.only(bottom: AppSpacing.xl),
           child: Row(
             children: [
-              // Player 1 Value
               Expanded(
                 child: Text(s.$3, 
                   textAlign: TextAlign.end,
-                  style: TextStyle(color: AppColors.neonBlue, fontWeight: AppTypography.black, fontSize: 16),
+                  style: TextStyle(
+                    color: AppColors.neonBlue, 
+                    fontWeight: AppTypography.black, 
+                    fontSize: 16,
+                    decoration: s.$5 == 1 ? TextDecoration.underline : TextDecoration.none,
+                    decorationColor: AppColors.neonBlue,
+                    decorationThickness: 2,
+                  ),
                 ),
               ),
-              
-              // Central Icon & Label
               Container(
-                width: 120,
+                width: 140,
                 child: Column(
                   children: [
                     Text(s.$2, style: TextStyle(fontSize: 8, fontWeight: AppTypography.bold, color: AppColors.textMuted, letterSpacing: 0.5)),
                     SizedBox(height: AppSpacing.xs),
                     Container(
-                      width: 34, height: 34,
+                      width: 30, height: 30,
                       decoration: BoxDecoration(
                         color: AppColors.white.withOpacity(0.05),
                         shape: BoxShape.circle,
                         border: Border.all(color: AppColors.glassBorder),
                       ),
                       alignment: Alignment.center,
-                      child: Text(s.$1, style: TextStyle(fontSize: 16)),
+                      child: Text(s.$1, style: TextStyle(fontSize: 14)),
                     ),
                   ],
                 ),
               ),
-
-              // Player 2 Value
               Expanded(
                 child: Text(s.$4, 
                   textAlign: TextAlign.start,
-                  style: TextStyle(color: AppColors.neonRed, fontWeight: AppTypography.black, fontSize: 16),
+                  style: TextStyle(
+                    color: AppColors.neonRed, 
+                    fontWeight: AppTypography.black, 
+                    fontSize: 16,
+                    decoration: s.$5 == 2 ? TextDecoration.underline : TextDecoration.none,
+                    decorationColor: AppColors.neonRed,
+                    decorationThickness: 2,
+                  ),
                 ),
               ),
             ],
           ),
         )).toList(),
       ),
+    );
+  }
+
+  Widget _buildRawStatsGrid() {
+    int getLarger(num v1, num v2) {
+      if (v1 == v2) return 0;
+      return v1 > v2 ? 1 : 2;
+    }
+
+    final rawStats = [
+      ("🏆", "TOTAL WINS", _p1!.wins, _p2!.wins, getLarger(_p1!.wins, _p2!.wins)),
+      ("➖", "TOTAL DRAWS", _p1!.draws, _p2!.draws, getLarger(_p1!.draws, _p2!.draws)),
+      ("✖️", "TOTAL LOSSES", _p1!.losses, _p2!.losses, getLarger(_p1!.losses, _p2!.losses)),
+      ("⚽", "TOTAL GOALS", _p1!.gf, _p2!.gf, getLarger(_p1!.gf, _p2!.gf)),
+      ("🥅", "GOALS AGST", _p1!.ga, _p2!.ga, getLarger(_p2!.ga, _p1!.ga)), // Less is better
+      ("🛡️", "CLEAN SHEETS", _p1!.cleansheets, _p2!.cleansheets, getLarger(_p1!.cleansheets, _p2!.cleansheets)),
+      ("🎖️", "MOTM AWARDS", _p1!.motm, _p2!.motm, getLarger(_p1!.motm, _p2!.motm)),
+      ("🔥", "HAT-TRICKS", _p1!.hattricks, _p2!.hattricks, getLarger(_p1!.hattricks, _p2!.hattricks)),
+    ];
+
+    return GridView.builder(
+      shrinkWrap: true,
+      physics: NeverScrollableScrollPhysics(),
+      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 2,
+        childAspectRatio: 1.8,
+        mainAxisSpacing: AppSpacing.md,
+        crossAxisSpacing: AppSpacing.md,
+      ),
+      itemCount: rawStats.length,
+      itemBuilder: (context, index) {
+        final s = rawStats[index];
+        return Container(
+          padding: EdgeInsets.all(AppSpacing.md),
+          decoration: BoxDecoration(
+            color: AppColors.white.withOpacity(0.03),
+            borderRadius: AppRadius.borderLg,
+            border: Border.all(color: AppColors.glassBorder.withOpacity(0.1)),
+          ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(s.$2, style: TextStyle(color: AppColors.textMuted, fontSize: 8, fontWeight: AppTypography.bold, letterSpacing: 0.8)),
+              SizedBox(height: AppSpacing.sm),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Text("${s.$3}", 
+                    style: TextStyle(
+                      color: AppColors.neonBlue, 
+                      fontWeight: AppTypography.black, 
+                      fontSize: 16,
+                      decoration: s.$5 == 1 ? TextDecoration.underline : TextDecoration.none,
+                      decorationColor: AppColors.neonBlue,
+                      decorationThickness: 2,
+                    )
+                  ),
+                  Text(s.$1, style: TextStyle(fontSize: 14)),
+                  Text("${s.$4}", 
+                    style: TextStyle(
+                      color: AppColors.neonRed, 
+                      fontWeight: AppTypography.black, 
+                      fontSize: 16,
+                      decoration: s.$5 == 2 ? TextDecoration.underline : TextDecoration.none,
+                      decorationColor: AppColors.neonRed,
+                      decorationThickness: 2,
+                    )
+                  ),
+                ],
+              ),
+            ],
+          ),
+        );
+      },
     );
   }
 
@@ -428,13 +528,32 @@ class _CompareScreenState extends State<CompareScreen> {
 
   Widget _buildLeaderSummary() {
     int p1Points = 0;
-    if (_p1!.wins > _p2!.wins) p1Points++;
-    if (_p1!.gf > _p2!.gf) p1Points++;
-    if (_p1!.wins / _p1!.matches > _p2!.wins / _p2!.matches) p1Points++;
-    if (_p1!.cleansheets > _p2!.cleansheets) p1Points++;
-    if (_p1!.motm > _p2!.motm) p1Points++;
+    int p2Points = 0;
+
+    final double m1 = _p1!.matches > 0 ? _p1!.matches.toDouble() : 1.0;
+    final double m2 = _p2!.matches > 0 ? _p2!.matches.toDouble() : 1.0;
+
+    // Win Rate
+    if ((_p1!.wins / m1) > (_p2!.wins / m2)) p1Points++;
+    else if ((_p2!.wins / m2) > (_p1!.wins / m1)) p2Points++;
+
+    // Goals For per Match
+    if ((_p1!.gf / m1) > (_p2!.gf / m2)) p1Points++;
+    else if ((_p2!.gf / m2) > (_p1!.gf / m1)) p2Points++;
+
+    // Goals Against per Match (lower is better)
+    if ((_p1!.ga / m1) < (_p2!.ga / m2)) p1Points++;
+    else if ((_p2!.ga / m2) < (_p1!.ga / m1)) p2Points++;
+
+    // Cleansheets per Match
+    if ((_p1!.cleansheets / m1) > (_p2!.cleansheets / m2)) p1Points++;
+    else if ((_p2!.cleansheets / m2) > (_p1!.cleansheets / m1)) p2Points++;
+
+    // MOTM per Match
+    if ((_p1!.motm / m1) > (_p2!.motm / m2)) p1Points++;
+    else if ((_p2!.motm / m2) > (_p1!.motm / m1)) p2Points++;
     
-    final p1Leading = p1Points >= 3;
+    final p1Leading = p1Points >= p2Points;
     final winner = p1Leading ? _p1! : _p2!;
     final color = p1Leading ? AppColors.neonBlue : AppColors.neonRed;
 

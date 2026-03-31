@@ -82,21 +82,29 @@ class SideBySideBarChart extends StatelessWidget {
 }
 
 class CompareBarChartsColumn extends StatelessWidget {
-  final num goals1;
-  final num goals2;
-  final num wins1;
-  final num wins2;
+  final double goalsPerMatch1;
+  final double goalsPerMatch2;
   final double winRate1;
   final double winRate2;
+  final double drawRate1;
+  final double drawRate2;
+  final double lossRate1;
+  final double lossRate2;
+  final double csRate1;
+  final double csRate2;
 
   const CompareBarChartsColumn({
     super.key,
-    required this.goals1,
-    required this.goals2,
-    required this.wins1,
-    required this.wins2,
+    required this.goalsPerMatch1,
+    required this.goalsPerMatch2,
     required this.winRate1,
     required this.winRate2,
+    required this.drawRate1,
+    required this.drawRate2,
+    required this.lossRate1,
+    required this.lossRate2,
+    required this.csRate1,
+    required this.csRate2,
   });
 
   @override
@@ -104,9 +112,11 @@ class CompareBarChartsColumn extends StatelessWidget {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        SideBySideBarChart(label: "Goals", v1: goals1, v2: goals2, max: 200), // Adjusted max for realistic demo
-        SideBySideBarChart(label: "Wins", v1: wins1, v2: wins2, max: 50),
         SideBySideBarChart(label: "Win Rate", v1: winRate1, v2: winRate2, max: 1.0, isPercent: true),
+        SideBySideBarChart(label: "Draw Rate", v1: drawRate1, v2: drawRate2, max: 1.0, isPercent: true),
+        SideBySideBarChart(label: "Loss Rate", v1: lossRate1, v2: lossRate2, max: 1.0, isPercent: true),
+        SideBySideBarChart(label: "Goals / M", v1: num.parse(goalsPerMatch1.toStringAsFixed(2)), v2: num.parse(goalsPerMatch2.toStringAsFixed(2)), max: 3.0),
+        SideBySideBarChart(label: "CS Rate", v1: csRate1, v2: csRate2, max: 1.0, isPercent: true),
       ],
     );
   }

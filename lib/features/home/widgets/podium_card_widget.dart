@@ -6,10 +6,22 @@ import 'package:flutter/material.dart';
 class PodiumCard extends StatelessWidget {
   final List<ComputedPlayerStats> players;
   final String title;
-  const PodiumCard({required this.players, required this.title});
+  final Color? accentColor;
+  final String statLabel;
+  final AlignmentGeometry badgeAlignment;
+
+  const PodiumCard({
+    required this.players,
+    required this.title,
+    this.accentColor,
+    this.statLabel = "PTS",
+    this.badgeAlignment = Alignment.topRight,
+  });
 
   @override
   Widget build(BuildContext context) {
+    final themeColor = accentColor ?? AppColors.neonGold;
+
     return GlassCardWidget(
       padding: EdgeInsets.fromLTRB(
         AppSpacing.cardInnerPadding,
@@ -17,16 +29,16 @@ class PodiumCard extends StatelessWidget {
         AppSpacing.cardInnerPadding,
         AppSpacing.cardInnerPadding,
       ),
-      borderColor: AppColors.neonGold.withOpacity(AppColors.opacity12),
+      borderColor: themeColor.withOpacity(AppColors.opacity12),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(children: [
             Container(
               width: AppSpacing.xs,
-              height: AppSpacing.xxl,
+              height: AppSizing.dotLg * 2,
               decoration: BoxDecoration(
-                color: AppColors.neonGold,
+                color: themeColor,
                 borderRadius: AppRadius.borderXxs,
               ),
             ),
@@ -46,30 +58,33 @@ class PodiumCard extends StatelessWidget {
                 player: players[0],
                 rank: 1,
                 rankLabel: "1ST",
-                medal: "🥇",
                 gradientColors: AppColors.podiumGradientColors[0],
-                glowColor: AppColors.podiumGlowColors[0],
+                glowColor: accentColor ?? AppColors.podiumGlowColors[0],
                 badgeColor: AppColors.podiumBadgeColors[0],
+                statLabel: statLabel,
+                badgeAlignment: badgeAlignment,
               )),
               SizedBox(width: AppSpacing.md),
               Expanded(child: _RankBox(
                 player: players[1],
                 rank: 2,
                 rankLabel: "2ND",
-                medal: "🥈",
                 gradientColors: AppColors.podiumGradientColors[1],
-                glowColor: AppColors.podiumGlowColors[1],
+                glowColor: accentColor?.withOpacity(0.5) ?? AppColors.podiumGlowColors[1],
                 badgeColor: AppColors.podiumBadgeColors[1],
+                statLabel: statLabel,
+                badgeAlignment: badgeAlignment,
               )),
               SizedBox(width: AppSpacing.md),
               Expanded(child: _RankBox(
                 player: players[2],
                 rank: 3,
                 rankLabel: "3RD",
-                medal: "🥉",
                 gradientColors: AppColors.podiumGradientColors[2],
-                glowColor: AppColors.podiumGlowColors[2],
+                glowColor: accentColor?.withOpacity(0.3) ?? AppColors.podiumGlowColors[2],
                 badgeColor: AppColors.podiumBadgeColors[2],
+                statLabel: statLabel,
+                badgeAlignment: badgeAlignment,
               )),
             ],
           ),
@@ -83,19 +98,21 @@ class _RankBox extends StatelessWidget {
   final ComputedPlayerStats player;
   final int rank;
   final String rankLabel;
-  final String medal;
   final List<Color> gradientColors;
   final Color glowColor;
   final Color badgeColor;
+  final String statLabel;
+  final AlignmentGeometry badgeAlignment;
 
   const _RankBox({
     required this.player,
     required this.rank,
     required this.rankLabel,
-    required this.medal,
     required this.gradientColors,
     required this.glowColor,
     required this.badgeColor,
+    required this.statLabel,
+    required this.badgeAlignment,
   });
 
   @override
@@ -181,32 +198,60 @@ class _RankBox extends StatelessWidget {
                           width: AppSizing.borderThin,
                         ),
                       ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.end,
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
                         children: [
-                          Text(
-                            "${player.pts}",
-                            style: TextStyle(
-                              fontSize: AppTypography.sizeHeadingLg,
-                              fontWeight: AppTypography.black,
-                              color: gradientColors[1],
-                              height: AppTypography.lineHeightCompact,
-                            ),
-                          ),
-                          SizedBox(width: AppSpacing.xs),
-                          Padding(
-                            padding: EdgeInsets.only(bottom: AppSpacing.xxs),
-                            child: Text(
-                              "PTS",
-                              style: TextStyle(
-                                fontSize: AppTypography.sizeTiny,
-                                fontWeight: AppTypography.extraBold,
-                                letterSpacing: AppTypography.trackingWider,
-                                color: gradientColors[1].withOpacity(AppColors.opacity60),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                            children: [
+                              Text(
+                                statLabel == "GOALS" ? "${player.goals}" : "${player.pts}",
+                                style: TextStyle(
+                                  fontSize: AppTypography.sizeHeadingLg,
+                                  fontWeight: AppTypography.black,
+                                  color: gradientColors[1],
+                                  height: AppTypography.lineHeightCompact,
+                                ),
                               ),
+                              SizedBox(width: AppSpacing.xs),
+                              Padding(
+                                padding: EdgeInsets.only(bottom: AppSpacing.xxs),
+                                child: Text(
+                                  statLabel,
+                                  style: TextStyle(
+                                    fontSize: AppTypography.sizeTiny,
+                                    fontWeight: AppTypography.extraBold,
+                                    letterSpacing: AppTypography.trackingWider,
+                                    color: gradientColors[1].withOpacity(AppColors.opacity60),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          Padding(
+                            padding: EdgeInsets.symmetric(horizontal: AppSpacing.sm, vertical: AppSpacing.xxs),
+                            child: Divider(
+                              height: 1, 
+                              thickness: 0.5, 
+                              color: gradientColors[1].withOpacity(AppColors.opacity12)
                             ),
                           ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              _buildMiniStat("M", player.matches, gradientColors[1]),
+                              _buildDivider(gradientColors[1]),
+                              _buildMiniStat("W", player.wins, gradientColors[1]),
+                              _buildDivider(gradientColors[1]),
+                              _buildMiniStat("D", player.draws, gradientColors[1]),
+                              _buildDivider(gradientColors[1]),
+                              _buildMiniStat("L", player.losses, gradientColors[1]),
+                              _buildDivider(gradientColors[1]),
+                              _buildMiniStat("G", player.goals, gradientColors[1]),
+                            ],
+                          ),
+                          SizedBox(height: AppSpacing.xxs),
                         ],
                       ),
                     ),
@@ -214,41 +259,6 @@ class _RankBox extends StatelessWidget {
                   ],
                 ),
               ],
-            ),
-          ),
-        ),
-        Positioned(
-          top: overflowAmt + 4,
-          right: 0,
-          child: ClipRRect(
-            borderRadius: AppRadius.ribbonBadge,
-            child: Container(
-              padding: EdgeInsets.fromLTRB(
-                AppSpacing.md, AppSpacing.xs, AppSpacing.md, AppSpacing.xs + 1,
-              ),
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [badgeColor.withOpacity(0.85), badgeColor],
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                ),
-              ),
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(medal, style: TextStyle(fontSize: AppTypography.sizeSmall)),
-                  SizedBox(width: AppSpacing.xs),
-                  Text(
-                    rankLabel,
-                    style: TextStyle(
-                      fontSize: AppTypography.sizeTiny,
-                      fontWeight: AppTypography.black,
-                      letterSpacing: 1.4,
-                      color: gradientColors[0],
-                    ),
-                  ),
-                ],
-              ),
             ),
           ),
         ),
@@ -304,7 +314,152 @@ class _RankBox extends StatelessWidget {
             ),
           ),
         ),
+        Positioned(
+          top: -overflowAmt - 4,
+          left: -4, right: -12, // More offset from the right side as requested
+          child: Align(
+            alignment: badgeAlignment,
+            child: CustomPaint(
+              painter: HexagonPainter(
+                color: badgeColor,
+                glowColor: badgeColor.withOpacity(0.5),
+              ),
+              child: ClipPath(
+                clipper: HexagonClipper(),
+                child: Container(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: AppSpacing.lg,
+                    vertical: AppSpacing.xs,
+                  ),
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [badgeColor.withOpacity(0.9), badgeColor],
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                    ),
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      _buildMedalIcon(rank),
+                      SizedBox(width: AppSpacing.xs),
+                      Text(
+                        rankLabel,
+                        style: TextStyle(
+                          fontSize: AppTypography.sizeTiny,
+                          fontWeight: AppTypography.black,
+                          letterSpacing: 1.2,
+                          color: gradientColors[0],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
       ],
     );
   }
+
+  Widget _buildMiniStat(String label, int value, Color color) {
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: AppSpacing.xs),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(label, style: TextStyle(
+            fontSize: 7, 
+            fontWeight: AppTypography.black, 
+            color: color.withOpacity(AppColors.opacity45)
+          )),
+          SizedBox(width: 2),
+          Text("$value", style: TextStyle(
+            fontSize: AppTypography.sizeTiny, 
+            fontWeight: AppTypography.bold, 
+            color: color.withOpacity(0.9)
+          )),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildDivider(Color color) {
+    return Container(
+      width: 1,
+      height: 8,
+      color: color.withOpacity(AppColors.opacity12),
+    );
+  }
+
+  Widget _buildMedalIcon(int rank) {
+    final Color iconColor = rank == 1 
+      ? const Color(0xFFFFD700) // Gold
+      : rank == 2 
+        ? const Color(0xFFE0E0E0) // Silver
+        : const Color(0xFFCD7F32); // Bronze
+
+    return Icon(
+      Icons.emoji_events_rounded,
+      color: iconColor,
+      size: 14,
+    );
+  }
+}
+
+class HexagonPainter extends CustomPainter {
+  final Color color;
+  final Color glowColor;
+
+  HexagonPainter({required this.color, required this.glowColor});
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final rect = Offset.zero & size;
+    final path = _getHexagonPath(size);
+
+    // 1. Draw Glow
+    final glowPaint = Paint()
+      ..color = glowColor
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 3.0
+      ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 3.0);
+    canvas.drawPath(path, glowPaint);
+
+    // 2. Draw Solid Border
+    final borderPaint = Paint()
+      ..color = AppColors.white.withOpacity(0.5)
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 1.0;
+    canvas.drawPath(path, borderPaint);
+  }
+
+  @override
+  bool shouldRepaint(HexagonPainter oldDelegate) => 
+    oldDelegate.color != color || oldDelegate.glowColor != glowColor;
+}
+
+class HexagonClipper extends CustomClipper<Path> {
+  @override
+  Path getClip(Size size) => _getHexagonPath(size);
+
+  @override
+  bool shouldReclip(CustomClipper<Path> oldClipper) => false;
+}
+
+Path _getHexagonPath(Size size) {
+  Path path = Path();
+  double width = size.width;
+  double height = size.height;
+  double edge = width * 0.12;
+
+  path.moveTo(edge, 0);
+  path.lineTo(width - edge, 0);
+  path.lineTo(width, height / 2);
+  path.lineTo(width - edge, height);
+  path.lineTo(edge, height);
+  path.lineTo(0, height / 2);
+  path.close();
+  return path;
 }

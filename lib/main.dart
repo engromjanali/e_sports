@@ -49,7 +49,7 @@ class GameArenaApp extends StatelessWidget {
         brightness: Brightness.dark,
         scaffoldBackgroundColor: AppColors.bg,
         fontFamily: AppTypography.fontFamily,
-        fontFamilyFallback: const ['Apple Color Emoji', 'Segoe UI Emoji', 'Noto Color Emoji'],
+        fontFamilyFallback: const ['NotoSansBengali', 'NotoSans', 'Apple Color Emoji', 'Segoe UI Emoji', 'Noto Color Emoji'],
         colorScheme: const ColorScheme.dark(
           primary: AppColors.neonGold,
           secondary: AppColors.neonCyan,
@@ -64,7 +64,11 @@ class GameArenaApp extends StatelessWidget {
         splashColor: Colors.transparent,
         highlightColor: Colors.transparent,
       ),
-      home: const LoginPage(),
+      initialRoute: "/",
+      getPages: [
+        GetPage(name: "/", page: () => const LoginPage()),
+        GetPage(name: "/DashboardScreen", page: () => const DashboardScreen()),
+      ],
     );
   }
 }
