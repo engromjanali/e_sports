@@ -1,11 +1,11 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import '../../../core/controllers/app_data_controller.dart';
 import '../../../core/data/models/computed_player_stats.dart';
 import '../../../core/helper/route_helper.dart';
 import '../../../core/theme/app_theme.dart';
+import '../../menu/screens/menu_screen.dart';
 import '../../home/screens/home_screen.dart';
 import '../../matches/screens/matches_screen.dart';
 import '../../profile/screens/profile_screen.dart';
@@ -55,8 +55,8 @@ class _GameArenaScreenState extends State<DashboardScreen> with SingleTickerProv
     _TabDef(icon: "🏠", label: "Home"),
     _TabDef(icon: "🎮", label: "Matches"),
     _TabDef(icon: "📊", label: "Ranks"),
-    _TabDef(icon: "👤", label: "Profile"),
     _TabDef(icon: "🪙", label: "Rewards"),
+    _TabDef(icon: "☰", label: "Menu"),
   ];
 
   @override
@@ -125,14 +125,14 @@ class _GameArenaScreenState extends State<DashboardScreen> with SingleTickerProv
           onProfileTap: _openMyProfile,
         );
       case 3:
-        return ProfileScreen(
-          key: const ValueKey(3),
+        return RewardsScreen(
+          key: const ValueKey(4),
           onSearchTap: _openSearch,
           onProfileTap: _openMyProfile,
         );
       case 4:
-        return RewardsScreen(
-          key: const ValueKey(4),
+        return MenuScreen(
+          key: const ValueKey(5),
           onSearchTap: _openSearch,
           onProfileTap: _openMyProfile,
         );
