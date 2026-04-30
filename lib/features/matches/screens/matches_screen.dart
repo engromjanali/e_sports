@@ -1,6 +1,7 @@
 import '../../../core/theme/app_theme.dart';
 import '../../../core/controllers/app_data_controller.dart';
 import 'package:get/get.dart';
+import '../../../core/widgets/app_footer_widget.dart';
 import '../../../core/widgets/app_header_widget.dart';
 import '../widgets/filter_chip_widget.dart';
 import '../widgets/full_match_card_widget.dart';
@@ -56,6 +57,7 @@ class _MatchesScreenState extends State<MatchesScreen> {
             padding: EdgeInsets.only(bottom: AppSpacing.lg),
             child: FullMatchCard(match: m),
           )),
+          if (AppBreakpoints.isDesktop(context)) AppDesktopFooter(),
         ]),
       )),
     ]);

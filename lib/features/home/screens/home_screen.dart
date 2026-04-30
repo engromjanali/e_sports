@@ -1,6 +1,7 @@
 import '../../../core/theme/app_theme.dart';
 import '../../../core/controllers/app_data_controller.dart';
 
+import '../../../core/widgets/app_footer_widget.dart';
 import '../../../core/widgets/app_header_widget.dart';
 import '../widgets/my_rank_card_widget.dart';
 import '../widgets/news_branner.dart';
@@ -202,6 +203,7 @@ class HomeScreen extends StatelessWidget {
 
                 // ── Get Rewards CTA ──
                 GetRewardsCta(onTap: () => onNavigate(3)),
+                if (AppBreakpoints.isDesktop(context)) AppDesktopFooter(),
                 SizedBox(height: AppSpacing.xxxl),
               ]),
             ),

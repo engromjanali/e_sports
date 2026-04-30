@@ -1,6 +1,7 @@
 import '../theme/app_theme.dart';
 import 'player_avater.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class AppHeader extends StatelessWidget {
   final String? title;
@@ -49,7 +50,10 @@ class AppHeader extends StatelessWidget {
                       child: const Icon(Icons.arrow_back_ios_new, color: AppColors.white, size: 16),
                     ),
                   ),
-                Flexible(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                Flexible(child: GestureDetector(
+                  onTap: title == null ? () => Get.offNamed('/home') : null,
+                  behavior: title == null ? HitTestBehavior.opaque : HitTestBehavior.deferToChild,
+                  child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                   if (title != null)
                     Text(title!, maxLines: 1, overflow: TextOverflow.ellipsis, style: TextStyle(
                         color: AppColors.neonCyan,
@@ -79,7 +83,7 @@ class AppHeader extends StatelessWidget {
                         color: AppColors.textMuted,
                         letterSpacing: AppTypography.trackingNormal,
                       )),
-                ])),
+                ]))),
               ],
             ),
           ),

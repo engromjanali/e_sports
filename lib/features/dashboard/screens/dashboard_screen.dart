@@ -267,6 +267,7 @@ class _GameArenaScreenState extends State<DashboardScreen> with SingleTickerProv
       ),
     );
   }
+
 }
 
 class _TabDef {

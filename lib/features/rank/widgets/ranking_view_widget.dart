@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../core/helper/route_helper.dart';
 import '../../../core/theme/app_theme.dart';
+import '../../../core/widgets/app_footer_widget.dart';
 import '../../../core/widgets/section_heading_widget.dart';
 import "../../../core/controllers/app_data_controller.dart";
 import '../../../core/data/models/computed_player_stats.dart';
@@ -96,6 +97,7 @@ class RankingViewWidget extends StatelessWidget {
                 onSelected: controller.setSelectedSeason,
               ),
             ),
+            if (AppBreakpoints.isDesktop(context)) AppDesktopFooter(),
           ],
         ),
       );

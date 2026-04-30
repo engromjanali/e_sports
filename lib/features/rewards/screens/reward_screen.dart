@@ -5,6 +5,7 @@ import '../../../core/controllers/app_data_controller.dart';
 import '../../../core/data/models/tournament_model.dart';
 import '../../../core/data/models/player_model.dart';
 import '../../../core/theme/app_theme.dart';
+import '../../../core/widgets/app_footer_widget.dart';
 import '../../../core/widgets/app_header_widget.dart';
 import '../../../core/widgets/glass_card_widget.dart';
 import '../../../core/widgets/neon_pill_widget.dart';
@@ -343,6 +344,7 @@ class _EarnTab extends StatelessWidget {
             _TaskGroupHeader(emoji: "🗓️", title: "Monthly Tasks",
                 sub: "400 ads = +500 bonus coins", color: AppColors.neonGold),
             ..._monthly.map((t) => _TaskCard(t: t, watching: watching, timer: timer, onStartAd: onStartAd)),
+            if (AppBreakpoints.isDesktop(context)) AppDesktopFooter(),
           ]),
         ),
       ]),
@@ -700,6 +702,7 @@ class TournamentTabWidget extends StatelessWidget {
         // ── Leaderboard ────────────────────────────────────────────────
         SectionHeadingWidget(title: "📊 Season Standings"),
         _TournamentLeaderboard(),
+        if (AppBreakpoints.isDesktop(context)) AppDesktopFooter(),
         const SizedBox(height: 8),
       ]),
     );
@@ -1173,6 +1176,7 @@ class _ShopTab extends StatelessWidget {
                 ])),
               ]),
             ),
+            if (AppBreakpoints.isDesktop(context)) AppDesktopFooter(),
           ]),
         ),
       ]),

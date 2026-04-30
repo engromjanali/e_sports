@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import '../../../core/controllers/theme_controller.dart';
 import '../../../core/helper/route_helper.dart';
 import '../../../core/theme/app_theme.dart';
+import '../../../core/widgets/app_footer_widget.dart';
 import '../../../core/widgets/app_header_widget.dart';
 
 class MenuScreen extends StatelessWidget {
@@ -116,6 +117,7 @@ class MenuScreen extends StatelessWidget {
                           ),
                         ],
                       ),
+                      if (AppBreakpoints.isDesktop(context)) AppDesktopFooter(),
                       SizedBox(height: AppSpacing.xl),
                     ],
                   ),
