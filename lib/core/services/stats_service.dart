@@ -1,6 +1,6 @@
-import 'package:e_sports/core/data/models/computed_player_stats.dart';
-import 'package:e_sports/core/data/models/match_entry_model.dart';
-import 'package:e_sports/core/data/models/player_model.dart';
+import '../data/models/computed_player_stats.dart';
+import '../data/models/match_entry_model.dart';
+import '../data/models/player_model.dart';
 
 class StatsService {
   static ComputedPlayerStats computeStats(PlayerModel player, List<MatchEntryModel> entries) {

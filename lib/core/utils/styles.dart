@@ -1,4 +1,4 @@
-import 'package:e_sports/core/utils/dimensions.dart';
+import 'dimensions.dart';
 import 'package:flutter/material.dart';
 
 final robotoRegular = TextStyle(

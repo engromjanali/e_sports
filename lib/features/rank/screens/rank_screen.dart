@@ -1,11 +1,11 @@
-import 'package:e_sports/core/theme/app_theme.dart';
-import 'package:e_sports/core/widgets/app_header_widget.dart';
-import 'package:e_sports/features/rank/controllers/rank_controller.dart';
-import 'package:e_sports/features/rank/widgets/ranking_view_widget.dart';
+import '../../../core/theme/app_theme.dart';
+import '../../../core/widgets/app_header_widget.dart';
+import '../controllers/rank_controller.dart';
+import '../widgets/ranking_view_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import 'package:e_sports/core/widgets/custom_segmented_toggle.dart';
+import '../../../core/widgets/custom_segmented_toggle.dart';
 
 class LeaderboardScreen extends StatelessWidget {
   final VoidCallback? onSearchTap;

@@ -1,9 +1,9 @@
-import 'package:e_sports/core/theme/app_theme.dart';
-import "package:e_sports/core/controllers/app_data_controller.dart";
-import "package:e_sports/core/data/models/news_model.dart";
+import '../../../core/theme/app_theme.dart';
+import "../../../core/controllers/app_data_controller.dart";
+import "../../../core/data/models/news_model.dart";
 import "package:get/get.dart";
-import 'package:e_sports/core/widgets/glow_circle_widget.dart';
-import 'package:e_sports/features/home/widgets/ring_widget.dart';
+import '../../../core/widgets/glow_circle_widget.dart';
+import 'ring_widget.dart';
 import 'package:flutter/material.dart';
 
 class NewsBannerWidget extends StatelessWidget {

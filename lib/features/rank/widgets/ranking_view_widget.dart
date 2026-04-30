@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import '../../../core/helper/route_helper.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../core/widgets/section_heading_widget.dart';
-import "package:e_sports/core/controllers/app_data_controller.dart";
-import "package:get/get.dart";
+import "../../../core/controllers/app_data_controller.dart";
 import '../../../core/data/models/computed_player_stats.dart';
 import '../controllers/rank_controller.dart';
 import 'premium_hero_card.dart';
 import 'mini_player_card.dart';
-import '../../profile/screens/profile_screen.dart';
 
 class RankingViewWidget extends StatelessWidget {
   final bool isScorer;
@@ -39,7 +38,7 @@ class RankingViewWidget extends StatelessWidget {
               child: Row(
                 children: [
                   _HeroWrapper(child: GestureDetector(
-                    onTap: hWeek == null ? null : () => Navigator.push(context, MaterialPageRoute(builder: (_) => ProfileScreen(player: hWeek, isSubScreen: true))),
+                    onTap: hWeek == null ? null : () => Get.toNamed(RouteHelper.getPlayerProfileRoute(hWeek.id)),
                     child: PremiumHeroCard(
                       type: MvpType.week, 
                       player: hWeek ?? controller.rankedPlayers.first, 
@@ -47,7 +46,7 @@ class RankingViewWidget extends StatelessWidget {
                     ),
                   )),
                   _HeroWrapper(child: GestureDetector(
-                    onTap: hMonth == null ? null : () => Navigator.push(context, MaterialPageRoute(builder: (_) => ProfileScreen(player: hMonth, isSubScreen: true))),
+                    onTap: hMonth == null ? null : () => Get.toNamed(RouteHelper.getPlayerProfileRoute(hMonth.id)),
                     child: PremiumHeroCard(
                       type: MvpType.month, 
                       player: hMonth ?? controller.rankedPlayers.first, 
@@ -55,7 +54,7 @@ class RankingViewWidget extends StatelessWidget {
                     ),
                   )),
                   _HeroWrapper(child: GestureDetector(
-                    onTap: hSeason == null ? null : () => Navigator.push(context, MaterialPageRoute(builder: (_) => ProfileScreen(player: hSeason, isSubScreen: true))),
+                    onTap: hSeason == null ? null : () => Get.toNamed(RouteHelper.getPlayerProfileRoute(hSeason.id)),
                     child: PremiumHeroCard(
                       type: MvpType.season, 
                       player: hSeason ?? controller.rankedPlayers.first, 
@@ -148,7 +147,7 @@ class _ListSection extends StatelessWidget {
           itemCount: players.length,
           separatorBuilder: (context, i) => SizedBox(height: AppSpacing.sm),
           itemBuilder: (context, i) => GestureDetector(
-            onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => ProfileScreen(player: players[i], isSubScreen: true))),
+            onTap: () => Get.toNamed(RouteHelper.getPlayerProfileRoute(players[i].id)),
             child: MiniPlayerCard(
               player: players[i],
               isScorer: isScorer,

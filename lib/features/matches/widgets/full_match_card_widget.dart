@@ -1,8 +1,8 @@
-import 'package:e_sports/core/theme/app_theme.dart';
-import "package:e_sports/core/controllers/app_data_controller.dart";
-import "package:e_sports/core/data/models/match_model.dart";
+import '../../../core/theme/app_theme.dart';
+import "../../../core/controllers/app_data_controller.dart";
+import "../../../core/data/models/match_model.dart";
 import "package:get/get.dart";
-import 'package:e_sports/core/widgets/glass_card_widget.dart';
+import '../../../core/widgets/glass_card_widget.dart';
 import 'package:flutter/material.dart';
 
 class FullMatchCard extends StatelessWidget {

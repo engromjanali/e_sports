@@ -1,6 +1,6 @@
-import 'package:e_sports/core/theme/app_theme.dart';
-import 'package:e_sports/core/data/models/computed_player_stats.dart';
-import 'package:e_sports/core/widgets/player_tags_widget.dart';
+import '../theme/app_theme.dart';
+import '../data/models/computed_player_stats.dart';
+import 'player_tags_widget.dart';
 import 'package:flutter/material.dart';
 
 

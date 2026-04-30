@@ -1,4 +1,4 @@
-import 'package:e_sports/core/data/models/computed_player_stats.dart';
+import 'computed_player_stats.dart';
 import 'package:flutter/material.dart';
 
 class AchievementMilestone {

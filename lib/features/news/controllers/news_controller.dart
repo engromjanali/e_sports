@@ -1,7 +1,7 @@
 import 'package:get/get.dart';
-import 'package:e_sports/core/controllers/app_data_controller.dart';
-import 'package:e_sports/core/data/models/news_model.dart';
-import 'package:e_sports/features/news/screens/news_detail_screen.dart';
+import '../../../core/controllers/app_data_controller.dart';
+import '../../../core/data/models/news_model.dart';
+import '../../../core/helper/route_helper.dart';
 
 class NewsController extends GetxController {
   final _news = <NewsModel>[].obs;
@@ -29,6 +29,6 @@ class NewsController extends GetxController {
   }
 
   void goToDetail(NewsModel news) {
-    Get.to(() => NewsDetailScreen(news: news), transition: Transition.cupertino);
+    Get.toNamed(RouteHelper.getNewsDetailsRoute(news.id));
   }
 }

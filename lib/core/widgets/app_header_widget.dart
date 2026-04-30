@@ -1,5 +1,5 @@
-import 'package:e_sports/core/theme/app_theme.dart';
-import 'package:e_sports/core/widgets/player_avater.dart';
+import '../theme/app_theme.dart';
+import 'player_avater.dart';
 import 'package:flutter/material.dart';
 
 class AppHeader extends StatelessWidget {

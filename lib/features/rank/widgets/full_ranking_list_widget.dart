@@ -1,8 +1,8 @@
-import 'package:e_sports/core/theme/app_theme.dart';
-import 'package:e_sports/core/data/models/computed_player_stats.dart';
-import 'package:e_sports/core/widgets/glass_card_widget.dart';
-import 'package:e_sports/core/widgets/neon_pill_widget.dart';
-import 'package:e_sports/core/widgets/player_avater.dart';
+import '../../../core/theme/app_theme.dart';
+import '../../../core/data/models/computed_player_stats.dart';
+import '../../../core/widgets/glass_card_widget.dart';
+import '../../../core/widgets/neon_pill_widget.dart';
+import '../../../core/widgets/player_avater.dart';
 import 'package:flutter/material.dart';
 
 class FullRankingList extends StatelessWidget {

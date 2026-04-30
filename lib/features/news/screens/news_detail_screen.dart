@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:e_sports/core/theme/app_theme.dart';
-import "package:e_sports/core/controllers/app_data_controller.dart";
-import "package:e_sports/core/data/models/news_model.dart";
-import "package:get/get.dart";
+import '../../../core/helper/route_helper.dart';
+import '../../../core/theme/app_theme.dart';
+import "../../../core/data/models/news_model.dart";
 
 class NewsDetailScreen extends StatelessWidget {
   final NewsModel news;
@@ -23,7 +22,7 @@ class NewsDetailScreen extends StatelessWidget {
             leading: Padding(
               padding: const EdgeInsets.all(8.0),
               child: GestureDetector(
-                onTap: () => Get.back(),
+                onTap: () => Get.key.currentState?.canPop() == true ? Get.back() : Get.offNamed(RouteHelper.news),
                 child: Container(
                   decoration: BoxDecoration(
                     color: Colors.black.withOpacity(0.3),

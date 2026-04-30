@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:e_sports/core/theme/app_colors.dart';
-import 'package:e_sports/core/theme/app_breakpoints.dart';
+import 'app_colors.dart';
+import 'app_breakpoints.dart';
 
 /// Centralized typography system — single source of truth for all text styles.
 class AppTypography {
   AppTypography._();
 
   // ─── Font Family ──────────────────────────────────────────────────────────
-  static String get fontFamily => GoogleFonts.hindSiliguri().fontFamily!;
+  static String get fontFamily => 'Roboto';
 
   // ─── Font Weights ─────────────────────────────────────────────────────────
   static const FontWeight regular   = FontWeight.w400;

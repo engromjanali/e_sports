@@ -1,5 +1,5 @@
-import 'package:e_sports/core/theme/app_theme.dart';
-import 'package:e_sports/core/widgets/glass_card_widget.dart';
+import '../theme/app_theme.dart';
+import 'glass_card_widget.dart';
 import 'package:flutter/material.dart';
 
 class QuickNavItem extends StatelessWidget {

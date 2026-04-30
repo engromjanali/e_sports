@@ -1,8 +1,8 @@
-import 'package:e_sports/core/theme/app_colors.dart';
-import 'package:e_sports/core/theme/app_radius.dart';
-import 'package:e_sports/core/theme/app_spacing.dart';
-import 'package:e_sports/core/theme/app_typography.dart';
-import 'package:e_sports/features/dashboard/screens/dashboard_screen.dart';
+import '../../../../core/theme/app_colors.dart';
+import '../../../../core/helper/route_helper.dart';
+import '../../../../core/theme/app_radius.dart';
+import '../../../../core/theme/app_spacing.dart';
+import '../../../../core/theme/app_typography.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -157,7 +157,7 @@ class LoginPage extends StatelessWidget {
                   ],
                 ),
                 child: ElevatedButton(
-                  onPressed: () => Get.offAll(() => const DashboardScreen()),
+                  onPressed: () => Get.offAllNamed(RouteHelper.home),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppColors.neonGold,
                     foregroundColor: Colors.black,

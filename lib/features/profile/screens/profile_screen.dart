@@ -505,21 +505,22 @@
 // }
 
 
-import 'package:e_sports/core/theme/app_theme.dart';
-import 'package:e_sports/core/widgets/app_header_widget.dart';
-import 'package:e_sports/core/widgets/glass_card_widget.dart';
-import 'package:e_sports/core/widgets/neon_pregress_bar_widget.dart';
-import 'package:e_sports/core/widgets/player_avater.dart';
-import 'package:e_sports/core/widgets/player_tags_widget.dart';
-import 'package:e_sports/core/widgets/section_heading_widget.dart';
-import 'package:e_sports/core/widgets/widget_opacity_widget.dart';
+import '../../../core/theme/app_theme.dart';
+import '../../../core/helper/route_helper.dart';
+import '../../../core/widgets/app_header_widget.dart';
+import '../../../core/widgets/glass_card_widget.dart';
+import '../../../core/widgets/neon_pregress_bar_widget.dart';
+import '../../../core/widgets/player_avater.dart';
+import '../../../core/widgets/player_tags_widget.dart';
+import '../../../core/widgets/section_heading_widget.dart';
+import '../../../core/widgets/widget_opacity_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../core/controllers/app_data_controller.dart';
 import '../../../core/data/models/computed_player_stats.dart';
 import '../widgets/profile_analytics_tab.dart';
 import '../models/player_performance.dart';
-import 'package:e_sports/core/data/models/achievement_generator.dart';
+import '../../../core/data/models/achievement_generator.dart';
 
 class ProfileScreen extends StatefulWidget {
   final ComputedPlayerStats? player;
@@ -553,7 +554,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         children: [
           AppHeader(
             sub: widget.isSubScreen ? "Player Details" : "My Profile",
-            onBack: widget.isSubScreen ? () => Navigator.pop(context) : null,
+            onBack: widget.isSubScreen ? () => Get.key.currentState?.canPop() == true ? Get.back() : Get.offNamed(RouteHelper.ranks) : null,
             onSearchTap: widget.onSearchTap,
             onProfileTap: widget.onProfileTap,
           ),

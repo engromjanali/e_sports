@@ -1,5 +1,5 @@
-import 'package:e_sports/core/controllers/app_data_controller.dart';
-import 'package:e_sports/core/data/models/tournament_model.dart';
+import '../../../core/controllers/app_data_controller.dart';
+import '../../../core/data/models/tournament_model.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import '../../../core/theme/app_theme.dart';

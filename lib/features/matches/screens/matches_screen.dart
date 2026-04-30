@@ -1,9 +1,9 @@
-import 'package:e_sports/core/theme/app_theme.dart';
-import 'package:e_sports/core/controllers/app_data_controller.dart';
+import '../../../core/theme/app_theme.dart';
+import '../../../core/controllers/app_data_controller.dart';
 import 'package:get/get.dart';
-import 'package:e_sports/core/widgets/app_header_widget.dart';
-import 'package:e_sports/features/matches/widgets/filter_chip_widget.dart';
-import 'package:e_sports/features/matches/widgets/full_match_card_widget.dart';
+import '../../../core/widgets/app_header_widget.dart';
+import '../widgets/filter_chip_widget.dart';
+import '../widgets/full_match_card_widget.dart';
 import 'package:flutter/material.dart';
 
 class MatchesScreen extends StatefulWidget {

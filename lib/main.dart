@@ -1,20 +1,25 @@
-import 'package:e_sports/core/theme/app_theme.dart';
-import 'package:e_sports/features/auth/presentation/pages/login_page.dart';
-import 'package:e_sports/features/dashboard/screens/dashboard_screen.dart';
-import 'package:e_sports/firebase_options.dart';
+import 'dart:async';
+
+import 'package:app_links/app_links.dart';
+import 'package:flutter/foundation.dart';
+import 'core/theme/app_theme.dart';
+import 'core/helper/route_helper.dart';
+import 'firebase_options.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:get/get_navigation/src/root/get_material_app.dart';
-import 'package:e_sports/core/data/models/player_model.dart';
-import 'package:e_sports/core/data/models/match_entry_model.dart';
-
-import 'package:e_sports/core/controllers/app_data_controller.dart';
+import 'package:flutter_web_plugins/url_strategy.dart';
+import 'core/controllers/app_data_controller.dart';
 import 'package:get/get.dart';
 
 void main() async{
 
   WidgetsFlutterBinding.ensureInitialized();
+
+  if (kIsWeb) {
+    usePathUrlStrategy();
+  }
+
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
@@ -37,8 +42,46 @@ void main() async{
   runApp(const GameArenaApp());
 }
 
-class GameArenaApp extends StatelessWidget {
+class GameArenaApp extends StatefulWidget {
   const GameArenaApp({super.key});
+
+  @override
+  State<GameArenaApp> createState() => _GameArenaAppState();
+}
+
+class _GameArenaAppState extends State<GameArenaApp> {
+  StreamSubscription<Uri>? _linkSubscription;
+
+  @override
+  void initState() {
+    super.initState();
+    if (!kIsWeb) {
+      _listenDeepLinks();
+    }
+  }
+
+  Future<void> _listenDeepLinks() async {
+    final appLinks = AppLinks();
+    final initialUri = await appLinks.getInitialLink();
+    final initialRoute = initialUri == null ? null : RouteHelper.routeFromUri(initialUri);
+
+    if (initialRoute != null) {
+      WidgetsBinding.instance.addPostFrameCallback((_) => Get.toNamed(initialRoute));
+    }
+
+    _linkSubscription = appLinks.uriLinkStream.listen((uri) {
+      final route = RouteHelper.routeFromUri(uri);
+      if (route != null) {
+        Get.toNamed(route);
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _linkSubscription?.cancel();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -64,11 +107,19 @@ class GameArenaApp extends StatelessWidget {
         splashColor: Colors.transparent,
         highlightColor: Colors.transparent,
       ),
-      initialRoute: "/",
-      getPages: [
-        GetPage(name: "/", page: () => const LoginPage()),
-        GetPage(name: "/DashboardScreen", page: () => const DashboardScreen()),
-      ],
+      initialRoute: RouteHelper.login,
+      getPages: RouteHelper.routes,
+      unknownRoute: GetPage(name: '/not-found', page: () => const RouteNotFoundScreen()),
+      builder: (context, child) {
+        return Container(
+          color: AppColors.bg,
+          alignment: Alignment.topCenter,
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: AppBreakpoints.webMaxWidth),
+            child: child ?? const SizedBox.shrink(),
+          ),
+        );
+      },
     );
   }
 }

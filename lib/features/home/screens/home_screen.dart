@@ -206,25 +206,22 @@
 //   }
 // }
 
-import 'package:e_sports/core/theme/app_theme.dart';
-import 'package:e_sports/core/controllers/app_data_controller.dart';
+import '../../../core/theme/app_theme.dart';
+import '../../../core/controllers/app_data_controller.dart';
 
-import 'package:e_sports/core/widgets/app_header_widget.dart';
-import 'package:e_sports/features/home/widgets/my_rank_card_widget.dart';
-import 'package:e_sports/features/home/widgets/news_branner.dart';
-import 'package:e_sports/core/widgets/quick_nav_item_widget.dart';
-import 'package:e_sports/core/widgets/section_heading_widget.dart';
-import 'package:e_sports/core/widgets/sport_light_card_widget.dart';
-import 'package:e_sports/features/home/widgets/get_rewards_cta_widget.dart';
-import 'package:e_sports/features/home/widgets/match_mini_card_widget.dart';
-import 'package:e_sports/features/home/widgets/podium_card_widget.dart';
-import 'package:e_sports/features/home/widgets/top_scorer_card.dart';
+import '../../../core/widgets/app_header_widget.dart';
+import '../widgets/my_rank_card_widget.dart';
+import '../widgets/news_branner.dart';
+import '../../../core/widgets/quick_nav_item_widget.dart';
+import '../../../core/widgets/section_heading_widget.dart';
+import '../../../core/widgets/sport_light_card_widget.dart';
+import '../widgets/get_rewards_cta_widget.dart';
+import '../widgets/match_mini_card_widget.dart';
+import '../widgets/podium_card_widget.dart';
+import '../widgets/top_scorer_card.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:e_sports/features/news/screens/news_list_screen.dart';
-import 'package:e_sports/features/news/screens/news_detail_screen.dart';
-import 'package:e_sports/features/compare/screens/compare_screen.dart';
-import 'package:e_sports/features/hall_of_fame/screens/hall_of_fame_screen.dart';
+import '../../../core/helper/route_helper.dart';
 
 class HomeScreen extends StatelessWidget {
   final int newsBannerIndex;
@@ -286,7 +283,7 @@ class HomeScreen extends StatelessWidget {
             if (n != null) Padding(
               padding: EdgeInsets.fromLTRB(AppSpacing.xxxl, AppSpacing.cardInnerPadding, AppSpacing.xxxl, 0),
               child: GestureDetector(
-                onTap: () => Get.to(() => NewsDetailScreen(news: n), transition: Transition.cupertino),
+                onTap: () => Get.toNamed(RouteHelper.getNewsDetailsRoute(n.id)),
                 child: AnimatedSwitcher(
                   duration: const Duration(milliseconds: 400),
                   transitionBuilder: (child, anim) => FadeTransition(opacity: anim, child: child),
@@ -308,9 +305,9 @@ class HomeScreen extends StatelessWidget {
                   SizedBox(width: 4),
                   Expanded(child: QuickNavItem(icon: "📊", label: "Ranks",   sub: "Tops",  color: AppColors.neonPurple, onTap: () => onNavigate(2))),
                   SizedBox(width: 4),
-                  Expanded(child: QuickNavItem(icon: "⚔️", label: "VS",      sub: "Comp",  color: AppColors.neonRed,    onTap: () => Get.to(() => const CompareScreen(), transition: Transition.cupertino))),
+                  Expanded(child: QuickNavItem(icon: "⚔️", label: "VS",      sub: "Comp",  color: AppColors.neonRed,    onTap: () => Get.toNamed(RouteHelper.compare))),
                   SizedBox(width: 4),
-                  Expanded(child: QuickNavItem(icon: "📰", label: "News",    sub: "Lat.",  color: AppColors.neonCyan,   onTap: () => Get.to(() => const NewsListScreen(), transition: Transition.cupertino))),
+                  Expanded(child: QuickNavItem(icon: "📰", label: "News",    sub: "Lat.",  color: AppColors.neonCyan,   onTap: () => Get.toNamed(RouteHelper.news))),
                   SizedBox(width: 4),
                   Expanded(child: QuickNavItem(icon: "🪙", label: "Rewards", sub: "Earn",  color: AppColors.neonGold,   onTap: () => onNavigate(4))),
                 ],
@@ -330,7 +327,7 @@ class HomeScreen extends StatelessWidget {
                 SectionHeadingWidget(
                   title: "⭐ Player of Week / Month",
                   sub: "Season 2025 spotlight",
-                  onAll: () => Get.to(() => const HallOfFameScreen(), transition: Transition.cupertino),
+                  onAll: () => Get.toNamed(RouteHelper.hallOfFame),
                 ),
                 Row(children: [
                   Expanded(child: SpotlightCardWidget(player: potw, label: "POTW", badge: "👑",
@@ -428,7 +425,7 @@ class _HallOfFameBanner extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => Get.to(() => const HallOfFameScreen(), transition: Transition.cupertino),
+      onTap: () => Get.toNamed(RouteHelper.hallOfFame),
       child: Container(
         decoration: BoxDecoration(
           gradient: const LinearGradient(

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../core/theme/app_theme.dart';
-import 'package:e_sports/core/data/models/computed_player_stats.dart';
+import '../../../core/data/models/computed_player_stats.dart';
 import '../../../core/widgets/player_avater.dart';
 
 enum PlayerCardType { playerOfWeek, playerOfMonth, topScorerWeek, topScorerMonth }

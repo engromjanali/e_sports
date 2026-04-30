@@ -35,14 +35,14 @@
 //     achievements.assignAll(MockDataSource.getAchievements());
 //     matches.assignAll(_getMockMatches());
 //   }
-import 'package:e_sports/core/data/models/computed_player_stats.dart';
-import 'package:e_sports/core/data/models/match_entry_model.dart';
-import 'package:e_sports/core/data/models/player_model.dart';
-import 'package:e_sports/core/data/models/news_model.dart';
-import 'package:e_sports/core/data/models/match_model.dart';
-import 'package:e_sports/core/data/models/tournament_model.dart';
-import 'package:e_sports/core/services/filter_service.dart';
-import 'package:e_sports/core/services/mock_data_source.dart';
+import '../data/models/computed_player_stats.dart';
+import '../data/models/match_entry_model.dart';
+import '../data/models/player_model.dart';
+import '../data/models/news_model.dart';
+import '../data/models/match_model.dart';
+import '../data/models/tournament_model.dart';
+import '../services/filter_service.dart';
+import '../services/mock_data_source.dart';
 import 'package:get/get.dart';
 
 class AppDataController extends GetxController {

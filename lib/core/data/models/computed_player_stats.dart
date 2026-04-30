@@ -1,5 +1,5 @@
-import 'package:e_sports/core/data/models/player_model.dart';
-import 'package:e_sports/core/data/models/match_entry_model.dart';
+import 'player_model.dart';
+import 'match_entry_model.dart';
 
 class ComputedPlayerStats {
   final PlayerModel player;

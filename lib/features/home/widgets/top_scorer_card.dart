@@ -1,11 +1,11 @@
-import 'package:e_sports/core/theme/app_theme.dart';
-import "package:e_sports/core/controllers/app_data_controller.dart";
+import '../../../core/theme/app_theme.dart';
+import "../../../core/controllers/app_data_controller.dart";
 import "package:get/get.dart";
-import 'package:e_sports/features/home/widgets/diagonal_slash_printer_widget.dart';
-import 'package:e_sports/features/home/widgets/stat_chip_widget.dart';
-import 'package:e_sports/core/widgets/player_tags_widget.dart';
+import 'diagonal_slash_printer_widget.dart';
+import 'stat_chip_widget.dart';
+import '../../../core/widgets/player_tags_widget.dart';
 import 'package:flutter/material.dart';
-import 'package:e_sports/core/data/models/computed_player_stats.dart';
+import '../../../core/data/models/computed_player_stats.dart';
 
 class TopScorerCard extends StatelessWidget {
   final ComputedPlayerStats player;

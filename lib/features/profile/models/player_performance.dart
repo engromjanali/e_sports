@@ -1,4 +1,4 @@
-import 'package:e_sports/core/data/models/computed_player_stats.dart';
+import '../../../core/data/models/computed_player_stats.dart';
 
 class PlayerPerformanceStat {
   final String label;

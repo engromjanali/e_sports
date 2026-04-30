@@ -1,9 +1,10 @@
-import 'package:e_sports/core/theme/app_theme.dart';
-import 'package:e_sports/core/controllers/app_data_controller.dart';
-import 'package:e_sports/core/data/models/computed_player_stats.dart';
-import 'package:e_sports/core/widgets/app_header_widget.dart';
-import 'package:e_sports/features/compare/widgets/compare_radar_chart.dart';
-import 'package:e_sports/features/compare/widgets/compare_bar_charts.dart';
+import '../../../core/theme/app_theme.dart';
+import '../../../core/controllers/app_data_controller.dart';
+import '../../../core/data/models/computed_player_stats.dart';
+import '../../../core/helper/route_helper.dart';
+import '../../../core/widgets/app_header_widget.dart';
+import '../widgets/compare_radar_chart.dart';
+import '../widgets/compare_bar_charts.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -42,7 +43,7 @@ class _CompareScreenState extends State<CompareScreen> {
             AppHeader(
               title: "Performance Battle",
               sub: "Player Comparison",
-              onBack: () => Navigator.pop(context),
+              onBack: () => Get.key.currentState?.canPop() == true ? Get.back() : Get.offNamed(RouteHelper.home),
             ),
             Expanded(
               child: SingleChildScrollView(

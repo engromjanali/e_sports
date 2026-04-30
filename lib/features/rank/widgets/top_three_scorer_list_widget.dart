@@ -1,5 +1,5 @@
-import 'package:e_sports/core/theme/app_theme.dart';
-import 'package:e_sports/core/data/models/computed_player_stats.dart';
+import '../../../core/theme/app_theme.dart';
+import '../../../core/data/models/computed_player_stats.dart';
 import 'package:flutter/material.dart';
 
 class TopThreeScorersWidget extends StatelessWidget {

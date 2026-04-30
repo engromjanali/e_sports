@@ -1,9 +1,9 @@
 import 'dart:math';
-import 'package:e_sports/core/data/models/achievement_model.dart';
-import 'package:e_sports/core/data/models/match_entry_model.dart';
-import 'package:e_sports/core/data/models/news_model.dart';
-import 'package:e_sports/core/data/models/player_model.dart';
-import 'package:e_sports/core/data/models/tournament_model.dart';
+import '../data/models/achievement_model.dart';
+import '../data/models/match_entry_model.dart';
+import '../data/models/news_model.dart';
+import '../data/models/player_model.dart';
+import '../data/models/tournament_model.dart';
 import 'package:flutter/material.dart';
 
 class MockDataSource {

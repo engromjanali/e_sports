@@ -617,10 +617,11 @@
 
 
 
-import 'package:e_sports/core/theme/app_theme.dart';
-import 'package:e_sports/core/widgets/app_header_widget.dart';
-import 'package:e_sports/core/widgets/glass_card_widget.dart';
-import 'package:e_sports/core/widgets/player_avater.dart';
+import '../../../core/theme/app_theme.dart';
+import '../../../core/helper/route_helper.dart';
+import '../../../core/widgets/app_header_widget.dart';
+import '../../../core/widgets/glass_card_widget.dart';
+import '../../../core/widgets/player_avater.dart';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -750,7 +751,7 @@ class HallOfFameScreen extends StatelessWidget {
             AppHeader(
               title: "Hall Of Fame",
               sub: "Legends & Champions",
-              onBack: () => Get.back(),
+              onBack: () => Get.key.currentState?.canPop() == true ? Get.back() : Get.offNamed(RouteHelper.home),
             ),
             Expanded(
               child: SingleChildScrollView(

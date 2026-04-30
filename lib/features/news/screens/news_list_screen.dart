@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:e_sports/core/theme/app_theme.dart';
+import '../../../core/helper/route_helper.dart';
+import '../../../core/theme/app_theme.dart';
 
-import 'package:e_sports/features/news/controllers/news_controller.dart';
-import 'package:e_sports/features/news/widgets/news_card_widget.dart';
+import '../controllers/news_controller.dart';
+import '../widgets/news_card_widget.dart';
 
 class NewsListScreen extends StatelessWidget {
   const NewsListScreen({super.key});
@@ -23,7 +24,7 @@ class NewsListScreen extends StatelessWidget {
               child: Row(
                 children: [
                   GestureDetector(
-                    onTap: () => Get.back(),
+                    onTap: () => Get.key.currentState?.canPop() == true ? Get.back() : Get.offNamed(RouteHelper.home),
                     child: Container(
                       padding: EdgeInsets.all(AppSpacing.sm),
                       decoration: BoxDecoration(

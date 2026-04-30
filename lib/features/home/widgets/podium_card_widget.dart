@@ -1,6 +1,6 @@
-import 'package:e_sports/core/theme/app_theme.dart';
-import 'package:e_sports/core/data/models/computed_player_stats.dart';
-import 'package:e_sports/core/widgets/glass_card_widget.dart';
+import '../../../core/theme/app_theme.dart';
+import '../../../core/data/models/computed_player_stats.dart';
+import '../../../core/widgets/glass_card_widget.dart';
 import 'package:flutter/material.dart';
 
 class PodiumCard extends StatelessWidget {
