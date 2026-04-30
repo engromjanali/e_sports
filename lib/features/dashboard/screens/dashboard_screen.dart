@@ -4,11 +4,11 @@ import 'package:get/get.dart';
 import '../../../core/controllers/app_data_controller.dart';
 import '../../../core/data/models/computed_player_stats.dart';
 import '../../../core/helper/route_helper.dart';
+import '../../../core/theme/app_breakpoints.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../menu/screens/menu_screen.dart';
 import '../../home/screens/home_screen.dart';
 import '../../matches/screens/matches_screen.dart';
-import '../../profile/screens/profile_screen.dart';
 import '../../rank/screens/rank_screen.dart';
 import '../../rewards/screens/reward_screen.dart';
 
@@ -21,6 +21,7 @@ class DashboardScreen extends StatefulWidget {
 }
 
 class _GameArenaScreenState extends State<DashboardScreen> with SingleTickerProviderStateMixin {
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   late int _tabIndex = widget.initialTab;
   int _newsBannerIndex = 0;
   Timer? _newsTimer;
@@ -52,17 +53,21 @@ class _GameArenaScreenState extends State<DashboardScreen> with SingleTickerProv
 
   // ── 5 tabs — Fame removed ──────────────────────────────────────────────────
   static const _tabs = [
-    _TabDef(icon: "🏠", label: "Home"),
-    _TabDef(icon: "🎮", label: "Matches"),
-    _TabDef(icon: "📊", label: "Ranks"),
-    _TabDef(icon: "🪙", label: "Rewards"),
-    _TabDef(icon: "☰", label: "Menu"),
+    _TabDef(icon: Icons.home_outlined, label: "Home"),
+    _TabDef(icon: Icons.sports_esports_outlined, label: "Matches"),
+    _TabDef(icon: Icons.leaderboard_outlined, label: "Ranks"),
+    _TabDef(icon: Icons.card_giftcard_outlined, label: "Rewards"),
+    _TabDef(icon: Icons.menu_outlined, label: "Menu"),
   ];
 
   @override
   Widget build(BuildContext context) {
+    final isDesktop = AppBreakpoints.isDesktop(context);
+
     return Scaffold(
+      key: _scaffoldKey,
       backgroundColor: AppColors.bg,
+      endDrawer: isDesktop ? _buildDesktopDrawer() : null,
       body: SafeArea(
         child: Column(
           children: [
@@ -79,7 +84,7 @@ class _GameArenaScreenState extends State<DashboardScreen> with SingleTickerProv
                 child: _buildScreen(_tabIndex),
               ),
             ),
-            _buildBottomNav(),
+            if (!isDesktop) _buildBottomNav(),
           ],
         ),
       ),
@@ -94,7 +99,11 @@ class _GameArenaScreenState extends State<DashboardScreen> with SingleTickerProv
   }
 
   void _openMyProfile() {
-    Get.offNamed(RouteHelper.profile);
+    Get.toNamed(RouteHelper.profile);
+  }
+
+  void _openDesktopMenu() {
+    _scaffoldKey.currentState?.openEndDrawer();
   }
 
   void _navigateTab(int index) {
@@ -111,34 +120,89 @@ class _GameArenaScreenState extends State<DashboardScreen> with SingleTickerProv
           onNavigate: _navigateTab,
           onSearchTap: _openSearch,
           onProfileTap: _openMyProfile,
+          onMenuTap: AppBreakpoints.isDesktop(context) ? _openDesktopMenu : null,
         );
       case 1:
         return MatchesScreen(
           key: const ValueKey(1),
           onSearchTap: _openSearch,
           onProfileTap: _openMyProfile,
+          onMenuTap: AppBreakpoints.isDesktop(context) ? _openDesktopMenu : null,
         );
       case 2:
         return LeaderboardScreen(
           key: const ValueKey(2),
           onSearchTap: _openSearch,
           onProfileTap: _openMyProfile,
+          onMenuTap: AppBreakpoints.isDesktop(context) ? _openDesktopMenu : null,
         );
       case 3:
         return RewardsScreen(
           key: const ValueKey(4),
           onSearchTap: _openSearch,
           onProfileTap: _openMyProfile,
+          onMenuTap: AppBreakpoints.isDesktop(context) ? _openDesktopMenu : null,
         );
       case 4:
         return MenuScreen(
           key: const ValueKey(5),
           onSearchTap: _openSearch,
           onProfileTap: _openMyProfile,
+          onMenuTap: AppBreakpoints.isDesktop(context) ? _openDesktopMenu : null,
         );
       default:
         return const SizedBox.shrink();
     }
+  }
+
+  Widget _buildDesktopDrawer() {
+    return Drawer(
+      width: 320,
+      backgroundColor: AppColors.bgCard,
+      child: SafeArea(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding: EdgeInsets.all(AppSpacing.screenPadding),
+              child: Text(
+                "Menu",
+                style: TextStyle(
+                  fontSize: AppTypography.sizeTitleLarge,
+                  fontWeight: AppTypography.black,
+                  color: AppColors.neonCyan,
+                ),
+              ),
+            ),
+            _buildDrawerItem(0, Icons.home_outlined, "Home"),
+            _buildDrawerItem(1, Icons.sports_esports_outlined, "Matches"),
+            _buildDrawerItem(2, Icons.leaderboard_outlined, "Ranks"),
+            _buildDrawerItem(3, Icons.card_giftcard_outlined, "Rewards"),
+            _buildDrawerItem(4, Icons.menu_outlined, "Menu"),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildDrawerItem(int index, IconData icon, String title) {
+    final active = _tabIndex == index;
+    return ListTile(
+      leading: Icon(icon, color: active ? AppColors.neonGold : AppColors.textMuted),
+      title: Text(
+        title,
+        style: TextStyle(
+          color: active ? AppColors.neonGold : AppColors.white,
+          fontWeight: active ? AppTypography.extraBold : AppTypography.medium,
+        ),
+      ),
+      selected: active,
+      selectedTileColor: AppColors.neonGold.withOpacity(AppColors.opacity10),
+      onTap: () {
+        Navigator.of(context).pop();
+        _navigateTab(index);
+      },
+    );
   }
 
   Widget _buildBottomNav() {
@@ -167,11 +231,10 @@ class _GameArenaScreenState extends State<DashboardScreen> with SingleTickerProv
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Text(
+                    Icon(
                       _tabs[i].icon,
-                      style: TextStyle(
-                        fontSize: active ? AppTypography.sizeHeading : AppTypography.sizeTitleLarge,
-                      ),
+                      size: active ? AppTypography.sizeHeading : AppTypography.sizeTitleLarge,
+                      color: active ? AppColors.neonGold : AppColors.textMuted,
                     ),
                     SizedBox(height: AppSpacing.xxs),
                     Text(
@@ -207,7 +270,8 @@ class _GameArenaScreenState extends State<DashboardScreen> with SingleTickerProv
 }
 
 class _TabDef {
-  final String icon, label;
+  final IconData icon;
+  final String label;
   const _TabDef({required this.icon, required this.label});
 }
 

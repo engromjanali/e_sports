@@ -9,11 +9,13 @@ import '../../../core/widgets/app_header_widget.dart';
 class MenuScreen extends StatelessWidget {
   final VoidCallback? onSearchTap;
   final VoidCallback? onProfileTap;
+  final VoidCallback? onMenuTap;
 
   const MenuScreen({
     super.key,
     this.onSearchTap,
     this.onProfileTap,
+    this.onMenuTap,
   });
 
   @override
@@ -35,6 +37,7 @@ class MenuScreen extends StatelessWidget {
                 sub: "Settings & Support",
                 onSearchTap: onSearchTap,
                 onProfileTap: onProfileTap,
+                onMenuTap: onMenuTap,
               ),
               Expanded(
                 child: SingleChildScrollView(
@@ -42,24 +45,6 @@ class MenuScreen extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      _MenuSectionCard(
-                        title: "Preferences",
-                        titleColor: titleColor,
-                        backgroundColor: cardColor,
-                        borderColor: borderColor,
-                        children: [
-                          _MenuTile(
-                            icon: Icons.palette_outlined,
-                            title: "Theme",
-                            subtitle: isDarkMode ? "Dark mode active" : "Light mode active",
-                            titleColor: titleColor,
-                            subtitleColor: subtitleColor,
-                            iconColor: AppColors.neonGoldDim,
-                            onTap: () => _showThemeSelector(context, themeController, isDarkMode, titleColor, subtitleColor, cardColor, borderColor),
-                          ),
-                        ],
-                      ),
-                      SizedBox(height: AppSpacing.lg),
                       _MenuSectionCard(
                         title: "Account",
                         titleColor: titleColor,
@@ -137,73 +122,6 @@ class MenuScreen extends StatelessWidget {
                 ),
               ),
             ],
-          ),
-        );
-      },
-    );
-  }
-
-  void _showThemeSelector(
-    BuildContext context,
-    ThemeController themeController,
-    bool isDarkMode,
-    Color titleColor,
-    Color subtitleColor,
-    Color cardColor,
-    Color borderColor,
-  ) {
-    showModalBottomSheet(
-      context: context,
-      backgroundColor: cardColor,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(AppSpacing.xl)),
-      ),
-      builder: (context) {
-        return SafeArea(
-          child: Padding(
-            padding: EdgeInsets.all(AppSpacing.lg),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  "Select Theme",
-                  style: TextStyle(
-                    fontSize: AppTypography.sizeTitleLarge,
-                    fontWeight: AppTypography.black,
-                    color: titleColor,
-                  ),
-                ),
-                SizedBox(height: AppSpacing.md),
-                _ThemeOptionTile(
-                  title: "Dark",
-                  selected: isDarkMode,
-                  titleColor: titleColor,
-                  subtitleColor: subtitleColor,
-                  borderColor: borderColor,
-                  onTap: () async {
-                    await themeController.setThemeMode(ThemeMode.dark);
-                    if (context.mounted) {
-                      Navigator.of(context).pop();
-                    }
-                  },
-                ),
-                SizedBox(height: AppSpacing.sm),
-                _ThemeOptionTile(
-                  title: "Light",
-                  selected: !isDarkMode,
-                  titleColor: titleColor,
-                  subtitleColor: subtitleColor,
-                  borderColor: borderColor,
-                  onTap: () async {
-                    await themeController.setThemeMode(ThemeMode.light);
-                    if (context.mounted) {
-                      Navigator.of(context).pop();
-                    }
-                  },
-                ),
-              ],
-            ),
           ),
         );
       },
@@ -379,61 +297,6 @@ class _MenuTile extends StatelessWidget {
               Icons.arrow_forward_ios,
               color: subtitleColor,
               size: 14,
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class _ThemeOptionTile extends StatelessWidget {
-  final String title;
-  final bool selected;
-  final Color titleColor;
-  final Color subtitleColor;
-  final Color borderColor;
-  final VoidCallback onTap;
-
-  const _ThemeOptionTile({
-    required this.title,
-    required this.selected,
-    required this.titleColor,
-    required this.subtitleColor,
-    required this.borderColor,
-    required this.onTap,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return InkWell(
-      onTap: onTap,
-      borderRadius: AppRadius.borderMd,
-      child: Container(
-        width: double.infinity,
-        padding: EdgeInsets.symmetric(horizontal: AppSpacing.md, vertical: AppSpacing.md),
-        decoration: BoxDecoration(
-          borderRadius: AppRadius.borderMd,
-          border: Border.all(
-            color: selected ? AppColors.neonGoldDim : borderColor,
-          ),
-        ),
-        child: Row(
-          children: [
-            Expanded(
-              child: Text(
-                title,
-                style: TextStyle(
-                  fontSize: AppTypography.sizeBody,
-                  fontWeight: AppTypography.extraBold,
-                  color: titleColor,
-                ),
-              ),
-            ),
-            Icon(
-              selected ? Icons.radio_button_checked : Icons.radio_button_off,
-              color: selected ? AppColors.neonGoldDim : subtitleColor,
-              size: 20,
             ),
           ],
         ),

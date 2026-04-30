@@ -10,7 +10,8 @@ import '../../../core/widgets/custom_segmented_toggle.dart';
 class LeaderboardScreen extends StatelessWidget {
   final VoidCallback? onSearchTap;
   final VoidCallback? onProfileTap;
-  const LeaderboardScreen({super.key, this.onSearchTap, this.onProfileTap});
+  final VoidCallback? onMenuTap;
+  const LeaderboardScreen({super.key, this.onSearchTap, this.onProfileTap, this.onMenuTap});
 
   @override
   Widget build(BuildContext context) {
@@ -22,6 +23,7 @@ class LeaderboardScreen extends StatelessWidget {
           sub: "Elite Performance Center",
           onSearchTap: onSearchTap,
           onProfileTap: onProfileTap,
+          onMenuTap: onMenuTap,
         ),
         
         SizedBox(height: AppSpacing.md),

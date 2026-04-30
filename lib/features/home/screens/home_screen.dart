@@ -21,6 +21,7 @@ class HomeScreen extends StatelessWidget {
   final void Function(int) onNavigate;
   final VoidCallback? onSearchTap;
   final VoidCallback? onProfileTap;
+  final VoidCallback? onMenuTap;
 
   const HomeScreen({
     super.key,
@@ -29,6 +30,7 @@ class HomeScreen extends StatelessWidget {
     required this.onNavigate,
     this.onSearchTap,
     this.onProfileTap,
+    this.onMenuTap,
   });
 
   @override
@@ -53,6 +55,7 @@ class HomeScreen extends StatelessWidget {
           sub: "Season 2025 · Live",
           onSearchTap: onSearchTap,
           onProfileTap: onProfileTap,
+          onMenuTap: onMenuTap,
         ),
         Expanded(child: SingleChildScrollView(
           padding: EdgeInsets.zero,
@@ -101,7 +104,7 @@ class HomeScreen extends StatelessWidget {
                   SizedBox(width: 4),
                   Expanded(child: QuickNavItem(icon: "📰", label: "News",    sub: "Lat.",  color: AppColors.neonCyan,   onTap: () => Get.toNamed(RouteHelper.news))),
                   SizedBox(width: 4),
-                  Expanded(child: QuickNavItem(icon: "🪙", label: "Rewards", sub: "Earn",  color: AppColors.neonGold,   onTap: () => onNavigate(4))),
+                  Expanded(child: QuickNavItem(icon: "🪙", label: "Rewards", sub: "Earn",  color: AppColors.neonGold,   onTap: () => onNavigate(3))),
                 ],
               ),
             ),
@@ -198,7 +201,7 @@ class HomeScreen extends StatelessWidget {
                     )),
 
                 // ── Get Rewards CTA ──
-                GetRewardsCta(onTap: () => onNavigate(4)),
+                GetRewardsCta(onTap: () => onNavigate(3)),
                 SizedBox(height: AppSpacing.xxxl),
               ]),
             ),

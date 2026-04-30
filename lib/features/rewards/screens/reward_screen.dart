@@ -16,7 +16,8 @@ import '../../../core/widgets/player_avater.dart';
 class RewardsScreen extends StatefulWidget {
   final VoidCallback? onSearchTap;
   final VoidCallback? onProfileTap;
-  const RewardsScreen({super.key, this.onSearchTap, this.onProfileTap});
+  final VoidCallback? onMenuTap;
+  const RewardsScreen({super.key, this.onSearchTap, this.onProfileTap, this.onMenuTap});
   @override State<RewardsScreen> createState() => _RewardsScreenState();
 }
 
@@ -150,7 +151,8 @@ class _RewardsScreenState extends State<RewardsScreen> with TickerProviderStateM
       sub: 'Rewards · Season 2025',
       onSearchTap: widget.onSearchTap,
       onProfileTap: widget.onProfileTap,
-      child: Row(
+      onMenuTap: widget.onMenuTap,
+      actionPrefix: Row(
         mainAxisSize: MainAxisSize.min,
       children: [
         Container(

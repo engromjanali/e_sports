@@ -6,16 +6,20 @@ class AppHeader extends StatelessWidget {
   final String? title;
   final String? sub;
   final Widget? child;
+  final Widget? actionPrefix;
   final VoidCallback? onSearchTap;
   final VoidCallback? onProfileTap;
+  final VoidCallback? onMenuTap;
   final VoidCallback? onBack;
 
   const AppHeader({
     this.title,
     this.sub, 
     this.child,
+    this.actionPrefix,
     this.onSearchTap,
     this.onProfileTap,
+    this.onMenuTap,
     this.onBack,
   });
 
@@ -28,53 +32,64 @@ class AppHeader extends StatelessWidget {
         border: Border(bottom: BorderSide(color: AppColors.glassBorder)),
       ),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Row(
-            children: [
-              if (onBack != null) 
-                GestureDetector(
-                  onTap: onBack,
-                  child: Container(
-                    margin: EdgeInsets.only(right: AppSpacing.md),
-                    padding: EdgeInsets.all(AppSpacing.xs),
-                    decoration: BoxDecoration(
-                      color: AppColors.white.withOpacity(0.05),
-                      shape: BoxShape.circle,
+          Expanded(
+            child: Row(
+              children: [
+                if (onBack != null) 
+                  GestureDetector(
+                    onTap: onBack,
+                    child: Container(
+                      margin: EdgeInsets.only(right: AppSpacing.md),
+                      padding: EdgeInsets.all(AppSpacing.xs),
+                      decoration: BoxDecoration(
+                        color: AppColors.white.withOpacity(0.05),
+                        shape: BoxShape.circle,
+                      ),
+                      child: const Icon(Icons.arrow_back_ios_new, color: AppColors.white, size: 16),
                     ),
-                    child: const Icon(Icons.arrow_back_ios_new, color: AppColors.white, size: 16),
                   ),
-                ),
-              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                if (title != null)
-                  Text(title!, style: TextStyle(
-                      color: AppColors.neonCyan,
-                      fontSize: AppTypography.sizeHeading + 1,
-                      fontWeight: AppTypography.black))
-                else
-                  RichText(text: TextSpan(
-                    children: [
-                      TextSpan(text: "House Of", style: TextStyle(
-                          color: AppColors.neonCyan,
-                          fontSize: AppTypography.sizeHeading + 1,
-                          fontWeight: AppTypography.black)),
-                      TextSpan(text: " Elites", style: TextStyle(
-                          color: AppColors.textPrimary,
-                          fontSize: AppTypography.sizeHeading + 1,
-                          fontWeight: AppTypography.black)),
-                    ],
-                  )),
-                Text(sub ?? "Play · Compete · Win",
-                    style: TextStyle(
-                      fontSize: AppTypography.sizeCaption,
-                      color: AppColors.textMuted,
-                      letterSpacing: AppTypography.trackingNormal,
+                Flexible(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                  if (title != null)
+                    Text(title!, maxLines: 1, overflow: TextOverflow.ellipsis, style: TextStyle(
+                        color: AppColors.neonCyan,
+                        fontSize: AppTypography.sizeHeading + 1,
+                        fontWeight: AppTypography.black))
+                  else
+                    RichText(
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      text: TextSpan(
+                      children: [
+                        TextSpan(text: "House Of", style: TextStyle(
+                            color: AppColors.neonCyan,
+                            fontSize: AppTypography.sizeHeading + 1,
+                            fontWeight: AppTypography.black)),
+                        TextSpan(text: " Elites", style: TextStyle(
+                            color: AppColors.textPrimary,
+                            fontSize: AppTypography.sizeHeading + 1,
+                            fontWeight: AppTypography.black)),
+                      ],
                     )),
-              ]),
-            ],
+                  Text(sub ?? "Play · Compete · Win",
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                        fontSize: AppTypography.sizeCaption,
+                        color: AppColors.textMuted,
+                        letterSpacing: AppTypography.trackingNormal,
+                      )),
+                ])),
+              ],
+            ),
           ),
 
-          child ?? Row(children: [
+          SizedBox(width: AppSpacing.md),
+          child ?? Row(mainAxisSize: MainAxisSize.min, children: [
+            if (actionPrefix != null) ...[
+              actionPrefix!,
+              SizedBox(width: AppSpacing.md),
+            ],
             _headerIconButton("🔍", onTap: onSearchTap),
             SizedBox(width: AppSpacing.md),
             GestureDetector(
@@ -88,6 +103,10 @@ class AppHeader extends StatelessWidget {
                 ),
               ]),
             ),
+            if (onMenuTap != null) ...[
+              SizedBox(width: AppSpacing.md),
+              _headerIconButton("☰", onTap: onMenuTap),
+            ],
           ]),
         ],
       ),

@@ -43,10 +43,8 @@ class RouteHelper {
       case 2:
         return ranks;
       case 3:
-        return profile;
-      case 4:
         return rewards;
-      case 5:
+      case 4:
         return menu;
       default:
         return home;
@@ -62,10 +60,6 @@ class RouteHelper {
             StaticContentSection(
               heading: 'Account',
               body: 'Use Edit Profile to keep your name, email, and gamer tag up to date. Logout is available from the Menu tab whenever you need to switch accounts.',
-            ),
-            StaticContentSection(
-              heading: 'Theme',
-              body: 'You can switch between dark and light mode from the Theme option inside Menu. The preference is saved on this device.',
             ),
             StaticContentSection(
               heading: 'Gameplay & Rankings',
@@ -156,9 +150,9 @@ class RouteHelper {
     GetPage(name: home, page: () => const DashboardScreen(initialTab: 0)),
     GetPage(name: matches, page: () => const DashboardScreen(initialTab: 1)),
     GetPage(name: ranks, page: () => const DashboardScreen(initialTab: 2)),
-    GetPage(name: profile, page: () => const DashboardScreen(initialTab: 3)),
-    GetPage(name: rewards, page: () => const DashboardScreen(initialTab: 4)),
-    GetPage(name: menu, page: () => const DashboardScreen(initialTab: 5)),
+    GetPage(name: profile, page: () => const ProfileScreen(isSubScreen: true)),
+    GetPage(name: rewards, page: () => const DashboardScreen(initialTab: 3)),
+    GetPage(name: menu, page: () => const DashboardScreen(initialTab: 4)),
     GetPage(name: compare, page: () => const CompareScreen()),
     GetPage(name: news, page: () => const NewsListScreen()),
     GetPage(name: hallOfFame, page: () => const HallOfFameScreen()),

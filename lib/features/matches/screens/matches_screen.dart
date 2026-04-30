@@ -9,7 +9,8 @@ import 'package:flutter/material.dart';
 class MatchesScreen extends StatefulWidget {
   final VoidCallback? onSearchTap;
   final VoidCallback? onProfileTap;
-  const MatchesScreen({super.key, this.onSearchTap, this.onProfileTap});
+  final VoidCallback? onMenuTap;
+  const MatchesScreen({super.key, this.onSearchTap, this.onProfileTap, this.onMenuTap});
   @override State<MatchesScreen> createState() => _MatchesScreenState();
 }
 
@@ -26,6 +27,7 @@ class _MatchesScreenState extends State<MatchesScreen> {
         sub: "Live & Upcoming Matches",
         onSearchTap: widget.onSearchTap,
         onProfileTap: widget.onProfileTap,
+        onMenuTap: widget.onMenuTap,
       ),
       Expanded(child: SingleChildScrollView(
         padding: AppSpacing.screenAll,

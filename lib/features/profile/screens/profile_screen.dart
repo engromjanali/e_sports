@@ -527,6 +527,7 @@ class ProfileScreen extends StatefulWidget {
   final bool isSubScreen;
   final VoidCallback? onSearchTap;
   final VoidCallback? onProfileTap;
+  final VoidCallback? onMenuTap;
 
   const ProfileScreen({
     super.key,
@@ -534,6 +535,7 @@ class ProfileScreen extends StatefulWidget {
     this.isSubScreen = false,
     this.onSearchTap,
     this.onProfileTap,
+    this.onMenuTap,
   });
 
   @override
@@ -553,10 +555,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
       child: Column(
         children: [
           AppHeader(
-            sub: widget.isSubScreen ? "Player Details" : "My Profile",
-            onBack: widget.isSubScreen ? () => Get.key.currentState?.canPop() == true ? Get.back() : Get.offNamed(RouteHelper.ranks) : null,
+            sub: widget.player != null ? "Player Details" : "My Profile",
+            onBack: widget.isSubScreen ? () => Get.key.currentState?.canPop() == true ? Get.back() : Get.offNamed(widget.player != null ? RouteHelper.ranks : RouteHelper.home) : null,
             onSearchTap: widget.onSearchTap,
             onProfileTap: widget.onProfileTap,
+            onMenuTap: widget.onMenuTap,
           ),
 
           // ── Tab Bar ──
