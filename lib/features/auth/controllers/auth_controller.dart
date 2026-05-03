@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:e_sports/core/data/models/auth_login_result_model.dart';
 
 import '../domain/services/auth_service_interface.dart';
 

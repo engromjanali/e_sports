@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:e_sports/core/data/models/auth_login_result_model.dart';
 
 import '../repositories/auth_repository_interface.dart';
 import 'auth_service_interface.dart';

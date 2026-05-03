@@ -1,9 +1,5 @@
-class AuthLoginResult {
-  final bool isSuccess;
-  final String message;
 
-  const AuthLoginResult(this.isSuccess, this.message);
-}
+import 'package:e_sports/core/data/models/auth_login_result_model.dart';
 
 abstract class AuthServiceInterface {
   Future<AuthLoginResult> login(String? email, String password);
