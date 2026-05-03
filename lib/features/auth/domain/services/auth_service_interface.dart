@@ -9,7 +9,7 @@ abstract class AuthServiceInterface {
   Future<AuthLoginResult> login(String? email, String password);
   String getUserToken();
   bool isLoggedIn();
-  Future<bool> clearSharedData();
+  Future<bool> clearUserToken();
 
   // Other auth flows are disabled for now.
   // Future<dynamic> registerRestaurant(...);

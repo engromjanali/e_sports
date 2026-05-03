@@ -66,8 +66,8 @@ class AuthService implements AuthServiceInterface {
   }
 
   @override
-  Future<bool> clearSharedData() async {
-    return await authRepositoryInterface.clearSharedData();
+  Future<bool> clearUserToken() async {
+    return await authRepositoryInterface.clearUserToken();
   }
 
   // Other auth flows are disabled for now.

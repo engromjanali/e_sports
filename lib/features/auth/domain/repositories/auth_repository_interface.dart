@@ -3,7 +3,7 @@ abstract class AuthRepositoryInterface {
   Future<bool> saveUserToken(String token);
   String getUserToken();
   bool isLoggedIn();
-  Future<bool> clearSharedData();
+  Future<bool> clearUserToken();
 
   // Other auth flows are disabled for now.
   // Future<dynamic> registerRestaurant(...);

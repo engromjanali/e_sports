@@ -27,7 +27,7 @@ class AuthController extends GetxController implements GetxService {
   }
 
   Future<bool> clearSharedData() async {
-    return await authServiceInterface.clearSharedData();
+    return await authServiceInterface.clearUserToken();
   }
 
   // Other auth flows are disabled for now.

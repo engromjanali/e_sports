@@ -60,7 +60,7 @@ class AuthRepository implements AuthRepositoryInterface {
   }
 
   @override
-  Future<bool> clearSharedData() async {
+  Future<bool> clearUserToken() async {
     return await sharedPreferences.remove(AppConstants.authToken);
   }
 
