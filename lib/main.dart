@@ -104,9 +104,9 @@ class _GameArenaAppState extends State<GameArenaApp> {
         theme: themeController.lightTheme,
         darkTheme: themeController.darkTheme,
         themeMode: themeController.themeMode,
-        initialRoute: RouteHelper.login,
+        initialRoute: RouteHelper.initial,
         getPages: RouteHelper.routes,
-        unknownRoute: GetPage(name: '/not-found', page: () => const RouteNotFoundScreen()),
+        unknownRoute: GetPage(name: '/not-found', page: () => const RouteNotFoundScreen(), middlewares: RouteHelper.authMiddleware),
         builder: (context, child) {
           return Container(
             color: Theme.of(context).scaffoldBackgroundColor,

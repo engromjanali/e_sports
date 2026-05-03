@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../../features/auth/controllers/auth_controller.dart';
 import '../../features/auth/presentation/pages/login_page.dart';
 import '../../features/compare/screens/compare_screen.dart';
 import '../../features/dashboard/screens/dashboard_screen.dart';
@@ -38,6 +39,8 @@ class RouteHelper {
   static const String support = '/support';
   static const String oldDashboard = '/DashboardScreen';
 
+
+  static List<GetMiddleware> get authMiddleware => [_AuthMiddleware()];
 
   static String getInitialRoute({bool fromSplash = false, String? moduleId, bool fromDeeplink = false}) {
     return initial;
@@ -152,35 +155,38 @@ class RouteHelper {
 
   static List<GetPage> routes = [
     GetPage(name: login, page: () => const LoginPage()),
-    GetPage(name: login, page: () => const LoginPage()),
-    GetPage(name: login, page: () => const LoginPage()),
-    GetPage(name: dashboard, page: () => const DashboardScreen()),
-    GetPage(name: oldDashboard, page: () => const DashboardScreen()),
-    GetPage(name: home, page: () => const DashboardScreen(initialTab: 0)),
-    GetPage(name: matches, page: () => const DashboardScreen(initialTab: 1)),
-    GetPage(name: ranks, page: () => const DashboardScreen(initialTab: 2)),
-    GetPage(name: profile, page: () => const ProfileScreen(isSubScreen: true)),
-    GetPage(name: rewards, page: () => const DashboardScreen(initialTab: 3)),
-    GetPage(name: menu, page: () => const DashboardScreen(initialTab: 4)),
-    GetPage(name: compare, page: () => const CompareScreen()),
-    GetPage(name: news, page: () => const NewsListScreen()),
-    GetPage(name: hallOfFame, page: () => const HallOfFameScreen()),
-    GetPage(name: editProfile, page: () => const EditProfileScreen()),
+    GetPage(name: initial, page: () => const DashboardScreen(), middlewares: authMiddleware),
+    GetPage(name: dashboard, page: () => const DashboardScreen(), middlewares: authMiddleware),
+    GetPage(name: oldDashboard, page: () => const DashboardScreen(), middlewares: authMiddleware),
+    GetPage(name: home, page: () => const DashboardScreen(initialTab: 0), middlewares: authMiddleware),
+    GetPage(name: matches, page: () => const DashboardScreen(initialTab: 1), middlewares: authMiddleware),
+    GetPage(name: ranks, page: () => const DashboardScreen(initialTab: 2), middlewares: authMiddleware),
+    GetPage(name: profile, page: () => const ProfileScreen(isSubScreen: true), middlewares: authMiddleware),
+    GetPage(name: rewards, page: () => const DashboardScreen(initialTab: 3), middlewares: authMiddleware),
+    GetPage(name: menu, page: () => const DashboardScreen(initialTab: 4), middlewares: authMiddleware),
+    GetPage(name: compare, page: () => const CompareScreen(), middlewares: authMiddleware),
+    GetPage(name: news, page: () => const NewsListScreen(), middlewares: authMiddleware),
+    GetPage(name: hallOfFame, page: () => const HallOfFameScreen(), middlewares: authMiddleware),
+    GetPage(name: editProfile, page: () => const EditProfileScreen(), middlewares: authMiddleware),
     GetPage(
       name: faq,
       page: () => StaticContentScreen(data: staticContentDataFromRoute(faq)),
+      middlewares: authMiddleware,
     ),
     GetPage(
       name: privacyPolicy,
       page: () => StaticContentScreen(data: staticContentDataFromRoute(privacyPolicy)),
+      middlewares: authMiddleware,
     ),
     GetPage(
       name: terms,
       page: () => StaticContentScreen(data: staticContentDataFromRoute(terms)),
+      middlewares: authMiddleware,
     ),
     GetPage(
       name: support,
       page: () => StaticContentScreen(data: staticContentDataFromRoute(support)),
+      middlewares: authMiddleware,
     ),
     GetPage(
       name: newsDetails,
@@ -188,6 +194,7 @@ class RouteHelper {
         final newsItem = _newsFromRoute();
         return newsItem == null ? const RouteNotFoundScreen() : NewsDetailScreen(news: newsItem);
       },
+      middlewares: authMiddleware,
     ),
     GetPage(
       name: playerProfile,
@@ -195,6 +202,7 @@ class RouteHelper {
         final player = _playerFromRoute();
         return player == null ? const RouteNotFoundScreen() : ProfileScreen(player: player, isSubScreen: true);
       },
+      middlewares: authMiddleware,
     ),
   ];
 
@@ -210,6 +218,17 @@ class RouteHelper {
     if (id == null || !Get.isRegistered<AppDataController>()) return null;
     final data = Get.find<AppDataController>().rankedPlayers.where((item) => item.id == id);
     return data.isEmpty ? null : data.first;
+  }
+}
+
+class _AuthMiddleware extends GetMiddleware {
+  @override
+  RouteSettings? redirect(String? route) {
+    if(!Get.isRegistered<AuthController>() || Get.find<AuthController>().isLoggedIn()) {
+      return null;
+    }
+
+    return const RouteSettings(name: RouteHelper.login);
   }
 }
 
