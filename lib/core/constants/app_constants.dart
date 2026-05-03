@@ -55,6 +55,9 @@ class AppConstants {
     'join_as_a_rider',
   ];
 
+  // keys
+  static const token = 'token';
+
   ///Rental Type
   static const String hourly = 'hourly';
   static const String distanceWise = 'distance_wise';

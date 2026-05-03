@@ -16,7 +16,9 @@ import '../data/models/news_model.dart';
 import '../theme/app_theme.dart';
 
 class RouteHelper {
-  static const String login = '/';
+  
+  static const String initial = '/';
+  static const String login = '/login';
   static const String dashboard = '/dashboard';
   static const String home = '/home';
   static const String matches = '/matches';
@@ -35,6 +37,11 @@ class RouteHelper {
   static const String terms = '/terms';
   static const String support = '/support';
   static const String oldDashboard = '/DashboardScreen';
+
+
+  static String getInitialRoute({bool fromSplash = false, String? moduleId, bool fromDeeplink = false}) {
+    return initial;
+  }
 
   static String getDashboardRoute(int index) {
     switch (index) {
@@ -144,6 +151,8 @@ class RouteHelper {
   }
 
   static List<GetPage> routes = [
+    GetPage(name: login, page: () => const LoginPage()),
+    GetPage(name: login, page: () => const LoginPage()),
     GetPage(name: login, page: () => const LoginPage()),
     GetPage(name: dashboard, page: () => const DashboardScreen()),
     GetPage(name: oldDashboard, page: () => const DashboardScreen()),

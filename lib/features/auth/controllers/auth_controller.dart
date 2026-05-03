@@ -27,7 +27,7 @@ class AuthController extends GetxController implements GetxService {
     return authServiceInterface.getUserToken();
   }
 
-  Future<bool> clearSharedData() async {
+  Future<bool> clearUserToken() async {
     return await authServiceInterface.clearUserToken();
   }
 

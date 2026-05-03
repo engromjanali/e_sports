@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:e_sports/core/data/models/auth_login_result_model.dart';
+import 'package:flutter/foundation.dart';
 
 import '../repositories/auth_repository_interface.dart';
 import 'auth_service_interface.dart';
@@ -23,7 +24,8 @@ class AuthService implements AuthServiceInterface {
       return AuthLoginResult(false, _readMessage(response, token));
     } on TimeoutException {
       return const AuthLoginResult(false, 'Request timeout. Please try again.');
-    } catch (_) {
+    } catch (e) {
+      debugPrint(e.toString());
       return const AuthLoginResult(false, 'Login failed. Please try again.');
     }
   }
