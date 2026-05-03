@@ -11,6 +11,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_web_plugins/url_strategy.dart';
 import 'core/controllers/app_data_controller.dart';
+import 'features/auth/controllers/auth_controller.dart';
+import 'features/auth/domain/repositories/auth_repository.dart';
+import 'features/auth/domain/repositories/auth_repository_interface.dart';
+import 'features/auth/domain/services/auth_service.dart';
+import 'features/auth/domain/services/auth_service_interface.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -32,6 +37,9 @@ void main() async{
   Get.put(AppDataController());
   final preferences = await SharedPreferences.getInstance();
   Get.put(ThemeController(preferences));
+  Get.put<AuthRepositoryInterface>(AuthRepository(sharedPreferences: preferences));
+  Get.put<AuthServiceInterface>(AuthService(authRepositoryInterface: Get.find()));
+  Get.put(AuthController(authServiceInterface: Get.find()));
 
   SystemChrome.setSystemUIOverlayStyle(
     const SystemUiOverlayStyle(

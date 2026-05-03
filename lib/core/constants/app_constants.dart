@@ -16,15 +16,16 @@ class AppConstants {
   static const String baseUrl = 'https://foatball.vercel.app';
 
   /// auth endpoints
-  String configUri = "/api/user/config";
-  String registationUri = "/api/user/registation";
-  String loginUri = "/api/user/login";
-  String forgetPaasswordUri = "/api/user/forget-password";
-  String ProfileUri = "/api/user/profile";
+  static const String configUri = "/api/user/config";
+  static const String registationUri = "/api/user/registation";
+  static const String loginUri = "/api/user/login";
+  static const String forgetPaasswordUri = "/api/user/forget-password";
+  static const String profileUri = "/api/user/profile";
 
 
   /// Shared Key
   static const String theme = '6ammart_theme';
+  static const String authToken = 'auth_token';
 
   ///taxi
 

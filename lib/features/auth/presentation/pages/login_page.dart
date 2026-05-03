@@ -3,6 +3,7 @@ import '../../../../core/helper/route_helper.dart';
 import '../../../../core/theme/app_radius.dart';
 import '../../../../core/theme/app_spacing.dart';
 import '../../../../core/theme/app_typography.dart';
+import '../../controllers/auth_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -10,11 +11,54 @@ import 'package:get/get.dart';
 /// 
 /// This screen follows the app's dark neon aesthetic and provides a clean,
 /// immersive entry point for users.
-class LoginPage extends StatelessWidget {
+class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
 
   @override
+  State<LoginPage> createState() => _LoginPageState();
+}
+
+class _LoginPageState extends State<LoginPage> {
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  bool _obscurePassword = true;
+
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
+
+  Future<void> _login(AuthController authController) async {
+    final email = _emailController.text.trim();
+    final password = _passwordController.text;
+
+    if(email.isEmpty) {
+      Get.snackbar('Login', 'Please enter your email');
+      return;
+    }
+    if(!GetUtils.isEmail(email)) {
+      Get.snackbar('Login', 'Please enter a valid email');
+      return;
+    }
+    if(password.isEmpty) {
+      Get.snackbar('Login', 'Please enter your password');
+      return;
+    }
+
+    final response = await authController.login(email, password);
+    if(response.isSuccess) {
+      Get.offAllNamed(RouteHelper.home);
+    }else {
+      Get.snackbar('Login failed', response.message);
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final authController = Get.find<AuthController>();
+
     return Scaffold(
       backgroundColor: AppColors.bg,
       body: SafeArea(
@@ -30,15 +74,15 @@ class LoginPage extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                 decoration: BoxDecoration(
-                  color: AppColors.neonGold.withOpacity(0.1),
+                  color: AppColors.neonGold.withValues(alpha: 0.1),
                   borderRadius: AppRadius.borderPill,
                   border: Border.all(
-                    color: AppColors.neonGold.withOpacity(0.3),
+                    color: AppColors.neonGold.withValues(alpha: 0.3),
                     width: 1,
                   ),
                   boxShadow: [
                     BoxShadow(
-                      color: AppColors.neonGold.withOpacity(0.15),
+                      color: AppColors.neonGold.withValues(alpha: 0.15),
                       blurRadius: 12,
                       spreadRadius: -2,
                     ),
@@ -56,28 +100,32 @@ class LoginPage extends StatelessWidget {
               const SizedBox(height: 32),
               
               // Big bold title - "WELCOME BACK , ELITE !!!"
-              RichText(
-                text: TextSpan(
-                  children: [
-                    TextSpan(
-                      text: "WELCOME BACK ,\n",
-                      style: AppTypography.statsGiant(context, color: AppColors.white).copyWith(
-                        fontSize: 38,
-                        letterSpacing: -1,
-                        fontWeight: FontWeight.w900,
-                        height: 1.1,
+              FittedBox(
+                fit: BoxFit.scaleDown,
+                alignment: Alignment.centerLeft,
+                child: RichText(
+                  text: TextSpan(
+                    children: [
+                      TextSpan(
+                        text: "WELCOME BACK ,\n",
+                        style: AppTypography.statsGiant(context, color: AppColors.white).copyWith(
+                          fontSize: 38,
+                          letterSpacing: 0,
+                          fontWeight: FontWeight.w900,
+                          height: 1.1,
+                        ),
                       ),
-                    ),
-                    TextSpan(
-                      text: "ELITE !!!",
-                      style: AppTypography.statsGiant(context, color: AppColors.neonGold).copyWith(
-                        fontSize: 48,
-                        letterSpacing: -1,
-                        fontWeight: FontWeight.w900,
-                        height: 1.1,
+                      TextSpan(
+                        text: "ELITE !!!",
+                        style: AppTypography.statsGiant(context, color: AppColors.neonGold).copyWith(
+                          fontSize: 48,
+                          letterSpacing: 0,
+                          fontWeight: FontWeight.w900,
+                          height: 1.1,
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
               
@@ -97,16 +145,19 @@ class LoginPage extends StatelessWidget {
               // Email field with email icon
               Container(
                 decoration: BoxDecoration(
-                  color: AppColors.bgCard.withOpacity(0.8),
+                  color: AppColors.bgCard.withValues(alpha: 0.8),
                   borderRadius: AppRadius.borderLg,
                   border: Border.all(color: AppColors.glassBorder),
                 ),
                 child: TextField(
+                  controller: _emailController,
+                  keyboardType: TextInputType.emailAddress,
+                  textInputAction: TextInputAction.next,
                   style: AppTypography.bodyText(context),
                   decoration: InputDecoration(
                     hintText: "Email",
                     hintStyle: AppTypography.mutedText(context).copyWith(
-                      color: AppColors.textMuted.withOpacity(0.5),
+                      color: AppColors.textMuted.withValues(alpha: 0.5),
                     ),
                     prefixIcon: const Icon(Icons.email_outlined, color: AppColors.textMuted, size: 20),
                     border: InputBorder.none,
@@ -120,20 +171,26 @@ class LoginPage extends StatelessWidget {
               // Password field with lock icon and show/hide toggle (UI only)
               Container(
                 decoration: BoxDecoration(
-                  color: AppColors.bgCard.withOpacity(0.8),
+                  color: AppColors.bgCard.withValues(alpha: 0.8),
                   borderRadius: AppRadius.borderLg,
                   border: Border.all(color: AppColors.glassBorder),
                 ),
                 child: TextField(
-                  obscureText: true,
+                  controller: _passwordController,
+                  obscureText: _obscurePassword,
+                  textInputAction: TextInputAction.done,
+                  onSubmitted: (_) => _login(authController),
                   style: AppTypography.bodyText(context),
                   decoration: InputDecoration(
                     hintText: "Password",
                     hintStyle: AppTypography.mutedText(context).copyWith(
-                      color: AppColors.textMuted.withOpacity(0.5),
+                      color: AppColors.textMuted.withValues(alpha: 0.5),
                     ),
                     prefixIcon: const Icon(Icons.lock_outline, color: AppColors.textMuted, size: 20),
-                    suffixIcon: const Icon(Icons.visibility_off_outlined, color: AppColors.textMuted, size: 20),
+                    suffixIcon: IconButton(
+                      onPressed: () => setState(() => _obscurePassword = !_obscurePassword),
+                      icon: Icon(_obscurePassword ? Icons.visibility_off_outlined : Icons.visibility_outlined, color: AppColors.textMuted, size: 20),
+                    ),
                     border: InputBorder.none,
                     contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 18),
                   ),
@@ -150,30 +207,35 @@ class LoginPage extends StatelessWidget {
                   borderRadius: AppRadius.borderLg,
                   boxShadow: [
                     BoxShadow(
-                      color: AppColors.neonGold.withOpacity(0.3),
+                      color: AppColors.neonGold.withValues(alpha: 0.3),
                       blurRadius: 20,
                       offset: const Offset(0, 4),
                     ),
                   ],
                 ),
-                child: ElevatedButton(
-                  onPressed: () => Get.offAllNamed(RouteHelper.home),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.neonGold,
-                    foregroundColor: Colors.black,
-                    elevation: 0,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: AppRadius.borderLg,
+                child: GetBuilder<AuthController>(
+                  builder: (authController) => ElevatedButton(
+                    onPressed: authController.isLoading ? null : () => _login(authController),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppColors.neonGold,
+                      foregroundColor: Colors.black,
+                      disabledBackgroundColor: AppColors.neonGold.withValues(alpha: 0.5),
+                      elevation: 0,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: AppRadius.borderLg,
+                      ),
                     ),
-                  ),
-                  child: Text(
-                    "SIGN IN",
-                    style: AppTypography.labelUppercase(context, color: Colors.black).copyWith(
-                      fontSize: 15,
-                      fontWeight: FontWeight.w900,
-                      letterSpacing: 1.5,
+                    child: authController.isLoading
+                        ? const SizedBox(width: 22, height: 22, child: CircularProgressIndicator(strokeWidth: 2.4, color: Colors.black))
+                        : Text(
+                            "SIGN IN",
+                            style: AppTypography.labelUppercase(context, color: Colors.black).copyWith(
+                              fontSize: 15,
+                              fontWeight: FontWeight.w900,
+                              letterSpacing: 1.5,
+                            ),
+                          ),
                     ),
-                  ),
                 ),
               ),
               
@@ -183,7 +245,7 @@ class LoginPage extends StatelessWidget {
               Center(
                 child: Text(
                   "The Enigmatic Elites",
-                  style: AppTypography.labelUppercase(context, color: AppColors.textMuted.withOpacity(0.25)).copyWith(
+                  style: AppTypography.labelUppercase(context, color: AppColors.textMuted.withValues(alpha: 0.25)).copyWith(
                     fontSize: 11,
                     letterSpacing: 5,
                     fontWeight: FontWeight.w500,
