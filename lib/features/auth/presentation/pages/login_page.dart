@@ -1,9 +1,11 @@
-import '../../../../core/theme/app_colors.dart';
-import '../../../../core/helper/route_helper.dart';
-import '../../../../core/theme/app_radius.dart';
-import '../../../../core/theme/app_spacing.dart';
-import '../../../../core/theme/app_typography.dart';
-import '../../controllers/auth_controller.dart';
+import 'package:e_sports/core/helper/route_helper.dart';
+import 'package:e_sports/core/theme/app_breakpoints.dart';
+import 'package:e_sports/core/theme/app_colors.dart';
+import 'package:e_sports/core/theme/app_radius.dart';
+import 'package:e_sports/core/theme/app_spacing.dart';
+import 'package:e_sports/core/theme/app_typography.dart';
+import 'package:e_sports/features/auth/controllers/auth_controller.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -21,12 +23,20 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  late final TapGestureRecognizer _registrationRecognizer;
   bool _obscurePassword = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _registrationRecognizer = TapGestureRecognizer()..onTap = () => Get.toNamed(RouteHelper.registration);
+  }
 
   @override
   void dispose() {
     _emailController.dispose();
     _passwordController.dispose();
+    _registrationRecognizer.dispose();
     super.dispose();
   }
 
@@ -55,9 +65,31 @@ class _LoginPageState extends State<LoginPage> {
     }
   }
 
+  Future<void> _forgotPassword(AuthController authController) async {
+    final email = _emailController.text.trim();
+
+    if(email.isEmpty) {
+      Get.snackbar('Forgot password', 'Please enter your email first');
+      return;
+    }
+    if(!GetUtils.isEmail(email)) {
+      Get.snackbar('Forgot password', 'Please enter a valid email');
+      return;
+    }
+
+    final response = await authController.forgotPassword(email);
+    if(response.isSuccess) {
+      Get.snackbar('Forgot password', response.message);
+    }else {
+      Get.snackbar('Forgot password failed', response.message);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final authController = Get.find<AuthController>();
+    final bool isDesktop = AppBreakpoints.isDesktop(context);
+    final double formMaxWidth = isDesktop ? 520 : double.infinity;
 
     return Scaffold(
       backgroundColor: AppColors.bg,
@@ -65,10 +97,13 @@ class _LoginPageState extends State<LoginPage> {
         child: SingleChildScrollView(
           padding: const EdgeInsets.symmetric(horizontal: AppSpacing.statusBarPaddingH),
           physics: const BouncingScrollPhysics(),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const SizedBox(height: 60),
+          child: Center(
+            child: ConstrainedBox(
+              constraints: BoxConstraints(maxWidth: formMaxWidth),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const SizedBox(height: 60),
               
               // Small neon badge - "HOUSE OF ELITES"
               Container(
@@ -197,7 +232,29 @@ class _LoginPageState extends State<LoginPage> {
                 ),
               ),
               
-              const SizedBox(height: 48),
+              const SizedBox(height: 12),
+
+              Align(
+                alignment: Alignment.centerRight,
+                child: GetBuilder<AuthController>(
+                  builder: (authController) => TextButton(
+                    onPressed: authController.isLoading ? null : () => _forgotPassword(authController),
+                    style: TextButton.styleFrom(
+                      foregroundColor: AppColors.neonGold,
+                      padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 8),
+                    ),
+                    child: Text(
+                      "Forgot password?",
+                      style: AppTypography.bodyText(context, color: AppColors.neonGold).copyWith(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w800,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+
+              const SizedBox(height: 28),
               
               // Neon color full-width login button - "SIGN IN"
               Container(
@@ -239,7 +296,33 @@ class _LoginPageState extends State<LoginPage> {
                 ),
               ),
               
-              const SizedBox(height: 120),
+              const SizedBox(height: 26),
+
+              Center(
+                child: Text.rich(
+                  TextSpan(
+                    text: "New to House Of Elites? ",
+                    style: AppTypography.mutedText(context).copyWith(
+                      fontSize: 13,
+                      color: AppColors.textSecondary,
+                      height: 1.4,
+                    ),
+                    children: [
+                      TextSpan(
+                        text: "Create account",
+                        recognizer: _registrationRecognizer,
+                        style: AppTypography.bodyText(context, color: AppColors.neonGold).copyWith(
+                          fontSize: 13,
+                          fontWeight: FontWeight.w900,
+                        ),
+                      ),
+                    ],
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+              ),
+
+              const SizedBox(height: 70),
               
               // Bottom decoration - "The Enigmatic Elites"
               Center(
@@ -253,8 +336,10 @@ class _LoginPageState extends State<LoginPage> {
                 ),
               ),
               
-              const SizedBox(height: 32),
-            ],
+                  const SizedBox(height: 32),
+                ],
+              ),
+            ),
           ),
         ),
       ),

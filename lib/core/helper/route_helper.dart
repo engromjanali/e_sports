@@ -1,26 +1,27 @@
+import 'package:e_sports/core/controllers/app_data_controller.dart';
+import 'package:e_sports/core/data/models/computed_player_stats.dart';
+import 'package:e_sports/core/data/models/news_model.dart';
 import 'package:e_sports/core/widgets/route_not_found_screen.dart';
+import 'package:e_sports/features/auth/controllers/auth_controller.dart';
+import 'package:e_sports/features/auth/presentation/pages/login_page.dart';
+import 'package:e_sports/features/auth/presentation/pages/registration_page.dart';
+import 'package:e_sports/features/compare/screens/compare_screen.dart';
+import 'package:e_sports/features/dashboard/screens/dashboard_screen.dart';
+import 'package:e_sports/features/hall_of_fame/screens/hall_of_fame_screen.dart';
+import 'package:e_sports/features/menu/screens/edit_profile_screen.dart';
+import 'package:e_sports/features/menu/screens/static_content_screen.dart';
+import 'package:e_sports/features/news/screens/news_detail_screen.dart';
+import 'package:e_sports/features/news/screens/news_list_screen.dart';
+import 'package:e_sports/features/profile/screens/profile_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-
-import '../../features/auth/controllers/auth_controller.dart';
-import '../../features/auth/presentation/pages/login_page.dart';
-import '../../features/compare/screens/compare_screen.dart';
-import '../../features/dashboard/screens/dashboard_screen.dart';
-import '../../features/hall_of_fame/screens/hall_of_fame_screen.dart';
-import '../../features/news/screens/news_detail_screen.dart';
-import '../../features/news/screens/news_list_screen.dart';
-import '../../features/menu/screens/edit_profile_screen.dart';
-import '../../features/menu/screens/static_content_screen.dart';
-import '../../features/profile/screens/profile_screen.dart';
-import '../controllers/app_data_controller.dart';
-import '../data/models/computed_player_stats.dart';
-import '../data/models/news_model.dart';
 
 
 class RouteHelper {
   
   static const String initial = '/';
   static const String login = '/login';
+  static const String registration = '/registration';
   static const String dashboard = '/dashboard';
   static const String home = '/home';
   static const String matches = '/matches';
@@ -156,6 +157,7 @@ class RouteHelper {
 
   static List<GetPage> routes = [
     GetPage(name: login, page: () => const LoginPage()),
+    GetPage(name: registration, page: () => const RegistrationPage()),
     GetPage(name: initial, page: () => const DashboardScreen(), middlewares: authMiddleware),
     GetPage(name: dashboard, page: () => const DashboardScreen(), middlewares: authMiddleware),
     GetPage(name: oldDashboard, page: () => const DashboardScreen(), middlewares: authMiddleware),
@@ -232,4 +234,3 @@ class _AuthMiddleware extends GetMiddleware {
     return const RouteSettings(name: RouteHelper.login);
   }
 }
-

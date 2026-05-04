@@ -1,9 +1,7 @@
 import 'dart:async';
 import 'package:e_sports/core/data/models/auth_login_result_model.dart';
-import 'package:flutter/foundation.dart';
-
-import '../repositories/auth_repository_interface.dart';
-import 'auth_service_interface.dart';
+import 'package:e_sports/features/auth/domain/repositories/auth_repository_interface.dart';
+import 'package:e_sports/features/auth/domain/services/auth_service_interface.dart';
 
 class AuthService implements AuthServiceInterface {
   final AuthRepositoryInterface authRepositoryInterface;
@@ -13,7 +11,7 @@ class AuthService implements AuthServiceInterface {
   Future<AuthLoginResult> login(String? email, String password) async {
     try {
       final response = await authRepositoryInterface.login(email, password);
-      final statusCode = response['status_code'];
+      final statusCode = _readStatusCode(response);
       final token = _readToken(response);
 
       if((statusCode == 200 || statusCode == 201) && token != null) {
@@ -21,13 +19,56 @@ class AuthService implements AuthServiceInterface {
         return const AuthLoginResult(true, 'Login successful');
       }
 
-      return AuthLoginResult(false, _readMessage(response, token));
+      return AuthLoginResult(false, _readMessage(response, token, needsToken: true));
     } on TimeoutException {
       return const AuthLoginResult(false, 'Request timeout. Please try again.');
-    } catch (e) {
-      debugPrint(e.toString());
+    } catch (_) {
       return const AuthLoginResult(false, 'Login failed. Please try again.');
     }
+  }
+
+  @override
+  Future<AuthLoginResult> register(String name, String email, String password) async {
+    try {
+      final response = await authRepositoryInterface.register(name, email, password);
+      final statusCode = _readStatusCode(response);
+
+      if(statusCode == 200 || statusCode == 201) {
+        return AuthLoginResult(true, _readMessage(response, null, fallback: 'Registration successful. Please sign in.'));
+      }
+
+      return AuthLoginResult(false, _readMessage(response, null, fallback: 'Registration failed. Please try again.'));
+    } on TimeoutException {
+      return const AuthLoginResult(false, 'Request timeout. Please try again.');
+    } catch (_) {
+      return const AuthLoginResult(false, 'Registration failed. Please try again.');
+    }
+  }
+
+  @override
+  Future<AuthLoginResult> forgotPassword(String email) async {
+    try {
+      final response = await authRepositoryInterface.forgotPassword(email);
+      final statusCode = _readStatusCode(response);
+
+      if(statusCode == 200 || statusCode == 201) {
+        return AuthLoginResult(true, _readMessage(response, null, fallback: 'Password reset instructions sent to your email.'));
+      }
+
+      return AuthLoginResult(false, _readMessage(response, null, fallback: 'Unable to send reset instructions.'));
+    } on TimeoutException {
+      return const AuthLoginResult(false, 'Request timeout. Please try again.');
+    } catch (_) {
+      return const AuthLoginResult(false, 'Unable to send reset instructions.');
+    }
+  }
+
+  int? _readStatusCode(Map<String, dynamic> response) {
+    final statusCode = response['status_code'] ?? response['statusCode'];
+    if(statusCode is int) {
+      return statusCode;
+    }
+    return int.tryParse(statusCode.toString());
   }
 
   String? _readToken(Map<String, dynamic> response) {
@@ -47,15 +88,16 @@ class AuthService implements AuthServiceInterface {
     return null;
   }
 
-  String _readMessage(Map<String, dynamic> response, String? token) {
+  String _readMessage(Map<String, dynamic> response, String? token, {String fallback = 'Invalid email or password.', bool needsToken = false}) {
     final message = response['message'] ?? response['error'];
     if(message != null) {
       return message.toString();
     }
-    if(token == null && (response['statusCode'] == 200 || response['statusCode'] == 201)) {
+    final statusCode = _readStatusCode(response);
+    if(needsToken && token == null && (statusCode == 200 || statusCode == 201)) {
       return 'Login token missing in response.';
     }
-    return 'Invalid email or password.';
+    return fallback;
   }
 
   @override
@@ -74,8 +116,6 @@ class AuthService implements AuthServiceInterface {
   }
 
   // Other auth flows are disabled for now.
-  // Future<dynamic> registerRestaurant(...);
   // Future<dynamic> updateToken();
-  // Future<dynamic> forgotPassword(...);
   // Future<dynamic> getProfile();
 }

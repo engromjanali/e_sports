@@ -1,7 +1,6 @@
 import 'package:get/get.dart';
 import 'package:e_sports/core/data/models/auth_login_result_model.dart';
-
-import '../domain/services/auth_service_interface.dart';
+import 'package:e_sports/features/auth/domain/services/auth_service_interface.dart';
 
 class AuthController extends GetxController implements GetxService {
   final AuthServiceInterface authServiceInterface;
@@ -14,6 +13,24 @@ class AuthController extends GetxController implements GetxService {
     _isLoading = true;
     update();
     final AuthLoginResult responseModel = await authServiceInterface.login(email, password);
+    _isLoading = false;
+    update();
+    return responseModel;
+  }
+
+  Future<AuthLoginResult> register(String name, String email, String password) async {
+    _isLoading = true;
+    update();
+    final AuthLoginResult responseModel = await authServiceInterface.register(name, email, password);
+    _isLoading = false;
+    update();
+    return responseModel;
+  }
+
+  Future<AuthLoginResult> forgotPassword(String email) async {
+    _isLoading = true;
+    update();
+    final AuthLoginResult responseModel = await authServiceInterface.forgotPassword(email);
     _isLoading = false;
     update();
     return responseModel;
@@ -34,6 +51,5 @@ class AuthController extends GetxController implements GetxService {
   // Other auth flows are disabled for now.
   // void pickImageForReg(...);
   // Future<void> updateToken();
-  // Future<void> registerStore(...);
   // Future<void> toggleStoreClosedStatus();
 }

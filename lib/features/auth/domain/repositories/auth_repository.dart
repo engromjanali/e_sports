@@ -1,11 +1,10 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:e_sports/core/constants/app_constants.dart';
+import 'package:e_sports/features/auth/domain/repositories/auth_repository_interface.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
-
-import '../../../../core/constants/app_constants.dart';
-import 'auth_repository_interface.dart';
 
 class AuthRepository implements AuthRepositoryInterface {
   final SharedPreferences sharedPreferences;
@@ -13,13 +12,66 @@ class AuthRepository implements AuthRepositoryInterface {
 
   @override
   Future<Map<String, dynamic>> login(String? email, String password) async {
-    final uri = Uri.parse('${AppConstants.baseUrl}${AppConstants.loginUri}');
-
     await Future.delayed(Duration(seconds: 3));
     
     return {
       'token' : "asfsdfsadfv235v454356345fsaef",
       'status_code' : 200,
+    };
+  }
+
+  @override
+  Future<Map<String, dynamic>> register(String name, String email, String password) async {
+    return await _postAuth(
+      AppConstants.registationUri,
+      {
+        'name': name,
+        'email': email,
+        'password': password,
+      },
+    );
+  }
+
+  @override
+  Future<Map<String, dynamic>> forgotPassword(String email) async {
+    return await _postAuth(
+      AppConstants.forgetPaasswordUri,
+      {
+        'email': email,
+      },
+    );
+  }
+
+  Future<Map<String, dynamic>> _postAuth(String path, Map<String, dynamic> body) async {
+    final uri = Uri.parse('${AppConstants.baseUrl}$path');
+    final response = await http.post(
+      uri,
+      headers: const {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: jsonEncode(body),
+    ).timeout(const Duration(seconds: 30));
+
+    final decodedBody = _decodeBody(response.body);
+    return {
+      ...decodedBody,
+      'status_code': response.statusCode,
+    };
+  }
+
+  Map<String, dynamic> _decodeBody(String body) {
+    if(body.isEmpty) {
+      return {};
+    }
+
+    final decoded = jsonDecode(body);
+    if(decoded is Map<String, dynamic>) {
+      return decoded;
+    }
+
+    return {
+      'message': decoded.toString(),
     };
   }
 

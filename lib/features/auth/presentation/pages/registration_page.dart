@@ -1,0 +1,321 @@
+import 'package:e_sports/core/helper/route_helper.dart';
+import 'package:e_sports/core/theme/app_breakpoints.dart';
+import 'package:e_sports/core/theme/app_colors.dart';
+import 'package:e_sports/core/theme/app_radius.dart';
+import 'package:e_sports/core/theme/app_spacing.dart';
+import 'package:e_sports/core/theme/app_typography.dart';
+import 'package:e_sports/features/auth/controllers/auth_controller.dart';
+import 'package:flutter/gestures.dart';
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+
+class RegistrationPage extends StatefulWidget {
+  const RegistrationPage({super.key});
+
+  @override
+  State<RegistrationPage> createState() => _RegistrationPageState();
+}
+
+class _RegistrationPageState extends State<RegistrationPage> {
+  final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  late final TapGestureRecognizer _loginRecognizer;
+  bool _obscurePassword = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _loginRecognizer = TapGestureRecognizer()..onTap = () => Get.offNamed(RouteHelper.login);
+  }
+
+  @override
+  void dispose() {
+    _nameController.dispose();
+    _emailController.dispose();
+    _passwordController.dispose();
+    _loginRecognizer.dispose();
+    super.dispose();
+  }
+
+  Future<void> _register(AuthController authController) async {
+    final name = _nameController.text.trim();
+    final email = _emailController.text.trim();
+    final password = _passwordController.text;
+
+    if(name.isEmpty) {
+      Get.snackbar('Registration', 'Please enter your name');
+      return;
+    }
+    if(name.length < 2) {
+      Get.snackbar('Registration', 'Please enter a valid name');
+      return;
+    }
+    if(email.isEmpty) {
+      Get.snackbar('Registration', 'Please enter your email');
+      return;
+    }
+    if(!GetUtils.isEmail(email)) {
+      Get.snackbar('Registration', 'Please enter a valid email');
+      return;
+    }
+    if(password.isEmpty) {
+      Get.snackbar('Registration', 'Please enter your password');
+      return;
+    }
+    if(password.length < 6) {
+      Get.snackbar('Registration', 'Password must be at least 6 characters');
+      return;
+    }
+
+    final response = await authController.register(name, email, password);
+    if(response.isSuccess) {
+      Get.snackbar('Registration', response.message);
+      Get.offNamed(RouteHelper.login);
+    }else {
+      Get.snackbar('Registration failed', response.message);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final authController = Get.find<AuthController>();
+    final bool isDesktop = AppBreakpoints.isDesktop(context);
+    final double topGap = isDesktop ? 72 : 42;
+    final double formMaxWidth = isDesktop ? 520 : double.infinity;
+
+    return Scaffold(
+      backgroundColor: AppColors.bg,
+      body: SafeArea(
+        child: SingleChildScrollView(
+            padding: const EdgeInsets.symmetric(horizontal: AppSpacing.statusBarPaddingH),
+            physics: const BouncingScrollPhysics(),
+            child: Center(
+              child: ConstrainedBox(
+                constraints: BoxConstraints(maxWidth: formMaxWidth),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SizedBox(height: topGap),
+                    const _Badge(),
+                    const SizedBox(height: 30),
+                    FittedBox(
+                      fit: BoxFit.scaleDown,
+                      alignment: Alignment.centerLeft,
+                      child: RichText(
+                        text: TextSpan(
+                          children: [
+                            TextSpan(
+                              text: "JOIN THE\n",
+                              style: AppTypography.statsGiant(context, color: AppColors.white).copyWith(
+                                fontSize: 38,
+                                letterSpacing: 0,
+                                fontWeight: FontWeight.w900,
+                                height: 1.1,
+                              ),
+                            ),
+                            TextSpan(
+                              text: "ELITE SQUAD",
+                              style: AppTypography.statsGiant(context, color: AppColors.neonGold).copyWith(
+                                fontSize: 46,
+                                letterSpacing: 0,
+                                fontWeight: FontWeight.w900,
+                                height: 1.1,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      "Create your profile and start tracking your match journey.",
+                      style: AppTypography.mutedText(context).copyWith(
+                        fontSize: 14,
+                        letterSpacing: 0.2,
+                        height: 1.4,
+                      ),
+                    ),
+                    const SizedBox(height: 42),
+                    _InputShell(
+                      child: TextField(
+                        controller: _nameController,
+                        keyboardType: TextInputType.name,
+                        textInputAction: TextInputAction.next,
+                        style: AppTypography.bodyText(context),
+                        decoration: _inputDecoration(context, "Full name", Icons.person_outline),
+                      ),
+                    ),
+                    const SizedBox(height: 18),
+                    _InputShell(
+                      child: TextField(
+                        controller: _emailController,
+                        keyboardType: TextInputType.emailAddress,
+                        textInputAction: TextInputAction.next,
+                        style: AppTypography.bodyText(context),
+                        decoration: _inputDecoration(context, "Email", Icons.email_outlined),
+                      ),
+                    ),
+                    const SizedBox(height: 18),
+                    _InputShell(
+                      child: TextField(
+                        controller: _passwordController,
+                        obscureText: _obscurePassword,
+                        textInputAction: TextInputAction.done,
+                        onSubmitted: (_) => _register(authController),
+                        style: AppTypography.bodyText(context),
+                        decoration: _inputDecoration(context, "Password", Icons.lock_outline).copyWith(
+                          suffixIcon: IconButton(
+                            onPressed: () => setState(() => _obscurePassword = !_obscurePassword),
+                            icon: Icon(_obscurePassword ? Icons.visibility_off_outlined : Icons.visibility_outlined, color: AppColors.textMuted, size: 20),
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 36),
+                    Container(
+                      width: double.infinity,
+                      height: 58,
+                      decoration: BoxDecoration(
+                        borderRadius: AppRadius.borderLg,
+                        boxShadow: [
+                          BoxShadow(
+                            color: AppColors.neonGold.withValues(alpha: 0.3),
+                            blurRadius: 20,
+                            offset: const Offset(0, 4),
+                          ),
+                        ],
+                      ),
+                      child: GetBuilder<AuthController>(
+                        builder: (authController) => ElevatedButton(
+                          onPressed: authController.isLoading ? null : () => _register(authController),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: AppColors.neonGold,
+                            foregroundColor: Colors.black,
+                            disabledBackgroundColor: AppColors.neonGold.withValues(alpha: 0.5),
+                            elevation: 0,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: AppRadius.borderLg,
+                            ),
+                          ),
+                          child: authController.isLoading
+                              ? const SizedBox(width: 22, height: 22, child: CircularProgressIndicator(strokeWidth: 2.4, color: Colors.black))
+                              : Text(
+                                  "CREATE ACCOUNT",
+                                  style: AppTypography.labelUppercase(context, color: Colors.black).copyWith(
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.w900,
+                                    letterSpacing: 1.2,
+                                  ),
+                                ),
+                          ),
+                      ),
+                    ),
+                    const SizedBox(height: 26),
+                    Center(
+                      child: Text.rich(
+                        TextSpan(
+                          text: "Already have an account? ",
+                          style: AppTypography.mutedText(context).copyWith(
+                            fontSize: 13,
+                            color: AppColors.textSecondary,
+                            height: 1.4,
+                          ),
+                          children: [
+                            TextSpan(
+                              text: "Sign in",
+                              recognizer: _loginRecognizer,
+                              style: AppTypography.bodyText(context, color: AppColors.neonGold).copyWith(
+                                fontSize: 13,
+                                fontWeight: FontWeight.w900,
+                              ),
+                            ),
+                          ],
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                    const SizedBox(height: 48),
+                    Center(
+                      child: Text(
+                        "The Enigmatic Elites",
+                        style: AppTypography.labelUppercase(context, color: AppColors.textMuted.withValues(alpha: 0.25)).copyWith(
+                          fontSize: 11,
+                          letterSpacing: 5,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 32),
+                  ],
+                ),
+              ),
+            ),
+        ),
+      ),
+    );
+  }
+
+  InputDecoration _inputDecoration(BuildContext context, String hintText, IconData icon) {
+    return InputDecoration(
+      hintText: hintText,
+      hintStyle: AppTypography.mutedText(context).copyWith(
+        color: AppColors.textMuted.withValues(alpha: 0.5),
+      ),
+      prefixIcon: Icon(icon, color: AppColors.textMuted, size: 20),
+      border: InputBorder.none,
+      contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 18),
+    );
+  }
+}
+
+class _InputShell extends StatelessWidget {
+  final Widget child;
+
+  const _InputShell({required this.child});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        color: AppColors.bgCard.withValues(alpha: 0.8),
+        borderRadius: AppRadius.borderLg,
+        border: Border.all(color: AppColors.glassBorder),
+      ),
+      child: child,
+    );
+  }
+}
+
+class _Badge extends StatelessWidget {
+  const _Badge();
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      decoration: BoxDecoration(
+        color: AppColors.neonGold.withValues(alpha: 0.1),
+        borderRadius: AppRadius.borderPill,
+        border: Border.all(
+          color: AppColors.neonGold.withValues(alpha: 0.3),
+          width: 1,
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: AppColors.neonGold.withValues(alpha: 0.15),
+            blurRadius: 12,
+            spreadRadius: -2,
+          ),
+        ],
+      ),
+      child: Text(
+        "HOUSE OF ELITES",
+        style: AppTypography.pillLabel(context, color: AppColors.neonGold).copyWith(
+          fontSize: 12,
+          letterSpacing: 2,
+        ),
+      ),
+    );
+  }
+}
