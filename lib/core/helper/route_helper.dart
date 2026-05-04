@@ -1,3 +1,4 @@
+import 'package:e_sports/core/widgets/route_not_found_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -14,7 +15,7 @@ import '../../features/profile/screens/profile_screen.dart';
 import '../controllers/app_data_controller.dart';
 import '../data/models/computed_player_stats.dart';
 import '../data/models/news_model.dart';
-import '../theme/app_theme.dart';
+
 
 class RouteHelper {
   
@@ -232,36 +233,3 @@ class _AuthMiddleware extends GetMiddleware {
   }
 }
 
-class RouteNotFoundScreen extends StatelessWidget {
-  const RouteNotFoundScreen({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppColors.bg,
-      body: Center(
-        child: Padding(
-          padding: AppSpacing.screenAll,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(
-                'Link not found',
-                style: TextStyle(
-                  color: AppColors.white,
-                  fontSize: AppTypography.sizeHeading,
-                  fontWeight: AppTypography.black,
-                ),
-              ),
-              SizedBox(height: AppSpacing.md),
-              TextButton(
-                onPressed: () => Get.offAllNamed(RouteHelper.home),
-                child: const Text('Go to home'),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
