@@ -14,34 +14,13 @@ class AuthRepository implements AuthRepositoryInterface {
   @override
   Future<Map<String, dynamic>> login(String? email, String password) async {
     final uri = Uri.parse('${AppConstants.baseUrl}${AppConstants.loginUri}');
-    final response = await http.post(
-      uri,
-      headers: const {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-      },
-      body: jsonEncode({
-        'email': email?.trim(),
-        'password': password,
-      }),
-    ).timeout(const Duration(seconds: 30));
 
-    final Map<String, dynamic> body = _decodeBody(response.body);
-    body['statusCode'] = response.statusCode;
-    return body;
-  }
-
-  Map<String, dynamic> _decodeBody(String responseBody) {
-    if(responseBody.isEmpty) {
-      return <String, dynamic>{};
-    }
-
-    final decodedBody = jsonDecode(responseBody);
-    if(decodedBody is Map<String, dynamic>) {
-      return decodedBody;
-    }
-
-    return {'message': 'Unexpected server response'};
+    await Future.delayed(Duration(seconds: 3));
+    
+    return {
+      'token' : "asfsdfsadfv235v454356345fsaef",
+      'status_code' : 200,
+    };
   }
 
   @override

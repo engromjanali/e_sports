@@ -13,7 +13,7 @@ class AuthService implements AuthServiceInterface {
   Future<AuthLoginResult> login(String? email, String password) async {
     try {
       final response = await authRepositoryInterface.login(email, password);
-      final statusCode = response['statusCode'];
+      final statusCode = response['status_code'];
       final token = _readToken(response);
 
       if((statusCode == 200 || statusCode == 201) && token != null) {
