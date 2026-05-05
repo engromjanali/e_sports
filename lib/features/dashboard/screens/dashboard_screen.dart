@@ -4,8 +4,8 @@ import 'package:get/get.dart';
 import '../../../core/controllers/app_data_controller.dart';
 import '../../../core/data/models/computed_player_stats.dart';
 import '../../../core/helper/route_helper.dart';
-import '../../../core/theme/app_breakpoints.dart';
-import '../../../core/theme/app_theme.dart';
+import 'package:e_sports/core/utils/dimensions.dart';
+import 'package:e_sports/core/helper/responsive_helper.dart';
 import '../../menu/screens/menu_screen.dart';
 import '../../home/screens/home_screen.dart';
 import '../../matches/screens/matches_screen.dart';
@@ -62,7 +62,7 @@ class _GameArenaScreenState extends State<DashboardScreen> with SingleTickerProv
 
   @override
   Widget build(BuildContext context) {
-    final isDesktop = AppBreakpoints.isDesktop(context);
+    final isDesktop = ResponsiveHelper.isDesktop(context);
 
     return Scaffold(
       key: _scaffoldKey,
@@ -120,35 +120,35 @@ class _GameArenaScreenState extends State<DashboardScreen> with SingleTickerProv
           onNavigate: _navigateTab,
           onSearchTap: _openSearch,
           onProfileTap: _openMyProfile,
-          onMenuTap: AppBreakpoints.isDesktop(context) ? _openDesktopMenu : null,
+          onMenuTap: ResponsiveHelper.isDesktop(context) ? _openDesktopMenu : null,
         );
       case 1:
         return MatchesScreen(
           key: const ValueKey(1),
           onSearchTap: _openSearch,
           onProfileTap: _openMyProfile,
-          onMenuTap: AppBreakpoints.isDesktop(context) ? _openDesktopMenu : null,
+          onMenuTap: ResponsiveHelper.isDesktop(context) ? _openDesktopMenu : null,
         );
       case 2:
         return LeaderboardScreen(
           key: const ValueKey(2),
           onSearchTap: _openSearch,
           onProfileTap: _openMyProfile,
-          onMenuTap: AppBreakpoints.isDesktop(context) ? _openDesktopMenu : null,
+          onMenuTap: ResponsiveHelper.isDesktop(context) ? _openDesktopMenu : null,
         );
       case 3:
         return RewardsScreen(
           key: const ValueKey(4),
           onSearchTap: _openSearch,
           onProfileTap: _openMyProfile,
-          onMenuTap: AppBreakpoints.isDesktop(context) ? _openDesktopMenu : null,
+          onMenuTap: ResponsiveHelper.isDesktop(context) ? _openDesktopMenu : null,
         );
       case 4:
         return MenuScreen(
           key: const ValueKey(5),
           onSearchTap: _openSearch,
           onProfileTap: _openMyProfile,
-          onMenuTap: AppBreakpoints.isDesktop(context) ? _openDesktopMenu : null,
+          onMenuTap: ResponsiveHelper.isDesktop(context) ? _openDesktopMenu : null,
         );
       default:
         return const SizedBox.shrink();
@@ -164,12 +164,12 @@ class _GameArenaScreenState extends State<DashboardScreen> with SingleTickerProv
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Padding(
-              padding: EdgeInsets.all(AppSpacing.screenPadding),
+              padding: EdgeInsets.all(Dimensions.screenPadding),
               child: Text(
                 "Menu",
                 style: TextStyle(
-                  fontSize: AppTypography.sizeTitleLarge,
-                  fontWeight: AppTypography.black,
+                  fontSize: Dimensions.sizeTitleLarge,
+                  fontWeight: Dimensions.black,
                   color: AppColors.neonCyan,
                 ),
               ),
@@ -193,7 +193,7 @@ class _GameArenaScreenState extends State<DashboardScreen> with SingleTickerProv
         title,
         style: TextStyle(
           color: active ? AppColors.neonGold : AppColors.white,
-          fontWeight: active ? AppTypography.extraBold : AppTypography.medium,
+          fontWeight: active ? Dimensions.extraBold : Dimensions.medium,
         ),
       ),
       selected: active,
@@ -227,31 +227,31 @@ class _GameArenaScreenState extends State<DashboardScreen> with SingleTickerProv
               behavior: HitTestBehavior.opaque,
               child: AnimatedContainer(
                 duration: const Duration(milliseconds: 180),
-                padding: EdgeInsets.symmetric(vertical: AppSpacing.lg),
+                padding: EdgeInsets.symmetric(vertical: Dimensions.lg),
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Icon(
                       _tabs[i].icon,
-                      size: active ? AppTypography.sizeHeading : AppTypography.sizeTitleLarge,
+                      size: active ? Dimensions.sizeHeading : Dimensions.sizeTitleLarge,
                       color: active ? AppColors.neonGold : AppColors.textMuted,
                     ),
-                    SizedBox(height: AppSpacing.xxs),
+                    SizedBox(height: Dimensions.xxs),
                     Text(
                       _tabs[i].label,
                       style: TextStyle(
-                        fontSize: AppTypography.sizeCaption,
-                        fontWeight: active ? AppTypography.extraBold : AppTypography.medium,
+                        fontSize: Dimensions.sizeCaption,
+                        fontWeight: active ? Dimensions.extraBold : Dimensions.medium,
                         color: active ? AppColors.neonGold : AppColors.textMuted,
                       ),
                     ),
                     AnimatedContainer(
                       duration: const Duration(milliseconds: 180),
-                      width: active ? AppSpacing.xxxl : 0,
-                      height: AppSizing.navIndicatorHeight,
-                      margin: EdgeInsets.only(top: AppSpacing.xs),
+                      width: active ? Dimensions.xxxl : 0,
+                      height: Dimensions.navIndicatorHeight,
+                      margin: EdgeInsets.only(top: Dimensions.xs),
                       decoration: BoxDecoration(
-                        borderRadius: AppRadius.borderXxs,
+                        borderRadius: Dimensions.borderXxs,
                         color: AppColors.neonGold,
                         boxShadow: active
                             ? [BoxShadow(color: AppColors.neonGold.withOpacity(AppColors.opacity60), blurRadius: 6)]

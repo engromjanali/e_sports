@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../../core/controllers/theme_controller.dart';
-import '../../../core/theme/app_theme.dart';
+import 'package:e_sports/core/utils/dimensions.dart';
 
 class StaticContentScreen extends StatelessWidget {
   final StaticContentData data;
@@ -31,22 +31,22 @@ class StaticContentScreen extends StatelessWidget {
           data.title,
           style: TextStyle(
             color: titleColor,
-            fontWeight: AppTypography.black,
+            fontWeight: Dimensions.black,
           ),
         ),
       ),
       body: SafeArea(
         child: ListView.separated(
-          padding: EdgeInsets.all(AppSpacing.screenPadding),
+          padding: EdgeInsets.all(Dimensions.screenPadding),
           itemCount: data.sections.length,
-          separatorBuilder: (context, index) => SizedBox(height: AppSpacing.md),
+          separatorBuilder: (context, index) => SizedBox(height: Dimensions.md),
           itemBuilder: (context, index) {
             final section = data.sections[index];
             return Container(
-              padding: EdgeInsets.all(AppSpacing.lg),
+              padding: EdgeInsets.all(Dimensions.lg),
               decoration: BoxDecoration(
                 color: cardColor,
-                borderRadius: AppRadius.borderLg,
+                borderRadius: Dimensions.borderLg,
                 border: Border.all(color: borderColor),
               ),
               child: Column(
@@ -55,16 +55,16 @@ class StaticContentScreen extends StatelessWidget {
                   Text(
                     section.heading,
                     style: TextStyle(
-                      fontSize: AppTypography.sizeBodyLarge,
-                      fontWeight: AppTypography.black,
+                      fontSize: Dimensions.sizeBodyLarge,
+                      fontWeight: Dimensions.black,
                       color: titleColor,
                     ),
                   ),
-                  SizedBox(height: AppSpacing.sm),
+                  SizedBox(height: Dimensions.sm),
                   Text(
                     section.body,
                     style: TextStyle(
-                      fontSize: AppTypography.sizeBody,
+                      fontSize: Dimensions.sizeBody,
                       height: 1.5,
                       color: subtitleColor,
                     ),

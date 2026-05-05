@@ -1,4 +1,4 @@
-import '../../../core/theme/app_theme.dart';
+import 'package:e_sports/core/utils/dimensions.dart';
 import '../../../core/data/models/computed_player_stats.dart';
 import '../../../core/widgets/glass_card_widget.dart';
 import '../../../core/widgets/neon_pill_widget.dart';
@@ -28,8 +28,8 @@ class FullRankingList extends StatelessWidget {
             final color = colors[i.clamp(0, colors.length - 1)];
             return Container(
               padding: EdgeInsets.symmetric(
-                horizontal: AppSpacing.cardInnerPadding,
-                vertical: AppSpacing.body2,
+                horizontal: Dimensions.cardInnerPadding,
+                vertical: Dimensions.body2,
               ),
               decoration: BoxDecoration(
                 border: i < players.length - 1
@@ -43,45 +43,45 @@ class FullRankingList extends StatelessWidget {
               ),
               child: Row(children: [
                 SizedBox(
-                    width: AppTypography.sizeHeadingLg + 2,
+                    width: Dimensions.sizeHeadingLg + 2,
                     child: Text(
                       i < 3 ? medals[i] : "${i + 1}",
                       style: TextStyle(
-                          fontSize: i < 3 ? AppTypography.sizeHeading : AppTypography.sizeBody,
-                          fontWeight: AppTypography.extraBold,
+                          fontSize: i < 3 ? Dimensions.sizeHeading : Dimensions.sizeBody,
+                          fontWeight: Dimensions.extraBold,
                           color: color),
                       textAlign: TextAlign.center,
                     )),
-                SizedBox(width: AppSpacing.lg),
-                PlayerAvatarWidget(name: p.name, imageUrl: p.player.imageUrl, size: AppSizing.avatarXs + 4),
-                SizedBox(width: AppSpacing.lg),
+                SizedBox(width: Dimensions.lg),
+                PlayerAvatarWidget(name: p.name, imageUrl: p.player.imageUrl, size: Dimensions.avatarXs + 4),
+                SizedBox(width: Dimensions.lg),
                 Expanded(
                     child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                       Row(children: [
                         Text(p.name,
                             style: TextStyle(
-                                fontSize: AppTypography.sizeBody,
-                                fontWeight: AppTypography.bold,
+                                fontSize: Dimensions.sizeBody,
+                                fontWeight: Dimensions.bold,
                                 color: AppColors.textPrimary)),
                         if (i < 2) ...[
-                          SizedBox(width: AppSpacing.sm),
+                          SizedBox(width: Dimensions.sm),
                           NeonPillWidget(label: "VIP", color: AppColors.neonGold),
                         ],
                       ]),
                       Text(isScorerList ? "${p.goals} Goals · ${p.hattricks} 🎩" : "${p.gf} GF · ${p.wins} W",
                           style: TextStyle(
-                              fontSize: AppTypography.sizeCaption,
+                              fontSize: Dimensions.sizeCaption,
                               color: AppColors.textMuted)),
                     ])),
                 Column(crossAxisAlignment: CrossAxisAlignment.end, children: [
                   Text(isScorerList ? "${p.goals}" : "${p.pts}",
                       style: TextStyle(
-                          fontSize: AppTypography.sizeTitle,
-                          fontWeight: AppTypography.black,
+                          fontSize: Dimensions.sizeTitle,
+                          fontWeight: Dimensions.black,
                           color: color)),
                   Text(isScorerList ? "goals" : "pts",
                       style: TextStyle(
-                        fontSize: AppTypography.sizeTiny,
+                        fontSize: Dimensions.sizeTiny,
                         color: AppColors.textMuted,
                       )),
                 ]),

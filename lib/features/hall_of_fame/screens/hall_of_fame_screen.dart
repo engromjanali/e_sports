@@ -1,4 +1,4 @@
-// import 'package:e_sports/core/theme/app_theme.dart';
+// import 'package:e_sports/core/utils/dimensions.dart';
 // import 'package:e_sports/core/widgets/app_header_widget.dart';
 // import 'package:e_sports/core/widgets/glass_card_widget.dart';
 // import 'package:e_sports/core/widgets/player_avater.dart';
@@ -132,24 +132,24 @@
 //             Expanded(
 //               child: SingleChildScrollView(
 //                 padding: EdgeInsets.fromLTRB(
-//                   AppSpacing.screenPadding,
-//                   AppSpacing.xxxl,
-//                   AppSpacing.screenPadding,
-//                   AppSpacing.massive + 16,
+//                   Dimensions.screenPadding,
+//                   Dimensions.xxxl,
+//                   Dimensions.screenPadding,
+//                   Dimensions.massive + 16,
 //                 ),
 //                 child: Column(
 //                   crossAxisAlignment: CrossAxisAlignment.start,
 //                   children: [
 //                     // ── Hero Banner ──
 //                     _HofHeroBanner(),
-//                     const SizedBox(height: AppSpacing.massive),
+//                     const SizedBox(height: Dimensions.massive),
 
 //                     // ── All Award Categories ──
 //                     ..._categories.asMap().entries.map((entry) {
 //                       final i = entry.key;
 //                       final cat = entry.value;
 //                       return Padding(
-//                         padding: const EdgeInsets.only(bottom: AppSpacing.xxxl),
+//                         padding: const EdgeInsets.only(bottom: Dimensions.xxxl),
 //                         child: _AwardSection(config: cat, index: i),
 //                       );
 //                     }),
@@ -172,7 +172,7 @@
 //   @override
 //   Widget build(BuildContext context) {
 //     return GlassCardWidget(
-//       padding: const EdgeInsets.all(AppSpacing.massive),
+//       padding: const EdgeInsets.all(Dimensions.massive),
 //       borderColor: AppColors.neonGold.withOpacity(AppColors.opacity25),
 //       gradient: const LinearGradient(
 //         begin: Alignment.topLeft,
@@ -200,9 +200,9 @@
 //               "HOF",
 //               style: TextStyle(
 //                 fontSize: 72,
-//                 fontWeight: AppTypography.black,
+//                 fontWeight: Dimensions.black,
 //                 color: AppColors.neonGold.withOpacity(0.04),
-//                 height: AppTypography.lineHeightCompact,
+//                 height: Dimensions.lineHeightCompact,
 //                 letterSpacing: -2,
 //               ),
 //             ),
@@ -214,53 +214,53 @@
 //                 children: [
 //                   Container(
 //                     padding: const EdgeInsets.symmetric(
-//                       horizontal: AppSpacing.lg,
-//                       vertical: AppSpacing.xs,
+//                       horizontal: Dimensions.lg,
+//                       vertical: Dimensions.xs,
 //                     ),
 //                     decoration: BoxDecoration(
 //                       gradient: AppColors.goldRibbonGradient,
-//                       borderRadius: AppRadius.borderPill,
+//                       borderRadius: Dimensions.borderPill,
 //                     ),
 //                     child: const Text(
 //                       "HOUSE OF ELITES",
 //                       style: TextStyle(
-//                         fontSize: AppTypography.sizeTiny,
-//                         fontWeight: AppTypography.black,
-//                         letterSpacing: AppTypography.trackingMax,
+//                         fontSize: Dimensions.sizeTiny,
+//                         fontWeight: Dimensions.black,
+//                         letterSpacing: Dimensions.trackingMax,
 //                         color: AppColors.bg,
 //                       ),
 //                     ),
 //                   ),
 //                 ],
 //               ),
-//               const SizedBox(height: AppSpacing.lg),
+//               const SizedBox(height: Dimensions.lg),
 //               const Text(
 //                 "Hall Of Fame",
 //                 style: TextStyle(
-//                   fontSize: AppTypography.sizeDisplay,
-//                   fontWeight: AppTypography.black,
+//                   fontSize: Dimensions.sizeDisplay,
+//                   fontWeight: Dimensions.black,
 //                   color: AppColors.white,
-//                   height: AppTypography.lineHeightCompact,
+//                   height: Dimensions.lineHeightCompact,
 //                   letterSpacing: -0.5,
 //                 ),
 //               ),
-//               const SizedBox(height: AppSpacing.xs),
+//               const SizedBox(height: Dimensions.xs),
 //               const Text(
 //                 "Celebrating the greatest players and teams\nacross all seasons of competition.",
 //                 style: TextStyle(
-//                   fontSize: AppTypography.sizeBody,
+//                   fontSize: Dimensions.sizeBody,
 //                   color: AppColors.textSecondary,
-//                   height: AppTypography.lineHeightRelaxed,
+//                   height: Dimensions.lineHeightRelaxed,
 //                 ),
 //               ),
-//               const SizedBox(height: AppSpacing.lg),
+//               const SizedBox(height: Dimensions.lg),
 //               // Stats row
 //               Row(
 //                 children: [
 //                   _buildStatChip("4", "Awards", AppColors.neonGold),
-//                   const SizedBox(width: AppSpacing.md),
+//                   const SizedBox(width: Dimensions.md),
 //                   _buildStatChip("18", "Champions", AppColors.neonCyan),
-//                   const SizedBox(width: AppSpacing.md),
+//                   const SizedBox(width: Dimensions.md),
 //                   _buildStatChip("6+", "Seasons", AppColors.neonPurple),
 //                 ],
 //               ),
@@ -274,12 +274,12 @@
 //   Widget _buildStatChip(String value, String label, Color color) {
 //     return Container(
 //       padding: const EdgeInsets.symmetric(
-//         horizontal: AppSpacing.lg,
-//         vertical: AppSpacing.xs,
+//         horizontal: Dimensions.lg,
+//         vertical: Dimensions.xs,
 //       ),
 //       decoration: BoxDecoration(
 //         color: color.withOpacity(AppColors.opacity10),
-//         borderRadius: AppRadius.borderDef,
+//         borderRadius: Dimensions.borderDef,
 //         border: Border.all(color: color.withOpacity(AppColors.opacity25)),
 //       ),
 //       child: Column(
@@ -287,19 +287,19 @@
 //           Text(
 //             value,
 //             style: TextStyle(
-//               fontSize: AppTypography.sizeSubtitle,
-//               fontWeight: AppTypography.black,
+//               fontSize: Dimensions.sizeSubtitle,
+//               fontWeight: Dimensions.black,
 //               color: color,
-//               height: AppTypography.lineHeightCompact,
+//               height: Dimensions.lineHeightCompact,
 //             ),
 //           ),
 //           Text(
 //             label,
 //             style: TextStyle(
-//               fontSize: AppTypography.sizeTiny,
-//               fontWeight: AppTypography.medium,
+//               fontSize: Dimensions.sizeTiny,
+//               fontWeight: Dimensions.medium,
 //               color: color.withOpacity(0.7),
-//               letterSpacing: AppTypography.trackingNormal,
+//               letterSpacing: Dimensions.trackingNormal,
 //             ),
 //           ),
 //         ],
@@ -323,14 +323,14 @@
 //       children: [
 //         // Section heading with category icon pill
 //         _buildSectionHeader(),
-//         const SizedBox(height: AppSpacing.lg),
+//         const SizedBox(height: Dimensions.lg),
 
 //         // Winner cards
 //         ...config.entries.asMap().entries.map((e) {
 //           final entryIndex = e.key;
 //           final entry = e.value;
 //           return Padding(
-//             padding: const EdgeInsets.only(bottom: AppSpacing.md),
+//             padding: const EdgeInsets.only(bottom: Dimensions.md),
 //             child: _AwardEntryCard(
 //               entry: entry,
 //               badge: config.badge,
@@ -348,18 +348,18 @@
 //       children: [
 //         // Color accent bar
 //         Container(
-//           width: AppSpacing.xs,
-//           height: AppSizing.dotLg * 2 + 4,
+//           width: Dimensions.xs,
+//           height: Dimensions.dotLg * 2 + 4,
 //           decoration: BoxDecoration(
 //             gradient: LinearGradient(
 //               begin: Alignment.topCenter,
 //               end: Alignment.bottomCenter,
 //               colors: [config.accentColor, config.accentColor.withOpacity(0.3)],
 //             ),
-//             borderRadius: AppRadius.borderXxs,
+//             borderRadius: Dimensions.borderXxs,
 //           ),
 //         ),
-//         const SizedBox(width: AppSpacing.md),
+//         const SizedBox(width: Dimensions.md),
 //         Column(
 //           crossAxisAlignment: CrossAxisAlignment.start,
 //           children: [
@@ -367,16 +367,16 @@
 //               children: [
 //                 Text(
 //                   config.emoji,
-//                   style: const TextStyle(fontSize: AppTypography.sizeTitle),
+//                   style: const TextStyle(fontSize: Dimensions.sizeTitle),
 //                 ),
-//                 const SizedBox(width: AppSpacing.xs),
+//                 const SizedBox(width: Dimensions.xs),
 //                 Text(
 //                   config.title.toUpperCase(),
 //                   style: TextStyle(
-//                     fontSize: AppTypography.sizeTitle,
-//                     fontWeight: AppTypography.extraBold,
+//                     fontSize: Dimensions.sizeTitle,
+//                     fontWeight: Dimensions.extraBold,
 //                     color: AppColors.textPrimary,
-//                     letterSpacing: AppTypography.trackingNormal,
+//                     letterSpacing: Dimensions.trackingNormal,
 //                   ),
 //                 ),
 //               ],
@@ -384,7 +384,7 @@
 //             Text(
 //               config.sub,
 //               style: const TextStyle(
-//                 fontSize: AppTypography.sizeSmall,
+//                 fontSize: Dimensions.sizeSmall,
 //                 color: AppColors.textSecondary,
 //               ),
 //             ),
@@ -416,7 +416,7 @@
 
 
 //     return GlassCardWidget(
-//       padding: const EdgeInsets.all(AppSpacing.cardInnerPadding),
+//       padding: const EdgeInsets.all(Dimensions.cardInnerPadding),
 //       borderColor: entry.isTbd
 //           ? AppColors.glassBorder
 //           : (isFirst
@@ -451,9 +451,9 @@
 //               entry.season.replaceAll("Season ", "S"),
 //               style: TextStyle(
 //                 fontSize: 42,
-//                 fontWeight: AppTypography.black,
+//                 fontWeight: Dimensions.black,
 //                 color: color.withOpacity(0.05),
-//                 height: AppTypography.lineHeightCompact,
+//                 height: Dimensions.lineHeightCompact,
 //               ),
 //             ),
 //           ),
@@ -464,13 +464,13 @@
 //               if (!entry.isTbd)
 //                 PlayerAvatarWidget(
 //                   name: entry.name,
-//                   size: AppSizing.avatarMd,
+//                   size: Dimensions.avatarMd,
 //                   borderColor: isFirst ? accentColor : accentColor.withOpacity(AppColors.opacity50),
 //                 )
 //               else
 //                 _TbdAvatar(),
 
-//               const SizedBox(width: AppSpacing.lg),
+//               const SizedBox(width: Dimensions.lg),
 
 //               // Name + detail
 //               Expanded(
@@ -481,29 +481,29 @@
 //                       entry.name,
 //                       style: TextStyle(
 //                         color: entry.isTbd ? AppColors.textSecondary : AppColors.white,
-//                         fontWeight: AppTypography.black,
-//                         fontSize: AppTypography.sizeBody,
-//                         letterSpacing: AppTypography.trackingNormal,
+//                         fontWeight: Dimensions.black,
+//                         fontSize: Dimensions.sizeBody,
+//                         letterSpacing: Dimensions.trackingNormal,
 //                       ),
 //                     ),
-//                     const SizedBox(height: AppSpacing.xxs),
+//                     const SizedBox(height: Dimensions.xxs),
 //                     Text(
 //                       entry.team,
 //                       style: TextStyle(
 //                         color: entry.isTbd
 //                             ? AppColors.textMuted
 //                             : accentColor.withOpacity(0.75),
-//                         fontSize: AppTypography.sizeCaption,
-//                         fontWeight: AppTypography.semiBold,
+//                         fontSize: Dimensions.sizeCaption,
+//                         fontWeight: Dimensions.semiBold,
 //                       ),
 //                     ),
-//                     const SizedBox(height: AppSpacing.xxs + 1),
+//                     const SizedBox(height: Dimensions.xxs + 1),
 //                     Text(
 //                       entry.detail,
 //                       style: const TextStyle(
 //                         color: AppColors.textMuted,
-//                         fontSize: AppTypography.sizeTiny,
-//                         fontWeight: AppTypography.medium,
+//                         fontSize: Dimensions.sizeTiny,
+//                         fontWeight: Dimensions.medium,
 //                       ),
 //                     ),
 //                   ],
@@ -518,18 +518,18 @@
 //                     entry.season.toUpperCase(),
 //                     style: TextStyle(
 //                       color: color,
-//                       fontWeight: AppTypography.extraBold,
-//                       fontSize: AppTypography.sizeTiny,
-//                       letterSpacing: AppTypography.trackingWidest,
+//                       fontWeight: Dimensions.extraBold,
+//                       fontSize: Dimensions.sizeTiny,
+//                       letterSpacing: Dimensions.trackingWidest,
 //                     ),
 //                   ),
-//                   const SizedBox(height: AppSpacing.xxs),
+//                   const SizedBox(height: Dimensions.xxs),
 //                   if (isFirst && !entry.isTbd)
 //                     // Champion crown badge
 //                     Container(
 //                       padding: const EdgeInsets.symmetric(
-//                         horizontal: AppSpacing.xs,
-//                         vertical: AppSpacing.xxs,
+//                         horizontal: Dimensions.xs,
+//                         vertical: Dimensions.xxs,
 //                       ),
 //                       decoration: BoxDecoration(
 //                         gradient: LinearGradient(
@@ -537,7 +537,7 @@
 //                           begin: Alignment.topLeft,
 //                           end: Alignment.bottomRight,
 //                         ),
-//                         borderRadius: AppRadius.borderXs,
+//                         borderRadius: Dimensions.borderXs,
 //                         boxShadow: [
 //                           BoxShadow(
 //                             color: accentColor.withOpacity(0.4),
@@ -551,15 +551,15 @@
 //                         children: [
 //                           Text(
 //                             badge,
-//                             style: const TextStyle(fontSize: AppTypography.sizeBody),
+//                             style: const TextStyle(fontSize: Dimensions.sizeBody),
 //                           ),
-//                           const SizedBox(width: AppSpacing.xxs),
+//                           const SizedBox(width: Dimensions.xxs),
 //                           Text(
 //                             "CHAMP",
 //                             style: TextStyle(
-//                               fontSize: AppTypography.sizeTiny,
-//                               fontWeight: AppTypography.black,
-//                               letterSpacing: AppTypography.trackingWider,
+//                               fontSize: Dimensions.sizeTiny,
+//                               fontWeight: Dimensions.black,
+//                               letterSpacing: Dimensions.trackingWider,
 //                               color: AppColors.bg,
 //                             ),
 //                           ),
@@ -570,7 +570,7 @@
 //                     Text(
 //                       badge,
 //                       style: TextStyle(
-//                         fontSize: AppTypography.sizeTitle,
+//                         fontSize: Dimensions.sizeTitle,
 //                         color: entry.isTbd ? AppColors.textMuted : null,
 //                       ),
 //                     ),
@@ -592,14 +592,14 @@
 //   @override
 //   Widget build(BuildContext context) {
 //     return Container(
-//       width: AppSizing.avatarMd,
-//       height: AppSizing.avatarMd,
+//       width: Dimensions.avatarMd,
+//       height: Dimensions.avatarMd,
 //       decoration: BoxDecoration(
 //         shape: BoxShape.circle,
 //         color: AppColors.bgSurface,
 //         border: Border.all(
 //           color: AppColors.glassBorder,
-//           width: AppSizing.borderThick,
+//           width: Dimensions.borderThick,
 //         ),
 //       ),
 //       alignment: Alignment.center,
@@ -607,8 +607,8 @@
 //         "?",
 //         style: TextStyle(
 //           color: AppColors.textMuted,
-//           fontSize: AppTypography.sizeHeading,
-//           fontWeight: AppTypography.black,
+//           fontSize: Dimensions.sizeHeading,
+//           fontWeight: Dimensions.black,
 //         ),
 //       ),
 //     );
@@ -617,7 +617,7 @@
 
 
 
-import '../../../core/theme/app_theme.dart';
+import 'package:e_sports/core/utils/dimensions.dart';
 import '../../../core/helper/route_helper.dart';
 import '../../../core/widgets/app_header_widget.dart';
 import '../../../core/widgets/glass_card_widget.dart';
@@ -756,24 +756,24 @@ class HallOfFameScreen extends StatelessWidget {
             Expanded(
               child: SingleChildScrollView(
                 padding: EdgeInsets.fromLTRB(
-                  AppSpacing.screenPadding,
-                  AppSpacing.xxxl,
-                  AppSpacing.screenPadding,
-                  AppSpacing.massive + 16,
+                  Dimensions.screenPadding,
+                  Dimensions.xxxl,
+                  Dimensions.screenPadding,
+                  Dimensions.massive + 16,
                 ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     // ── Hero Banner ──
                     _HofHeroBanner(),
-                    const SizedBox(height: AppSpacing.massive),
+                    const SizedBox(height: Dimensions.massive),
 
                     // ── All Award Categories ──
                     ..._categories.asMap().entries.map((entry) {
                       final i = entry.key;
                       final cat = entry.value;
                       return Padding(
-                        padding: const EdgeInsets.only(bottom: AppSpacing.xxxl),
+                        padding: const EdgeInsets.only(bottom: Dimensions.xxxl),
                         child: _AwardSection(config: cat, index: i),
                       );
                     }),
@@ -796,7 +796,7 @@ class _HofHeroBanner extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GlassCardWidget(
-      padding: const EdgeInsets.all(AppSpacing.massive),
+      padding: const EdgeInsets.all(Dimensions.massive),
       borderColor: AppColors.neonGold.withOpacity(AppColors.opacity25),
       gradient: const LinearGradient(
         begin: Alignment.topLeft,
@@ -824,9 +824,9 @@ class _HofHeroBanner extends StatelessWidget {
               "HOF",
               style: TextStyle(
                 fontSize: 72,
-                fontWeight: AppTypography.black,
+                fontWeight: Dimensions.black,
                 color: AppColors.neonGold.withOpacity(0.04),
-                height: AppTypography.lineHeightCompact,
+                height: Dimensions.lineHeightCompact,
                 letterSpacing: -2,
               ),
             ),
@@ -838,43 +838,43 @@ class _HofHeroBanner extends StatelessWidget {
                 children: [
                   Container(
                     padding: const EdgeInsets.symmetric(
-                      horizontal: AppSpacing.lg,
-                      vertical: AppSpacing.xs,
+                      horizontal: Dimensions.lg,
+                      vertical: Dimensions.xs,
                     ),
                     decoration: BoxDecoration(
                       gradient: AppColors.goldRibbonGradient,
-                      borderRadius: AppRadius.borderPill,
+                      borderRadius: Dimensions.borderPill,
                     ),
                     child: const Text(
                       "HOUSE OF ELITES",
                       style: TextStyle(
-                        fontSize: AppTypography.sizeTiny,
-                        fontWeight: AppTypography.black,
-                        letterSpacing: AppTypography.trackingMax,
+                        fontSize: Dimensions.sizeTiny,
+                        fontWeight: Dimensions.black,
+                        letterSpacing: Dimensions.trackingMax,
                         color: AppColors.bg,
                       ),
                     ),
                   ),
                 ],
               ),
-              const SizedBox(height: AppSpacing.lg),
+              const SizedBox(height: Dimensions.lg),
               const Text(
                 "Hall Of Fame",
                 style: TextStyle(
-                  fontSize: AppTypography.sizeDisplay,
-                  fontWeight: AppTypography.black,
+                  fontSize: Dimensions.sizeDisplay,
+                  fontWeight: Dimensions.black,
                   color: AppColors.white,
-                  height: AppTypography.lineHeightCompact,
+                  height: Dimensions.lineHeightCompact,
                   letterSpacing: -0.5,
                 ),
               ),
-              const SizedBox(height: AppSpacing.xs),
+              const SizedBox(height: Dimensions.xs),
               const Text(
                 "Celebrating the greatest players and teams\nacross all seasons of competition.",
                 style: TextStyle(
-                  fontSize: AppTypography.sizeBody,
+                  fontSize: Dimensions.sizeBody,
                   color: AppColors.textSecondary,
-                  height: AppTypography.lineHeightRelaxed,
+                  height: Dimensions.lineHeightRelaxed,
                 ),
               ),
             ],
@@ -899,14 +899,14 @@ class _AwardSection extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         _buildSectionHeader(),
-        const SizedBox(height: AppSpacing.lg),
+        const SizedBox(height: Dimensions.lg),
 
         // All entries — every non-TBD gets the champ badge
         ...config.entries.asMap().entries.map((e) {
           final entryIndex = e.key;
           final entry = e.value;
           return Padding(
-            padding: const EdgeInsets.only(bottom: AppSpacing.md),
+            padding: const EdgeInsets.only(bottom: Dimensions.md),
             child: _AwardEntryCard(
               entry: entry,
               badge: config.badge,
@@ -923,18 +923,18 @@ class _AwardSection extends StatelessWidget {
     return Row(
       children: [
         Container(
-          width: AppSpacing.xs,
-          height: AppSizing.dotLg * 2 + 4,
+          width: Dimensions.xs,
+          height: Dimensions.dotLg * 2 + 4,
           decoration: BoxDecoration(
             gradient: LinearGradient(
               begin: Alignment.topCenter,
               end: Alignment.bottomCenter,
               colors: [config.accentColor, config.accentColor.withOpacity(0.3)],
             ),
-            borderRadius: AppRadius.borderXxs,
+            borderRadius: Dimensions.borderXxs,
           ),
         ),
-        const SizedBox(width: AppSpacing.md),
+        const SizedBox(width: Dimensions.md),
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -942,16 +942,16 @@ class _AwardSection extends StatelessWidget {
               children: [
                 Text(
                   config.emoji,
-                  style: const TextStyle(fontSize: AppTypography.sizeTitle),
+                  style: const TextStyle(fontSize: Dimensions.sizeTitle),
                 ),
-                const SizedBox(width: AppSpacing.xs),
+                const SizedBox(width: Dimensions.xs),
                 Text(
                   config.title.toUpperCase(),
                   style: TextStyle(
-                    fontSize: AppTypography.sizeTitle,
-                    fontWeight: AppTypography.extraBold,
+                    fontSize: Dimensions.sizeTitle,
+                    fontWeight: Dimensions.extraBold,
                     color: AppColors.textPrimary,
-                    letterSpacing: AppTypography.trackingNormal,
+                    letterSpacing: Dimensions.trackingNormal,
                   ),
                 ),
               ],
@@ -959,7 +959,7 @@ class _AwardSection extends StatelessWidget {
             Text(
               config.sub,
               style: const TextStyle(
-                fontSize: AppTypography.sizeSmall,
+                fontSize: Dimensions.sizeSmall,
                 color: AppColors.textSecondary,
               ),
             ),
@@ -991,7 +991,7 @@ class _AwardEntryCard extends StatelessWidget {
     final isChamp = !entry.isTbd;
 
     return GlassCardWidget(
-      padding: const EdgeInsets.all(AppSpacing.cardInnerPadding),
+      padding: const EdgeInsets.all(Dimensions.cardInnerPadding),
       borderColor: entry.isTbd
           ? AppColors.glassBorder
           : accentColor.withOpacity(0.35),
@@ -1025,9 +1025,9 @@ class _AwardEntryCard extends StatelessWidget {
               entry.season.replaceAll("Season ", "S"),
               style: TextStyle(
                 fontSize: 42,
-                fontWeight: AppTypography.black,
+                fontWeight: Dimensions.black,
                 color: color.withOpacity(0.05),
-                height: AppTypography.lineHeightCompact,
+                height: Dimensions.lineHeightCompact,
               ),
             ),
           ),
@@ -1037,13 +1037,13 @@ class _AwardEntryCard extends StatelessWidget {
               if (!entry.isTbd)
                 PlayerAvatarWidget(
                   name: entry.name,
-                  size: AppSizing.avatarMd,
+                  size: Dimensions.avatarMd,
                   borderColor: accentColor.withOpacity(0.65),
                 )
               else
                 const _TbdAvatar(),
 
-              const SizedBox(width: AppSpacing.lg),
+              const SizedBox(width: Dimensions.lg),
 
               Expanded(
                 child: Column(
@@ -1055,36 +1055,36 @@ class _AwardEntryCard extends StatelessWidget {
                         color: entry.isTbd
                             ? AppColors.textSecondary
                             : AppColors.white,
-                        fontWeight: AppTypography.black,
+                        fontWeight: Dimensions.black,
                         fontSize: entry.soloOnly
-                            ? AppTypography.sizeSubtitle
-                            : AppTypography.sizeBody,
-                        letterSpacing: AppTypography.trackingNormal,
+                            ? Dimensions.sizeSubtitle
+                            : Dimensions.sizeBody,
+                        letterSpacing: Dimensions.trackingNormal,
                       ),
                     ),
 
                     if (!entry.soloOnly && entry.team.isNotEmpty) ...[
-                      const SizedBox(height: AppSpacing.xxs),
+                      const SizedBox(height: Dimensions.xxs),
                       Text(
                         entry.team,
                         style: TextStyle(
                           color: entry.isTbd
                               ? AppColors.textMuted
                               : accentColor.withOpacity(0.75),
-                          fontSize: AppTypography.sizeCaption,
-                          fontWeight: AppTypography.semiBold,
+                          fontSize: Dimensions.sizeCaption,
+                          fontWeight: Dimensions.semiBold,
                         ),
                       ),
                     ],
 
                     if (!entry.soloOnly && entry.detail.isNotEmpty) ...[
-                      const SizedBox(height: AppSpacing.xxs + 1),
+                      const SizedBox(height: Dimensions.xxs + 1),
                       Text(
                         entry.detail,
                         style: const TextStyle(
                           color: AppColors.textMuted,
-                          fontSize: AppTypography.sizeTiny,
-                          fontWeight: AppTypography.medium,
+                          fontSize: Dimensions.sizeTiny,
+                          fontWeight: Dimensions.medium,
                         ),
                       ),
                     ],
@@ -1099,18 +1099,18 @@ class _AwardEntryCard extends StatelessWidget {
                     entry.season.toUpperCase(),
                     style: TextStyle(
                       color: color,
-                      fontWeight: AppTypography.extraBold,
-                      fontSize: AppTypography.sizeTiny,
-                      letterSpacing: AppTypography.trackingWidest,
+                      fontWeight: Dimensions.extraBold,
+                      fontSize: Dimensions.sizeTiny,
+                      letterSpacing: Dimensions.trackingWidest,
                     ),
                   ),
-                  const SizedBox(height: AppSpacing.xxs),
+                  const SizedBox(height: Dimensions.xxs),
 
                   if (isChamp)
                     Container(
                       padding: const EdgeInsets.symmetric(
-                        horizontal: AppSpacing.xs,
-                        vertical: AppSpacing.xxs,
+                        horizontal: Dimensions.xs,
+                        vertical: Dimensions.xxs,
                       ),
                       decoration: BoxDecoration(
                         gradient: LinearGradient(
@@ -1121,7 +1121,7 @@ class _AwardEntryCard extends StatelessWidget {
                           begin: Alignment.topLeft,
                           end: Alignment.bottomRight,
                         ),
-                        borderRadius: AppRadius.borderXs,
+                        borderRadius: Dimensions.borderXs,
                         boxShadow: [
                           BoxShadow(
                             color: accentColor.withOpacity(0.35),
@@ -1137,16 +1137,16 @@ class _AwardEntryCard extends StatelessWidget {
                           Text(
                             badge,
                             style: const TextStyle(
-                              fontSize: AppTypography.sizeBody,
+                              fontSize: Dimensions.sizeBody,
                             ),
                           ),
-                          const SizedBox(width: AppSpacing.xxs),
+                          const SizedBox(width: Dimensions.xxs),
                           Text(
                             "CHAMPIONS",
                             style: TextStyle(
-                              fontSize: AppTypography.sizeTiny,
-                              fontWeight: AppTypography.black,
-                              letterSpacing: AppTypography.trackingWider,
+                              fontSize: Dimensions.sizeTiny,
+                              fontWeight: Dimensions.black,
+                              letterSpacing: Dimensions.trackingWider,
                               color: AppColors.bg,
                             ),
                           ),
@@ -1157,7 +1157,7 @@ class _AwardEntryCard extends StatelessWidget {
                     Text(
                       badge,
                       style: TextStyle(
-                        fontSize: AppTypography.sizeTitle,
+                        fontSize: Dimensions.sizeTitle,
                         color: AppColors.textMuted,
                       ),
                     ),
@@ -1179,14 +1179,14 @@ class _TbdAvatar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: AppSizing.avatarMd,
-      height: AppSizing.avatarMd,
+      width: Dimensions.avatarMd,
+      height: Dimensions.avatarMd,
       decoration: BoxDecoration(
         shape: BoxShape.circle,
         color: AppColors.bgSurface,
         border: Border.all(
           color: AppColors.glassBorder,
-          width: AppSizing.borderThick,
+          width: Dimensions.borderThick,
         ),
       ),
       alignment: Alignment.center,
@@ -1194,8 +1194,8 @@ class _TbdAvatar extends StatelessWidget {
         "?",
         style: TextStyle(
           color: AppColors.textMuted,
-          fontSize: AppTypography.sizeHeading,
-          fontWeight: AppTypography.black,
+          fontSize: Dimensions.sizeHeading,
+          fontWeight: Dimensions.black,
         ),
       ),
     );

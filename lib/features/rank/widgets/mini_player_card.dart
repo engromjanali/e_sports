@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../../core/theme/app_theme.dart';
+import 'package:e_sports/core/utils/dimensions.dart';
 import '../../../core/widgets/glass_card_widget.dart';
 import '../../../core/widgets/player_avater.dart';
 import "../../../core/controllers/app_data_controller.dart";
@@ -19,8 +19,8 @@ class MiniPlayerCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GlassCardWidget(
-      radius: AppRadius.card,
-      padding: EdgeInsets.symmetric(horizontal: AppSpacing.md, vertical: AppSpacing.sm),
+      radius: Dimensions.radiusCardValue,
+      padding: EdgeInsets.symmetric(horizontal: Dimensions.md, vertical: Dimensions.sm),
       borderColor: AppColors.white.withOpacity(0.05),
       child: Row(
         children: [
@@ -44,20 +44,20 @@ class MiniPlayerCard extends StatelessWidget {
                 "${player.rank}",
                 style: TextStyle(
                   fontSize: 10,
-                  fontWeight: AppTypography.black,
+                  fontWeight: Dimensions.black,
                   color: player.rank <= 3 ? AppColors.neonGold : AppColors.white,
                 ),
               ),
             ),
           ),
-          SizedBox(width: AppSpacing.md),
+          SizedBox(width: Dimensions.md),
 
           PlayerAvatarWidget(
             name: player.name,
             size: 40,
             borderColor: AppColors.white.withOpacity(0.1),
           ),
-          SizedBox(width: AppSpacing.md),
+          SizedBox(width: Dimensions.md),
 
           Expanded(
             child: Column(
@@ -67,8 +67,8 @@ class MiniPlayerCard extends StatelessWidget {
                 Text(
                   player.name.toUpperCase(),
                   style: TextStyle(
-                    fontSize: AppTypography.sizeCaption,
-                    fontWeight: AppTypography.black,
+                    fontSize: Dimensions.sizeCaption,
+                    fontWeight: Dimensions.black,
                     color: AppColors.white,
                   ),
                   maxLines: 1,
@@ -79,7 +79,7 @@ class MiniPlayerCard extends StatelessWidget {
                   style: TextStyle(
                     fontSize: 9,
                     color: AppColors.white.withOpacity(0.4),
-                    fontWeight: AppTypography.bold,
+                    fontWeight: Dimensions.bold,
                   ),
                 ),
               ],
@@ -113,7 +113,7 @@ class _Divider extends StatelessWidget {
     return Container(
       width: 1,
       height: 12,
-      margin: EdgeInsets.symmetric(horizontal: AppSpacing.sm),
+      margin: EdgeInsets.symmetric(horizontal: Dimensions.sm),
       color: AppColors.white.withOpacity(0.1),
     );
   }
@@ -134,7 +134,7 @@ class _StatStandard extends StatelessWidget {
           label,
           style: TextStyle(
             fontSize: 8,
-            fontWeight: AppTypography.bold,
+            fontWeight: Dimensions.bold,
             color: AppColors.white.withOpacity(0.3),
           ),
         ),
@@ -142,7 +142,7 @@ class _StatStandard extends StatelessWidget {
           value,
           style: TextStyle(
             fontSize: isHero ? 12 : 10,
-            fontWeight: AppTypography.black,
+            fontWeight: Dimensions.black,
             color: isGold ? AppColors.neonGold : AppColors.white,
           ),
         ),

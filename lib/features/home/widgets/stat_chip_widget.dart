@@ -1,4 +1,4 @@
-import '../../../core/theme/app_theme.dart';
+import 'package:e_sports/core/utils/dimensions.dart';
 import 'package:flutter/material.dart';
 
 class StatChipWidget extends StatelessWidget {
@@ -18,19 +18,19 @@ class StatChipWidget extends StatelessWidget {
     return Expanded(
       child: Container(
         padding: EdgeInsets.symmetric(
-          vertical: AppSpacing.sm + 1,
-          horizontal: AppSpacing.xs + 1,
+          vertical: Dimensions.sm + 1,
+          horizontal: Dimensions.xs + 1,
         ),
         decoration: BoxDecoration(
           color: highlight
               ? AppColors.neonGold.withOpacity(AppColors.opacity15)
               : AppColors.white.withOpacity(AppColors.opacity7),
-          borderRadius: AppRadius.borderMd,
+          borderRadius: Dimensions.borderMd,
           border: Border.all(
             color: highlight
                 ? AppColors.neonGold.withOpacity(AppColors.opacity35)
                 : AppColors.white.withOpacity(AppColors.opacity8),
-            width: AppSizing.borderThin,
+            width: Dimensions.borderThin,
           ),
         ),
         child: Column(
@@ -38,17 +38,17 @@ class StatChipWidget extends StatelessWidget {
             Text(
               value,
               style: TextStyle(
-                fontSize: AppTypography.sizeBody2,
-                fontWeight: AppTypography.black,
+                fontSize: Dimensions.sizeBody2,
+                fontWeight: Dimensions.black,
                 color: color,
               ),
             ),
-            SizedBox(height: AppSpacing.xxs / 2),
+            SizedBox(height: Dimensions.xxs / 2),
             Text(
               label,
               style: TextStyle(
-                fontSize: AppTypography.sizeOverSmall,
-                fontWeight: AppTypography.bold,
+                fontSize: Dimensions.sizeOverSmall,
+                fontWeight: Dimensions.bold,
                 color: AppColors.white.withOpacity(AppColors.opacity40),
                 letterSpacing: 0.8,
               ),

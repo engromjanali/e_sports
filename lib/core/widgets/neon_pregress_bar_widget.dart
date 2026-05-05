@@ -1,4 +1,4 @@
-import '../theme/app_theme.dart';
+import 'package:e_sports/core/utils/dimensions.dart';
 import 'package:flutter/material.dart';
 
 class NeonProgressBarWidget extends StatelessWidget {
@@ -12,7 +12,7 @@ class NeonProgressBarWidget extends StatelessWidget {
     required this.value,
     required this.max,
     this.color = AppColors.neonGold,
-    this.height = AppSizing.progressBarDefault,
+    this.height = Dimensions.progressBarDefault,
   });
 
   @override

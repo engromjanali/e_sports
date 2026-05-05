@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../../core/controllers/theme_controller.dart';
-import '../../../core/theme/app_theme.dart';
+import 'package:e_sports/core/utils/dimensions.dart';
 
 class EditProfileScreen extends StatefulWidget {
   const EditProfileScreen({super.key});
@@ -54,19 +54,19 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           "Edit Profile",
           style: TextStyle(
             color: titleColor,
-            fontWeight: AppTypography.black,
+            fontWeight: Dimensions.black,
           ),
         ),
       ),
       body: SafeArea(
         child: SingleChildScrollView(
-          padding: EdgeInsets.all(AppSpacing.screenPadding),
+          padding: EdgeInsets.all(Dimensions.screenPadding),
           child: Container(
             width: double.infinity,
-            padding: EdgeInsets.all(AppSpacing.lg),
+            padding: EdgeInsets.all(Dimensions.lg),
             decoration: BoxDecoration(
               color: cardColor,
-              borderRadius: AppRadius.borderLg,
+              borderRadius: Dimensions.borderLg,
               border: Border.all(color: borderColor),
             ),
             child: Column(
@@ -75,20 +75,20 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 Text(
                   "Basic Details",
                   style: TextStyle(
-                    fontSize: AppTypography.sizeTitleLarge,
-                    fontWeight: AppTypography.black,
+                    fontSize: Dimensions.sizeTitleLarge,
+                    fontWeight: Dimensions.black,
                     color: titleColor,
                   ),
                 ),
-                SizedBox(height: AppSpacing.xs),
+                SizedBox(height: Dimensions.xs),
                 Text(
                   "Update the information shown in your account section.",
                   style: TextStyle(
-                    fontSize: AppTypography.sizeCaption,
+                    fontSize: Dimensions.sizeCaption,
                     color: subtitleColor,
                   ),
                 ),
-                SizedBox(height: AppSpacing.lg),
+                SizedBox(height: Dimensions.lg),
                 _ProfileField(
                   label: "Full Name",
                   controller: _nameController,
@@ -96,7 +96,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   subtitleColor: subtitleColor,
                   borderColor: borderColor,
                 ),
-                SizedBox(height: AppSpacing.md),
+                SizedBox(height: Dimensions.md),
                 _ProfileField(
                   label: "Email",
                   controller: _emailController,
@@ -104,7 +104,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   subtitleColor: subtitleColor,
                   borderColor: borderColor,
                 ),
-                SizedBox(height: AppSpacing.md),
+                SizedBox(height: Dimensions.md),
                 _ProfileField(
                   label: "Gamer Tag",
                   controller: _tagController,
@@ -112,7 +112,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   subtitleColor: subtitleColor,
                   borderColor: borderColor,
                 ),
-                SizedBox(height: AppSpacing.md),
+                SizedBox(height: Dimensions.md),
                 _ProfileField(
                   label: "Bio",
                   controller: _bioController,
@@ -121,7 +121,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   borderColor: borderColor,
                   maxLines: 4,
                 ),
-                SizedBox(height: AppSpacing.lg),
+                SizedBox(height: Dimensions.lg),
                 SizedBox(
                   width: double.infinity,
                   child: ElevatedButton(
@@ -132,21 +132,21 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                         snackPosition: SnackPosition.BOTTOM,
                         backgroundColor: AppColors.neonGoldDim,
                         colorText: Colors.black,
-                        margin: EdgeInsets.all(AppSpacing.md),
+                        margin: EdgeInsets.all(Dimensions.md),
                       );
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: AppColors.neonGoldDim,
                       foregroundColor: Colors.black,
-                      padding: EdgeInsets.symmetric(vertical: AppSpacing.md),
+                      padding: EdgeInsets.symmetric(vertical: Dimensions.md),
                       shape: RoundedRectangleBorder(
-                        borderRadius: AppRadius.borderMd,
+                        borderRadius: Dimensions.borderMd,
                       ),
                     ),
                     child: Text(
                       "Save Changes",
                       style: TextStyle(
-                        fontWeight: AppTypography.black,
+                        fontWeight: Dimensions.black,
                       ),
                     ),
                   ),
@@ -185,29 +185,29 @@ class _ProfileField extends StatelessWidget {
         Text(
           label,
           style: TextStyle(
-            fontSize: AppTypography.sizeCaption,
-            fontWeight: AppTypography.extraBold,
+            fontSize: Dimensions.sizeCaption,
+            fontWeight: Dimensions.extraBold,
             color: subtitleColor,
           ),
         ),
-        SizedBox(height: AppSpacing.xs),
+        SizedBox(height: Dimensions.xs),
         TextField(
           controller: controller,
           maxLines: maxLines,
           style: TextStyle(
             color: titleColor,
-            fontSize: AppTypography.sizeBody,
+            fontSize: Dimensions.sizeBody,
           ),
           decoration: InputDecoration(
             isDense: true,
             filled: true,
             fillColor: Colors.transparent,
             enabledBorder: OutlineInputBorder(
-              borderRadius: AppRadius.borderMd,
+              borderRadius: Dimensions.borderMd,
               borderSide: BorderSide(color: borderColor),
             ),
             focusedBorder: OutlineInputBorder(
-              borderRadius: AppRadius.borderMd,
+              borderRadius: Dimensions.borderMd,
               borderSide: const BorderSide(color: AppColors.neonGoldDim),
             ),
           ),

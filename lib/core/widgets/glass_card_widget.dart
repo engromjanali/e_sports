@@ -1,5 +1,5 @@
 import 'dart:ui';
-import '../theme/app_theme.dart';
+import 'package:e_sports/core/utils/dimensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 
@@ -18,7 +18,7 @@ class GlassCardWidget extends StatelessWidget {
     super.key,
     required this.child,
     this.padding,
-    this.radius = AppRadius.xl,
+    this.radius = Dimensions.radiusXlValue,
     this.borderColor,
     this.shadows,
     this.gradient,
@@ -37,9 +37,9 @@ class GlassCardWidget extends StatelessWidget {
         borderRadius: BorderRadius.circular(radius),
         border: Border.all(
           color: borderColor ?? AppColors.glassBorder,
-          width: AppSizing.borderThin,
+          width: Dimensions.borderThin,
         ),
-        boxShadow: shadows ?? AppElevation.high,
+        boxShadow: shadows ?? Dimensions.high,
       ),
       child: child,
     );
@@ -59,7 +59,7 @@ class GlassCardWidget extends StatelessWidget {
       child: ClipRRect(
         borderRadius: BorderRadius.circular(radius),
         child: BackdropFilter(
-          filter: ImageFilter.blur(sigmaX: AppElevation.glassBlur, sigmaY: AppElevation.glassBlur),
+          filter: ImageFilter.blur(sigmaX: Dimensions.glassBlur, sigmaY: Dimensions.glassBlur),
           child: container,
         ),
       ),

@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:app_links/app_links.dart';
 import 'package:e_sports/core/widgets/route_not_found_screen.dart';
 import 'package:flutter/foundation.dart';
-import 'core/theme/app_theme.dart';
+import 'package:e_sports/core/utils/dimensions.dart';
 import 'core/helper/route_helper.dart';
 import 'core/controllers/theme_controller.dart';
 import 'firebase_options.dart';
@@ -113,7 +113,7 @@ class _GameArenaAppState extends State<GameArenaApp> {
             color: Theme.of(context).scaffoldBackgroundColor,
             alignment: Alignment.topCenter,
             child: ConstrainedBox(
-              constraints: const BoxConstraints(maxWidth: AppBreakpoints.webMaxWidth),
+              constraints: const BoxConstraints(maxWidth: Dimensions.webMaxWidth),
               child: child ?? const SizedBox.shrink(),
             ),
           );

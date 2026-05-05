@@ -1,5 +1,5 @@
 // import 'package:flutter/material.dart';
-// import '../../../core/theme/app_theme.dart';
+// import 'package:e_sports/core/utils/dimensions.dart';
 // import '../../../core/widgets/glass_card_widget.dart';
 // import '../../../core/widgets/player_avater.dart';
 // import '../../../core/widgets/player_tags_widget.dart';
@@ -28,7 +28,7 @@
 //     final badgeLabel = _getBadgeLabel();
 
 //     return GlassCardWidget(
-//       radius: AppRadius.hero,
+//       radius: Dimensions.radiusHeroValue,
 //       gradient: gradient,
 //       borderColor: accentColor.withOpacity(AppColors.opacity20),
 //       shadows: [
@@ -39,7 +39,7 @@
 //         )
 //       ],
 //       child: Container(
-//         padding: EdgeInsets.all(AppSpacing.xl),
+//         padding: EdgeInsets.all(Dimensions.xl),
 //         child: Stack(
 //           children: [
 //             // Decorative Background Glow
@@ -64,7 +64,7 @@
 //                 badgeLabel.split(' ')[0], // WEEK, MONTH, or SEASON
 //                 style: TextStyle(
 //                   fontSize: 80,
-//                   fontWeight: AppTypography.black,
+//                   fontWeight: Dimensions.black,
 //                   color: AppColors.white.withOpacity(0.03),
 //                   letterSpacing: -5,
 //                 ),
@@ -81,22 +81,22 @@
 //                     if (action != null) action! else Text(
 //                       "#${player.rank}",
 //                       style: TextStyle(
-//                         fontSize: AppTypography.sizeBody,
-//                         fontWeight: AppTypography.black,
+//                         fontSize: Dimensions.sizeBody,
+//                         fontWeight: Dimensions.black,
 //                         color: AppColors.white.withOpacity(AppColors.opacity50),
 //                       ),
 //                     ),
 //                   ],
 //                 ),
-//                 SizedBox(height: AppSpacing.xl),
+//                 SizedBox(height: Dimensions.xl),
 //                 Row(
 //                   children: [
 //                     PlayerAvatarWidget(
 //                       name: player.name,
-//                       size: AppSizing.avatarGiant,
+//                       size: Dimensions.avatarGiant,
 //                       borderColor: accentColor.withOpacity(AppColors.opacity40),
 //                     ),
-//                     SizedBox(width: AppSpacing.xl),
+//                     SizedBox(width: Dimensions.xl),
 //                     Expanded(
 //                       child: Column(
 //                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -104,14 +104,14 @@
 //                             Text(
 //                               player.name.toUpperCase(),
 //                               style: TextStyle(
-//                                 fontSize: AppTypography.sizeHeadingLg,
-//                                 fontWeight: AppTypography.black,
+//                                 fontSize: Dimensions.sizeHeadingLg,
+//                                 fontWeight: Dimensions.black,
 //                                 color: AppColors.white,
 //                                 letterSpacing: -0.5,
 //                                 height: 1.1,
 //                               ),
 //                             ),
-//                             SizedBox(height: AppSpacing.md),
+//                             SizedBox(height: Dimensions.md),
 //                             PlayerTagsWidget(
 //                               tags: player.tags,
 //                               accentColor: accentColor,
@@ -121,7 +121,7 @@
 //                     ),
 //                   ],
 //                 ),
-//                 SizedBox(height: AppSpacing.xxxl),
+//                 SizedBox(height: Dimensions.xxxl),
 //                 _StatsGrid(player: player, accentColor: accentColor),
 //               ],
 //             ),
@@ -171,17 +171,17 @@
 //   @override
 //   Widget build(BuildContext context) {
 //     return Container(
-//       padding: EdgeInsets.symmetric(horizontal: AppSpacing.md, vertical: AppSpacing.xs),
+//       padding: EdgeInsets.symmetric(horizontal: Dimensions.md, vertical: Dimensions.xs),
 //       decoration: BoxDecoration(
 //         color: color.withOpacity(AppColors.opacity15),
-//         borderRadius: AppRadius.borderSm,
+//         borderRadius: Dimensions.borderSm,
 //         border: Border.all(color: color.withOpacity(AppColors.opacity30)),
 //       ),
 //       child: Text(
 //         label,
 //         style: TextStyle(
-//           fontSize: AppTypography.sizeMicro,
-//           fontWeight: AppTypography.black,
+//           fontSize: Dimensions.sizeMicro,
+//           fontWeight: Dimensions.black,
 //           color: color,
 //           letterSpacing: 2.0,
 //         ),
@@ -223,18 +223,18 @@
 //         Text(
 //           label,
 //           style: TextStyle(
-//             fontSize: AppTypography.sizeOverSmall,
-//             fontWeight: AppTypography.bold,
+//             fontSize: Dimensions.sizeOverSmall,
+//             fontWeight: Dimensions.bold,
 //             color: AppColors.white.withOpacity(AppColors.opacity40),
 //             letterSpacing: 1.2,
 //           ),
 //         ),
-//         SizedBox(height: AppSpacing.xs),
+//         SizedBox(height: Dimensions.xs),
 //         Text(
 //           value,
 //           style: TextStyle(
-//             fontSize: isHighlight ? AppTypography.sizeHeading : AppTypography.sizeBodyLarge,
-//             fontWeight: AppTypography.black,
+//             fontSize: isHighlight ? Dimensions.sizeHeading : Dimensions.sizeBodyLarge,
+//             fontWeight: Dimensions.black,
 //             color: isHighlight ? (accentColor ?? AppColors.neonGold) : AppColors.white,
 //           ),
 //         ),
@@ -245,7 +245,7 @@
 
 
 import 'package:flutter/material.dart';
-import '../../../core/theme/app_theme.dart';
+import 'package:e_sports/core/utils/dimensions.dart';
 import '../../../core/widgets/glass_card_widget.dart';
 import '../../../core/widgets/player_avater.dart';
 import '../../../core/widgets/player_tags_widget.dart';
@@ -274,7 +274,7 @@ class PremiumHeroCard extends StatelessWidget {
     final badgeLabel = _getBadgeLabel();
 
     return GlassCardWidget(
-      radius: AppRadius.hero,
+      radius: Dimensions.radiusHeroValue,
       gradient: gradient,
       borderColor: accentColor.withOpacity(AppColors.opacity20),
       shadows: [
@@ -285,7 +285,7 @@ class PremiumHeroCard extends StatelessWidget {
         )
       ],
       child: Container(
-        padding: EdgeInsets.all(AppSpacing.xl),
+        padding: EdgeInsets.all(Dimensions.xl),
         child: Stack(
           children: [
             // ── Decorative Background Glow ──
@@ -310,7 +310,7 @@ class PremiumHeroCard extends StatelessWidget {
                 badgeLabel.split(' ')[0],
                 style: TextStyle(
                   fontSize: 80,
-                  fontWeight: AppTypography.black,
+                  fontWeight: Dimensions.black,
                   color: AppColors.white.withOpacity(0.03),
                   letterSpacing: -5,
                 ),
@@ -331,14 +331,14 @@ class PremiumHeroCard extends StatelessWidget {
                       Text(
                         "#${player.rank}",
                         style: TextStyle(
-                          fontSize: AppTypography.sizeBody,
-                          fontWeight: AppTypography.black,
+                          fontSize: Dimensions.sizeBody,
+                          fontWeight: Dimensions.black,
                           color: AppColors.white.withOpacity(AppColors.opacity50),
                         ),
                       ),
                   ],
                 ),
-                SizedBox(height: AppSpacing.xl),
+                SizedBox(height: Dimensions.xl),
 
                 // ── Avatar + Name ──
                 Row(
@@ -346,10 +346,10 @@ class PremiumHeroCard extends StatelessWidget {
                     PlayerAvatarWidget(
                       name: player.name,
                       imageUrl: player.player.imageUrl,
-                      size: AppSizing.avatarGiant,
+                      size: Dimensions.avatarGiant,
                       borderColor: accentColor.withOpacity(AppColors.opacity40),
                     ),
-                    SizedBox(width: AppSpacing.xl),
+                    SizedBox(width: Dimensions.xl),
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -357,8 +357,8 @@ class PremiumHeroCard extends StatelessWidget {
                           Text(
                             player.name.toUpperCase(),
                             style: TextStyle(
-                              fontSize: AppTypography.sizeHeadingLg,
-                              fontWeight: AppTypography.black,
+                              fontSize: Dimensions.sizeHeadingLg,
+                              fontWeight: Dimensions.black,
                               color: AppColors.white,
                               letterSpacing: -0.5,
                               height: 1.1,
@@ -366,7 +366,7 @@ class PremiumHeroCard extends StatelessWidget {
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                           ),
-                          SizedBox(height: AppSpacing.md),
+                          SizedBox(height: Dimensions.md),
                           PlayerTagsWidget(
                             tags: player.tags,
                             accentColor: accentColor,
@@ -376,7 +376,7 @@ class PremiumHeroCard extends StatelessWidget {
                     ),
                   ],
                 ),
-                SizedBox(height: AppSpacing.xxxl),
+                SizedBox(height: Dimensions.xxxl),
 
                 // ── Stats Row ──
                 _StatsGrid(player: player, accentColor: accentColor),
@@ -431,19 +431,19 @@ class _Badge extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: EdgeInsets.symmetric(
-        horizontal: AppSpacing.md,
-        vertical: AppSpacing.xs,
+        horizontal: Dimensions.md,
+        vertical: Dimensions.xs,
       ),
       decoration: BoxDecoration(
         color: color.withOpacity(AppColors.opacity15),
-        borderRadius: AppRadius.borderSm,
+        borderRadius: Dimensions.borderSm,
         border: Border.all(color: color.withOpacity(AppColors.opacity30)),
       ),
       child: Text(
         label,
         style: TextStyle(
-          fontSize: AppTypography.sizeMicro,
-          fontWeight: AppTypography.black,
+          fontSize: Dimensions.sizeMicro,
+          fontWeight: Dimensions.black,
           color: color,
           letterSpacing: 2.0,
         ),
@@ -486,7 +486,7 @@ class _StatDivider extends StatelessWidget {
     return Container(
       width: 1,
       height: 28,
-      margin: EdgeInsets.symmetric(horizontal: AppSpacing.sm),
+      margin: EdgeInsets.symmetric(horizontal: Dimensions.sm),
       color: AppColors.white.withOpacity(0.08),
     );
   }
@@ -513,22 +513,22 @@ class _StatItem extends StatelessWidget {
           Text(
             label,
             style: TextStyle(
-              fontSize: AppTypography.sizeOverSmall,
-              fontWeight: AppTypography.bold,
+              fontSize: Dimensions.sizeOverSmall,
+              fontWeight: Dimensions.bold,
               color: AppColors.white.withOpacity(AppColors.opacity40),
               letterSpacing: 1.0,
             ),
           ),
-          SizedBox(height: AppSpacing.xs),
+          SizedBox(height: Dimensions.xs),
           FittedBox(
             fit: BoxFit.scaleDown,
             child: Text(
               value,
               style: TextStyle(
                 fontSize: isHighlight
-                    ? AppTypography.sizeHeading
-                    : AppTypography.sizeBodyLarge,
-                fontWeight: AppTypography.black,
+                    ? Dimensions.sizeHeading
+                    : Dimensions.sizeBodyLarge,
+                fontWeight: Dimensions.black,
                 color: isHighlight
                     ? (accentColor ?? AppColors.neonGold)
                     : AppColors.white,

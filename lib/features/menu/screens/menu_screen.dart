@@ -3,7 +3,8 @@ import 'package:get/get.dart';
 
 import '../../../core/controllers/theme_controller.dart';
 import '../../../core/helper/route_helper.dart';
-import '../../../core/theme/app_theme.dart';
+import 'package:e_sports/core/utils/dimensions.dart';
+import 'package:e_sports/core/helper/responsive_helper.dart';
 import '../../../core/widgets/app_footer_widget.dart';
 import '../../../core/widgets/app_header_widget.dart';
 
@@ -42,7 +43,7 @@ class MenuScreen extends StatelessWidget {
               ),
               Expanded(
                 child: SingleChildScrollView(
-                  padding: EdgeInsets.all(AppSpacing.screenPadding),
+                  padding: EdgeInsets.all(Dimensions.screenPadding),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -72,7 +73,7 @@ class MenuScreen extends StatelessWidget {
                           ),
                         ],
                       ),
-                      SizedBox(height: AppSpacing.lg),
+                      SizedBox(height: Dimensions.lg),
                       _MenuSectionCard(
                         title: "Information",
                         titleColor: titleColor,
@@ -117,8 +118,8 @@ class MenuScreen extends StatelessWidget {
                           ),
                         ],
                       ),
-                      if (AppBreakpoints.isDesktop(context)) AppDesktopFooter(),
-                      SizedBox(height: AppSpacing.xl),
+                      if (ResponsiveHelper.isDesktop(context)) AppDesktopFooter(),
+                      SizedBox(height: Dimensions.xl),
                     ],
                   ),
                 ),
@@ -144,14 +145,14 @@ class MenuScreen extends StatelessWidget {
         return AlertDialog(
           backgroundColor: cardColor,
           shape: RoundedRectangleBorder(
-            borderRadius: AppRadius.borderLg,
+            borderRadius: Dimensions.borderLg,
             side: BorderSide(color: borderColor),
           ),
           title: Text(
             "Logout",
             style: TextStyle(
               color: titleColor,
-              fontWeight: AppTypography.black,
+              fontWeight: Dimensions.black,
             ),
           ),
           content: Text(
@@ -204,10 +205,10 @@ class _MenuSectionCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
-      padding: EdgeInsets.all(AppSpacing.lg),
+      padding: EdgeInsets.all(Dimensions.lg),
       decoration: BoxDecoration(
         color: backgroundColor,
-        borderRadius: AppRadius.borderLg,
+        borderRadius: Dimensions.borderLg,
         border: Border.all(color: borderColor),
       ),
       child: Column(
@@ -216,12 +217,12 @@ class _MenuSectionCard extends StatelessWidget {
           Text(
             title,
             style: TextStyle(
-              fontSize: AppTypography.sizeBodyLarge,
-              fontWeight: AppTypography.black,
+              fontSize: Dimensions.sizeBodyLarge,
+              fontWeight: Dimensions.black,
               color: titleColor,
             ),
           ),
-          SizedBox(height: AppSpacing.md),
+          SizedBox(height: Dimensions.md),
           ...children,
         ],
       ),
@@ -252,9 +253,9 @@ class _MenuTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: onTap,
-      borderRadius: AppRadius.borderMd,
+      borderRadius: Dimensions.borderMd,
       child: Padding(
-        padding: EdgeInsets.symmetric(vertical: AppSpacing.sm),
+        padding: EdgeInsets.symmetric(vertical: Dimensions.sm),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -263,12 +264,12 @@ class _MenuTile extends StatelessWidget {
               height: 42,
               decoration: BoxDecoration(
                 color: iconColor.withValues(alpha: 0.12),
-                borderRadius: AppRadius.borderMd,
+                borderRadius: Dimensions.borderMd,
               ),
               alignment: Alignment.center,
               child: Icon(icon, color: iconColor, size: 20),
             ),
-            SizedBox(width: AppSpacing.md),
+            SizedBox(width: Dimensions.md),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -278,23 +279,23 @@ class _MenuTile extends StatelessWidget {
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(
-                      fontSize: AppTypography.sizeBody,
-                      fontWeight: AppTypography.extraBold,
+                      fontSize: Dimensions.sizeBody,
+                      fontWeight: Dimensions.extraBold,
                       color: titleColor,
                     ),
                   ),
-                  SizedBox(height: AppSpacing.xxs),
+                  SizedBox(height: Dimensions.xxs),
                   Text(
                     subtitle,
                     style: TextStyle(
-                      fontSize: AppTypography.sizeCaption,
+                      fontSize: Dimensions.sizeCaption,
                       color: subtitleColor,
                     ),
                   ),
                 ],
               ),
             ),
-            SizedBox(width: AppSpacing.sm),
+            SizedBox(width: Dimensions.sm),
             Icon(
               Icons.arrow_forward_ios,
               color: subtitleColor,

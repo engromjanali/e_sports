@@ -1,6 +1,6 @@
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
-import '../../../core/theme/app_theme.dart';
+import 'package:e_sports/core/utils/dimensions.dart';
 import '../../../core/data/models/computed_player_stats.dart';
 import '../../../core/widgets/glass_card_widget.dart';
 import '../../../core/services/stats_service.dart';
@@ -26,11 +26,11 @@ class ProfileAnalyticsTab extends StatelessWidget {
     ].reduce(math.max);
 
     return SingleChildScrollView(
-      padding: EdgeInsets.all(AppSpacing.screenPadding),
+      padding: EdgeInsets.all(Dimensions.screenPadding),
       child: Column(
         children: [
           GlassCardWidget(
-            padding: EdgeInsets.all(AppSpacing.massive),
+            padding: EdgeInsets.all(Dimensions.massive),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -53,7 +53,7 @@ class ProfileAnalyticsTab extends StatelessWidget {
                   ),
                 ),
                 
-                const SizedBox(width: AppSpacing.xxxl),
+                const SizedBox(width: Dimensions.xxxl),
                 
                 // ── Right: Pie Chart ──
                 Expanded(
@@ -104,7 +104,7 @@ class ProfileAnalyticsTab extends StatelessWidget {
           
           // ── Points Trend Line Chart ──
           GlassCardWidget(
-            padding: EdgeInsets.all(AppSpacing.massive),
+            padding: EdgeInsets.all(Dimensions.massive),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -115,8 +115,8 @@ class ProfileAnalyticsTab extends StatelessWidget {
                       style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: AppColors.textMuted, letterSpacing: 1.0)),
                     Container(
                       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-                      decoration: BoxDecoration(color: AppColors.neonGold.withOpacity(0.1), borderRadius: AppRadius.borderPill),
-                      child: Text("GOLD FORM", style: TextStyle(fontSize: 8, fontWeight: AppTypography.black, color: AppColors.neonGold)),
+                      decoration: BoxDecoration(color: AppColors.neonGold.withOpacity(0.1), borderRadius: Dimensions.borderPill),
+                      child: Text("GOLD FORM", style: TextStyle(fontSize: 8, fontWeight: Dimensions.black, color: AppColors.neonGold)),
                     ),
                   ],
                 ),
@@ -176,10 +176,10 @@ class ProfileAnalyticsTab extends StatelessWidget {
 
   Widget _buildTrendStatCard(String label, String value, {Color? color, IconData? icon}) {
     return Container(
-      padding: EdgeInsets.symmetric(vertical: AppSpacing.lg),
+      padding: EdgeInsets.symmetric(vertical: Dimensions.lg),
       decoration: BoxDecoration(
         color: AppColors.white.withOpacity(0.03),
-        borderRadius: AppRadius.borderMd,
+        borderRadius: Dimensions.borderMd,
         border: Border.all(color: AppColors.glassBorder),
       ),
       child: Column(
@@ -191,7 +191,7 @@ class ProfileAnalyticsTab extends StatelessWidget {
                 Icon(icon, size: 14, color: color),
                 const SizedBox(width: 4),
               ],
-              Text(value, style: TextStyle(fontSize: 18, fontWeight: AppTypography.black, color: color ?? AppColors.white)),
+              Text(value, style: TextStyle(fontSize: 18, fontWeight: Dimensions.black, color: color ?? AppColors.white)),
             ],
           ),
           const SizedBox(height: 4),
@@ -212,7 +212,7 @@ class ProfileAnalyticsTab extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(label, style: const TextStyle(fontSize: 9, fontWeight: FontWeight.bold, color: AppColors.textMuted)),
-              Text("$val", style: TextStyle(fontSize: 9, fontWeight: AppTypography.black, color: AppColors.white)),
+              Text("$val", style: TextStyle(fontSize: 9, fontWeight: Dimensions.black, color: AppColors.white)),
             ],
           ),
           const SizedBox(height: 4),
@@ -221,7 +221,7 @@ class ProfileAnalyticsTab extends StatelessWidget {
               Container(
                 height: 6,
                 width: double.infinity,
-                decoration: BoxDecoration(color: AppColors.white.withOpacity(0.05), borderRadius: AppRadius.borderPill),
+                decoration: BoxDecoration(color: AppColors.white.withOpacity(0.05), borderRadius: Dimensions.borderPill),
               ),
               TweenAnimationBuilder<double>(
                 tween: Tween(begin: 0, end: scale),
@@ -232,7 +232,7 @@ class ProfileAnalyticsTab extends StatelessWidget {
                     width: totalWidth * value,
                     decoration: BoxDecoration(
                       gradient: LinearGradient(colors: [color.withOpacity(0.4), color]),
-                      borderRadius: AppRadius.borderPill,
+                      borderRadius: Dimensions.borderPill,
                       boxShadow: [BoxShadow(color: color.withOpacity(0.3), blurRadius: 4)],
                     ),
                   );
@@ -258,10 +258,10 @@ class ProfileAnalyticsTab extends StatelessWidget {
 
   Widget _buildSummaryCard(String label, int count, double pct) {
     return GlassCardWidget(
-      padding: EdgeInsets.symmetric(vertical: AppSpacing.xl, horizontal: AppSpacing.md),
+      padding: EdgeInsets.symmetric(vertical: Dimensions.xl, horizontal: Dimensions.md),
       child: Column(
         children: [
-          Text("$count", style: TextStyle(fontSize: 24, fontWeight: AppTypography.black, color: AppColors.white)),
+          Text("$count", style: TextStyle(fontSize: 24, fontWeight: Dimensions.black, color: AppColors.white)),
           const SizedBox(height: 4),
           Text(label, style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: AppColors.textMuted, letterSpacing: 0.5)),
           const SizedBox(height: 4),

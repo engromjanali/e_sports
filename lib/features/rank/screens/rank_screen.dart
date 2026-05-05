@@ -1,4 +1,4 @@
-import '../../../core/theme/app_theme.dart';
+import 'package:e_sports/core/utils/dimensions.dart';
 import '../../../core/widgets/app_header_widget.dart';
 import '../controllers/rank_controller.dart';
 import '../widgets/ranking_view_widget.dart';
@@ -26,18 +26,18 @@ class LeaderboardScreen extends StatelessWidget {
           onMenuTap: onMenuTap,
         ),
         
-        SizedBox(height: AppSpacing.md),
+        SizedBox(height: Dimensions.md),
 
         // Custom animated toggle
         Padding(
-          padding: EdgeInsets.symmetric(horizontal: AppSpacing.screenPadding),
+          padding: EdgeInsets.symmetric(horizontal: Dimensions.screenPadding),
           child: Obx(() => CustomSegmentedToggle(
             options: const ["PLAYER", "SCORER"],
             selectedIndex: controller.tabIndex,
             onSelected: controller.setTabIndex,
           )),
         ),
-        SizedBox(height: AppSpacing.md),
+        SizedBox(height: Dimensions.md),
 
         Expanded(
           child: Obx(() => AnimatedSwitcher(

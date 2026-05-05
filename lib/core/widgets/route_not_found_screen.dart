@@ -1,7 +1,5 @@
-import 'package:e_sports/core/constants/app_colors.dart';
 import 'package:e_sports/core/helper/route_helper.dart';
-import 'package:e_sports/core/theme/app_spacing.dart';
-import 'package:e_sports/core/theme/app_typography.dart';
+import 'package:e_sports/core/utils/dimensions.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_navigation/src/extension_navigation.dart';
@@ -15,7 +13,7 @@ class RouteNotFoundScreen extends StatelessWidget {
       backgroundColor: AppColors.bg,
       body: Center(
         child: Padding(
-          padding: AppSpacing.screenAll,
+          padding: Dimensions.screenAll,
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -23,11 +21,11 @@ class RouteNotFoundScreen extends StatelessWidget {
                 'Link not found',
                 style: TextStyle(
                   color: AppColors.white,
-                  fontSize: AppTypography.sizeHeading,
-                  fontWeight: AppTypography.black,
+                  fontSize: Dimensions.sizeHeading,
+                  fontWeight: Dimensions.black,
                 ),
               ),
-              SizedBox(height: AppSpacing.md),
+              SizedBox(height: Dimensions.md),
               TextButton(
                 onPressed: () => Get.offAllNamed(RouteHelper.home),
                 child: const Text('Go to home'),

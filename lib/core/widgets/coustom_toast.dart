@@ -36,7 +36,7 @@ class CustomToast extends StatelessWidget {
             ),
             padding: padding,
             margin: EdgeInsets.only(
-              right: ResponsiveHelper.isDesktop(Get.context) ? Get.context!.width * 0.7 : Dimensions.paddingSizeLarge,
+              right: ResponsiveHelper.isDesktop(Get.context!) ? Get.context!.width * 0.7 : Dimensions.paddingSizeLarge,
               left: Dimensions.paddingSizeLarge,
             ),
             child: Row(mainAxisSize: MainAxisSize.min, children: [

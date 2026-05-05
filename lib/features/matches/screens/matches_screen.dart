@@ -1,4 +1,5 @@
-import '../../../core/theme/app_theme.dart';
+import 'package:e_sports/core/utils/dimensions.dart';
+import 'package:e_sports/core/helper/responsive_helper.dart';
 import '../../../core/controllers/app_data_controller.dart';
 import 'package:get/get.dart';
 import '../../../core/widgets/app_footer_widget.dart';
@@ -31,7 +32,7 @@ class _MatchesScreenState extends State<MatchesScreen> {
         onMenuTap: widget.onMenuTap,
       ),
       Expanded(child: SingleChildScrollView(
-        padding: AppSpacing.screenAll,
+        padding: Dimensions.screenAll,
         child: Column(children: [
           // Filter chips
           SingleChildScrollView(
@@ -39,7 +40,7 @@ class _MatchesScreenState extends State<MatchesScreen> {
             child: Row(children: [
               for (final f in ["live", "upcoming", "completed", "all"])
                 Padding(
-                  padding: EdgeInsets.only(right: AppSpacing.md),
+                  padding: EdgeInsets.only(right: Dimensions.md),
                   child: FilterChipWidget(
                     label: f[0].toUpperCase() + f.substring(1),
                     active: _filter == f,
@@ -51,13 +52,13 @@ class _MatchesScreenState extends State<MatchesScreen> {
                 ),
             ]),
           ),
-          SizedBox(height: AppSpacing.cardInnerPadding),
+          SizedBox(height: Dimensions.cardInnerPadding),
 
           ...filtered.map((m) => Padding(
-            padding: EdgeInsets.only(bottom: AppSpacing.lg),
+            padding: EdgeInsets.only(bottom: Dimensions.lg),
             child: FullMatchCard(match: m),
           )),
-          if (AppBreakpoints.isDesktop(context)) AppDesktopFooter(),
+          if (ResponsiveHelper.isDesktop(context)) AppDesktopFooter(),
         ]),
       )),
     ]);

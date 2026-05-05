@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../theme/app_theme.dart';
+import 'package:e_sports/core/utils/dimensions.dart';
 
 class ThemeController extends GetxController {
   static const String _themeModeKey = 'theme_mode';
@@ -18,7 +18,7 @@ class ThemeController extends GetxController {
   ThemeData get darkTheme => ThemeData(
         brightness: Brightness.dark,
         scaffoldBackgroundColor: AppColors.bg,
-        fontFamily: AppTypography.fontFamily,
+        fontFamily: Dimensions.fontFamily,
         fontFamilyFallback: const ['NotoSansBengali', 'NotoSans', 'Apple Color Emoji', 'Segoe UI Emoji', 'Noto Color Emoji'],
         colorScheme: const ColorScheme.dark(
           primary: AppColors.neonGold,
@@ -28,7 +28,7 @@ class ThemeController extends GetxController {
         textTheme: TextTheme(
           bodyMedium: TextStyle(
             color: AppColors.textPrimary,
-            fontFamily: AppTypography.fontFamily,
+            fontFamily: Dimensions.fontFamily,
           ),
         ),
         splashColor: Colors.transparent,
@@ -38,7 +38,7 @@ class ThemeController extends GetxController {
   ThemeData get lightTheme => ThemeData(
         brightness: Brightness.light,
         scaffoldBackgroundColor: const Color(0xFFF8FAFC),
-        fontFamily: AppTypography.fontFamily,
+        fontFamily: Dimensions.fontFamily,
         fontFamilyFallback: const ['NotoSansBengali', 'NotoSans', 'Apple Color Emoji', 'Segoe UI Emoji', 'Noto Color Emoji'],
         colorScheme: const ColorScheme.light(
           primary: AppColors.neonGoldDim,
@@ -49,7 +49,7 @@ class ThemeController extends GetxController {
         textTheme: TextTheme(
           bodyMedium: TextStyle(
             color: const Color(0xFF0F172A),
-            fontFamily: AppTypography.fontFamily,
+            fontFamily: Dimensions.fontFamily,
           ),
         ),
         splashColor: Colors.transparent,

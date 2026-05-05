@@ -1,4 +1,4 @@
-import '../../../core/theme/app_theme.dart';
+import 'package:e_sports/core/utils/dimensions.dart';
 import "../../../core/controllers/app_data_controller.dart";
 import "../../../core/data/models/match_model.dart";
 import "package:get/get.dart";
@@ -14,8 +14,8 @@ class MatchMiniCard extends StatelessWidget {
     final isLive = match.status == "live";
     return GlassCardWidget(
       padding: EdgeInsets.symmetric(
-        horizontal: AppSpacing.cardInnerPadding,
-        vertical: AppSpacing.body2,
+        horizontal: Dimensions.cardInnerPadding,
+        vertical: Dimensions.body2,
       ),
       borderColor: isLive
           ? AppColors.neonRed.withOpacity(AppColors.opacity30)
@@ -24,47 +24,47 @@ class MatchMiniCard extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Row(children: [
-            Text("⚽", style: TextStyle(fontSize: AppTypography.sizeHeadingLg + 2)), // Default emoji
-            SizedBox(width: AppSpacing.md),
+            Text("⚽", style: TextStyle(fontSize: Dimensions.sizeHeadingLg + 2)), // Default emoji
+            SizedBox(width: Dimensions.md),
             Text(match.team1,
                 style: TextStyle(
-                    fontSize: AppTypography.sizeBody,
-                    fontWeight: AppTypography.bold,
+                    fontSize: Dimensions.sizeBody,
+                    fontWeight: Dimensions.bold,
                     color: AppColors.textPrimary)),
           ]),
           Column(children: [
             Text(match.date, style: TextStyle(
-              fontSize: AppTypography.sizeCaption,
+              fontSize: Dimensions.sizeCaption,
               color: AppColors.textMuted,
             )),
             Text(match.time,
                 style: TextStyle(
-                    fontSize: AppTypography.sizeBody2,
-                    fontWeight: AppTypography.extraBold,
+                    fontSize: Dimensions.sizeBody2,
+                    fontWeight: Dimensions.extraBold,
                     color: AppColors.textPrimary)),
             if (isLive)
               Row(children: [
                 Container(
-                    width: AppSizing.dotMd,
-                    height: AppSizing.dotMd,
+                    width: Dimensions.dotMd,
+                    height: Dimensions.dotMd,
                     decoration: const BoxDecoration(
                         shape: BoxShape.circle, color: AppColors.neonRed)),
-                SizedBox(width: AppSpacing.xs),
+                SizedBox(width: Dimensions.xs),
                 Text("LIVE",
                     style: TextStyle(
-                        fontSize: AppTypography.sizeCaption,
+                        fontSize: Dimensions.sizeCaption,
                         color: AppColors.neonRed,
-                        fontWeight: AppTypography.extraBold)),
+                        fontWeight: Dimensions.extraBold)),
               ]),
           ]),
           Row(children: [
             Text(match.team2,
                 style: TextStyle(
-                    fontSize: AppTypography.sizeBody,
-                    fontWeight: AppTypography.bold,
+                    fontSize: Dimensions.sizeBody,
+                    fontWeight: Dimensions.bold,
                     color: AppColors.textPrimary)),
-            SizedBox(width: AppSpacing.md),
-            Text("⚽", style: TextStyle(fontSize: AppTypography.sizeHeadingLg + 2)),
+            SizedBox(width: Dimensions.md),
+            Text("⚽", style: TextStyle(fontSize: Dimensions.sizeHeadingLg + 2)),
           ]),
         ],
       ),

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../theme/app_theme.dart';
+import 'package:e_sports/core/utils/dimensions.dart';
 
 class CustomSegmentedToggle extends StatefulWidget {
   final List<String> options;
@@ -22,10 +22,10 @@ class _CustomSegmentedToggleState extends State<CustomSegmentedToggle> {
   Widget build(BuildContext context) {
     return Container(
       height: 48,
-      padding: EdgeInsets.all(AppSpacing.xs),
+      padding: EdgeInsets.all(Dimensions.xs),
       decoration: BoxDecoration(
         color: AppColors.bgSurface.withOpacity(0.5),
-        borderRadius: AppRadius.borderPill,
+        borderRadius: Dimensions.borderPill,
         border: Border.all(color: AppColors.white.withOpacity(0.1)),
       ),
       child: LayoutBuilder(
@@ -50,7 +50,7 @@ class _CustomSegmentedToggleState extends State<CustomSegmentedToggle> {
                   height: double.infinity,
                   decoration: BoxDecoration(
                     gradient: AppColors.blueHeroGradient,
-                    borderRadius: AppRadius.borderPill,
+                    borderRadius: Dimensions.borderPill,
                     boxShadow: [
                       BoxShadow(
                         color: AppColors.neonBlue.withOpacity(0.3),
@@ -74,8 +74,8 @@ class _CustomSegmentedToggleState extends State<CustomSegmentedToggle> {
                         child: AnimatedDefaultTextStyle(
                           duration: const Duration(milliseconds: 200),
                           style: TextStyle(
-                            fontSize: AppTypography.sizeCaption,
-                            fontWeight: isSelected ? AppTypography.black : AppTypography.bold,
+                            fontSize: Dimensions.sizeCaption,
+                            fontWeight: isSelected ? Dimensions.black : Dimensions.bold,
                             color: isSelected ? AppColors.white : AppColors.textMuted,
                             letterSpacing: 1.2,
                           ),

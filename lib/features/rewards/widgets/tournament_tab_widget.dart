@@ -2,7 +2,7 @@ import '../../../core/controllers/app_data_controller.dart';
 import '../../../core/data/models/tournament_model.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
-import '../../../core/theme/app_theme.dart';
+import 'package:e_sports/core/utils/dimensions.dart';
 import '../../../core/widgets/section_heading_widget.dart';
 import '../../../core/widgets/glass_card_widget.dart';
 import '../../../core/widgets/neon_pregress_bar_widget.dart';
@@ -35,8 +35,8 @@ class TournamentTabWidget extends StatelessWidget {
 
     return SingleChildScrollView(
       padding: EdgeInsets.fromLTRB(
-        AppSpacing.screenPadding, AppSpacing.cardOuterGap,
-        AppSpacing.screenPadding, AppSpacing.giant,
+        Dimensions.screenPadding, Dimensions.cardOuterGap,
+        Dimensions.screenPadding, Dimensions.giant,
       ),
       child: Column(children: [
         // Tournament selector
@@ -55,15 +55,15 @@ class TournamentTabWidget extends StatelessWidget {
                   onTap: () => onSelTrn(i),
                   child: AnimatedContainer(
                     duration: const Duration(milliseconds: 180),
-                    margin: EdgeInsets.only(right: AppSpacing.md),
+                    margin: EdgeInsets.only(right: Dimensions.md),
                     padding: EdgeInsets.symmetric(
-                      horizontal: AppSpacing.cardInnerPadding,
-                      vertical: AppSpacing.md,
+                      horizontal: Dimensions.cardInnerPadding,
+                      vertical: Dimensions.md,
                     ),
                     decoration: BoxDecoration(
                       gradient: active ? AppColors.blueGradient : null,
                       color: active ? null : AppColors.bgSurface,
-                      borderRadius: AppRadius.borderXl,
+                      borderRadius: Dimensions.borderXl,
                       border: Border.all(
                         color: active
                             ? AppColors.neonCyan.withOpacity(AppColors.opacity40)
@@ -73,46 +73,46 @@ class TournamentTabWidget extends StatelessWidget {
                           ? [
                               BoxShadow(
                                 color: AppColors.neonBlue.withOpacity(AppColors.opacity30),
-                                blurRadius: AppElevation.blurLg,
+                                blurRadius: Dimensions.blurLg,
                               )
                             ]
                           : [],
                     ),
                     child: Row(mainAxisSize: MainAxisSize.min, children: [
                       Container(
-                        width: AppSizing.dotLg,
-                        height: AppSizing.dotLg,
-                        margin: EdgeInsets.only(right: AppSpacing.iconGap),
+                        width: Dimensions.dotLg,
+                        height: Dimensions.dotLg,
+                        margin: EdgeInsets.only(right: Dimensions.iconGap),
                         decoration: BoxDecoration(
                             shape: BoxShape.circle,
                             color: statusColor,
                             boxShadow: [
                               BoxShadow(
                                 color: statusColor.withOpacity(AppColors.opacity60),
-                                blurRadius: AppRadius.xs,
+                                blurRadius: Dimensions.radiusXsValue,
                               )
                             ]),
                       ),
                       Text(t.name,
                           style: TextStyle(
-                              fontSize: AppTypography.sizeBody2,
-                              fontWeight: AppTypography.bold,
+                              fontSize: Dimensions.sizeBody2,
+                              fontWeight: Dimensions.bold,
                               color: active ? AppColors.white : AppColors.textSecondary)),
                     ]),
                   ),
                 );
               })),
         ),
-        SizedBox(height: AppSpacing.cardInnerPadding),
+        SizedBox(height: Dimensions.cardInnerPadding),
 
         // Tournament Hero Card
         _TournamentHeroCard(trn: trn),
-        SizedBox(height: AppSpacing.xl),
+        SizedBox(height: Dimensions.xl),
 
         // Register button
         if (trn.status != "ended")
           _RegisterSection(trn: trn, coins: coins, joined: joined, onJoin: onJoin),
-        SizedBox(height: AppSpacing.xl),
+        SizedBox(height: Dimensions.xl),
 
         // Rewards / Prize Pool
         SectionHeadingWidget(title: "🎁 Prize Pool"),
@@ -121,7 +121,7 @@ class TournamentTabWidget extends StatelessWidget {
             ...List.generate(trn.rewards.length, (i) {
               final r = trn.rewards[i];
               return Container(
-                padding: AppSpacing.cardPadding,
+                padding: Dimensions.cardPadding,
                 decoration: BoxDecoration(
                   border: i < trn.rewards.length - 1
                       ? Border(bottom: BorderSide(color: AppColors.glassBorder))
@@ -134,30 +134,30 @@ class TournamentTabWidget extends StatelessWidget {
                       : null,
                 ),
                 child: Row(children: [
-                  Text(r.icon, style: TextStyle(fontSize: AppTypography.sizeDisplay)),
-                  SizedBox(width: AppSpacing.xl),
+                  Text(r.icon, style: TextStyle(fontSize: Dimensions.sizeDisplay)),
+                  SizedBox(width: Dimensions.xl),
                   Expanded(
                       child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(r.pos,
                                 style: TextStyle(
-                                    fontSize: AppTypography.sizeBody,
-                                    fontWeight: AppTypography.extraBold,
+                                    fontSize: Dimensions.sizeBody,
+                                    fontWeight: Dimensions.extraBold,
                                     color: AppColors.textPrimary)),
                             Text(r.detail,
-                                style: AppTypography.mutedText(context).copyWith(
-                                  fontSize: AppTypography.sizeSmall,
+                                style: Dimensions.mutedText(context).copyWith(
+                                  fontSize: Dimensions.sizeSmall,
                                 )),
                           ])),
                   Container(
-                      width: AppSpacing.lg,
-                      height: AppSpacing.lg,
+                      width: Dimensions.lg,
+                      height: Dimensions.lg,
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
                         color: r.color,
                         boxShadow: [
-                          BoxShadow(color: r.color.withOpacity(AppColors.opacity60), blurRadius: AppSpacing.xs + 3)
+                          BoxShadow(color: r.color.withOpacity(AppColors.opacity60), blurRadius: Dimensions.xs + 3)
                         ],
                       )),
                 ]),
@@ -165,28 +165,28 @@ class TournamentTabWidget extends StatelessWidget {
             }),
             Container(
               padding: EdgeInsets.symmetric(
-                horizontal: AppSpacing.screenPadding,
-                vertical: AppSpacing.lg,
+                horizontal: Dimensions.screenPadding,
+                vertical: Dimensions.lg,
               ),
               decoration: BoxDecoration(
                 color: AppColors.neonCyan.withOpacity(AppColors.opacity5),
                 border: Border(top: BorderSide(color: AppColors.glassBorder)),
               ),
               child: Row(children: [
-                Text("🎁", style: TextStyle(fontSize: AppTypography.sizeSubtitle)),
-                SizedBox(width: AppSpacing.md),
+                Text("🎁", style: TextStyle(fontSize: Dimensions.sizeSubtitle)),
+                SizedBox(width: Dimensions.md),
                 Expanded(
                     child: Text(
                         "All prizes provided by the club & sponsor. Platform organises only.",
                         style: TextStyle(
-                          fontSize: AppTypography.sizeSmall,
+                          fontSize: Dimensions.sizeSmall,
                           color: AppColors.neonCyan,
                         ))),
               ]),
             ),
           ]),
         ),
-        SizedBox(height: AppSpacing.xl),
+        SizedBox(height: Dimensions.xl),
 
         // Tournament Bracket
         if (trn.bracket.isNotEmpty)
@@ -195,7 +195,7 @@ class TournamentTabWidget extends StatelessWidget {
         // Leaderboard
         SectionHeadingWidget(title: "📊 Season Standings"),
         _TournamentLeaderboard(),
-        SizedBox(height: AppSpacing.cardOuterGap),
+        SizedBox(height: Dimensions.cardOuterGap),
       ]),
     );
   }
@@ -215,15 +215,15 @@ class _TournamentHeroCard extends StatelessWidget {
     final fillPct = trn.slots > 0 ? trn.filled / trn.slots : 0.0;
 
     return Container(
-      padding: AppSpacing.hugePadding, // Use a custom padding or existing
+      padding: Dimensions.hugePadding, // Use a custom padding or existing
       decoration: BoxDecoration(
         gradient: AppColors.blueGradient,
-        borderRadius: AppRadius.borderXl,
+        borderRadius: Dimensions.borderXl,
         border: Border.all(color: AppColors.neonGold.withOpacity(AppColors.opacity20)),
         boxShadow: [
           BoxShadow(
             color: AppColors.neonBlue.withOpacity(AppColors.opacity20),
-            blurRadius: AppElevation.blurXl,
+            blurRadius: Dimensions.blurXl,
           )
         ],
       ),
@@ -231,76 +231,76 @@ class _TournamentHeroCard extends StatelessWidget {
         Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
           Row(children: [
             Container(
-              padding: EdgeInsets.symmetric(horizontal: AppSpacing.md, vertical: AppSpacing.xs + 1),
+              padding: EdgeInsets.symmetric(horizontal: Dimensions.md, vertical: Dimensions.xs + 1),
               decoration: BoxDecoration(
                 color: AppColors.neonGold.withOpacity(AppColors.opacity15),
-                borderRadius: AppRadius.borderSm,
+                borderRadius: Dimensions.borderSm,
                 border: Border.all(color: AppColors.neonGold.withOpacity(AppColors.opacity30)),
               ),
               child: Text(trn.tag,
                   style: TextStyle(
-                      fontSize: AppTypography.sizeCaption,
-                      fontWeight: AppTypography.extraBold,
+                      fontSize: Dimensions.sizeCaption,
+                      fontWeight: Dimensions.extraBold,
                       color: AppColors.neonGold,
-                      letterSpacing: AppTypography.trackingWider)),
+                      letterSpacing: Dimensions.trackingWider)),
             ),
           ]),
           Container(
-            padding: EdgeInsets.symmetric(horizontal: AppSpacing.lg, vertical: AppSpacing.xs + 1),
+            padding: EdgeInsets.symmetric(horizontal: Dimensions.lg, vertical: Dimensions.xs + 1),
             decoration: BoxDecoration(
               color: statusColor.withOpacity(AppColors.opacity12),
-              borderRadius: AppRadius.borderXl,
+              borderRadius: Dimensions.borderXl,
               border: Border.all(color: statusColor.withOpacity(AppColors.opacity30)),
             ),
             child: Text(trn.status.toUpperCase(),
                 style: TextStyle(
-                    fontSize: AppTypography.sizeCaption,
-                    fontWeight: AppTypography.extraBold,
+                    fontSize: Dimensions.sizeCaption,
+                    fontWeight: Dimensions.extraBold,
                     color: statusColor)),
           ),
         ]),
-        SizedBox(height: AppSpacing.xl),
+        SizedBox(height: Dimensions.xl),
         Text(trn.name,
             style: TextStyle(
-                fontSize: AppTypography.sizeHeadingLg,
-                fontWeight: AppTypography.black,
+                fontSize: Dimensions.sizeHeadingLg,
+                fontWeight: Dimensions.black,
                 color: AppColors.white)),
-        SizedBox(height: AppSpacing.xs + 1),
+        SizedBox(height: Dimensions.xs + 1),
         Text("🏅  ${trn.prize}",
             style: TextStyle(
-                fontSize: AppTypography.sizeBodyLarge,
+                fontSize: Dimensions.sizeBodyLarge,
                 color: AppColors.neonGold,
-                fontWeight: AppTypography.bold)),
-        SizedBox(height: AppSpacing.xs + 1),
+                fontWeight: Dimensions.bold)),
+        SizedBox(height: Dimensions.xs + 1),
         Text("🏟️  ${trn.sponsor}",
             style: TextStyle(
-              fontSize: AppTypography.sizeBody2,
+              fontSize: Dimensions.sizeBody2,
               color: AppColors.white.withOpacity(AppColors.opacity55),
             )),
-        SizedBox(height: AppSpacing.xl),
+        SizedBox(height: Dimensions.xl),
         Row(children: [
           _TrnInfoItem(icon: "📅", label: "Starts", value: trn.starts),
           _TrnInfoItem(icon: "⏰", label: "Reg. Closes", value: trn.regDeadline),
         ]),
-        SizedBox(height: AppSpacing.cardOuterGap),
+        SizedBox(height: Dimensions.cardOuterGap),
         Row(children: [
           _TrnInfoItem(icon: "🎮", label: "Format", value: trn.format),
           _TrnInfoItem(icon: "🪙", label: "Entry Cost", value: "${trn.cost} pts"),
         ]),
-        SizedBox(height: AppSpacing.cardInnerPadding),
+        SizedBox(height: Dimensions.cardInnerPadding),
         Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
           Text("👥  Slots Filled",
               style: TextStyle(
-                fontSize: AppTypography.sizeSmall,
+                fontSize: Dimensions.sizeSmall,
                 color: AppColors.white.withOpacity(AppColors.opacity55),
               )),
           Text("${trn.filled} / ${trn.slots}",
               style: TextStyle(
-                  fontSize: AppTypography.sizeBody2,
-                  fontWeight: AppTypography.extraBold,
+                  fontSize: Dimensions.sizeBody2,
+                  fontWeight: Dimensions.extraBold,
                   color: AppColors.neonGold)),
         ]),
-        SizedBox(height: AppSpacing.sm),
+        SizedBox(height: Dimensions.sm),
         NeonProgressBarWidget(
             value: fillPct * trn.slots,
             max: trn.slots.toDouble(),
@@ -318,21 +318,21 @@ class _TrnInfoItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Expanded(
       child: Padding(
-        padding: EdgeInsets.only(bottom: AppSpacing.xs + 1),
+        padding: EdgeInsets.only(bottom: Dimensions.xs + 1),
         child: Row(children: [
-          Text(icon, style: TextStyle(fontSize: AppTypography.sizeBodyLarge)),
-          SizedBox(width: AppSpacing.iconGap),
+          Text(icon, style: TextStyle(fontSize: Dimensions.sizeBodyLarge)),
+          SizedBox(width: Dimensions.iconGap),
           Expanded(
               child:
               Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                 Text(label,
                     style: TextStyle(
-                        fontSize: AppTypography.sizeCaption,
+                        fontSize: Dimensions.sizeCaption,
                         color: AppColors.textMuted)),
                 Text(value,
                     style: TextStyle(
-                        fontSize: AppTypography.sizeBody2,
-                        fontWeight: AppTypography.bold,
+                        fontSize: Dimensions.sizeBody2,
+                        fontWeight: Dimensions.bold,
                         color: AppColors.textPrimary)),
               ])),
         ]),
@@ -357,15 +357,15 @@ class _RegisterSection extends StatelessWidget {
 
     if (alreadyJoined) {
       return GlassCardWidget(
-        padding: EdgeInsets.symmetric(vertical: AppSpacing.xl),
+        padding: EdgeInsets.symmetric(vertical: Dimensions.xl),
         borderColor: AppColors.neonGreen.withOpacity(AppColors.opacity30),
         child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-          Text("✅", style: TextStyle(fontSize: AppTypography.sizeTitleLarge)),
-          SizedBox(width: AppSpacing.cardOuterGap),
+          Text("✅", style: TextStyle(fontSize: Dimensions.sizeTitleLarge)),
+          SizedBox(width: Dimensions.cardOuterGap),
           Text("You're Registered!",
               style: TextStyle(
-                  fontSize: AppTypography.sizeBodyLarge,
-                  fontWeight: AppTypography.extraBold,
+                  fontSize: Dimensions.sizeBodyLarge,
+                  fontWeight: Dimensions.extraBold,
                   color: AppColors.neonGreen)),
         ]),
       );
@@ -374,19 +374,19 @@ class _RegisterSection extends StatelessWidget {
     if (!canAfford) {
       return GlassCardWidget(
         padding: EdgeInsets.symmetric(
-          vertical: AppSpacing.body2,
-          horizontal: AppSpacing.cardInnerPadding,
+          vertical: Dimensions.body2,
+          horizontal: Dimensions.cardInnerPadding,
         ),
         borderColor: AppColors.neonRed.withOpacity(AppColors.opacity30),
         child: Row(children: [
-          Text("⚠️", style: TextStyle(fontSize: AppTypography.sizeSubtitle)),
-          SizedBox(width: AppSpacing.cardOuterGap),
+          Text("⚠️", style: TextStyle(fontSize: Dimensions.sizeSubtitle)),
+          SizedBox(width: Dimensions.cardOuterGap),
           Expanded(
               child: Text(
                   "Need ${trn.cost - coins} more points — watch ads to earn!",
                   style: TextStyle(
-                      fontSize: AppTypography.sizeBody2,
-                      fontWeight: AppTypography.bold,
+                      fontSize: Dimensions.sizeBody2,
+                      fontWeight: Dimensions.bold,
                       color: AppColors.neonRed))),
         ]),
       );
@@ -396,14 +396,14 @@ class _RegisterSection extends StatelessWidget {
       onTap: () => onJoin(trn),
       child: Container(
         width: double.infinity,
-        padding: EdgeInsets.symmetric(vertical: AppSpacing.cardInnerPadding),
+        padding: EdgeInsets.symmetric(vertical: Dimensions.cardInnerPadding),
         decoration: BoxDecoration(
           gradient: AppColors.goldRibbonGradient,
-          borderRadius: AppRadius.borderTitle, // Using title radius for buttons
+          borderRadius: Dimensions.borderTitle, // Using title radius for buttons
           boxShadow: [
             BoxShadow(
                 color: AppColors.neonGold.withOpacity(AppColors.opacity40),
-                blurRadius: AppElevation.blurLg,
+                blurRadius: Dimensions.blurLg,
                 offset: const Offset(0, 4))
           ],
         ),
@@ -411,8 +411,8 @@ class _RegisterSection extends StatelessWidget {
         child: Text("Register Now  —  🪙 ${trn.cost} Points",
             style: TextStyle(
                 color: Colors.black,
-                fontSize: AppTypography.sizeSubtitle,
-                fontWeight: AppTypography.black)),
+                fontSize: Dimensions.sizeSubtitle,
+                fontWeight: Dimensions.black)),
       ),
     );
   }
@@ -428,20 +428,20 @@ class _BracketSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.only(bottom: AppSpacing.xl),
+      padding: EdgeInsets.only(bottom: Dimensions.xl),
       child: Column(children: [
         GestureDetector(
           onTap: onToggle,
           child: Container(
             padding: EdgeInsets.symmetric(
-              horizontal: AppSpacing.screenPadding,
-              vertical: AppSpacing.bodyLarge,
+              horizontal: Dimensions.screenPadding,
+              vertical: Dimensions.bodyLarge,
             ),
             decoration: BoxDecoration(
               color: AppColors.bgCard,
               borderRadius: open
-                  ? BorderRadius.vertical(top: AppRadius.radiusXl)
-                  : AppRadius.borderXl,
+                  ? BorderRadius.vertical(top: Dimensions.radiusXl)
+                  : Dimensions.borderXl,
               border: Border.all(color: AppColors.glassBorder),
             ),
             child: Row(
@@ -449,27 +449,27 @@ class _BracketSection extends StatelessWidget {
                 children: [
                   Row(children: [
                     Container(
-                      width: AppSizing.resultChipSize + 4,
-                      height: AppSizing.resultChipSize + 4,
+                      width: Dimensions.resultChipSize + 4,
+                      height: Dimensions.resultChipSize + 4,
                       decoration: BoxDecoration(
                         color: AppColors.neonCyan.withOpacity(AppColors.opacity10),
-                        borderRadius: AppRadius.borderDef,
+                        borderRadius: Dimensions.borderDef,
                         border: Border.all(
                             color: AppColors.neonCyan.withOpacity(AppColors.opacity20)),
                       ),
                       alignment: Alignment.center,
-                      child: Text("🏟️", style: TextStyle(fontSize: AppTypography.sizeHeading)),
+                      child: Text("🏟️", style: TextStyle(fontSize: Dimensions.sizeHeading)),
                     ),
-                    SizedBox(width: AppSpacing.cardOuterGap),
+                    SizedBox(width: Dimensions.cardOuterGap),
                     Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                       Text("Tournament Bracket",
                           style: TextStyle(
-                              fontSize: AppTypography.sizeSubtitle,
-                              fontWeight: AppTypography.extraBold,
+                              fontSize: Dimensions.sizeSubtitle,
+                              fontWeight: Dimensions.extraBold,
                               color: AppColors.textPrimary)),
                       Text(trn.rounds.join(" → "),
-                          style: AppTypography.mutedText(context).copyWith(
-                            fontSize: AppTypography.sizeSmall,
+                          style: Dimensions.mutedText(context).copyWith(
+                            fontSize: Dimensions.sizeSmall,
                           )),
                     ]),
                   ]),
@@ -486,12 +486,12 @@ class _BracketSection extends StatelessWidget {
           firstChild: const SizedBox(height: 0),
           secondChild: Container(
             padding: EdgeInsets.fromLTRB(
-              AppSpacing.cardInnerPadding, 0,
-              AppSpacing.cardInnerPadding, AppSpacing.cardInnerPadding,
+              Dimensions.cardInnerPadding, 0,
+              Dimensions.cardInnerPadding, Dimensions.cardInnerPadding,
             ),
             decoration: BoxDecoration(
               color: AppColors.bgCard,
-              borderRadius: BorderRadius.vertical(bottom: AppRadius.radiusXl),
+              borderRadius: BorderRadius.vertical(bottom: Dimensions.radiusXl),
               border: Border(
                 left: BorderSide(color: AppColors.glassBorder),
                 right: BorderSide(color: AppColors.glassBorder),
@@ -503,23 +503,23 @@ class _BracketSection extends StatelessWidget {
                 children: trn.bracket.map((rnd) {
                   return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                     Padding(
-                      padding: EdgeInsets.symmetric(vertical: AppSpacing.xl),
+                      padding: EdgeInsets.symmetric(vertical: Dimensions.xl),
                       child: Text(rnd.roundName,
                           style: TextStyle(
-                              fontSize: AppTypography.sizeSmall,
-                              fontWeight: AppTypography.extraBold,
+                              fontSize: Dimensions.sizeSmall,
+                              fontWeight: Dimensions.extraBold,
                               color: AppColors.neonCyan,
-                              letterSpacing: AppTypography.trackingWidest)),
+                              letterSpacing: Dimensions.trackingWidest)),
                     ),
                     ...rnd.matches.map((m) => Container(
-                      margin: EdgeInsets.only(bottom: AppSpacing.iconGap),
+                      margin: EdgeInsets.only(bottom: Dimensions.iconGap),
                       padding: EdgeInsets.symmetric(
-                        horizontal: AppSpacing.cardInnerPadding,
-                        vertical: AppSpacing.lg,
+                        horizontal: Dimensions.cardInnerPadding,
+                        vertical: Dimensions.lg,
                       ),
                       decoration: BoxDecoration(
                         color: AppColors.bgSurface,
-                        borderRadius: AppRadius.borderXl,
+                        borderRadius: Dimensions.borderXl,
                         border: Border.all(color: AppColors.glassBorder),
                       ),
                       child: Row(
@@ -527,30 +527,30 @@ class _BracketSection extends StatelessWidget {
                           children: [
                             Text(m[0],
                                 style: TextStyle(
-                                    fontSize: AppTypography.sizeBody,
-                                    fontWeight: AppTypography.bold,
+                                    fontSize: Dimensions.sizeBody,
+                                    fontWeight: Dimensions.bold,
                                     color: m[0] == "TBD"
                                         ? AppColors.textMuted
                                         : AppColors.textPrimary)),
                             Container(
                               padding: EdgeInsets.symmetric(
-                                  horizontal: AppSpacing.lg, vertical: AppSpacing.xs),
+                                  horizontal: Dimensions.lg, vertical: Dimensions.xs),
                               decoration: BoxDecoration(
                                 color: AppColors.neonBlue.withOpacity(AppColors.opacity15),
-                                borderRadius: AppRadius.borderMd,
+                                borderRadius: Dimensions.borderMd,
                                 border: Border.all(
                                     color: AppColors.neonBlue.withOpacity(AppColors.opacity30)),
                               ),
                               child: Text("VS",
                                   style: TextStyle(
-                                      fontSize: AppTypography.sizeSmall,
-                                      fontWeight: AppTypography.extraBold,
+                                      fontSize: Dimensions.sizeSmall,
+                                      fontWeight: Dimensions.extraBold,
                                       color: AppColors.neonBlue)),
                             ),
                             Text(m[1],
                                 style: TextStyle(
-                                    fontSize: AppTypography.sizeBody,
-                                    fontWeight: AppTypography.bold,
+                                    fontSize: Dimensions.sizeBody,
+                                    fontWeight: Dimensions.bold,
                                     color: m[1] == "TBD"
                                         ? AppColors.textMuted
                                         : AppColors.textPrimary)),
@@ -588,8 +588,8 @@ class _TournamentLeaderboard extends StatelessWidget {
             final c = colors[i.clamp(0, colors.length - 1)];
             return Container(
               padding: EdgeInsets.symmetric(
-                horizontal: AppSpacing.screenPadding,
-                vertical: AppSpacing.body2,
+                horizontal: Dimensions.screenPadding,
+                vertical: Dimensions.body2,
               ),
               decoration: BoxDecoration(
                 border: i < players.length - 1
@@ -604,18 +604,18 @@ class _TournamentLeaderboard extends StatelessWidget {
               ),
               child: Row(children: [
                 SizedBox(
-                    width: AppSpacing.giant,
+                    width: Dimensions.giant,
                     child: Text(
                       i < 3 ? medals[i] : "${i + 1}",
                       style: TextStyle(
-                          fontSize: i < 3 ? AppSizing.iconEmojiSm : AppTypography.sizeBodyLarge,
-                          fontWeight: AppTypography.extraBold,
+                          fontSize: i < 3 ? Dimensions.iconEmojiSm : Dimensions.sizeBodyLarge,
+                          fontWeight: Dimensions.extraBold,
                           color: c),
                       textAlign: TextAlign.center,
                     )),
-                SizedBox(width: AppSpacing.bodyLarge),
-                PlayerAvatarWidget(name: p.name, imageUrl: p.player.imageUrl, size: AppSizing.resultChipSize + 4),
-                SizedBox(width: AppSpacing.cardOuterGap),
+                SizedBox(width: Dimensions.bodyLarge),
+                PlayerAvatarWidget(name: p.name, imageUrl: p.player.imageUrl, size: Dimensions.resultChipSize + 4),
+                SizedBox(width: Dimensions.cardOuterGap),
                 Expanded(
                     child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -623,28 +623,28 @@ class _TournamentLeaderboard extends StatelessWidget {
                           Row(children: [
                             Text(p.name,
                                 style: TextStyle(
-                                    fontSize: AppTypography.sizeBody,
-                                    fontWeight: AppTypography.bold,
+                                    fontSize: Dimensions.sizeBody,
+                                    fontWeight: Dimensions.bold,
                                     color: AppColors.textPrimary)),
                             if (i < 2) ...[
-                              SizedBox(width: AppSpacing.sm),
+                              SizedBox(width: Dimensions.sm),
                               NeonPillWidget(label: "VIP", color: AppColors.neonGold)
                             ],
                           ]),
                           Text("${p.wins}W · ${p.goals} goals",
-                              style: AppTypography.mutedText(context).copyWith(
-                                fontSize: AppTypography.sizeCaption,
+                              style: Dimensions.mutedText(context).copyWith(
+                                fontSize: Dimensions.sizeCaption,
                               )),
                         ])),
                 Column(crossAxisAlignment: CrossAxisAlignment.end, children: [
                   Text("${p.pts}",
                       style: TextStyle(
-                          fontSize: AppTypography.sizeTitle,
-                          fontWeight: AppTypography.black,
+                          fontSize: Dimensions.sizeTitle,
+                          fontWeight: Dimensions.black,
                           color: c)),
                   Text("pts",
-                      style: AppTypography.mutedText(context).copyWith(
-                        fontSize: AppTypography.sizeTiny,
+                      style: Dimensions.mutedText(context).copyWith(
+                        fontSize: Dimensions.sizeTiny,
                       )),
                 ]),
               ]),

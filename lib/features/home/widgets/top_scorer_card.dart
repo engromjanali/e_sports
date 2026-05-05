@@ -1,4 +1,4 @@
-import '../../../core/theme/app_theme.dart';
+import 'package:e_sports/core/utils/dimensions.dart';
 import "../../../core/controllers/app_data_controller.dart";
 import "package:get/get.dart";
 import 'diagonal_slash_printer_widget.dart';
@@ -27,13 +27,13 @@ class TopScorerCard extends StatelessWidget {
         : 0.0;
 
     return Container(
-      width: AppSizing.scorerCardWidth,
+      width: Dimensions.scorerCardWidth,
       decoration: BoxDecoration(
-        borderRadius: AppRadius.borderXl,
+        borderRadius: Dimensions.borderXl,
         gradient: gradient,
         border: Border.all(
           color: AppColors.white.withOpacity(AppColors.opacity8),
-          width: AppSizing.borderThin,
+          width: Dimensions.borderThin,
         ),
         boxShadow: [
           BoxShadow(
@@ -49,7 +49,7 @@ class TopScorerCard extends StatelessWidget {
         ],
       ),
       child: ClipRRect(
-        borderRadius: AppRadius.borderXl,
+        borderRadius: Dimensions.borderXl,
         child: Stack(
           children: [
             Positioned.fill(
@@ -69,10 +69,10 @@ class TopScorerCard extends StatelessWidget {
             ),
             Padding(
               padding: EdgeInsets.fromLTRB(
-                AppSpacing.cardInnerPadding,
-                AppSpacing.cardInnerPadding,
-                AppSpacing.cardInnerPadding,
-                AppSpacing.xxxl,
+                Dimensions.cardInnerPadding,
+                Dimensions.cardInnerPadding,
+                Dimensions.cardInnerPadding,
+                Dimensions.xxxl,
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -82,31 +82,31 @@ class TopScorerCard extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Container(
-                        padding: AppSpacing.pillPadding,
+                        padding: Dimensions.pillPadding,
                         decoration: BoxDecoration(
                           color: AppColors.white.withOpacity(AppColors.opacity12),
-                          borderRadius: AppRadius.borderPill,
+                          borderRadius: Dimensions.borderPill,
                           border: Border.all(
                             color: AppColors.white.withOpacity(AppColors.opacity15),
-                            width: AppSizing.borderThin,
+                            width: Dimensions.borderThin,
                           ),
                         ),
                         child: Text(
                           label.toUpperCase(),
-                          style: AppTypography.pillLabel(context,
+                          style: Dimensions.pillLabel(context,
                             color: AppColors.white.withOpacity(0.75),
                           ),
                         ),
                       ),
-                      Text(badge, style: TextStyle(fontSize: AppTypography.sizeHeading)),
+                      Text(badge, style: TextStyle(fontSize: Dimensions.sizeHeading)),
                     ],
                   ),
-                  SizedBox(height: AppSpacing.xxl),
+                  SizedBox(height: Dimensions.xxl),
                   Row(
                     children: [
                       Container(
-                        width: AppSizing.avatarMdLg,
-                        height: AppSizing.avatarMdLg,
+                        width: Dimensions.avatarMdLg,
+                        height: Dimensions.avatarMdLg,
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
                           gradient: LinearGradient(
@@ -116,21 +116,21 @@ class TopScorerCard extends StatelessWidget {
                           ),
                           border: Border.all(
                             color: AppColors.white.withOpacity(AppColors.opacity30),
-                            width: AppSizing.borderThick,
+                            width: Dimensions.borderThick,
                           ),
-                          boxShadow: AppElevation.subtleGlow(c, opacity: 0.5, blur: 10),
+                          boxShadow: Dimensions.subtleGlow(c, opacity: 0.5, blur: 10),
                         ),
                         alignment: Alignment.center,
                         child: Text(
                           player.name[0],
                           style: TextStyle(
-                            fontSize: AppTypography.sizeHeadingLg,
-                            fontWeight: AppTypography.black,
+                            fontSize: Dimensions.sizeHeadingLg,
+                            fontWeight: Dimensions.black,
                             color: AppColors.white,
                           ),
                         ),
                       ),
-                      SizedBox(width: AppSpacing.lg),
+                      SizedBox(width: Dimensions.lg),
                       Expanded(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -138,38 +138,38 @@ class TopScorerCard extends StatelessWidget {
                             Text(
                               player.short.toUpperCase(),
                               style: TextStyle(
-                                fontSize: AppTypography.sizeBody2,
-                                fontWeight: AppTypography.black,
+                                fontSize: Dimensions.sizeBody2,
+                                fontWeight: Dimensions.black,
                                 color: AppColors.white,
-                                letterSpacing: AppTypography.trackingNormal,
+                                letterSpacing: Dimensions.trackingNormal,
                                 height: 1.1,
                               ),
                               maxLines: 2,
                               overflow: TextOverflow.ellipsis,
                             ),
-                            SizedBox(height: AppSpacing.xs),
+                            SizedBox(height: Dimensions.xs),
                             Row(
                               children: [
                                 Container(
-                                  width: AppSizing.dotSm,
-                                  height: AppSizing.dotSm,
+                                  width: Dimensions.dotSm,
+                                  height: Dimensions.dotSm,
                                   decoration: BoxDecoration(
                                     shape: BoxShape.circle,
                                     color: AppColors.neonGold,
                                   ),
                                 ),
-                                SizedBox(width: AppSpacing.xs + 1),
+                                SizedBox(width: Dimensions.xs + 1),
                                 Text(
                                   "${player.matches} matches",
                                   style: TextStyle(
                                     fontSize: 8.5,
                                     color: AppColors.white.withOpacity(AppColors.opacity55),
-                                    fontWeight: AppTypography.semiBold,
+                                    fontWeight: Dimensions.semiBold,
                                   ),
                                 ),
                               ],
                             ),
-                            SizedBox(height: AppSpacing.xs),
+                            SizedBox(height: Dimensions.xs),
                             PlayerTagsWidget(
                               tags: player.tags,
                               accentColor: AppColors.neonGold,
@@ -179,24 +179,24 @@ class TopScorerCard extends StatelessWidget {
                       ),
                     ],
                   ),
-                  SizedBox(height: AppSpacing.xxl),
+                  SizedBox(height: Dimensions.xxl),
                   Container(
-                    height: AppSizing.dividerHeight,
+                    height: Dimensions.dividerHeight,
                     decoration: BoxDecoration(
                       gradient: AppColors.dividerGradient(color: AppColors.white, opacity: AppColors.opacity15),
                     ),
                   ),
-                  SizedBox(height: AppSpacing.xl),
+                  SizedBox(height: Dimensions.xl),
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
                       Text(
                         "${player.goals}",
                         style: TextStyle(
-                          fontSize: AppTypography.sizeHero,
-                          fontWeight: AppTypography.black,
+                          fontSize: Dimensions.sizeHero,
+                          fontWeight: Dimensions.black,
                           color: AppColors.white,
-                          height: AppTypography.lineHeightTight,
+                          height: Dimensions.lineHeightTight,
                           shadows: [
                             Shadow(
                               color: c.withOpacity(AppColors.opacity60),
@@ -205,27 +205,27 @@ class TopScorerCard extends StatelessWidget {
                           ],
                         ),
                       ),
-                      SizedBox(width: AppSpacing.iconGap),
+                      SizedBox(width: Dimensions.iconGap),
                       Padding(
-                        padding: EdgeInsets.only(bottom: AppSpacing.iconGap),
+                        padding: EdgeInsets.only(bottom: Dimensions.iconGap),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
                               "GOALS",
                               style: TextStyle(
-                                fontSize: AppTypography.sizeTiny,
-                                fontWeight: AppTypography.extraBold,
+                                fontSize: Dimensions.sizeTiny,
+                                fontWeight: Dimensions.extraBold,
                                 color: AppColors.neonGold,
-                                letterSpacing: AppTypography.trackingWidest,
+                                letterSpacing: Dimensions.trackingWidest,
                               ),
                             ),
                             Text(
                               "scored",
                               style: TextStyle(
-                                fontSize: AppTypography.sizeTiny,
+                                fontSize: Dimensions.sizeTiny,
                                 color: AppColors.white.withOpacity(AppColors.opacity40),
-                                fontWeight: AppTypography.medium,
+                                fontWeight: Dimensions.medium,
                               ),
                             ),
                           ],
@@ -233,7 +233,7 @@ class TopScorerCard extends StatelessWidget {
                       ),
                     ],
                   ),
-                  SizedBox(height: AppSpacing.lg),
+                  SizedBox(height: Dimensions.lg),
                   Row(
                     children: [
                       StatChipWidget(
@@ -241,13 +241,13 @@ class TopScorerCard extends StatelessWidget {
                         value: "${player.matches}",
                         color: AppColors.white.withOpacity(0.7),
                       ),
-                      SizedBox(width: AppSpacing.iconGap),
+                      SizedBox(width: Dimensions.iconGap),
                       StatChipWidget(
                         label: "Win",
                         value: "${player.wins}",
                         color: AppColors.white.withOpacity(0.7),
                       ),
-                      SizedBox(width: AppSpacing.iconGap),
+                      SizedBox(width: Dimensions.iconGap),
                       StatChipWidget(
                         label: "RATIO",
                         value: ratio.toStringAsFixed(2),

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../core/helper/route_helper.dart';
-import '../../../core/theme/app_theme.dart';
+import 'package:e_sports/core/utils/dimensions.dart';
 import "../../../core/data/models/news_model.dart";
 
 class NewsDetailScreen extends StatelessWidget {
@@ -84,13 +84,13 @@ class NewsDetailScreen extends StatelessWidget {
                           padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                           decoration: BoxDecoration(
                             color: AppColors.neonBlue,
-                            borderRadius: AppRadius.borderPill,
+                            borderRadius: Dimensions.borderPill,
                           ),
                           child: Text(
                             news.tag.toUpperCase(),
                             style: TextStyle(
                               fontSize: 9,
-                              fontWeight: AppTypography.black,
+                              fontWeight: Dimensions.black,
                               color: AppColors.white,
                             ),
                           ),
@@ -100,7 +100,7 @@ class NewsDetailScreen extends StatelessWidget {
                           news.title,
                           style: TextStyle(
                             fontSize: 24,
-                            fontWeight: AppTypography.black,
+                            fontWeight: Dimensions.black,
                             color: AppColors.white,
                             height: 1.1,
                           ),
@@ -116,7 +116,7 @@ class NewsDetailScreen extends StatelessWidget {
           // Content
           SliverToBoxAdapter(
             child: Padding(
-              padding: AppSpacing.screenAll,
+              padding: Dimensions.screenAll,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -127,7 +127,7 @@ class NewsDetailScreen extends StatelessWidget {
                       Text(
                         "${news.time} · Published in ${news.tag}",
                         style: TextStyle(
-                          fontSize: AppTypography.sizeTiny,
+                          fontSize: Dimensions.sizeTiny,
                           color: AppColors.textMuted,
                         ),
                       ),
@@ -137,8 +137,8 @@ class NewsDetailScreen extends StatelessWidget {
                   Text(
                     news.description,
                     style: TextStyle(
-                      fontSize: AppTypography.sizeBody,
-                      fontWeight: AppTypography.bold,
+                      fontSize: Dimensions.sizeBody,
+                      fontWeight: Dimensions.bold,
                       color: AppColors.white.withOpacity(0.9),
                       height: 1.5,
                     ),
@@ -149,14 +149,14 @@ class NewsDetailScreen extends StatelessWidget {
                     height: 4,
                     decoration: BoxDecoration(
                       color: AppColors.neonBlue.withOpacity(0.3),
-                      borderRadius: AppRadius.borderPill,
+                      borderRadius: Dimensions.borderPill,
                     ),
                   ),
                   const SizedBox(height: 20),
                   Text(
                     news.content,
                     style: TextStyle(
-                      fontSize: AppTypography.sizeBody,
+                      fontSize: Dimensions.sizeBody,
                       color: AppColors.white.withOpacity(0.7),
                       height: 1.6,
                     ),

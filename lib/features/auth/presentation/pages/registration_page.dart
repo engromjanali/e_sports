@@ -1,9 +1,6 @@
 import 'package:e_sports/core/helper/route_helper.dart';
-import 'package:e_sports/core/theme/app_breakpoints.dart';
-import 'package:e_sports/core/theme/app_colors.dart';
-import 'package:e_sports/core/theme/app_radius.dart';
-import 'package:e_sports/core/theme/app_spacing.dart';
-import 'package:e_sports/core/theme/app_typography.dart';
+import 'package:e_sports/core/utils/dimensions.dart';
+import 'package:e_sports/core/helper/responsive_helper.dart';
 import 'package:e_sports/features/auth/controllers/auth_controller.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -80,7 +77,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
   @override
   Widget build(BuildContext context) {
     final authController = Get.find<AuthController>();
-    final bool isDesktop = AppBreakpoints.isDesktop(context);
+    final bool isDesktop = ResponsiveHelper.isDesktop(context);
     final double topGap = isDesktop ? 72 : 42;
     final double formMaxWidth = isDesktop ? 520 : double.infinity;
 
@@ -88,7 +85,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
       backgroundColor: AppColors.bg,
       body: SafeArea(
         child: SingleChildScrollView(
-            padding: const EdgeInsets.symmetric(horizontal: AppSpacing.statusBarPaddingH),
+            padding: const EdgeInsets.symmetric(horizontal: Dimensions.statusBarPaddingH),
             physics: const BouncingScrollPhysics(),
             child: Center(
               child: ConstrainedBox(
@@ -107,7 +104,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                           children: [
                             TextSpan(
                               text: "JOIN THE\n",
-                              style: AppTypography.statsGiant(context, color: AppColors.white).copyWith(
+                              style: Dimensions.statsGiant(context, color: AppColors.white).copyWith(
                                 fontSize: 38,
                                 letterSpacing: 0,
                                 fontWeight: FontWeight.w900,
@@ -116,7 +113,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                             ),
                             TextSpan(
                               text: "ELITE SQUAD",
-                              style: AppTypography.statsGiant(context, color: AppColors.neonGold).copyWith(
+                              style: Dimensions.statsGiant(context, color: AppColors.neonGold).copyWith(
                                 fontSize: 46,
                                 letterSpacing: 0,
                                 fontWeight: FontWeight.w900,
@@ -130,7 +127,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                     const SizedBox(height: 8),
                     Text(
                       "Create your profile and start tracking your match journey.",
-                      style: AppTypography.mutedText(context).copyWith(
+                      style: Dimensions.mutedText(context).copyWith(
                         fontSize: 14,
                         letterSpacing: 0.2,
                         height: 1.4,
@@ -142,7 +139,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                         controller: _nameController,
                         keyboardType: TextInputType.name,
                         textInputAction: TextInputAction.next,
-                        style: AppTypography.bodyText(context),
+                        style: Dimensions.bodyText(context),
                         decoration: _inputDecoration(context, "Full name", Icons.person_outline),
                       ),
                     ),
@@ -152,7 +149,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                         controller: _emailController,
                         keyboardType: TextInputType.emailAddress,
                         textInputAction: TextInputAction.next,
-                        style: AppTypography.bodyText(context),
+                        style: Dimensions.bodyText(context),
                         decoration: _inputDecoration(context, "Email", Icons.email_outlined),
                       ),
                     ),
@@ -163,7 +160,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                         obscureText: _obscurePassword,
                         textInputAction: TextInputAction.done,
                         onSubmitted: (_) => _register(authController),
-                        style: AppTypography.bodyText(context),
+                        style: Dimensions.bodyText(context),
                         decoration: _inputDecoration(context, "Password", Icons.lock_outline).copyWith(
                           suffixIcon: IconButton(
                             onPressed: () => setState(() => _obscurePassword = !_obscurePassword),
@@ -177,7 +174,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                       width: double.infinity,
                       height: 58,
                       decoration: BoxDecoration(
-                        borderRadius: AppRadius.borderLg,
+                        borderRadius: Dimensions.borderLg,
                         boxShadow: [
                           BoxShadow(
                             color: AppColors.neonGold.withValues(alpha: 0.3),
@@ -195,14 +192,14 @@ class _RegistrationPageState extends State<RegistrationPage> {
                             disabledBackgroundColor: AppColors.neonGold.withValues(alpha: 0.5),
                             elevation: 0,
                             shape: RoundedRectangleBorder(
-                              borderRadius: AppRadius.borderLg,
+                              borderRadius: Dimensions.borderLg,
                             ),
                           ),
                           child: authController.isLoading
                               ? const SizedBox(width: 22, height: 22, child: CircularProgressIndicator(strokeWidth: 2.4, color: Colors.black))
                               : Text(
                                   "CREATE ACCOUNT",
-                                  style: AppTypography.labelUppercase(context, color: Colors.black).copyWith(
+                                  style: Dimensions.labelUppercase(context, color: Colors.black).copyWith(
                                     fontSize: 15,
                                     fontWeight: FontWeight.w900,
                                     letterSpacing: 1.2,
@@ -216,7 +213,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                       child: Text.rich(
                         TextSpan(
                           text: "Already have an account? ",
-                          style: AppTypography.mutedText(context).copyWith(
+                          style: Dimensions.mutedText(context).copyWith(
                             fontSize: 13,
                             color: AppColors.textSecondary,
                             height: 1.4,
@@ -225,7 +222,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                             TextSpan(
                               text: "Sign in",
                               recognizer: _loginRecognizer,
-                              style: AppTypography.bodyText(context, color: AppColors.neonGold).copyWith(
+                              style: Dimensions.bodyText(context, color: AppColors.neonGold).copyWith(
                                 fontSize: 13,
                                 fontWeight: FontWeight.w900,
                               ),
@@ -239,7 +236,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                     Center(
                       child: Text(
                         "The Enigmatic Elites",
-                        style: AppTypography.labelUppercase(context, color: AppColors.textMuted.withValues(alpha: 0.25)).copyWith(
+                        style: Dimensions.labelUppercase(context, color: AppColors.textMuted.withValues(alpha: 0.25)).copyWith(
                           fontSize: 11,
                           letterSpacing: 5,
                           fontWeight: FontWeight.w500,
@@ -259,7 +256,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
   InputDecoration _inputDecoration(BuildContext context, String hintText, IconData icon) {
     return InputDecoration(
       hintText: hintText,
-      hintStyle: AppTypography.mutedText(context).copyWith(
+      hintStyle: Dimensions.mutedText(context).copyWith(
         color: AppColors.textMuted.withValues(alpha: 0.5),
       ),
       prefixIcon: Icon(icon, color: AppColors.textMuted, size: 20),
@@ -279,7 +276,7 @@ class _InputShell extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
         color: AppColors.bgCard.withValues(alpha: 0.8),
-        borderRadius: AppRadius.borderLg,
+        borderRadius: Dimensions.borderLg,
         border: Border.all(color: AppColors.glassBorder),
       ),
       child: child,
@@ -296,7 +293,7 @@ class _Badge extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       decoration: BoxDecoration(
         color: AppColors.neonGold.withValues(alpha: 0.1),
-        borderRadius: AppRadius.borderPill,
+        borderRadius: Dimensions.borderPill,
         border: Border.all(
           color: AppColors.neonGold.withValues(alpha: 0.3),
           width: 1,
@@ -311,7 +308,7 @@ class _Badge extends StatelessWidget {
       ),
       child: Text(
         "HOUSE OF ELITES",
-        style: AppTypography.pillLabel(context, color: AppColors.neonGold).copyWith(
+        style: Dimensions.pillLabel(context, color: AppColors.neonGold).copyWith(
           fontSize: 12,
           letterSpacing: 2,
         ),

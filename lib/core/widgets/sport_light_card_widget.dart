@@ -1,4 +1,4 @@
-import '../theme/app_theme.dart';
+import 'package:e_sports/core/utils/dimensions.dart';
 import '../data/models/computed_player_stats.dart';
 import 'player_tags_widget.dart';
 import 'package:flutter/material.dart';
@@ -24,22 +24,22 @@ class SpotlightCardWidget extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
         gradient: gradient,
-        borderRadius: AppRadius.borderXl,
+        borderRadius: Dimensions.borderXl,
         border: Border.all(
           color: AppColors.neonGold.withOpacity(0.32),
-          width: AppSizing.borderThin,
+          width: Dimensions.borderThin,
         ),
-        boxShadow: AppElevation.accentGlow(AppColors.neonGold, opacity: 0.14),
+        boxShadow: Dimensions.accentGlow(AppColors.neonGold, opacity: 0.14),
       ),
       child: ClipRRect(
-        borderRadius: AppRadius.borderXl,
+        borderRadius: Dimensions.borderXl,
         child: Stack(
           children: [
             // ── Shimmer top bar
             Positioned(
               top: 0, left: 0, right: 0,
               child: Container(
-                height: AppSizing.shimmerHeight,
+                height: Dimensions.shimmerHeight,
                 decoration: BoxDecoration(
                   gradient: AppColors.shimmerGradient(color: AppColors.goldLight),
                 ),
@@ -53,10 +53,10 @@ class SpotlightCardWidget extends StatelessWidget {
                 label.toUpperCase(),
                 style: TextStyle(
                   fontSize: 44,
-                  fontWeight: AppTypography.black,
+                  fontWeight: Dimensions.black,
                   color: AppColors.neonGold.withOpacity(AppColors.opacity8),
-                  height: AppTypography.lineHeightCompact,
-                  letterSpacing: AppTypography.trackingUltra,
+                  height: Dimensions.lineHeightCompact,
+                  letterSpacing: Dimensions.trackingUltra,
                 ),
               ),
             ),
@@ -64,10 +64,10 @@ class SpotlightCardWidget extends StatelessWidget {
             // ── Main content
             Padding(
               padding: EdgeInsets.fromLTRB(
-                AppSpacing.cardInnerPadding - 1,
-                AppSpacing.cardInnerPadding,
-                AppSpacing.cardInnerPadding - 1,
-                AppSpacing.cardInnerPadding,
+                Dimensions.cardInnerPadding - 1,
+                Dimensions.cardInnerPadding,
+                Dimensions.cardInnerPadding - 1,
+                Dimensions.cardInnerPadding,
               ),
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -78,42 +78,42 @@ class SpotlightCardWidget extends StatelessWidget {
                     children: [
                       // Label pill
                       Container(
-                        padding: AppSpacing.pillPadding,
+                        padding: Dimensions.pillPadding,
                         decoration: BoxDecoration(
                           color: AppColors.neonGold.withOpacity(AppColors.opacity12),
-                          borderRadius: AppRadius.borderSm,
+                          borderRadius: Dimensions.borderSm,
                           border: Border.all(
                             color: AppColors.neonGold.withOpacity(AppColors.opacity35),
-                            width: AppSizing.borderThin,
+                            width: Dimensions.borderThin,
                           ),
                         ),
                         child: Text(
                           label.toUpperCase(),
-                          style: AppTypography.pillLabel(context),
+                          style: Dimensions.pillLabel(context),
                         ),
                       ),
-                      SizedBox(height: AppSpacing.xl),
+                      SizedBox(height: Dimensions.xl),
 
                       // Avatar with badge
                       Stack(
                         clipBehavior: Clip.none,
                         children: [
                           Container(
-                            width: AppSizing.avatarXxl,
-                            height: AppSizing.avatarXxl,
+                            width: Dimensions.avatarXxl,
+                            height: Dimensions.avatarXxl,
                             decoration: BoxDecoration(
                               shape: BoxShape.circle,
                               border: Border.all(
                                 color: AppColors.neonGold,
-                                width: AppSizing.borderAvatar,
+                                width: Dimensions.borderAvatar,
                               ),
-                              boxShadow: AppElevation.ringGlow(AppColors.neonGold),
+                              boxShadow: Dimensions.ringGlow(AppColors.neonGold),
                             ),
                             child: ClipOval(
                               child: Image.network(
                                 imageUrl,
-                                width: AppSizing.avatarXxl,
-                                height: AppSizing.avatarXxl,
+                                width: Dimensions.avatarXxl,
+                                height: Dimensions.avatarXxl,
                                 fit: BoxFit.cover,
                                 loadingBuilder: (ctx, child, progress) {
                                   if (progress == null) return child;
@@ -121,10 +121,10 @@ class SpotlightCardWidget extends StatelessWidget {
                                     color: AppColors.goldDeep.withOpacity(0.5),
                                     child: Center(
                                       child: SizedBox(
-                                        width: AppSpacing.massive,
-                                        height: AppSpacing.massive,
+                                        width: Dimensions.massive,
+                                        height: Dimensions.massive,
                                         child: CircularProgressIndicator(
-                                          strokeWidth: AppSizing.borderThick,
+                                          strokeWidth: Dimensions.borderThick,
                                           color: AppColors.neonGold,
                                           value: progress.expectedTotalBytes != null
                                               ? progress.cumulativeBytesLoaded /
@@ -143,8 +143,8 @@ class SpotlightCardWidget extends StatelessWidget {
                                         ? player.name[0].toUpperCase()
                                         : "?",
                                     style: TextStyle(
-                                      fontSize: AppTypography.sizeDisplay - 2,
-                                      fontWeight: AppTypography.black,
+                                      fontSize: Dimensions.sizeDisplay - 2,
+                                      fontWeight: Dimensions.black,
                                       color: AppColors.neonGold,
                                     ),
                                   ),
@@ -157,36 +157,36 @@ class SpotlightCardWidget extends StatelessWidget {
                           Positioned(
                             top: -2, right: -2,
                             child: ClipRRect(
-                              borderRadius: AppRadius.ribbonTopRight,
+                              borderRadius: Dimensions.ribbonTopRight,
                               child: Container(
                                 padding: EdgeInsets.fromLTRB(
-                                  AppSpacing.sm, AppSpacing.xxs, AppSpacing.sm, AppSpacing.xs,
+                                  Dimensions.sm, Dimensions.xxs, Dimensions.sm, Dimensions.xs,
                                 ),
                                 decoration: BoxDecoration(
                                   gradient: AppColors.goldRibbonGradient,
                                 ),
                                 child: Text(
                                   badge,
-                                  style: TextStyle(fontSize: AppTypography.sizeSmall),
+                                  style: TextStyle(fontSize: Dimensions.sizeSmall),
                                 ),
                               ),
                             ),
                           ),
                         ],
                       ),
-                      SizedBox(height: AppSpacing.lg),
+                      SizedBox(height: Dimensions.lg),
 
                       // Name
                       Text(
                         player.short,
                         style: TextStyle(
-                          fontSize: AppTypography.sizeSubtitle,
-                          fontWeight: AppTypography.black,
+                          fontSize: Dimensions.sizeSubtitle,
+                          fontWeight: Dimensions.black,
                           color: AppColors.white,
-                          height: AppTypography.lineHeightNormal,
+                          height: Dimensions.lineHeightNormal,
                         ),
                       ),
-                      SizedBox(height: AppSpacing.xs),
+                      SizedBox(height: Dimensions.xs),
                       
                       // Dynamic Tags
                       PlayerTagsWidget(
@@ -194,19 +194,19 @@ class SpotlightCardWidget extends StatelessWidget {
                         accentColor: AppColors.neonGold,
                       ),
                       
-                      SizedBox(height: AppSpacing.sm),
+                      SizedBox(height: Dimensions.sm),
                       Text(
                         "${player.matches} matches",
                         style: TextStyle(
-                          fontSize: AppTypography.sizeBody,
+                          fontSize: Dimensions.sizeBody,
                           color: AppColors.white.withOpacity(AppColors.opacity45),
-                          letterSpacing: AppTypography.trackingTight + 0.1,
+                          letterSpacing: Dimensions.trackingTight + 0.1,
                         ),
                       ),
                     ],
                   ),
 
-                  SizedBox(width: AppSpacing.xxl),
+                  SizedBox(width: Dimensions.xxl),
 
                   // ── Right: vertical stats
                   Expanded(
@@ -214,21 +214,21 @@ class SpotlightCardWidget extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        SizedBox(height: AppSpacing.xxxl * 2),
+                        SizedBox(height: Dimensions.xxxl * 2),
                         _StatRow(
                           label: "Goals",
                           value: "${player.goals}",
                           accentColor: AppColors.neonGold,
                           fillFraction: (player.goals / 20).clamp(0.0, 1.0),
                         ),
-                        SizedBox(height: AppSpacing.md),
+                        SizedBox(height: Dimensions.md),
                         _StatRow(
                           label: "Points",
                           value: "${player.pts}",
                           accentColor: AppColors.neonGold,
                           fillFraction: (player.pts / 100).clamp(0.0, 1.0),
                         ),
-                        SizedBox(height: AppSpacing.md),
+                        SizedBox(height: Dimensions.md),
                         _StatRow(
                           label: "Win",
                           value: "${player.wins}",
@@ -266,14 +266,14 @@ class _StatRow extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: EdgeInsets.fromLTRB(
-        AppSpacing.caption, AppSpacing.micro, AppSpacing.caption, AppSpacing.micro,
+        Dimensions.caption, Dimensions.micro, Dimensions.caption, Dimensions.micro,
       ),
       decoration: BoxDecoration(
         color: AppColors.white.withOpacity(AppColors.opacity4),
-        borderRadius: AppRadius.borderDef,
+        borderRadius: Dimensions.borderDef,
         border: Border.all(
           color: accentColor.withOpacity(AppColors.opacity18),
-          width: AppSizing.borderThin,
+          width: Dimensions.borderThin,
         ),
       ),
       child: Column(
@@ -285,39 +285,39 @@ class _StatRow extends StatelessWidget {
               Expanded(
                 child: Text(
                   label.toUpperCase(),
-                  style: AppTypography.labelUppercase(context, color: AppColors.white.withOpacity(AppColors.opacity45)),
+                  style: Dimensions.labelUppercase(context, color: AppColors.white.withOpacity(AppColors.opacity45)),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),
               ),
-              SizedBox(width: AppSpacing.xs),
+              SizedBox(width: Dimensions.xs),
               Text(
                 value,
                 style: TextStyle(
-                  fontSize: AppTypography.sizeBodyLarge,
-                  fontWeight: AppTypography.black,
+                  fontSize: Dimensions.sizeBodyLarge,
+                  fontWeight: Dimensions.black,
                   color: accentColor,
-                  height: AppTypography.lineHeightCompact,
+                  height: Dimensions.lineHeightCompact,
                 ),
               ),
             ],
           ),
-          SizedBox(height: AppSpacing.sm),
+          SizedBox(height: Dimensions.sm),
           // Progress bar
           ClipRRect(
-            borderRadius: AppRadius.borderXs,
+            borderRadius: Dimensions.borderXs,
             child: Stack(
               children: [
                 Container(
-                  height: AppSizing.progressBarSm,
+                  height: Dimensions.progressBarSm,
                   color: AppColors.white.withOpacity(AppColors.opacity8),
                 ),
                 FractionallySizedBox(
                   widthFactor: fillFraction,
                   child: Container(
-                    height: AppSizing.progressBarSm,
+                    height: Dimensions.progressBarSm,
                     decoration: BoxDecoration(
-                      borderRadius: AppRadius.borderXs,
+                      borderRadius: Dimensions.borderXs,
                       gradient: LinearGradient(
                         colors: [
                           accentColor.withOpacity(AppColors.opacity60),

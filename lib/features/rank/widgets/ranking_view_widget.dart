@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../core/helper/route_helper.dart';
-import '../../../core/theme/app_theme.dart';
+import 'package:e_sports/core/utils/dimensions.dart';
+import 'package:e_sports/core/helper/responsive_helper.dart';
 import '../../../core/widgets/app_footer_widget.dart';
 import '../../../core/widgets/section_heading_widget.dart';
 import "../../../core/controllers/app_data_controller.dart";
@@ -29,7 +30,7 @@ class RankingViewWidget extends StatelessWidget {
       final lSeason = isScorer ? controller.seasonalScorers : controller.seasonalPlayers;
 
       return SingleChildScrollView(
-        padding: AppSpacing.screenAll,
+        padding: Dimensions.screenAll,
         child: Column(
           children: [
             // ─── 3 Highlight Cards (Horizontal Scroll) ──────────────────────
@@ -69,7 +70,7 @@ class RankingViewWidget extends StatelessWidget {
                 ],
               ),
             ),
-            SizedBox(height: AppSpacing.massive),
+            SizedBox(height: Dimensions.massive),
 
             // ─── Weekly Full List ───────────────────────────────────────────
             _ListSection(
@@ -77,7 +78,7 @@ class RankingViewWidget extends StatelessWidget {
               players: lWeek, 
               isScorer: isScorer,
             ),
-            SizedBox(height: AppSpacing.xl),
+            SizedBox(height: Dimensions.xl),
 
             // ─── Monthly Full List ──────────────────────────────────────────
             _ListSection(
@@ -85,7 +86,7 @@ class RankingViewWidget extends StatelessWidget {
               players: lMonth, 
               isScorer: isScorer,
             ),
-            SizedBox(height: AppSpacing.xl),
+            SizedBox(height: Dimensions.xl),
 
             // ─── Seasonal Full List ─────────────────────────────────────────
             _ListSection(
@@ -97,7 +98,7 @@ class RankingViewWidget extends StatelessWidget {
                 onSelected: controller.setSelectedSeason,
               ),
             ),
-            if (AppBreakpoints.isDesktop(context)) AppDesktopFooter(),
+            if (ResponsiveHelper.isDesktop(context)) AppDesktopFooter(),
           ],
         ),
       );
@@ -113,7 +114,7 @@ class _HeroWrapper extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: MediaQuery.of(context).size.width * 0.85,
-      padding: EdgeInsets.only(right: AppSpacing.xl),
+      padding: EdgeInsets.only(right: Dimensions.xl),
       child: child,
     );
   }
@@ -147,7 +148,7 @@ class _ListSection extends StatelessWidget {
           physics: const NeverScrollableScrollPhysics(),
           padding: EdgeInsets.zero,
           itemCount: players.length,
-          separatorBuilder: (context, i) => SizedBox(height: AppSpacing.sm),
+          separatorBuilder: (context, i) => SizedBox(height: Dimensions.sm),
           itemBuilder: (context, i) => GestureDetector(
             onTap: () => Get.toNamed(RouteHelper.getPlayerProfileRoute(players[i].id)),
             child: MiniPlayerCard(
@@ -174,13 +175,13 @@ class _SeasonSelector extends StatelessWidget {
     return PopupMenuButton<String>(
       onSelected: (val) => onSelected(val.toLowerCase()),
       offset: const Offset(0, 40),
-      shape: RoundedRectangleBorder(borderRadius: AppRadius.borderCard),
+      shape: RoundedRectangleBorder(borderRadius: Dimensions.borderCard),
       color: AppColors.bgCard,
       child: Container(
-        padding: EdgeInsets.symmetric(horizontal: AppSpacing.md, vertical: AppSpacing.xs),
+        padding: EdgeInsets.symmetric(horizontal: Dimensions.md, vertical: Dimensions.xs),
         decoration: BoxDecoration(
           color: AppColors.white.withOpacity(AppColors.opacity10),
-          borderRadius: AppRadius.borderPill,
+          borderRadius: Dimensions.borderPill,
           border: Border.all(color: AppColors.white.withOpacity(AppColors.opacity20)),
         ),
         child: Row(
@@ -190,7 +191,7 @@ class _SeasonSelector extends StatelessWidget {
               selected.toUpperCase(),
               style: TextStyle(
                 fontSize: 9,
-                fontWeight: AppTypography.black,
+                fontWeight: Dimensions.black,
                 color: AppColors.white,
                 letterSpacing: 1.0,
               ),
@@ -205,8 +206,8 @@ class _SeasonSelector extends StatelessWidget {
         child: Text(
           opt,
           style: TextStyle(
-            fontSize: AppTypography.sizeBody,
-            fontWeight: AppTypography.bold,
+            fontSize: Dimensions.sizeBody,
+            fontWeight: Dimensions.bold,
             color: AppColors.white,
           ),
         ),

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../core/helper/route_helper.dart';
-import '../../../core/theme/app_theme.dart';
+import 'package:e_sports/core/utils/dimensions.dart';
 
 import '../controllers/news_controller.dart';
 import '../widgets/news_card_widget.dart';
@@ -20,13 +20,13 @@ class NewsListScreen extends StatelessWidget {
           children: [
             // Header
             Padding(
-              padding: AppSpacing.screenAll,
+              padding: Dimensions.screenAll,
               child: Row(
                 children: [
                   GestureDetector(
                     onTap: () => Get.key.currentState?.canPop() == true ? Get.back() : Get.offNamed(RouteHelper.home),
                     child: Container(
-                      padding: EdgeInsets.all(AppSpacing.sm),
+                      padding: EdgeInsets.all(Dimensions.sm),
                       decoration: BoxDecoration(
                         color: AppColors.white.withOpacity(0.05),
                         shape: BoxShape.circle,
@@ -35,7 +35,7 @@ class NewsListScreen extends StatelessWidget {
                       child: Icon(Icons.arrow_back, color: AppColors.white, size: 20),
                     ),
                   ),
-                  SizedBox(width: AppSpacing.md),
+                  SizedBox(width: Dimensions.md),
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -43,8 +43,8 @@ class NewsListScreen extends StatelessWidget {
                         Text(
                           "NEWS & UPDATES",
                           style: TextStyle(
-                            fontSize: AppTypography.sizeHeading,
-                            fontWeight: AppTypography.black,
+                            fontSize: Dimensions.sizeHeading,
+                            fontWeight: Dimensions.black,
                             color: AppColors.white,
                             letterSpacing: -0.5,
                           ),
@@ -52,7 +52,7 @@ class NewsListScreen extends StatelessWidget {
                         Text(
                           "Stay updated with the latest in House Of Elites",
                           style: TextStyle(
-                            fontSize: AppTypography.sizeTiny,
+                            fontSize: Dimensions.sizeTiny,
                             color: AppColors.textMuted,
                           ),
                         ),
@@ -60,7 +60,7 @@ class NewsListScreen extends StatelessWidget {
                     ),
                   ),
                   _HeaderIcon(icon: Icons.search),
-                  SizedBox(width: AppSpacing.sm),
+                  SizedBox(width: Dimensions.sm),
                   _HeaderIcon(icon: Icons.tune),
                 ],
               ),
@@ -71,9 +71,9 @@ class NewsListScreen extends StatelessWidget {
               child: Obx(() {
                 final news = controller.filteredNews;
                 return ListView.separated(
-                  padding: AppSpacing.screenAll,
+                  padding: Dimensions.screenAll,
                   itemCount: news.length,
-                  separatorBuilder: (context, i) => SizedBox(height: AppSpacing.md),
+                  separatorBuilder: (context, i) => SizedBox(height: Dimensions.md),
                   itemBuilder: (context, i) => NewsCardWidget(
                     news: news[i],
                     onTap: () => controller.goToDetail(news[i]),
@@ -95,10 +95,10 @@ class _HeaderIcon extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.all(AppSpacing.sm),
+      padding: EdgeInsets.all(Dimensions.sm),
       decoration: BoxDecoration(
         color: AppColors.white.withOpacity(0.05),
-        borderRadius: AppRadius.borderCard,
+        borderRadius: Dimensions.borderCard,
         border: Border.all(color: AppColors.white.withOpacity(0.1)),
       ),
       child: Icon(icon, color: AppColors.white.withOpacity(0.8), size: 20),

@@ -1,4 +1,5 @@
-import '../../../core/theme/app_theme.dart';
+import 'package:e_sports/core/utils/dimensions.dart';
+import 'package:e_sports/core/helper/responsive_helper.dart';
 import '../../../core/controllers/app_data_controller.dart';
 
 import '../../../core/widgets/app_footer_widget.dart';
@@ -64,20 +65,20 @@ class HomeScreen extends StatelessWidget {
 
             // ── My Rank ──
             Padding(
-              padding: AppSpacing.screenH,
+              padding: Dimensions.screenH,
               child: Column(
                 children: [
-                  SizedBox(height: AppSpacing.xxxl),
+                  SizedBox(height: Dimensions.xxxl),
                   SectionHeadingWidget(title: "📍 My Rank"),
                   MyRankCard(),
-                  SizedBox(height: AppSpacing.cardInnerPadding),
+                  SizedBox(height: Dimensions.cardInnerPadding),
                 ],
               ),
             ),
 
             // ── News Banner ──
             if (n != null) Padding(
-              padding: EdgeInsets.fromLTRB(AppSpacing.xxxl, AppSpacing.cardInnerPadding, AppSpacing.xxxl, 0),
+              padding: EdgeInsets.fromLTRB(Dimensions.xxxl, Dimensions.cardInnerPadding, Dimensions.xxxl, 0),
               child: GestureDetector(
                 onTap: () => Get.toNamed(RouteHelper.getNewsDetailsRoute(n.id)),
                 child: AnimatedSwitcher(
@@ -90,11 +91,11 @@ class HomeScreen extends StatelessWidget {
                 ),
               ),
             ),
-            SizedBox(height: AppSpacing.cardInnerPadding),
+            SizedBox(height: Dimensions.cardInnerPadding),
 
             // ── Quick Nav ──
             Padding(
-              padding: AppSpacing.screenH,
+              padding: Dimensions.screenH,
               child: Row(
                 children: [
                   Expanded(child: QuickNavItem(icon: "🎮", label: "Matches", sub: "Live",  color: AppColors.neonBlue,   onTap: () => onNavigate(1))),
@@ -109,15 +110,15 @@ class HomeScreen extends StatelessWidget {
                 ],
               ),
             ),
-            SizedBox(height: AppSpacing.massive),
+            SizedBox(height: Dimensions.massive),
 
             Padding(
-              padding: AppSpacing.screenH,
+              padding: Dimensions.screenH,
               child: Column(children: [
 
                 // ── Hall of Fame Banner ───────────────────────────────────────
                 _HallOfFameBanner(),
-                SizedBox(height: AppSpacing.xxxl),
+                SizedBox(height: Dimensions.xxxl),
 
                 // ── POTW + POTM ──
                 SectionHeadingWidget(
@@ -128,11 +129,11 @@ class HomeScreen extends StatelessWidget {
                 Row(children: [
                   Expanded(child: SpotlightCardWidget(player: potw, label: "POTW", badge: "👑",
                       gradient: AppColors.blueHeroGradient)),
-                  SizedBox(width: AppSpacing.lg),
+                  SizedBox(width: Dimensions.lg),
                   Expanded(child: SpotlightCardWidget(player: potm, label: "POTM", badge: "🏆",
                       gradient: AppColors.orangeHeroGradient)),
                 ]),
-                SizedBox(height: AppSpacing.xxxl),
+                SizedBox(height: Dimensions.xxxl),
 
                 // ── Overall Top 3 ──
                 if (players.length >= 3) ...[
@@ -142,7 +143,7 @@ class HomeScreen extends StatelessWidget {
                     title: "All-Time Rankings",
                     badgeAlignment: Alignment.topRight,
                   ),
-                  SizedBox(height: AppSpacing.xxxl),
+                  SizedBox(height: Dimensions.xxxl),
                 ],
 
                 // ── Seasonal Top 3 ──
@@ -154,7 +155,7 @@ class HomeScreen extends StatelessWidget {
                     accentColor: AppColors.neonPurple,
                     badgeAlignment: Alignment.topRight,
                   ),
-                  SizedBox(height: AppSpacing.xxxl),
+                  SizedBox(height: Dimensions.xxxl),
                 ],
 
                 // ── TSOTW/M ──
@@ -162,11 +163,11 @@ class HomeScreen extends StatelessWidget {
                 Row(children: [
                   Expanded(child: TopScorerCard(player: tsotw, label: "TSOTW · THIS WEEK", badge: "👑",
                       gradient: AppColors.blueHeroGradient)),
-                  SizedBox(width: AppSpacing.lg),
+                  SizedBox(width: Dimensions.lg),
                   Expanded(child: TopScorerCard(player: tsotm, label: "TSOTM · DECEMBER", badge: "🏆",
                       gradient: AppColors.orangeHeroGradient)),
                 ]),
-                SizedBox(height: AppSpacing.xxxl),
+                SizedBox(height: Dimensions.xxxl),
 
                 // ── Overall Top Scorer ──
                 if (appData.seasonalScorers.length >= 3) ...[
@@ -178,7 +179,7 @@ class HomeScreen extends StatelessWidget {
                     statLabel: "GOALS",
                     badgeAlignment: Alignment.topRight,
                   ),
-                  SizedBox(height: AppSpacing.xxxl),
+                  SizedBox(height: Dimensions.xxxl),
                 ],
 
                 // ── Seasonal Top Scorer ──
@@ -191,20 +192,20 @@ class HomeScreen extends StatelessWidget {
                     statLabel: "GOALS",
                     badgeAlignment: Alignment.topRight,
                   ),
-                  SizedBox(height: AppSpacing.xxxl),
+                  SizedBox(height: Dimensions.xxxl),
                 ],
 
                 // ── Upcoming Matches ──
                 SectionHeadingWidget(title: "🎮 Upcoming Matches", onAll: () => onNavigate(1)),
                 ...appData.matches.take(3).map((m) => Padding(
-                      padding: EdgeInsets.only(bottom: AppSpacing.md),
+                      padding: EdgeInsets.only(bottom: Dimensions.md),
                       child: MatchMiniCard(match: m),
                     )),
 
                 // ── Get Rewards CTA ──
                 GetRewardsCta(onTap: () => onNavigate(3)),
-                if (AppBreakpoints.isDesktop(context)) AppDesktopFooter(),
-                SizedBox(height: AppSpacing.xxxl),
+                if (ResponsiveHelper.isDesktop(context)) AppDesktopFooter(),
+                SizedBox(height: Dimensions.xxxl),
               ]),
             ),
           ]),
@@ -234,7 +235,7 @@ class _HallOfFameBanner extends StatelessWidget {
               Color(0x08FFD700),
             ],
           ),
-          borderRadius: AppRadius.borderDef,
+          borderRadius: Dimensions.borderDef,
           border: Border.all(color: AppColors.neonGold.withOpacity(AppColors.opacity25)),
           boxShadow: [
             BoxShadow(
@@ -245,8 +246,8 @@ class _HallOfFameBanner extends StatelessWidget {
           ],
         ),
         padding: const EdgeInsets.symmetric(
-          horizontal: AppSpacing.massive,
-          vertical: AppSpacing.cardInnerPadding,
+          horizontal: Dimensions.massive,
+          vertical: Dimensions.cardInnerPadding,
         ),
         child: Stack(
           children: [
@@ -258,9 +259,9 @@ class _HallOfFameBanner extends StatelessWidget {
                 "HOF",
                 style: TextStyle(
                   fontSize: 56,
-                  fontWeight: AppTypography.black,
+                  fontWeight: Dimensions.black,
                   color: AppColors.neonGold.withOpacity(0.05),
-                  height: AppTypography.lineHeightCompact,
+                  height: Dimensions.lineHeightCompact,
                   letterSpacing: -2,
                 ),
               ),
@@ -276,60 +277,60 @@ class _HallOfFameBanner extends StatelessWidget {
                       // Pill label
                       Container(
                         padding: const EdgeInsets.symmetric(
-                          horizontal: AppSpacing.md,
-                          vertical: AppSpacing.xxs,
+                          horizontal: Dimensions.md,
+                          vertical: Dimensions.xxs,
                         ),
                         decoration: BoxDecoration(
                           gradient: AppColors.goldRibbonGradient,
-                          borderRadius: AppRadius.borderPill,
+                          borderRadius: Dimensions.borderPill,
                         ),
                         child: const Text(
                           "HOUSE OF ELITES",
                           style: TextStyle(
-                            fontSize: AppTypography.sizeTiny,
-                            fontWeight: AppTypography.black,
-                            letterSpacing: AppTypography.trackingMax,
+                            fontSize: Dimensions.sizeTiny,
+                            fontWeight: Dimensions.black,
+                            letterSpacing: Dimensions.trackingMax,
                             color: AppColors.bg,
                           ),
                         ),
                       ),
-                      const SizedBox(height: AppSpacing.md),
+                      const SizedBox(height: Dimensions.md),
                       const Text(
                         "Hall Of Fame",
                         style: TextStyle(
-                          fontSize: AppTypography.sizeHeading,
-                          fontWeight: AppTypography.black,
+                          fontSize: Dimensions.sizeHeading,
+                          fontWeight: Dimensions.black,
                           color: AppColors.white,
-                          height: AppTypography.lineHeightCompact,
+                          height: Dimensions.lineHeightCompact,
                           letterSpacing: -0.3,
                         ),
                       ),
-                      const SizedBox(height: AppSpacing.xxs),
+                      const SizedBox(height: Dimensions.xxs),
                       const Text(
                         "Legends & Champions across\nall seasons",
                         style: TextStyle(
-                          fontSize: AppTypography.sizeCaption,
+                          fontSize: Dimensions.sizeCaption,
                           color: AppColors.textSecondary,
-                          height: AppTypography.lineHeightRelaxed,
+                          height: Dimensions.lineHeightRelaxed,
                         ),
                       ),
-                      const SizedBox(height: AppSpacing.md),
+                      const SizedBox(height: Dimensions.md),
                       // CTA row
                       Row(
                         children: [
                           Text(
                             "View All",
                             style: TextStyle(
-                              fontSize: AppTypography.sizeSmall,
-                              fontWeight: AppTypography.extraBold,
+                              fontSize: Dimensions.sizeSmall,
+                              fontWeight: Dimensions.extraBold,
                               color: AppColors.neonGold,
-                              letterSpacing: AppTypography.trackingNormal,
+                              letterSpacing: Dimensions.trackingNormal,
                             ),
                           ),
-                          const SizedBox(width: AppSpacing.xs),
+                          const SizedBox(width: Dimensions.xs),
                           Icon(
                             Icons.arrow_forward_ios_rounded,
-                            size: AppTypography.sizeCaption,
+                            size: Dimensions.sizeCaption,
                             color: AppColors.neonGold,
                           ),
                         ],
@@ -338,18 +339,18 @@ class _HallOfFameBanner extends StatelessWidget {
                   ),
                 ),
 
-                const SizedBox(width: AppSpacing.lg),
+                const SizedBox(width: Dimensions.lg),
 
                 // // Right: trophy emoji + season count chips
                 // Column(
                 //   crossAxisAlignment: CrossAxisAlignment.end,
                 //   children: [
                 //     const Text("🏆", style: TextStyle(fontSize: 48)),
-                //     const SizedBox(height: AppSpacing.md),
+                //     const SizedBox(height: Dimensions.md),
                 //     // _buildMiniChip("4 Awards", AppColors.neonGold),
-                //     // const SizedBox(height: AppSpacing.xs),
+                //     // const SizedBox(height: Dimensions.xs),
                 //     // _buildMiniChip("18 Champs", AppColors.neonCyan),
-                //     // const SizedBox(height: AppSpacing.xs),
+                //     // const SizedBox(height: Dimensions.xs),
                 //     // _buildMiniChip("6+ Seasons", AppColors.neonPurple),
                 //   ],
                 // ),
@@ -364,21 +365,21 @@ class _HallOfFameBanner extends StatelessWidget {
   // Widget _buildMiniChip(String label, Color color) {
   //   return Container(
   //     padding: const EdgeInsets.symmetric(
-  //       horizontal: AppSpacing.md,
-  //       vertical: AppSpacing.xxs,
+  //       horizontal: Dimensions.md,
+  //       vertical: Dimensions.xxs,
   //     ),
   //     decoration: BoxDecoration(
   //       color: color.withOpacity(AppColors.opacity10),
-  //       borderRadius: AppRadius.borderXxs,
+  //       borderRadius: Dimensions.borderXxs,
   //       border: Border.all(color: color.withOpacity(AppColors.opacity25)),
   //     ),
   //     child: Text(
   //       label,
   //       style: TextStyle(
-  //         fontSize: AppTypography.sizeTiny,
-  //         fontWeight: AppTypography.extraBold,
+  //         fontSize: Dimensions.sizeTiny,
+  //         fontWeight: Dimensions.extraBold,
   //         color: color,
-  //         letterSpacing: AppTypography.trackingNormal,
+  //         letterSpacing: Dimensions.trackingNormal,
   //       ),
   //     ),
   //   );

@@ -1,4 +1,4 @@
-// import 'package:e_sports/core/theme/app_theme.dart';
+// import 'package:e_sports/core/utils/dimensions.dart';
 
 // import 'package:e_sports/core/widgets/app_header_widget.dart';
 // import 'package:e_sports/core/widgets/glass_card_widget.dart';
@@ -64,7 +64,7 @@
 //               indicatorWeight: 3,
 //               labelColor: AppColors.neonCyan,
 //               unselectedLabelColor: AppColors.textMuted,
-//               labelStyle: TextStyle(fontSize: 12, fontWeight: AppTypography.black, letterSpacing: 1.2),
+//               labelStyle: TextStyle(fontSize: 12, fontWeight: Dimensions.black, letterSpacing: 1.2),
 //               tabs: const [
 //                 Tab(text: "OVERVIEW"),
 //                 Tab(text: "ANALYTICS"),
@@ -77,27 +77,27 @@
 //               children: [
 //                 // ── Tab 1: Overview ──
 //                 SingleChildScrollView(
-//                   padding: EdgeInsets.symmetric(vertical: AppSpacing.screenPadding),
+//                   padding: EdgeInsets.symmetric(vertical: Dimensions.screenPadding),
 //                   child: Column(
 //                     children: [
 //                       // ── Top Section (Padded) ──
 //                       Padding(
-//                         padding: EdgeInsets.symmetric(horizontal: AppSpacing.screenPadding),
+//                         padding: EdgeInsets.symmetric(horizontal: Dimensions.screenPadding),
 //                         child: Column(
 //                           children: [
 //                             Container(
-//                               padding: EdgeInsets.all(AppSpacing.massive),
+//                               padding: EdgeInsets.all(Dimensions.massive),
 //                               decoration: BoxDecoration(
 //                                 gradient: AppColors.goldGradient,
-//                                 borderRadius: AppRadius.borderXl + const BorderRadius.all(Radius.circular(2)),
+//                                 borderRadius: Dimensions.borderXl + const BorderRadius.all(Radius.circular(2)),
 //                                 border: Border.all(
 //                                   color: AppColors.neonGold.withOpacity(AppColors.opacity30),
-//                                   width: AppSizing.borderThin,
+//                                   width: Dimensions.borderThin,
 //                                 ),
-//                                 boxShadow: AppElevation.accentGlow(AppColors.neonGold, opacity: AppColors.opacity18, blur: 24, offset: const Offset(0, 6)),
+//                                 boxShadow: Dimensions.accentGlow(AppColors.neonGold, opacity: AppColors.opacity18, blur: 24, offset: const Offset(0, 6)),
 //                               ),
 //                               child: ClipRRect(
-//                                 borderRadius: AppRadius.borderXl + const BorderRadius.all(Radius.circular(2)),
+//                                 borderRadius: Dimensions.borderXl + const BorderRadius.all(Radius.circular(2)),
 //                                 child: Stack(
 //                                   children: [
 //                                     Positioned(
@@ -105,10 +105,10 @@
 //                                       child: Text(
 //                                         "#1",
 //                                         style: TextStyle(
-//                                           fontSize: AppTypography.sizeGhostXxl,
-//                                           fontWeight: AppTypography.black,
+//                                           fontSize: Dimensions.sizeGhostXxl,
+//                                           fontWeight: Dimensions.black,
 //                                           color: AppColors.neonGold.withOpacity(0.05),
-//                                           height: AppTypography.lineHeightCompact,
+//                                           height: Dimensions.lineHeightCompact,
 //                                         ),
 //                                       ),
 //                                     ),
@@ -119,10 +119,10 @@
 //                                             PlayerAvatarWidget(
 //                                               name: p.name,
 //                                               imageUrl: p.player.imageUrl,
-//                                               size: AppSizing.avatarLg,
+//                                               size: Dimensions.avatarLg,
 //                                               borderColor: AppColors.neonGold,
 //                                             ),
-//                                             SizedBox(width: AppSpacing.xxxl),
+//                                             SizedBox(width: Dimensions.xxxl),
 //                                             Expanded(
 //                                               child: Column(
 //                                                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -130,19 +130,19 @@
 //                                                   Text(
 //                                                     p.name,
 //                                                     style: TextStyle(
-//                                                       fontSize: AppTypography.sizeTitleLarge,
-//                                                       fontWeight: AppTypography.black,
+//                                                       fontSize: Dimensions.sizeTitleLarge,
+//                                                       fontWeight: Dimensions.black,
 //                                                       color: AppColors.white,
 //                                                     ),
 //                                                   ),
 //                                                   Text(
 //                                                     "@${p.short.toLowerCase()}",
 //                                                     style: TextStyle(
-//                                                       fontSize: AppTypography.sizeSmall,
+//                                                       fontSize: Dimensions.sizeSmall,
 //                                                       color: AppColors.white.withOpacity(AppColors.opacity45),
 //                                                     ),
 //                                                   ),
-//                                                   SizedBox(height: AppSpacing.md),
+//                                                   SizedBox(height: Dimensions.md),
 //                                                   PlayerTagsWidget(
 //                                                     tags: p.tags,
 //                                                     accentColor: AppColors.neonGold,
@@ -152,9 +152,9 @@
 //                                             ),
 //                                           ],
 //                                         ),
-//                                         SizedBox(height: AppSpacing.xxxl),
+//                                         SizedBox(height: Dimensions.xxxl),
 //                                         Container(
-//                                           height: AppSizing.dividerHeight,
+//                                           height: Dimensions.dividerHeight,
 //                                           decoration: BoxDecoration(
 //                                             gradient: AppColors.dividerGradient(color: AppColors.neonGold, opacity: AppColors.opacity25),
 //                                           ),
@@ -165,7 +165,7 @@
 //                                 ),
 //                               ),
 //                             ),
-//                             SizedBox(height: AppSpacing.xxxl),
+//                             SizedBox(height: Dimensions.xxxl),
 //                           ],
 //                         ),
 //                       ),
@@ -175,16 +175,16 @@
 
 //                       // ── Bottom Section (Padded) ──
 //                       Padding(
-//                         padding: EdgeInsets.symmetric(horizontal: AppSpacing.screenPadding),
+//                         padding: EdgeInsets.symmetric(horizontal: Dimensions.screenPadding),
 //                         child: Column(
 //                           children: [
-//                             SizedBox(height: AppSpacing.xxxl),
+//                             SizedBox(height: Dimensions.xxxl),
 //                             SectionHeadingWidget(title: "📋 Last 20 Results"),
 //                             GlassCardWidget(
-//                               padding: EdgeInsets.all(AppSpacing.massive),
+//                               padding: EdgeInsets.all(Dimensions.massive),
 //                               child: Wrap(
 //                                 alignment: WrapAlignment.start,
-//                                 spacing: AppSpacing.sm, runSpacing: AppSpacing.sm,
+//                                 spacing: Dimensions.sm, runSpacing: Dimensions.sm,
 //                                 children: List.generate(20, (i) {
 //                                   final bool hasData = i < last20.length;
 //                                   final r = hasData ? last20[i] : "na";
@@ -192,9 +192,9 @@
 //                                                 r == "win" ? AppColors.neonGreen :
 //                                                 r == "loss" ? AppColors.neonRed : AppColors.neonGold;
 
-//                                   final totalSpacing = AppSpacing.sm * 9;
-//                                   final cardPadding = AppSpacing.massive * 2;
-//                                   final screenPadding = AppSpacing.screenPadding * 2;
+//                                   final totalSpacing = Dimensions.sm * 9;
+//                                   final cardPadding = Dimensions.massive * 2;
+//                                   final screenPadding = Dimensions.screenPadding * 2;
 //                                   final availableWidth = MediaQuery.of(context).size.width - screenPadding - cardPadding - totalSpacing;
 //                                   final itemWidth = availableWidth / 10 - 0.5;
 
@@ -202,26 +202,26 @@
 //                                     width: itemWidth, height: itemWidth,
 //                                     decoration: BoxDecoration(
 //                                       color: color.withOpacity(AppColors.opacity15),
-//                                       borderRadius: AppRadius.borderMd - const BorderRadius.all(Radius.circular(2)),
+//                                       borderRadius: Dimensions.borderMd - const BorderRadius.all(Radius.circular(2)),
 //                                       border: Border.all(color: color.withOpacity(AppColors.opacity40)),
 //                                     ),
 //                                     alignment: Alignment.center,
 //                                     child: Text(hasData ? r[0].toUpperCase() : "N/A",
 //                                         style: TextStyle(
-//                                           fontSize: hasData ? AppTypography.sizeMicro : 6, 
-//                                           fontWeight: AppTypography.black, 
+//                                           fontSize: hasData ? Dimensions.sizeMicro : 6, 
+//                                           fontWeight: Dimensions.black, 
 //                                           color: color,
 //                                         )),
 //                                   );
 //                                 }),
 //                               ),
 //                             ),
-//                             SizedBox(height: AppSpacing.xxxl),
+//                             SizedBox(height: Dimensions.xxxl),
 //                             _buildAchievementsSection(context),
-//                             SizedBox(height: AppSpacing.xxxl),
+//                             SizedBox(height: Dimensions.xxxl),
 //                             SectionHeadingWidget(title: "📊 Detailed Stats"),
 //                             GlassCardWidget(
-//                               padding: EdgeInsets.all(AppSpacing.massive),
+//                               padding: EdgeInsets.all(Dimensions.massive),
 //                               child: Column(
 //                                 children: [
 //                                   for (final stat in [
@@ -231,21 +231,21 @@
 //                                     ("🎩", "Hat-tricks", p.hattricks, 20),
 //                                     ("🧤", "Clean Sheets", p.cleansheets, 50),
 //                                   ]) Padding(
-//                                     padding: EdgeInsets.only(bottom: AppSpacing.xl),
+//                                     padding: EdgeInsets.only(bottom: Dimensions.xl),
 //                                     child: Column(
 //                                       crossAxisAlignment: CrossAxisAlignment.start,
 //                                       children: [
 //                                         Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
 //                                           Row(children: [
-//                                             Text(stat.$1, style: TextStyle(fontSize: AppTypography.sizeSubtitle)),
-//                                             SizedBox(width: AppSpacing.iconGap),
+//                                             Text(stat.$1, style: TextStyle(fontSize: Dimensions.sizeSubtitle)),
+//                                             SizedBox(width: Dimensions.iconGap),
 //                                             Text(stat.$2, style: TextStyle(
-//                                                 fontSize: AppTypography.sizeSmall, fontWeight: AppTypography.bold, color: AppColors.textPrimary)),
+//                                                 fontSize: Dimensions.sizeSmall, fontWeight: Dimensions.bold, color: AppColors.textPrimary)),
 //                                           ]),
 //                                           Text("${stat.$3}", style: TextStyle(
-//                                               fontSize: AppTypography.sizeBody, fontWeight: AppTypography.extraBold, color: AppColors.neonGold)),
+//                                               fontSize: Dimensions.sizeBody, fontWeight: Dimensions.extraBold, color: AppColors.neonGold)),
 //                                         ]),
-//                                         SizedBox(height: AppSpacing.sm),
+//                                         SizedBox(height: Dimensions.sm),
 //                                         NeonProgressBarWidget(value: stat.$3.toDouble(), max: stat.$4.toDouble(), color: AppColors.neonCyan),
 //                                       ],
 //                                     ),
@@ -253,7 +253,7 @@
 //                                 ],
 //                               ),
 //                             ),
-//                             SizedBox(height: AppSpacing.xxxl),
+//                             SizedBox(height: Dimensions.xxxl),
 //                           ],
 //                         ),
 //                       ),
@@ -280,28 +280,28 @@
 //   //   final stats = performance.stats;
 
 //   //   return Padding(
-//   //     padding: EdgeInsets.symmetric(horizontal: AppSpacing.screenPadding),
+//   //     padding: EdgeInsets.symmetric(horizontal: Dimensions.screenPadding),
 //   //     child: Column(
 //   //       crossAxisAlignment: CrossAxisAlignment.start,
 //   //       children: [
 //   //         SectionHeadingWidget(title: "🏆 Official Overall ⚡ Stats"),
 //   //         GlassCardWidget(
-//   //           padding: EdgeInsets.all(AppSpacing.massive),
+//   //           padding: EdgeInsets.all(Dimensions.massive),
 //   //           child: SingleChildScrollView(
 //   //             scrollDirection: Axis.horizontal,
 //   //             clipBehavior: Clip.none,
 //   //             child: Row(
 //   //               children: stats.map((s) => Padding(
-//   //                 padding: EdgeInsets.only(right: AppSpacing.massive),
+//   //                 padding: EdgeInsets.only(right: Dimensions.massive),
 //   //                 child: Column(
 //   //                   children: [
 //   //                     Text(s.label, style: TextStyle(
 //   //                       fontSize: 8,
-//   //                       fontWeight: AppTypography.bold,
+//   //                       fontWeight: Dimensions.bold,
 //   //                       color: AppColors.textMuted,
 //   //                       letterSpacing: 0.5,
 //   //                     )),
-//   //                     SizedBox(height: AppSpacing.sm),
+//   //                     SizedBox(height: Dimensions.sm),
 //   //                     Container(
 //   //                       width: 42,
 //   //                       height: 42,
@@ -324,12 +324,12 @@
 //   //                         style: TextStyle(fontSize: 18),
 //   //                       ),
 //   //                     ),
-//   //                     SizedBox(height: AppSpacing.sm),
+//   //                     SizedBox(height: Dimensions.sm),
 //   //                     Text(
 //   //                       s.label == "FA" ? (s.rawValue as double).toStringAsFixed(2) : "${s.rawValue}",
 //   //                       style: TextStyle(
-//   //                         fontSize: AppTypography.sizeBodyLarge,
-//   //                         fontWeight: AppTypography.black,
+//   //                         fontSize: Dimensions.sizeBodyLarge,
+//   //                         fontWeight: Dimensions.black,
 //   //                         color: AppColors.white,
 //   //                       ),
 //   //                     ),
@@ -349,24 +349,24 @@
 //   final stats = performance.stats.where((s) => s.label != "FA").toList();
 
 //   return Padding(
-//     padding: EdgeInsets.symmetric(horizontal: AppSpacing.screenPadding),
+//     padding: EdgeInsets.symmetric(horizontal: Dimensions.screenPadding),
 //     child: Column(
 //       crossAxisAlignment: CrossAxisAlignment.start,
 //       children: [
 //         SectionHeadingWidget(title: "🏆 Official Overall ⚡ Stats"),
 //         GlassCardWidget(
-//           padding: EdgeInsets.all(AppSpacing.massive),
+//           padding: EdgeInsets.all(Dimensions.massive),
 //           child: LayoutBuilder(
 //             builder: (context, constraints) {
 //               const itemsPerRow = 5;
 
-//               final totalSpacing = AppSpacing.lg * (itemsPerRow - 1);
+//               final totalSpacing = Dimensions.lg * (itemsPerRow - 1);
 //               final itemWidth =
 //                   (constraints.maxWidth - totalSpacing) / itemsPerRow;
 
 //               return Wrap(
-//                 spacing: AppSpacing.lg,
-//                 runSpacing: AppSpacing.xl,
+//                 spacing: Dimensions.lg,
+//                 runSpacing: Dimensions.xl,
 //                 children: stats.map((s) {
 //                   return SizedBox(
 //                     width: itemWidth,
@@ -379,12 +379,12 @@
 //                           overflow: TextOverflow.ellipsis,
 //                           style: TextStyle(
 //                             fontSize: 8,
-//                             fontWeight: AppTypography.bold,
+//                             fontWeight: Dimensions.bold,
 //                             color: AppColors.textMuted,
 //                             letterSpacing: 0.5,
 //                           ),
 //                         ),
-//                         SizedBox(height: AppSpacing.sm),
+//                         SizedBox(height: Dimensions.sm),
 //                         Container(
 //                           width: 42,
 //                           height: 42,
@@ -421,13 +421,13 @@
 //                             style: TextStyle(fontSize: 18),
 //                           ),
 //                         ),
-//                         SizedBox(height: AppSpacing.sm),
+//                         SizedBox(height: Dimensions.sm),
 //                         Text(
 //                           "${s.rawValue}",
 //                           textAlign: TextAlign.center,
 //                           style: TextStyle(
-//                             fontSize: AppTypography.sizeBodyLarge,
-//                             fontWeight: AppTypography.black,
+//                             fontSize: Dimensions.sizeBodyLarge,
+//                             fontWeight: Dimensions.black,
 //                             color: AppColors.white,
 //                           ),
 //                         ),
@@ -451,45 +451,45 @@
 //       children: [
 //         SectionHeadingWidget(title: "🏅 Achievements"),
 //         GlassCardWidget(
-//           padding: EdgeInsets.all(AppSpacing.massive),
+//           padding: EdgeInsets.all(Dimensions.massive),
 //           child: SizedBox(
 //             width: double.infinity,
 //             child: Wrap(
 //               alignment: WrapAlignment.start,
-//               spacing: AppSpacing.md,
-//               runSpacing: AppSpacing.md,
+//               spacing: Dimensions.md,
+//               runSpacing: Dimensions.md,
 //               children: achievements.map((a) {
 //                 // Mock unlocked status for demo
 //                 final unlocked = a.id == 1; 
                 
-//                 final totalSpacing = AppSpacing.md * 4;
-//                 final cardPadding = AppSpacing.massive * 2;
-//                 final screenPadding = AppSpacing.screenPadding * 2;
+//                 final totalSpacing = Dimensions.md * 4;
+//                 final cardPadding = Dimensions.massive * 2;
+//                 final screenPadding = Dimensions.screenPadding * 2;
 //                 final availableWidth = MediaQuery.of(context).size.width - screenPadding - cardPadding - totalSpacing;
 //                 final itemWidth = availableWidth / 5 - 0.5;
 
 //                 return Container(
 //                   width: itemWidth,
-//                   padding: EdgeInsets.symmetric(vertical: AppSpacing.lg, horizontal: AppSpacing.xs),
+//                   padding: EdgeInsets.symmetric(vertical: Dimensions.lg, horizontal: Dimensions.xs),
 //                   decoration: BoxDecoration(
 //                     color: unlocked ? AppColors.neonGold.withOpacity(AppColors.opacity8) : AppColors.white.withOpacity(0.03),
-//                     borderRadius: AppRadius.borderMd,
+//                     borderRadius: Dimensions.borderMd,
 //                     border: Border.all(
 //                         color: unlocked ? AppColors.neonGold.withOpacity(AppColors.opacity30) : AppColors.glassBorder),
 //                     boxShadow: unlocked ? [BoxShadow(color: AppColors.neonGold.withOpacity(AppColors.opacity10), blurRadius: 4)] : [],
 //                   ),
 //                   child: Column(children: [
 //                     Text("🏆", // Use a generic icon if iconAsset isn't an emoji
-//                       style: TextStyle(fontSize: AppTypography.sizeBodyLarge),
+//                       style: TextStyle(fontSize: Dimensions.sizeBodyLarge),
 //                     ).withOpacity(unlocked ? 1.0 : 0.3),
-//                     SizedBox(height: AppSpacing.xxs),
+//                     SizedBox(height: Dimensions.xxs),
 //                     Text(a.title,
 //                         textAlign: TextAlign.center,
 //                         maxLines: 1,
 //                         overflow: TextOverflow.ellipsis,
 //                         style: TextStyle(
 //                           fontSize: 7, 
-//                           fontWeight: AppTypography.bold,
+//                           fontWeight: Dimensions.bold,
 //                           color: unlocked ? AppColors.textPrimary : AppColors.textMuted,
 //                           letterSpacing: -0.2,
 //                         )),
@@ -505,7 +505,7 @@
 // }
 
 
-import '../../../core/theme/app_theme.dart';
+import 'package:e_sports/core/utils/dimensions.dart';
 import '../../../core/helper/route_helper.dart';
 import '../../../core/widgets/app_header_widget.dart';
 import '../../../core/widgets/glass_card_widget.dart';
@@ -576,7 +576,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               unselectedLabelColor: AppColors.textMuted,
               labelStyle: TextStyle(
                   fontSize: 12,
-                  fontWeight: AppTypography.black,
+                  fontWeight: Dimensions.black,
                   letterSpacing: 1.2),
               tabs: const [
                 Tab(text: "OVERVIEW"),
@@ -590,34 +590,34 @@ class _ProfileScreenState extends State<ProfileScreen> {
               children: [
                 // ── Tab 1: Overview ──
                 SingleChildScrollView(
-                  padding: EdgeInsets.symmetric(vertical: AppSpacing.screenPadding),
+                  padding: EdgeInsets.symmetric(vertical: Dimensions.screenPadding),
                   child: Column(
                     children: [
                       // ── Top Section ──
                       Padding(
                         padding:
-                            EdgeInsets.symmetric(horizontal: AppSpacing.screenPadding),
+                            EdgeInsets.symmetric(horizontal: Dimensions.screenPadding),
                         child: Column(
                           children: [
                             Container(
-                              padding: EdgeInsets.all(AppSpacing.massive),
+                              padding: EdgeInsets.all(Dimensions.massive),
                               decoration: BoxDecoration(
                                 gradient: AppColors.goldGradient,
-                                borderRadius: AppRadius.borderXl +
+                                borderRadius: Dimensions.borderXl +
                                     const BorderRadius.all(Radius.circular(2)),
                                 border: Border.all(
                                   color: AppColors.neonGold
                                       .withOpacity(AppColors.opacity30),
-                                  width: AppSizing.borderThin,
+                                  width: Dimensions.borderThin,
                                 ),
-                                boxShadow: AppElevation.accentGlow(
+                                boxShadow: Dimensions.accentGlow(
                                     AppColors.neonGold,
                                     opacity: AppColors.opacity18,
                                     blur: 24,
                                     offset: const Offset(0, 6)),
                               ),
                               child: ClipRRect(
-                                borderRadius: AppRadius.borderXl +
+                                borderRadius: Dimensions.borderXl +
                                     const BorderRadius.all(Radius.circular(2)),
                                 child: Stack(
                                   children: [
@@ -627,11 +627,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                       child: Text(
                                         "#1",
                                         style: TextStyle(
-                                          fontSize: AppTypography.sizeGhostXxl,
-                                          fontWeight: AppTypography.black,
+                                          fontSize: Dimensions.sizeGhostXxl,
+                                          fontWeight: Dimensions.black,
                                           color: AppColors.neonGold
                                               .withOpacity(0.05),
-                                          height: AppTypography.lineHeightCompact,
+                                          height: Dimensions.lineHeightCompact,
                                         ),
                                       ),
                                     ),
@@ -642,10 +642,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                             PlayerAvatarWidget(
                                               name: p.name,
                                               imageUrl: p.player.imageUrl,
-                                              size: AppSizing.avatarLg,
+                                              size: Dimensions.avatarLg,
                                               borderColor: AppColors.neonGold,
                                             ),
-                                            SizedBox(width: AppSpacing.xxxl),
+                                            SizedBox(width: Dimensions.xxxl),
                                             Expanded(
                                               child: Column(
                                                 crossAxisAlignment:
@@ -655,8 +655,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                                     p.name,
                                                     style: TextStyle(
                                                       fontSize:
-                                                          AppTypography.sizeTitleLarge,
-                                                      fontWeight: AppTypography.black,
+                                                          Dimensions.sizeTitleLarge,
+                                                      fontWeight: Dimensions.black,
                                                       color: AppColors.white,
                                                     ),
                                                   ),
@@ -664,13 +664,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                                     "@${p.short.toLowerCase()}",
                                                     style: TextStyle(
                                                       fontSize:
-                                                          AppTypography.sizeSmall,
+                                                          Dimensions.sizeSmall,
                                                       color: AppColors.white
                                                           .withOpacity(
                                                               AppColors.opacity45),
                                                     ),
                                                   ),
-                                                  SizedBox(height: AppSpacing.md),
+                                                  SizedBox(height: Dimensions.md),
                                                   PlayerTagsWidget(
                                                     tags: p.tags,
                                                     accentColor: AppColors.neonGold,
@@ -680,9 +680,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                             ),
                                           ],
                                         ),
-                                        SizedBox(height: AppSpacing.xxxl),
+                                        SizedBox(height: Dimensions.xxxl),
                                         Container(
-                                          height: AppSizing.dividerHeight,
+                                          height: Dimensions.dividerHeight,
                                           decoration: BoxDecoration(
                                             gradient: AppColors.dividerGradient(
                                                 color: AppColors.neonGold,
@@ -695,7 +695,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 ),
                               ),
                             ),
-                            SizedBox(height: AppSpacing.xxxl),
+                            SizedBox(height: Dimensions.xxxl),
                           ],
                         ),
                       ),
@@ -706,17 +706,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       // ── Last 20 Results ──
                       Padding(
                         padding:
-                            EdgeInsets.symmetric(horizontal: AppSpacing.screenPadding),
+                            EdgeInsets.symmetric(horizontal: Dimensions.screenPadding),
                         child: Column(
                           children: [
-                            SizedBox(height: AppSpacing.xxxl),
+                            SizedBox(height: Dimensions.xxxl),
                             SectionHeadingWidget(title: "📋 Last 20 Results"),
                             GlassCardWidget(
-                              padding: EdgeInsets.all(AppSpacing.massive),
+                              padding: EdgeInsets.all(Dimensions.massive),
                               child: Wrap(
                                 alignment: WrapAlignment.start,
-                                spacing: AppSpacing.sm,
-                                runSpacing: AppSpacing.sm,
+                                spacing: Dimensions.sm,
+                                runSpacing: Dimensions.sm,
                                 children: List.generate(20, (i) {
                                   final bool hasData = i < last20.length;
                                   final r = hasData ? last20[i] : "na";
@@ -728,9 +728,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                               ? AppColors.neonRed
                                               : AppColors.neonGold;
 
-                                  final totalSpacing = AppSpacing.sm * 9;
-                                  final cardPadding = AppSpacing.massive * 2;
-                                  final screenPadding = AppSpacing.screenPadding * 2;
+                                  final totalSpacing = Dimensions.sm * 9;
+                                  final cardPadding = Dimensions.massive * 2;
+                                  final screenPadding = Dimensions.screenPadding * 2;
                                   final availableWidth = MediaQuery.of(context)
                                           .size
                                           .width -
@@ -744,7 +744,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                     height: itemWidth,
                                     decoration: BoxDecoration(
                                       color: color.withOpacity(AppColors.opacity15),
-                                      borderRadius: AppRadius.borderMd -
+                                      borderRadius: Dimensions.borderMd -
                                           const BorderRadius.all(Radius.circular(2)),
                                       border: Border.all(
                                           color: color.withOpacity(AppColors.opacity40)),
@@ -754,23 +754,23 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                         hasData ? r[0].toUpperCase() : "N/A",
                                         style: TextStyle(
                                           fontSize:
-                                              hasData ? AppTypography.sizeMicro : 6,
-                                          fontWeight: AppTypography.black,
+                                              hasData ? Dimensions.sizeMicro : 6,
+                                          fontWeight: Dimensions.black,
                                           color: color,
                                         )),
                                   );
                                 }),
                               ),
                             ),
-                            SizedBox(height: AppSpacing.xxxl),
+                            SizedBox(height: Dimensions.xxxl),
                             // _buildAchievementsSection(context),
                             _buildAchievementsSection(context, p),
 
                             // ── Performance Breakdown (Unique Stats) ──
-                            SizedBox(height: AppSpacing.xxxl),
+                            SizedBox(height: Dimensions.xxxl),
                             SectionHeadingWidget(title: "🔥 Performance Breakdown"),
                             GlassCardWidget(
-                              padding: EdgeInsets.all(AppSpacing.massive),
+                              padding: EdgeInsets.all(Dimensions.massive),
                               child: Column(
                                 children: [
                                   _buildPerformanceRow(
@@ -782,7 +782,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                         p.matches == 0 ? 0 : p.wins / p.matches,
                                     color: AppColors.neonGreen,
                                   ),
-                                  SizedBox(height: AppSpacing.xl),
+                                  SizedBox(height: Dimensions.xl),
                                   _buildPerformanceRow(
                                     icon: "⚽",
                                     title: "Goals Per Match",
@@ -793,7 +793,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                         : ((p.goals / p.matches) / 3).clamp(0.0, 1.0),
                                     color: AppColors.neonGold,
                                   ),
-                                  SizedBox(height: AppSpacing.xl),
+                                  SizedBox(height: Dimensions.xl),
                                   _buildPerformanceRow(
                                     icon: "🧤",
                                     title: "Clean Sheet Rate",
@@ -804,7 +804,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                         : p.cleansheets / p.matches,
                                     color: AppColors.neonCyan,
                                   ),
-                                  SizedBox(height: AppSpacing.xl),
+                                  SizedBox(height: Dimensions.xl),
                                   _buildPerformanceRow(
                                     icon: "🎩",
                                     title: "Hat-trick Frequency",
@@ -816,7 +816,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               ),
                             ),
 
-                            SizedBox(height: AppSpacing.xxxl),
+                            SizedBox(height: Dimensions.xxxl),
                           ],
                         ),
                       ),
@@ -844,23 +844,23 @@ class _ProfileScreenState extends State<ProfileScreen> {
     final stats = performance.stats.where((s) => s.label != "FA").toList();
 
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: AppSpacing.screenPadding),
+      padding: EdgeInsets.symmetric(horizontal: Dimensions.screenPadding),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           SectionHeadingWidget(title: "🏆 Official Overall ⚡ Stats"),
           GlassCardWidget(
-            padding: EdgeInsets.all(AppSpacing.massive),
+            padding: EdgeInsets.all(Dimensions.massive),
             child: LayoutBuilder(
               builder: (context, constraints) {
                 const itemsPerRow = 5;
 
-                final totalSpacing = AppSpacing.lg * (itemsPerRow - 1);
+                final totalSpacing = Dimensions.lg * (itemsPerRow - 1);
                 final itemWidth = (constraints.maxWidth - totalSpacing) / itemsPerRow;
 
                 return Wrap(
-                  spacing: AppSpacing.lg,
-                  runSpacing: AppSpacing.xl,
+                  spacing: Dimensions.lg,
+                  runSpacing: Dimensions.xl,
                   children: stats.map((s) {
                     return SizedBox(
                       width: itemWidth,
@@ -873,12 +873,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             overflow: TextOverflow.ellipsis,
                             style: TextStyle(
                               fontSize: 8,
-                              fontWeight: AppTypography.bold,
+                              fontWeight: Dimensions.bold,
                               color: AppColors.textMuted,
                               letterSpacing: 0.5,
                             ),
                           ),
-                          SizedBox(height: AppSpacing.sm),
+                          SizedBox(height: Dimensions.sm),
                           Container(
                             width: 42,
                             height: 42,
@@ -915,13 +915,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               style: TextStyle(fontSize: 18),
                             ),
                           ),
-                          SizedBox(height: AppSpacing.sm),
+                          SizedBox(height: Dimensions.sm),
                           Text(
                             "${s.rawValue}",
                             textAlign: TextAlign.center,
                             style: TextStyle(
-                              fontSize: AppTypography.sizeBodyLarge,
-                              fontWeight: AppTypography.black,
+                              fontSize: Dimensions.sizeBodyLarge,
+                              fontWeight: Dimensions.black,
                               color: AppColors.white,
                             ),
                           ),
@@ -945,19 +945,19 @@ class _ProfileScreenState extends State<ProfileScreen> {
   //     children: [
   //       SectionHeadingWidget(title: "🏅 Achievements"),
   //       GlassCardWidget(
-  //         padding: EdgeInsets.all(AppSpacing.massive),
+  //         padding: EdgeInsets.all(Dimensions.massive),
   //         child: SizedBox(
   //           width: double.infinity,
   //           child: Wrap(
   //             alignment: WrapAlignment.start,
-  //             spacing: AppSpacing.md,
-  //             runSpacing: AppSpacing.md,
+  //             spacing: Dimensions.md,
+  //             runSpacing: Dimensions.md,
   //             children: achievements.map((a) {
   //               final unlocked = a.id == 1; // Mock unlocked
 
-  //               final totalSpacing = AppSpacing.md * 4;
-  //               final cardPadding = AppSpacing.massive * 2;
-  //               final screenPadding = AppSpacing.screenPadding * 2;
+  //               final totalSpacing = Dimensions.md * 4;
+  //               final cardPadding = Dimensions.massive * 2;
+  //               final screenPadding = Dimensions.screenPadding * 2;
   //               final availableWidth = MediaQuery.of(context).size.width -
   //                   screenPadding -
   //                   cardPadding -
@@ -967,12 +967,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
   //               return Container(
   //                 width: itemWidth,
   //                 padding:
-  //                     EdgeInsets.symmetric(vertical: AppSpacing.lg, horizontal: AppSpacing.xs),
+  //                     EdgeInsets.symmetric(vertical: Dimensions.lg, horizontal: Dimensions.xs),
   //                 decoration: BoxDecoration(
   //                   color: unlocked
   //                       ? AppColors.neonGold.withOpacity(AppColors.opacity8)
   //                       : AppColors.white.withOpacity(0.03),
-  //                   borderRadius: AppRadius.borderMd,
+  //                   borderRadius: Dimensions.borderMd,
   //                   border: Border.all(
   //                       color: unlocked
   //                           ? AppColors.neonGold.withOpacity(AppColors.opacity30)
@@ -985,16 +985,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
   //                   children: [
   //                     Text(
   //                       "🏆",
-  //                       style: TextStyle(fontSize: AppTypography.sizeBodyLarge),
+  //                       style: TextStyle(fontSize: Dimensions.sizeBodyLarge),
   //                     ).withOpacity(unlocked ? 1.0 : 0.3),
-  //                     SizedBox(height: AppSpacing.xxs),
+  //                     SizedBox(height: Dimensions.xxs),
   //                     Text(a.title,
   //                         textAlign: TextAlign.center,
   //                         maxLines: 1,
   //                         overflow: TextOverflow.ellipsis,
   //                         style: TextStyle(
   //                           fontSize: 7,
-  //                           fontWeight: AppTypography.bold,
+  //                           fontWeight: Dimensions.bold,
   //                           color: unlocked ? AppColors.textPrimary : AppColors.textMuted,
   //                           letterSpacing: -0.2,
   //                         )),
@@ -1036,12 +1036,12 @@ Widget _buildAchievementsSection(BuildContext context, ComputedPlayerStats p) {
       children: [
         SectionHeadingWidget(title: "🏅 Achievements (0)"),
         GlassCardWidget(
-          padding: EdgeInsets.all(AppSpacing.massive),
+          padding: EdgeInsets.all(Dimensions.massive),
           child: Center(
             child: Text(
               "No achievements yet. Keep playing!",
               style: TextStyle(
-                fontSize: AppTypography.sizeSmall,
+                fontSize: Dimensions.sizeSmall,
                 color: AppColors.textMuted,
               ),
             ),
@@ -1056,11 +1056,11 @@ Widget _buildAchievementsSection(BuildContext context, ComputedPlayerStats p) {
     children: [
       SectionHeadingWidget(title: "🏅 Achievements (${unlocked.length})"),
       GlassCardWidget(
-        padding: EdgeInsets.all(AppSpacing.massive),
+        padding: EdgeInsets.all(Dimensions.massive),
         child: LayoutBuilder(
           builder: (context, constraints) {
             const itemsPerRow = 5;
-            final totalSpacing = AppSpacing.md * (itemsPerRow - 1);
+            final totalSpacing = Dimensions.md * (itemsPerRow - 1);
             final itemWidth = (constraints.maxWidth - totalSpacing) / itemsPerRow;
 
             return Column(
@@ -1070,7 +1070,7 @@ Widget _buildAchievementsSection(BuildContext context, ComputedPlayerStats p) {
                 final items = entry.value;
 
                 return Padding(
-                  padding: EdgeInsets.only(bottom: AppSpacing.xl),
+                  padding: EdgeInsets.only(bottom: Dimensions.xl),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -1078,28 +1078,28 @@ Widget _buildAchievementsSection(BuildContext context, ComputedPlayerStats p) {
                       Text(
                         sectionLabel,
                         style: TextStyle(
-                          fontSize: AppTypography.sizeSmall,
-                          fontWeight: AppTypography.bold,
+                          fontSize: Dimensions.sizeSmall,
+                          fontWeight: Dimensions.bold,
                           color: AppColors.textMuted,
                           letterSpacing: 0.8,
                         ),
                       ),
-                      SizedBox(height: AppSpacing.md),
+                      SizedBox(height: Dimensions.md),
 
                       // ── Achievement Badges ──
                       Wrap(
-                        spacing: AppSpacing.md,
-                        runSpacing: AppSpacing.md,
+                        spacing: Dimensions.md,
+                        runSpacing: Dimensions.md,
                         children: items.map((a) {
                           return Container(
                             width: itemWidth,
                             padding: EdgeInsets.symmetric(
-                              vertical: AppSpacing.lg,
-                              horizontal: AppSpacing.xs,
+                              vertical: Dimensions.lg,
+                              horizontal: Dimensions.xs,
                             ),
                             decoration: BoxDecoration(
                               color: a.color.withOpacity(0.08),
-                              borderRadius: AppRadius.borderMd,
+                              borderRadius: Dimensions.borderMd,
                               border: Border.all(
                                 color: a.color.withOpacity(0.30),
                               ),
@@ -1115,10 +1115,10 @@ Widget _buildAchievementsSection(BuildContext context, ComputedPlayerStats p) {
                                 Text(
                                   a.emoji,
                                   style: TextStyle(
-                                    fontSize: AppTypography.sizeBodyLarge,
+                                    fontSize: Dimensions.sizeBodyLarge,
                                   ),
                                 ),
-                                SizedBox(height: AppSpacing.xxs),
+                                SizedBox(height: Dimensions.xxs),
                                 Text(
                                   a.title,
                                   textAlign: TextAlign.center,
@@ -1126,7 +1126,7 @@ Widget _buildAchievementsSection(BuildContext context, ComputedPlayerStats p) {
                                   overflow: TextOverflow.ellipsis,
                                   style: TextStyle(
                                     fontSize: 7,
-                                    fontWeight: AppTypography.bold,
+                                    fontWeight: Dimensions.bold,
                                     color: AppColors.textPrimary,
                                     letterSpacing: -0.2,
                                   ),
@@ -1163,23 +1163,23 @@ Widget _buildAchievementsSection(BuildContext context, ComputedPlayerStats p) {
           children: [
             Row(
               children: [
-                Text(icon, style: TextStyle(fontSize: AppTypography.sizeSubtitle)),
-                SizedBox(width: AppSpacing.iconGap),
+                Text(icon, style: TextStyle(fontSize: Dimensions.sizeSubtitle)),
+                SizedBox(width: Dimensions.iconGap),
                 Text(title,
                     style: TextStyle(
-                        fontSize: AppTypography.sizeSmall,
-                        fontWeight: AppTypography.bold,
+                        fontSize: Dimensions.sizeSmall,
+                        fontWeight: Dimensions.bold,
                         color: AppColors.textPrimary)),
               ],
             ),
             Text(value,
                 style: TextStyle(
-                    fontSize: AppTypography.sizeBody,
-                    fontWeight: AppTypography.extraBold,
+                    fontSize: Dimensions.sizeBody,
+                    fontWeight: Dimensions.extraBold,
                     color: color)),
           ],
         ),
-        SizedBox(height: AppSpacing.sm),
+        SizedBox(height: Dimensions.sm),
         NeonProgressBarWidget(value: progress, max: 1, color: color),
       ],
     );

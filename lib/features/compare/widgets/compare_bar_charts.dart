@@ -1,4 +1,4 @@
-import '../../../core/theme/app_theme.dart';
+import 'package:e_sports/core/utils/dimensions.dart';
 import 'package:flutter/material.dart';
 
 class SideBySideBarChart extends StatelessWidget {
@@ -27,13 +27,13 @@ class SideBySideBarChart extends StatelessWidget {
     final s2 = isPercent ? "${(v2 * 100).toStringAsFixed(1)}%" : "$v2";
 
     return Padding(
-      padding: EdgeInsets.only(bottom: AppSpacing.lg),
+      padding: EdgeInsets.only(bottom: Dimensions.lg),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(label.toUpperCase(), 
               style: TextStyle(color: AppColors.textMuted, fontSize: 8, fontWeight: FontWeight.bold, letterSpacing: 0.5)),
-          SizedBox(height: AppSpacing.xs),
+          SizedBox(height: Dimensions.xs),
           _buildHorizontalBar(v1.toDouble(), max.toDouble(), color1, s1),
           SizedBox(height: 4),
           _buildHorizontalBar(v2.toDouble(), max.toDouble(), color2, s2),
@@ -74,8 +74,8 @@ class SideBySideBarChart extends StatelessWidget {
             ],
           ),
         ),
-        SizedBox(width: AppSpacing.sm),
-        Text(label, style: TextStyle(color: color, fontSize: 10, fontWeight: AppTypography.black)),
+        SizedBox(width: Dimensions.sm),
+        Text(label, style: TextStyle(color: color, fontSize: 10, fontWeight: Dimensions.black)),
       ],
     );
   }

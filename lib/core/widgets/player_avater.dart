@@ -1,4 +1,4 @@
-import '../theme/app_theme.dart';
+import 'package:e_sports/core/utils/dimensions.dart';
 import 'package:flutter/material.dart';
 
 /// A universal player avatar widget.
@@ -15,7 +15,7 @@ class PlayerAvatarWidget extends StatelessWidget {
     super.key,
     required this.name,
     this.imageUrl = '',
-    this.size = AppSizing.avatarMd,
+    this.size = Dimensions.avatarMd,
     this.online,
     this.borderColor,
   });
@@ -33,9 +33,9 @@ class PlayerAvatarWidget extends StatelessWidget {
       ),
       border: Border.all(
         color: borderColor ?? AppColors.glassBorder,
-        width: AppSizing.borderThick,
+        width: Dimensions.borderThick,
       ),
-      boxShadow: AppElevation.subtleGlow(c, opacity: AppColors.opacity30),
+      boxShadow: Dimensions.subtleGlow(c, opacity: AppColors.opacity30),
     );
 
     Widget avatar;
@@ -48,9 +48,9 @@ class PlayerAvatarWidget extends StatelessWidget {
           shape: BoxShape.circle,
           border: Border.all(
             color: borderColor ?? AppColors.glassBorder,
-            width: AppSizing.borderThick,
+            width: Dimensions.borderThick,
           ),
-          boxShadow: AppElevation.subtleGlow(c, opacity: AppColors.opacity30),
+          boxShadow: Dimensions.subtleGlow(c, opacity: AppColors.opacity30),
         ),
         child: ClipOval(
           child: Image.network(
@@ -66,7 +66,7 @@ class PlayerAvatarWidget extends StatelessWidget {
                 style: TextStyle(
                   color: AppColors.white,
                   fontSize: size * 0.38,
-                  fontWeight: AppTypography.black,
+                  fontWeight: Dimensions.black,
                 ),
               ),
             ),
@@ -84,7 +84,7 @@ class PlayerAvatarWidget extends StatelessWidget {
           style: TextStyle(
             color: AppColors.white,
             fontSize: size * 0.38,
-            fontWeight: AppTypography.black,
+            fontWeight: Dimensions.black,
           ),
         ),
       );
@@ -100,12 +100,12 @@ class PlayerAvatarWidget extends StatelessWidget {
           bottom: 0,
           right: 0,
           child: Container(
-            width: size * AppSizing.onlineIndicatorFactor,
-            height: size * AppSizing.onlineIndicatorFactor,
+            width: size * Dimensions.onlineIndicatorFactor,
+            height: size * Dimensions.onlineIndicatorFactor,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
               color: online! ? AppColors.neonGreen : AppColors.textMuted,
-              border: Border.all(color: AppColors.bg, width: AppSizing.borderThick),
+              border: Border.all(color: AppColors.bg, width: Dimensions.borderThick),
             ),
           ),
         ),

@@ -2,7 +2,7 @@ import 'package:e_sports/core/constants/app_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../theme/app_theme.dart';
+import 'package:e_sports/core/utils/dimensions.dart';
 
 class AppDesktopFooter extends StatelessWidget {
   const AppDesktopFooter({super.key});
@@ -10,8 +10,8 @@ class AppDesktopFooter extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.only(top: AppSpacing.xxxl),
-      padding: EdgeInsets.symmetric(horizontal: AppSpacing.screenPadding, vertical: AppSpacing.cardInnerPadding),
+      margin: EdgeInsets.only(top: Dimensions.xxxl),
+      padding: EdgeInsets.symmetric(horizontal: Dimensions.screenPadding, vertical: Dimensions.cardInnerPadding),
       decoration: BoxDecoration(
         color: AppColors.bgCard,
         border: Border(top: BorderSide(color: AppColors.glassBorder)),
@@ -28,8 +28,8 @@ class AppDesktopFooter extends StatelessWidget {
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(
                     color: AppColors.textMuted,
-                    fontSize: AppTypography.sizeCaption,
-                    fontWeight: AppTypography.medium,
+                    fontSize: Dimensions.sizeCaption,
+                    fontWeight: Dimensions.medium,
                   ),
                 ),
                 Text(
@@ -38,15 +38,15 @@ class AppDesktopFooter extends StatelessWidget {
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(
                     color: AppColors.textMuted,
-                    fontSize: AppTypography.sizeCaption,
-                    fontWeight: AppTypography.medium,
+                    fontSize: Dimensions.sizeCaption,
+                    fontWeight: Dimensions.medium,
                   ),
                 ),
               ],
             ),
           ),
           Wrap(
-            spacing: AppSpacing.lg,
+            spacing: Dimensions.lg,
             children: [
               _FooterLink(title: "FAQ", route: "/faq"),
               _FooterLink(title: "Privacy", route: "/privacy-policy"),
@@ -71,13 +71,13 @@ class _FooterLink extends StatelessWidget {
     return InkWell(
       onTap: () => Get.toNamed(route),
       child: Padding(
-        padding: EdgeInsets.symmetric(vertical: AppSpacing.xs),
+        padding: EdgeInsets.symmetric(vertical: Dimensions.xs),
         child: Text(
           title,
           style: TextStyle(
             color: AppColors.textMuted,
-            fontSize: AppTypography.sizeCaption,
-            fontWeight: AppTypography.semiBold,
+            fontSize: Dimensions.sizeCaption,
+            fontWeight: Dimensions.semiBold,
           ),
         ),
       ),

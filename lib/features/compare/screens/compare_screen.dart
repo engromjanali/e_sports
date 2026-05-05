@@ -1,4 +1,4 @@
-import '../../../core/theme/app_theme.dart';
+import 'package:e_sports/core/utils/dimensions.dart';
 import '../../../core/controllers/app_data_controller.dart';
 import '../../../core/data/models/computed_player_stats.dart';
 import '../../../core/helper/route_helper.dart';
@@ -47,27 +47,27 @@ class _CompareScreenState extends State<CompareScreen> {
             ),
             Expanded(
               child: SingleChildScrollView(
-                padding: EdgeInsets.all(AppSpacing.xxxl),
+                padding: EdgeInsets.all(Dimensions.xxxl),
                 child: Column(
                   children: [
                     // ── Selection Area ──
                     Row(
                       children: [
                         Expanded(child: _buildSelectorTile(1, _p1, AppColors.neonBlue)),
-                        SizedBox(width: AppSpacing.lg),
+                        SizedBox(width: Dimensions.lg),
                         _buildVS(),
-                        SizedBox(width: AppSpacing.lg),
+                        SizedBox(width: Dimensions.lg),
                         Expanded(child: _buildSelectorTile(2, _p2, AppColors.neonRed)),
                       ],
                     ),
-                    SizedBox(height: AppSpacing.massive),
+                    SizedBox(height: Dimensions.massive),
 
                     // ── Compare Button ──
                     if (_p1 != null && _p2 != null)
                       _buildCompareButton(),
                     
                     if (_isComparing) ...[
-                      SizedBox(height: AppSpacing.massive),
+                      SizedBox(height: Dimensions.massive),
                       _buildComparisonContent(),
                     ],
                   ],
@@ -87,7 +87,7 @@ class _CompareScreenState extends State<CompareScreen> {
         height: 160,
         decoration: BoxDecoration(
           color: AppColors.bgCard.withOpacity(0.4),
-          borderRadius: AppRadius.borderXl,
+          borderRadius: Dimensions.borderXl,
           border: Border.all(
             color: p != null ? accent.withOpacity(0.6) : AppColors.glassBorder.withOpacity(0.2),
             width: 1.5,
@@ -98,7 +98,7 @@ class _CompareScreenState extends State<CompareScreen> {
           ] : [],
         ),
         child: ClipRRect(
-          borderRadius: AppRadius.borderXl,
+          borderRadius: Dimensions.borderXl,
           child: Stack(
             children: [
               // Background Gradient
@@ -121,7 +121,7 @@ class _CompareScreenState extends State<CompareScreen> {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Container(
-                        padding: EdgeInsets.all(AppSpacing.md),
+                        padding: EdgeInsets.all(Dimensions.md),
                         decoration: BoxDecoration(
                           color: accent.withOpacity(0.05),
                           shape: BoxShape.circle,
@@ -129,11 +129,11 @@ class _CompareScreenState extends State<CompareScreen> {
                         ),
                         child: Icon(Icons.add_rounded, color: accent, size: 28),
                       ),
-                      SizedBox(height: AppSpacing.sm),
+                      SizedBox(height: Dimensions.sm),
                       Text("SELECT PLAYER", 
                         style: TextStyle(
                           color: accent.withOpacity(0.8), 
-                          fontWeight: AppTypography.black, 
+                          fontWeight: Dimensions.black, 
                           fontSize: 9, 
                           letterSpacing: 1.2
                         )
@@ -161,29 +161,29 @@ class _CompareScreenState extends State<CompareScreen> {
                                   errorBuilder: (_, __, ___) => CircleAvatar(
                                     radius: 32,
                                     backgroundColor: accent.withOpacity(0.15),
-                                    child: Text(p.name[0], style: TextStyle(color: accent, fontSize: 28, fontWeight: AppTypography.black)),
+                                    child: Text(p.name[0], style: TextStyle(color: accent, fontSize: 28, fontWeight: Dimensions.black)),
                                   ),
                                 ),
                               )
                             : CircleAvatar(
                                 radius: 32,
                                 backgroundColor: accent.withOpacity(0.15),
-                                child: Text(p.name[0], style: TextStyle(color: accent, fontSize: 28, fontWeight: AppTypography.black)),
+                                child: Text(p.name[0], style: TextStyle(color: accent, fontSize: 28, fontWeight: Dimensions.black)),
                               ),
                       ),
-                      SizedBox(height: AppSpacing.md),
+                      SizedBox(height: Dimensions.md),
                       Text(p.short.toUpperCase(), 
-                        style: TextStyle(color: AppColors.white, fontWeight: AppTypography.black, fontSize: 16, letterSpacing: 0.5)
+                        style: TextStyle(color: AppColors.white, fontWeight: Dimensions.black, fontSize: 16, letterSpacing: 0.5)
                       ),
                       SizedBox(height: 2),
                       Container(
                         padding: EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                         decoration: BoxDecoration(
                           color: AppColors.white.withOpacity(0.05),
-                          borderRadius: AppRadius.borderPill,
+                          borderRadius: Dimensions.borderPill,
                         ),
                         child: Text("${p.team} · #${p.jerseyNumber}", 
-                          style: TextStyle(color: AppColors.textMuted, fontSize: 9, fontWeight: AppTypography.bold)
+                          style: TextStyle(color: AppColors.textMuted, fontSize: 9, fontWeight: Dimensions.bold)
                         ),
                       ),
                     ],
@@ -198,11 +198,11 @@ class _CompareScreenState extends State<CompareScreen> {
                     padding: EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                     decoration: BoxDecoration(
                       color: AppColors.neonGold.withOpacity(0.15),
-                      borderRadius: AppRadius.borderSm,
+                      borderRadius: Dimensions.borderSm,
                       border: Border.all(color: AppColors.neonGold.withOpacity(0.3)),
                     ),
                     child: Text("RANK #${p.rank}", 
-                      style: TextStyle(color: AppColors.neonGold, fontSize: 7, fontWeight: AppTypography.black)
+                      style: TextStyle(color: AppColors.neonGold, fontSize: 7, fontWeight: Dimensions.black)
                     ),
                   ),
                 ),
@@ -229,7 +229,7 @@ class _CompareScreenState extends State<CompareScreen> {
       child: Text("VS", 
         style: TextStyle(
           color: AppColors.neonGold, 
-          fontWeight: AppTypography.black, 
+          fontWeight: Dimensions.black, 
           fontSize: 14, 
           fontStyle: FontStyle.italic,
           letterSpacing: -1
@@ -243,14 +243,14 @@ class _CompareScreenState extends State<CompareScreen> {
       onTap: () => setState(() => _isComparing = true),
       child: Container(
         width: double.infinity,
-        padding: EdgeInsets.symmetric(vertical: AppSpacing.lg),
+        padding: EdgeInsets.symmetric(vertical: Dimensions.lg),
         decoration: BoxDecoration(
           gradient: AppColors.goldRibbonGradient,
-          borderRadius: AppRadius.borderLg,
+          borderRadius: Dimensions.borderLg,
           boxShadow: [BoxShadow(color: AppColors.neonGold.withOpacity(0.3), blurRadius: 15, offset: Offset(0, 5))],
         ),
         child: Center(
-          child: Text("COMPARE STATS", style: TextStyle(color: AppColors.goldDeep, fontWeight: AppTypography.black, letterSpacing: 1.5)),
+          child: Text("COMPARE STATS", style: TextStyle(color: AppColors.goldDeep, fontWeight: Dimensions.black, letterSpacing: 1.5)),
         ),
       ),
     );
@@ -275,7 +275,7 @@ class _CompareScreenState extends State<CompareScreen> {
               ),
             ),
             
-            SizedBox(width: AppSpacing.md),
+            SizedBox(width: Dimensions.md),
             
             // Bar Charts (Right)
             Expanded(
@@ -295,17 +295,17 @@ class _CompareScreenState extends State<CompareScreen> {
             ),
           ],
         ),
-        SizedBox(height: AppSpacing.massive),
+        SizedBox(height: Dimensions.massive),
 
         // ── Summary Card ──
         _buildLeaderSummary(),
-        SizedBox(height: AppSpacing.massive),
+        SizedBox(height: Dimensions.massive),
 
         // ── Performance Rates ──
         _buildSectionHeader("PERFORMANCE RATES"),
         _buildCompareStatBubbles(),
 
-        SizedBox(height: AppSpacing.massive),
+        SizedBox(height: Dimensions.massive),
 
         // ── Raw Stats ──
         _buildSectionHeader("LIFETIME RAW STATS"),
@@ -335,10 +335,10 @@ class _CompareScreenState extends State<CompareScreen> {
     ];
 
     return Container(
-      padding: EdgeInsets.symmetric(vertical: AppSpacing.lg),
+      padding: EdgeInsets.symmetric(vertical: Dimensions.lg),
       child: Column(
         children: stats.map((s) => Padding(
-          padding: EdgeInsets.only(bottom: AppSpacing.xl),
+          padding: EdgeInsets.only(bottom: Dimensions.xl),
           child: Row(
             children: [
               Expanded(
@@ -346,7 +346,7 @@ class _CompareScreenState extends State<CompareScreen> {
                   textAlign: TextAlign.end,
                   style: TextStyle(
                     color: AppColors.neonBlue, 
-                    fontWeight: AppTypography.black, 
+                    fontWeight: Dimensions.black, 
                     fontSize: 16,
                     decoration: s.$5 == 1 ? TextDecoration.underline : TextDecoration.none,
                     decorationColor: AppColors.neonBlue,
@@ -358,8 +358,8 @@ class _CompareScreenState extends State<CompareScreen> {
                 width: 140,
                 child: Column(
                   children: [
-                    Text(s.$2, style: TextStyle(fontSize: 8, fontWeight: AppTypography.bold, color: AppColors.textMuted, letterSpacing: 0.5)),
-                    SizedBox(height: AppSpacing.xs),
+                    Text(s.$2, style: TextStyle(fontSize: 8, fontWeight: Dimensions.bold, color: AppColors.textMuted, letterSpacing: 0.5)),
+                    SizedBox(height: Dimensions.xs),
                     Container(
                       width: 30, height: 30,
                       decoration: BoxDecoration(
@@ -378,7 +378,7 @@ class _CompareScreenState extends State<CompareScreen> {
                   textAlign: TextAlign.start,
                   style: TextStyle(
                     color: AppColors.neonRed, 
-                    fontWeight: AppTypography.black, 
+                    fontWeight: Dimensions.black, 
                     fontSize: 16,
                     decoration: s.$5 == 2 ? TextDecoration.underline : TextDecoration.none,
                     decorationColor: AppColors.neonRed,
@@ -416,31 +416,31 @@ class _CompareScreenState extends State<CompareScreen> {
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 2,
         childAspectRatio: 1.8,
-        mainAxisSpacing: AppSpacing.md,
-        crossAxisSpacing: AppSpacing.md,
+        mainAxisSpacing: Dimensions.md,
+        crossAxisSpacing: Dimensions.md,
       ),
       itemCount: rawStats.length,
       itemBuilder: (context, index) {
         final s = rawStats[index];
         return Container(
-          padding: EdgeInsets.all(AppSpacing.md),
+          padding: EdgeInsets.all(Dimensions.md),
           decoration: BoxDecoration(
             color: AppColors.white.withOpacity(0.03),
-            borderRadius: AppRadius.borderLg,
+            borderRadius: Dimensions.borderLg,
             border: Border.all(color: AppColors.glassBorder.withOpacity(0.1)),
           ),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text(s.$2, style: TextStyle(color: AppColors.textMuted, fontSize: 8, fontWeight: AppTypography.bold, letterSpacing: 0.8)),
-              SizedBox(height: AppSpacing.sm),
+              Text(s.$2, style: TextStyle(color: AppColors.textMuted, fontSize: 8, fontWeight: Dimensions.bold, letterSpacing: 0.8)),
+              SizedBox(height: Dimensions.sm),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   Text("${s.$3}", 
                     style: TextStyle(
                       color: AppColors.neonBlue, 
-                      fontWeight: AppTypography.black, 
+                      fontWeight: Dimensions.black, 
                       fontSize: 16,
                       decoration: s.$5 == 1 ? TextDecoration.underline : TextDecoration.none,
                       decorationColor: AppColors.neonBlue,
@@ -451,7 +451,7 @@ class _CompareScreenState extends State<CompareScreen> {
                   Text("${s.$4}", 
                     style: TextStyle(
                       color: AppColors.neonRed, 
-                      fontWeight: AppTypography.black, 
+                      fontWeight: Dimensions.black, 
                       fontSize: 16,
                       decoration: s.$5 == 2 ? TextDecoration.underline : TextDecoration.none,
                       decorationColor: AppColors.neonRed,
@@ -470,12 +470,12 @@ class _CompareScreenState extends State<CompareScreen> {
 
   Widget _buildSectionHeader(String title) {
     return Padding(
-      padding: EdgeInsets.only(bottom: AppSpacing.xl),
+      padding: EdgeInsets.only(bottom: Dimensions.xl),
       child: Row(
         children: [
           Container(width: 4, height: 16, color: AppColors.neonGold),
-          SizedBox(width: AppSpacing.md),
-          Text(title, style: TextStyle(color: AppColors.white, fontWeight: AppTypography.black, letterSpacing: 1.2, fontSize: 14)),
+          SizedBox(width: Dimensions.md),
+          Text(title, style: TextStyle(color: AppColors.white, fontWeight: Dimensions.black, letterSpacing: 1.2, fontSize: 14)),
         ],
       ),
     );
@@ -486,18 +486,18 @@ class _CompareScreenState extends State<CompareScreen> {
     final s2 = isPercent ? (v2 * 100).toStringAsFixed(1) + "%" : v2.toString() + suffix;
     
     return Padding(
-      padding: EdgeInsets.only(bottom: AppSpacing.lg),
+      padding: EdgeInsets.only(bottom: Dimensions.lg),
       child: Column(
         children: [
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(s1, style: TextStyle(color: AppColors.neonBlue, fontWeight: AppTypography.bold)),
+              Text(s1, style: TextStyle(color: AppColors.neonBlue, fontWeight: Dimensions.bold)),
               Text(label.toUpperCase(), style: TextStyle(color: AppColors.textMuted, fontSize: 10, fontWeight: FontWeight.bold)),
-              Text(s2, style: TextStyle(color: AppColors.neonRed, fontWeight: AppTypography.bold)),
+              Text(s2, style: TextStyle(color: AppColors.neonRed, fontWeight: Dimensions.bold)),
             ],
           ),
-          SizedBox(height: AppSpacing.xs),
+          SizedBox(height: Dimensions.xs),
           Row(
             children: [
               Expanded(
@@ -559,10 +559,10 @@ class _CompareScreenState extends State<CompareScreen> {
     final color = p1Leading ? AppColors.neonBlue : AppColors.neonRed;
 
     return Container(
-      padding: EdgeInsets.all(AppSpacing.xl),
+      padding: EdgeInsets.all(Dimensions.xl),
       decoration: BoxDecoration(
         color: color.withOpacity(0.1),
-        borderRadius: AppRadius.borderXl,
+        borderRadius: Dimensions.borderXl,
         border: Border.all(color: color, width: 2),
         boxShadow: [BoxShadow(color: color.withOpacity(0.2), blurRadius: 20)],
       ),
@@ -571,26 +571,26 @@ class _CompareScreenState extends State<CompareScreen> {
           Row(
             children: [
               Container(
-                padding: EdgeInsets.all(AppSpacing.md),
+                padding: EdgeInsets.all(Dimensions.md),
                 decoration: BoxDecoration(color: color.withOpacity(0.2), shape: BoxShape.circle),
                 child: Icon(Icons.analytics_rounded, color: color, size: 28),
               ),
-              SizedBox(width: AppSpacing.lg),
+              SizedBox(width: Dimensions.lg),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text("SUMMARY CARD", style: TextStyle(color: color, fontWeight: AppTypography.extraBold, fontSize: 10, letterSpacing: 1.2)),
-                    Text("${winner.name.toUpperCase()} LEADING", style: TextStyle(color: AppColors.white, fontWeight: AppTypography.black, fontSize: 18)),
+                    Text("SUMMARY CARD", style: TextStyle(color: color, fontWeight: Dimensions.extraBold, fontSize: 10, letterSpacing: 1.2)),
+                    Text("${winner.name.toUpperCase()} LEADING", style: TextStyle(color: AppColors.white, fontWeight: Dimensions.black, fontSize: 18)),
                   ],
                 ),
               ),
             ],
           ),
-          SizedBox(height: AppSpacing.lg),
+          SizedBox(height: Dimensions.lg),
           Container(
             padding: EdgeInsets.symmetric(vertical: 8, horizontal: 12),
-            decoration: BoxDecoration(color: AppColors.white.withOpacity(0.05), borderRadius: AppRadius.borderMd),
+            decoration: BoxDecoration(color: AppColors.white.withOpacity(0.05), borderRadius: Dimensions.borderMd),
             child: Text(
               "${winner.short} shows superior dominance in recent performance metrics.",
               textAlign: TextAlign.center,
@@ -639,18 +639,18 @@ class PlayerSelectDelegate extends SearchDelegate<ComputedPlayerStats> {
     return Container(
       color: AppColors.bg,
       child: ListView.separated(
-        padding: EdgeInsets.all(AppSpacing.xxxl),
+        padding: EdgeInsets.all(Dimensions.xxxl),
         itemCount: results.length,
-        separatorBuilder: (_, __) => SizedBox(height: AppSpacing.md),
+        separatorBuilder: (_, __) => SizedBox(height: Dimensions.md),
         itemBuilder: (context, i) {
           final p = results[i];
           return GestureDetector(
             onTap: () => close(context, p),
             child: Container(
-              padding: EdgeInsets.all(AppSpacing.md),
+              padding: EdgeInsets.all(Dimensions.md),
               decoration: BoxDecoration(
                 color: AppColors.bgCard.withOpacity(0.5),
-                borderRadius: AppRadius.borderLg,
+                borderRadius: Dimensions.borderLg,
                 border: Border.all(color: AppColors.glassBorder),
               ),
               child: Row(
@@ -660,12 +660,12 @@ class PlayerSelectDelegate extends SearchDelegate<ComputedPlayerStats> {
                     backgroundColor: AppColors.neonGold.withOpacity(0.1),
                     child: Text(p.name[0], style: TextStyle(color: AppColors.neonGold, fontWeight: FontWeight.bold)),
                   ),
-                  SizedBox(width: AppSpacing.md),
+                  SizedBox(width: Dimensions.md),
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(p.name, style: TextStyle(color: AppColors.white, fontWeight: AppTypography.bold, fontSize: 14)),
+                        Text(p.name, style: TextStyle(color: AppColors.white, fontWeight: Dimensions.bold, fontSize: 14)),
                         Row(
                           children: [
                             Text(p.team, style: TextStyle(color: AppColors.neonCyan, fontSize: 10, fontWeight: FontWeight.bold)),
@@ -680,7 +680,7 @@ class PlayerSelectDelegate extends SearchDelegate<ComputedPlayerStats> {
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
                       Text("RANK", style: TextStyle(color: AppColors.textMuted, fontSize: 8, fontWeight: FontWeight.bold)),
-                      Text("#${p.rank}", style: TextStyle(color: AppColors.neonGold, fontWeight: AppTypography.black, fontSize: 14)),
+                      Text("#${p.rank}", style: TextStyle(color: AppColors.neonGold, fontWeight: Dimensions.black, fontSize: 14)),
                     ],
                   ),
                 ],
