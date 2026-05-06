@@ -1,23 +1,25 @@
-import 'dart:async';
 import 'dart:convert';
 
+import 'package:e_sports/core/api/api_client.dart';
 import 'package:e_sports/core/constants/app_constants.dart';
 import 'package:e_sports/features/auth/domain/repositories/auth_repository_interface.dart';
-import 'package:http/http.dart' as http;
+import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthRepository implements AuthRepositoryInterface {
+  final ApiClient apiClient;
   final SharedPreferences sharedPreferences;
-  AuthRepository({required this.sharedPreferences});
+  AuthRepository({required this.apiClient, required this.sharedPreferences});
 
   @override
   Future<Map<String, dynamic>> login(String? email, String password) async {
-    await Future.delayed(Duration(seconds: 3));
-    
-    return {
-      'token' : "asfsdfsadfv235v454356345fsaef",
-      'status_code' : 200,
-    };
+    return await _postAuth(
+      AppConstants.loginUri,
+      {
+        'email': email,
+        'password': password,
+      },
+    );
   }
 
   @override
@@ -43,16 +45,7 @@ class AuthRepository implements AuthRepositoryInterface {
   }
 
   Future<Map<String, dynamic>> _postAuth(String path, Map<String, dynamic> body) async {
-    final uri = Uri.parse('${AppConstants.baseUrl}$path');
-    final response = await http.post(
-      uri,
-      headers: const {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-      },
-      body: jsonEncode(body),
-    ).timeout(const Duration(seconds: 30));
-
+    final Response response = await apiClient.postData(path, body, handleError: false);
     final decodedBody = _decodeBody(response.body);
     return {
       ...decodedBody,
@@ -60,29 +53,51 @@ class AuthRepository implements AuthRepositoryInterface {
     };
   }
 
-  Map<String, dynamic> _decodeBody(String body) {
-    if(body.isEmpty) {
+  Map<String, dynamic> _decodeBody(dynamic body) {
+    if(body == null) {
       return {};
     }
 
-    final decoded = jsonDecode(body);
-    if(decoded is Map<String, dynamic>) {
-      return decoded;
+    if(body is Map<String, dynamic>) {
+      return body;
+    }
+    if(body is Map) {
+      return Map<String, dynamic>.from(body);
+    }
+
+    if(body is String && body.isNotEmpty) {
+      dynamic decoded;
+      try {
+        decoded = jsonDecode(body);
+      } catch (_) {
+        return {
+          'message': body,
+        };
+      }
+      if(decoded is Map<String, dynamic>) {
+        return decoded;
+      }
+
+      return {
+        'message': decoded.toString(),
+      };
     }
 
     return {
-      'message': decoded.toString(),
+      'message': body.toString(),
     };
   }
 
   @override
   Future<bool> saveUserToken(String token) async {
-    return await sharedPreferences.setString(AppConstants.authToken, token);
+    apiClient.token = token;
+    apiClient.updateHeader(token);
+    return await sharedPreferences.setString(AppConstants.token, token);
   }
 
   @override
   String getUserToken() {
-    return sharedPreferences.getString(AppConstants.authToken) ?? '';
+    return sharedPreferences.getString(AppConstants.token) ?? '';
   }
 
   @override
@@ -92,7 +107,9 @@ class AuthRepository implements AuthRepositoryInterface {
 
   @override
   Future<bool> clearUserToken() async {
-    return await sharedPreferences.remove(AppConstants.authToken);
+    apiClient.token = null;
+    apiClient.updateHeader(null);
+    return await sharedPreferences.remove(AppConstants.token);
   }
 
   // Other auth flows are disabled for now.

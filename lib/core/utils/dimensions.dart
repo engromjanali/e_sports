@@ -7,6 +7,7 @@ import 'package:e_sports/core/constants/app_colors.dart';
 import 'package:e_sports/core/helper/responsive_helper.dart';
 
 class Dimensions {
+  // Responsive font sizes
   static double get fontSizeOverSmall => ResponsiveHelper.isDesktopWidth(Get.width) ? 10 : 8;
   static double get fontSizeExtraSmall => ResponsiveHelper.isDesktopWidth(Get.width) ? 12 : 10; // Check if 40 is a typo here!
   static double get fontSizeSmall => ResponsiveHelper.isDesktopWidth(Get.width) ? 14 : 12;
@@ -15,6 +16,7 @@ class Dimensions {
   static double get fontSizeExtraLarge => ResponsiveHelper.isDesktopWidth(Get.width) ? 20 : 18;
   static double get fontSizeOverLarge => ResponsiveHelper.isDesktopWidth(Get.width) ? 26 : 24;
 
+  // Padding sizes
   static const double paddingSizeExtraSmall = 5.0;
   static const double paddingSizeSmall = 10.0;
   static const double paddingSizeDefault = 15.0;
@@ -23,17 +25,21 @@ class Dimensions {
   static const double paddingSizeExtremeLarge = 30.0;
   static const double paddingSizeExtraOverLarge = 35.0;
 
+  // Radius sizes
   static const double radiusSmall = 5.0;
   static const double radiusMedium = 8.0;
   static const double radiusDefault = 10.0;
   static const double radiusLarge = 15.0;
   static const double radiusExtraLarge = 20.0;
 
+  // Layout limits
   static const double webMaxWidth = 1200;
   static const int messageInputLength = 1000;
 
+  // Map sizes
   static const double pickMapIconSize = 100.0;
 
+  // Spacing scale
   static const double xxs = 2.0;
   static const double xs = 3.0;
   static const double sm = 5.0;
@@ -50,6 +56,7 @@ class Dimensions {
   static const double massive = 20.0;
   static const double giant = 24.0;
 
+  // Component spacing
   static const double sectionGap = 16.0;
   static const double cardInnerPadding = 14.0;
   static const double cardOuterGap = 10.0;
@@ -65,12 +72,14 @@ class Dimensions {
   static const double pillPaddingV = 3.0;
   static const double buttonPaddingV = 14.0;
 
+  // Responsive value helpers
   static double scaled(BuildContext context, double baseValue) {
     if (ResponsiveHelper.isDesktop(context)) return baseValue * 1.25;
     if (ResponsiveHelper.isTab(context)) return baseValue * 1.1;
     return baseValue;
   }
 
+  // EdgeInsets presets
   static const EdgeInsets screenH = EdgeInsets.symmetric(horizontal: screenPadding);
   static const EdgeInsets screenAll = EdgeInsets.all(screenPadding);
   static const EdgeInsets cardPadding = EdgeInsets.all(cardInnerPadding);
@@ -90,6 +99,7 @@ class Dimensions {
   static const EdgeInsets hugePadding = EdgeInsets.all(huge);
   static const EdgeInsets chipPadding = EdgeInsets.symmetric(horizontal: xxxl, vertical: md);
 
+  // Border radius values
   static const double radiusXxsValue = 2.0;
   static const double radiusXsValue = 4.0;
   static const double radiusSmValue = 6.0;
@@ -103,6 +113,7 @@ class Dimensions {
   static const double radiusCardValue = 20.0;
   static const double radiusHeroValue = 28.0;
 
+  // Radius presets
   static const Radius radiusXxs = Radius.circular(radiusXxsValue);
   static const Radius radiusXs = Radius.circular(radiusXsValue);
   static const Radius radiusSm = Radius.circular(radiusSmValue);
@@ -115,6 +126,7 @@ class Dimensions {
   static const Radius radiusCardCircle = Radius.circular(radiusCardValue);
   static const Radius radiusHeroCircle = Radius.circular(radiusHeroValue);
 
+  // BorderRadius presets
   static final BorderRadius borderXxs = BorderRadius.circular(radiusXxsValue);
   static final BorderRadius borderXs = BorderRadius.circular(radiusXsValue);
   static final BorderRadius borderSm = BorderRadius.circular(radiusSmValue);
@@ -128,6 +140,7 @@ class Dimensions {
   static final BorderRadius borderCard = BorderRadius.circular(radiusCardValue);
   static final BorderRadius borderHero = BorderRadius.circular(radiusHeroValue);
 
+  // Custom BorderRadius shapes
   static const BorderRadius ribbonLeft = BorderRadius.only(
     topLeft: Radius.circular(6),
     bottomLeft: Radius.circular(6),
@@ -146,6 +159,7 @@ class Dimensions {
     top: Radius.circular(radiusXlValue),
   );
 
+  // Icon sizes
   static const double iconXs = 10.0;
   static const double iconSm = 14.0;
   static const double iconMd = 16.0;
@@ -158,6 +172,7 @@ class Dimensions {
   static const double iconBtnMd = 38.0;
   static const double iconBtnLg = 52.0;
 
+  // Avatar sizes
   static const double avatarXs = 32.0;
   static const double avatarSm = 34.0;
   static const double avatarMd = 40.0;
@@ -169,6 +184,7 @@ class Dimensions {
   static const double avatarPodium = 80.0;
   static const double avatarGiant = 90.0;
 
+  // Component sizes
   static const double headerIconSize = 34.0;
   static const double badgeSm = 15.0;
   static const double badgeMd = 16.0;
@@ -203,6 +219,7 @@ class Dimensions {
   static const double batteryWidth = 18.0;
   static const double batteryHeight = 10.0;
 
+  // Responsive scale helpers
   static double scale(BuildContext context, double baseValue) {
     if (ResponsiveHelper.isDesktop(context)) return baseValue * 1.1;
     if (ResponsiveHelper.isTab(context)) return baseValue * 1.05;
@@ -213,6 +230,7 @@ class Dimensions {
   static double scaledIcon(BuildContext context, double baseSize) => scale(context, baseSize);
   static double scaledAvatar(BuildContext context, double baseSize) => scale(context, baseSize);
 
+  // Font family and weights
   static String get fontFamily => 'Roboto';
   static const FontWeight regular = FontWeight.w400;
   static const FontWeight medium = FontWeight.w500;
@@ -221,6 +239,7 @@ class Dimensions {
   static const FontWeight extraBold = FontWeight.w800;
   static const FontWeight black = FontWeight.w900;
 
+  // Text size values
   static const double sizeOverSmall = 6.5;
   static const double sizeMicro = 7.0;
   static const double sizeTiny = 8.0;
@@ -240,6 +259,7 @@ class Dimensions {
   static const double sizeGhostXl = 90.0;
   static const double sizeGhostXxl = 110.0;
 
+  // Responsive text sizes
   static double overSmall(BuildContext context) => scaleText(context, sizeOverSmall);
   static double textMicro(BuildContext context) => scaleText(context, sizeMicro);
   static double tiny(BuildContext context) => scaleText(context, sizeTiny);
@@ -259,11 +279,13 @@ class Dimensions {
   static double ghostXl(BuildContext context) => scaleText(context, sizeGhostXl);
   static double ghostXxl(BuildContext context) => scaleText(context, sizeGhostXxl);
 
+  // Text scale helper
   static double scaleText(BuildContext context, double baseSize) {
     final scaleFactor = ResponsiveHelper.isDesktop(context) ? 1.15 : 1.0;
     return baseSize * scaleFactor;
   }
 
+  // TextStyle presets
   static TextStyle labelUppercase(BuildContext context, {Color? color, double? letterSpacing}) => TextStyle(
     fontFamily: fontFamily,
     fontSize: textMicro(context),
@@ -378,6 +400,7 @@ class Dimensions {
     fontSize: subtitle(context),
   );
 
+  // Text line height and tracking
   static const double lineHeightTight = 0.9;
   static const double lineHeightCompact = 1.0;
   static const double lineHeightNormal = 1.2;
@@ -392,9 +415,12 @@ class Dimensions {
   static const double trackingUltra = 2.0;
   static const double trackingMax = 2.5;
 
+  // Blur values
   static const double glassBlur = 12.0;
   static const double blurLg = 12.0;
   static const double blurXl = 20.0;
+
+  // Shadow presets
   static const List<BoxShadow> none = [];
   static const List<BoxShadow> low = [
     BoxShadow(

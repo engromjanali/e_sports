@@ -1,24 +1,18 @@
 import 'dart:async';
 
 import 'package:app_links/app_links.dart';
-import 'package:e_sports/core/widgets/route_not_found_screen.dart';
-import 'package:flutter/foundation.dart';
+import 'package:e_sports/core/controllers/theme_controller.dart';
+import 'package:e_sports/core/helper/get_di.dart' as di;
+import 'package:e_sports/core/helper/route_helper.dart';
 import 'package:e_sports/core/utils/dimensions.dart';
-import 'core/helper/route_helper.dart';
-import 'core/controllers/theme_controller.dart';
-import 'firebase_options.dart';
+import 'package:e_sports/core/widgets/route_not_found_screen.dart';
+import 'package:e_sports/firebase_options.dart';
+import 'package:flutter/foundation.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_web_plugins/url_strategy.dart';
-import 'core/controllers/app_data_controller.dart';
-import 'features/auth/controllers/auth_controller.dart';
-import 'features/auth/domain/repositories/auth_repository.dart';
-import 'features/auth/domain/repositories/auth_repository_interface.dart';
-import 'features/auth/domain/services/auth_service.dart';
-import 'features/auth/domain/services/auth_service_interface.dart';
 import 'package:get/get.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 void main() async{
 
@@ -32,15 +26,7 @@ void main() async{
     options: DefaultFirebaseOptions.currentPlatform,
   );
   
-  // Start using Mock Data Source implicitly
-  
-  // Inject global data controller
-  Get.put(AppDataController());
-  final preferences = await SharedPreferences.getInstance();
-  Get.put(ThemeController(preferences));
-  Get.put<AuthRepositoryInterface>(AuthRepository(sharedPreferences: preferences));
-  Get.put<AuthServiceInterface>(AuthService(authRepositoryInterface: Get.find()));
-  Get.put(AuthController(authServiceInterface: Get.find()));
+  await di.init();
 
   SystemChrome.setSystemUIOverlayStyle(
     const SystemUiOverlayStyle(

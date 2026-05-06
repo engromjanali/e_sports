@@ -22,17 +22,6 @@ class AppConstants {
   static const String forgetPaasswordUri = "/api/user/forget-password";
   static const String profileUri = "/api/user/profile";
 
-
-  /// Shared Key
-  static const String theme = '6ammart_theme';
-  static const String authToken = 'auth_token';
-
-  ///taxi
-
-  static const String taxiSearchAddressHistory = '6ammart_taxi_search_address_history';
-
-  static const String prescriptionMediaLibrary = 'prescription_media_library';
-
   // static List<ChooseUsModel> whyChooseUsList = [
   //   ChooseUsModel(icon: Images.landingTrusted, title: 'trusted_by_customers_and_store_owners'),
   //   ChooseUsModel(icon: Images.landingStores, title: 'thousands_of_stores'),
