@@ -1,10 +1,8 @@
 import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
-import 'package:e_sports/core/api/api_checker.dart';
 import 'package:e_sports/core/constants/app_constants.dart';
-import 'package:e_sports/core/data/models/error_response.dart';
-import 'package:e_sports/core/helper/responsive_helper.dart';
+import 'package:e_sports/core/error/exception/app_exception.dart';
 import 'package:path/path.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:get/get_connect/http/src/request/request.dart';
@@ -60,34 +58,29 @@ class ApiClient extends GetxService {
       if (kDebugMode) {
         print('------------${e.toString()}');
       }
-      return Response(statusCode: 1, statusText: noInternetMessage);
+      throw NetworkException(noInternetMessage);
     }
   }
 
   Future<Response> postData(String uri, dynamic body, {Map<String, String>? headers, int? timeout, bool handleError = true,}) async {
+    
+    http.Response response;
+    
     try {
       if (kDebugMode) {
         print('====> API Call: $uri\nHeader: ${headers ?? _mainHeaders}');
         print('====> API Body: $body');
       }
 
-      Map<dynamic, dynamic> newBody = {};
-      if (body != null) {
-        body.forEach((key, value) {
-          if (value != null && value.toString().isNotEmpty) {
-            newBody.addAll({key: value});
-          }
-        });
-      }
-
-      http.Response response = await http.post(
+      response = await http.post(
         Uri.parse(appBaseUrl + uri),
-        body: jsonEncode(newBody), headers: headers ?? _mainHeaders).timeout(Duration(seconds: timeout ?? timeoutInSeconds)
+        body: jsonEncode(body), headers: headers ?? _mainHeaders).timeout(Duration(seconds: timeout ?? timeoutInSeconds)
       );
-      return handleResponse(response, uri, handleError);
     } catch (e) {
-      return Response(statusCode: 1, statusText: noInternetMessage);
+      print("----> error: $e ");
+      throw NetworkException(noInternetMessage);
     }
+    return handleResponse(response, uri, handleError);
   }
 
   Future<Response> postMultipartData(
@@ -147,7 +140,7 @@ class ApiClient extends GetxService {
       http.Response response = await http.Response.fromStream(await request.send());
       return handleResponse(response, uri, handleError);
     } catch (e) {
-      return Response(statusCode: 1, statusText: noInternetMessage);
+      throw NetworkException(noInternetMessage);
     }
   }
 
@@ -162,7 +155,7 @@ class ApiClient extends GetxService {
       http.Response response = await http.put(Uri.parse(appBaseUrl + uri), body: jsonEncode(body), headers: headers ?? _mainHeaders).timeout(Duration(seconds: timeoutInSeconds));
       return handleResponse(response, uri, handleError);
     } catch (e) {
-      return Response(statusCode: 1, statusText: noInternetMessage);
+      throw NetworkException(noInternetMessage);
     }
   }
 
@@ -180,19 +173,16 @@ class ApiClient extends GetxService {
           .timeout(Duration(seconds: timeoutInSeconds));
       return handleResponse(response, uri, handleError);
     } catch (e) {
-      return Response(statusCode: 1, statusText: noInternetMessage);
+      throw NetworkException(noInternetMessage);
     }
   }
 
-  Response handleResponse(
-    http.Response response,
-    String uri,
-    bool handleError,
-  ) {
+  Response handleResponse(http.Response response, String uri, bool handleError) {
     dynamic body;
     try {
       body = jsonDecode(response.body);
     } catch (_) {}
+
     Response response0 = Response(
       body: body ?? response.body,
       bodyString: response.body.toString(),
@@ -205,49 +195,58 @@ class ApiClient extends GetxService {
       statusCode: response.statusCode,
       statusText: response.reasonPhrase,
     );
-    if (response0.statusCode != 200 &&
-        response0.body != null &&
-        response0.body is! String) {
-      if (response0.body.toString().startsWith('{errors: [{code:')) {
-        ErrorResponse errorResponse = ErrorResponse.fromJson(response0.body);
-        response0 = Response(
-          statusCode: response0.statusCode,
-          body: response0.body,
-          statusText: errorResponse.errors![0].message,
-        );
-      } else if (response0.body.toString().startsWith(
-        '{response_code: zone_404, message:',
-      )) {
-        response0 = Response(
-          statusCode: response0.statusCode,
-          body: response0.body,
-          statusText: response0.body['message'],
-        );
-      } else if (response0.body.toString().startsWith('{message')) {
-        response0 = Response(
-          statusCode: response0.statusCode,
-          body: response0.body,
-          statusText: response0.body['message'],
-        );
-      }
-    } else if (response0.statusCode != 200 && response0.body == null) {
-      response0 = Response(statusCode: 0, statusText: noInternetMessage);
-    }
+
     if (kDebugMode) {
-      print('====> API Response: [${response0.statusCode}] $uri');
-      if (!ResponsiveHelper.isWeb() || response.statusCode != 500) {
-        log('====> API Response Body: ${response0.body}');
-      }
+      log('====> API Response: [${response0.statusCode}] $uri');
+      log('====> API Response Body: ${response0.body}');
     }
-    if (handleError) {
-      if (response0.statusCode == 200) {
-        return response0;
-      } else {
-        ApiChecker.checkApi(response0);
-        return const Response();
+
+    // Extract a clean message from whatever shape the body is
+    String _extractMessage(Response r, String fallback) {
+      final b = r.body;
+      if (b is Map) {
+        return b['message']?.toString() ??
+            b['error']?.toString() ??
+            (b['errors'] is List ? (b['errors'] as List).first['message']?.toString() : null) ??
+            fallback;
       }
-    } else {
-      return response0;
+      return r.statusText ?? fallback;
+    }
+
+    // ── Throw typed exceptions based on status code ────────────────────────
+    switch (response.statusCode) {
+      case 200:
+      case 201:
+        return response0;
+
+      case 400:
+        final errors = (body?['errors'] as Map?)?.cast<String, String>();
+        throw ValidationException(
+          _extractMessage(response0, 'Invalid request.'),
+          fieldErrors: errors,
+        );
+
+      case 401:
+        throw UnauthorizedException(
+          _extractMessage(response0, 'Unauthorized. Please login again.'),
+        );
+
+      case 404:
+        throw NotFoundException(
+          _extractMessage(response0, 'Resource not found.'),
+        );
+
+      default:
+        if (response.statusCode >= 500) {
+          throw ServerException(
+            _extractMessage(response0, 'Server error. Please try again later.'),
+            response.statusCode,
+          );
+        }
+        throw ServerException(
+          _extractMessage(response0, 'Unexpected error occurred.'),
+          response.statusCode,
+        );
     }
   }
 }

@@ -1,91 +1,40 @@
-import 'dart:convert';
-
 import 'package:e_sports/core/api/api_client.dart';
 import 'package:e_sports/core/constants/app_constants.dart';
 import 'package:e_sports/features/auth/domain/repositories/auth_repository_interface.dart';
-import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthRepository implements AuthRepositoryInterface {
   final ApiClient apiClient;
   final SharedPreferences sharedPreferences;
+
   AuthRepository({required this.apiClient, required this.sharedPreferences});
 
   @override
   Future<Map<String, dynamic>> login(String? email, String password) async {
-    return await _postAuth(
+    // ApiClient throws AppException on failure — no try/catch here
+    final response = await apiClient.postData(
       AppConstants.loginUri,
-      {
-        'email': email,
-        'password': password,
-      },
+      {'email': email, 'password': password},
     );
+    return response.body as Map<String, dynamic>;
   }
 
   @override
   Future<Map<String, dynamic>> register(String name, String email, String password) async {
-    return await _postAuth(
+    final response = await apiClient.postData(
       AppConstants.registationUri,
-      {
-        'name': name,
-        'email': email,
-        'password': password,
-      },
+      {'name': name, 'email': email, 'password': password},
     );
+    return response.body as Map<String, dynamic>;
   }
 
   @override
   Future<Map<String, dynamic>> forgotPassword(String email) async {
-    return await _postAuth(
+    final response = await apiClient.postData(
       AppConstants.forgetPaasswordUri,
-      {
-        'email': email,
-      },
+      {'email': email},
     );
-  }
-
-  Future<Map<String, dynamic>> _postAuth(String path, Map<String, dynamic> body) async {
-    final Response response = await apiClient.postData(path, body, handleError: false);
-    final decodedBody = _decodeBody(response.body);
-    return {
-      ...decodedBody,
-      'status_code': response.statusCode,
-    };
-  }
-
-  Map<String, dynamic> _decodeBody(dynamic body) {
-    if(body == null) {
-      return {};
-    }
-
-    if(body is Map<String, dynamic>) {
-      return body;
-    }
-    if(body is Map) {
-      return Map<String, dynamic>.from(body);
-    }
-
-    if(body is String && body.isNotEmpty) {
-      dynamic decoded;
-      try {
-        decoded = jsonDecode(body);
-      } catch (_) {
-        return {
-          'message': body,
-        };
-      }
-      if(decoded is Map<String, dynamic>) {
-        return decoded;
-      }
-
-      return {
-        'message': decoded.toString(),
-      };
-    }
-
-    return {
-      'message': body.toString(),
-    };
+    return response.body as Map<String, dynamic>;
   }
 
   @override
@@ -96,14 +45,10 @@ class AuthRepository implements AuthRepositoryInterface {
   }
 
   @override
-  String getUserToken() {
-    return sharedPreferences.getString(AppConstants.token) ?? '';
-  }
+  String getUserToken() => sharedPreferences.getString(AppConstants.token) ?? '';
 
   @override
-  bool isLoggedIn() {
-    return getUserToken().isNotEmpty;
-  }
+  bool isLoggedIn() => getUserToken().isNotEmpty;
 
   @override
   Future<bool> clearUserToken() async {
@@ -111,10 +56,4 @@ class AuthRepository implements AuthRepositoryInterface {
     apiClient.updateHeader(null);
     return await sharedPreferences.remove(AppConstants.token);
   }
-
-  // Other auth flows are disabled for now.
-  // Future<dynamic> registerRestaurant(...);
-  // Future<dynamic> updateToken();
-  // Future<dynamic> forgotPassword(...);
-  // Future<dynamic> getProfile();
 }

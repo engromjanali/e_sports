@@ -18,7 +18,7 @@ class AppConstants {
   /// auth endpoints
   static const String configUri = "/api/user/config";
   static const String registationUri = "/api/user/registation";
-  static const String loginUri = "/api/user/login";
+  static const String loginUri = "/api/user/signin";
   static const String forgetPaasswordUri = "/api/user/forget-password";
   static const String profileUri = "/api/user/profile";
 
