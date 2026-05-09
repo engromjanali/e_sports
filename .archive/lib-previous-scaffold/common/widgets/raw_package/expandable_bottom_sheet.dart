@@ -157,7 +157,7 @@ class ExpandableBottomSheetState extends State<ExpandableBottomSheet>
                   if (_controller.isAnimating) {
                     _positionOffset = _animationMinOffset + _controller.value * _draggableHeight;
                   }
-                    // print('=[Focus]==> show header: $_showHeader, Animating: $_positionOffset , minOffset: $_minOffset, maxOffset: $_maxOffset, draggableHeight: $_draggableHeight');
+                    // printer('=[Focus]==> show header: $_showHeader, Animating: $_positionOffset , minOffset: $_minOffset, maxOffset: $_maxOffset, draggableHeight: $_draggableHeight');
                   return Positioned(
                     top: _positionOffset,
                     right: 0.0,
@@ -222,7 +222,7 @@ class ExpandableBottomSheetState extends State<ExpandableBottomSheet>
       }
     }
 
-    // print('===> AnimationStatus: draggable hieght: $_draggableHeight, PositionOffset: $_positionOffset');
+    // printer('===> AnimationStatus: draggable hieght: $_draggableHeight, PositionOffset: $_positionOffset');
   }
 
   void _afterUpdateWidgetBuild(bool isFirstBuild) {
@@ -247,7 +247,7 @@ class ExpandableBottomSheetState extends State<ExpandableBottomSheet>
       });
     }
 
-    // print('===> AfterUpdateWidgetBuild: draggble height: $_draggableHeight,  positionOffset: $_positionOffset, minOffset: $_minOffset, maxOffset: $_maxOffset, ');
+    // printer('===> AfterUpdateWidgetBuild: draggble height: $_draggableHeight,  positionOffset: $_positionOffset, minOffset: $_minOffset, maxOffset: $_maxOffset, ');
   }
 
   void _positionOutOfBounds() {
@@ -320,7 +320,7 @@ class ExpandableBottomSheetState extends State<ExpandableBottomSheet>
   }
 
   void _dragEnd(DragEndDetails details) {
-    // print('==>dragEnd: ${details.primaryVelocity}');
+    // printer('==>dragEnd: ${details.primaryVelocity}');
     if (_startPositionAtDragDown == _positionOffset || !_useDrag) return;
     if (details.primaryVelocity! < -250) {
       //drag up ended with high speed

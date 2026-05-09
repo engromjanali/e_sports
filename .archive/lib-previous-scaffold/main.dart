@@ -92,13 +92,13 @@ class _MyAppState extends State<MyApp> {
     _appLinks.uriLinkStream.listen((Uri? uri) {
       if (uri != null) {
         if (kDebugMode) {
-          print('=======Received URI: $uri and previous deeplinkRoute: ${Get.find<SplashController>().deeplinkRoute}');
+          printer('=======Received URI: $uri and previous deeplinkRoute: ${Get.find<SplashController>().deeplinkRoute}');
         }
         LinkConverter.convertDeepLink(uri);
       }
     }, onError: (err) {
       if (kDebugMode) {
-        print('catch Error in initAppLinksStream: $err');
+        printer('catch Error in initAppLinksStream: $err');
       }
     });
   }

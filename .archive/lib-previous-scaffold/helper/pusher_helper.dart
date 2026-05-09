@@ -112,7 +112,7 @@ class PusherHelper{
       if(pusherDriverAccepted.currentStatus ==  null){
         pusherDriverAccepted.subscribe();
         pusherDriverAccepted.bind("driver-trip-accepted.$tripId").listen((event) {
-          print('======driver-trip-accepted');
+          printer('======driver-trip-accepted');
           // Get.back();
           Get.find<RideController>().getRideDetails(jsonDecode(event.data!)['id']?.toString()??'').then((value){
             if(value.statusCode == 200){
@@ -121,7 +121,7 @@ class PusherHelper{
               Get.find<RideController>().startLocationRecord();
               Get.find<RideController>().updateRideController();
               // Get.find<MapController>().notifyMapController();
-              print('----pusher--current route: ${Get.currentRoute}');
+              printer('----pusher--current route: ${Get.currentRoute}');
               if(Get.currentRoute == '/MapScreen'){
                 Get.off(() => const MapScreen(fromScreen: MapScreenType.dashboard));
               } else {
@@ -148,7 +148,7 @@ class PusherHelper{
       if(driverTripStarted.currentStatus == null){
         driverTripStarted.subscribe();
         driverTripStarted.bind("driver-trip-started.$tripId").listen((event) {
-          print('======driver-trip-started');
+          printer('======driver-trip-started');
           Get.find<RideController>().remainingDistance(jsonDecode(event.data!)['id']?.toString()??'', mapBound: false);
           Get.find<RideController>().startLocationRecord();
           Get.find<RideController>().getRideDetails(jsonDecode(event.data!)['id']?.toString()??'');
@@ -178,7 +178,7 @@ class PusherHelper{
       if(driverTripCancelled.currentStatus == null){
         driverTripCancelled.subscribe();
         driverTripCancelled.bind("driver-trip-cancelled.$tripId").listen((event) async{
-          print('======driver-trip-cancelled');
+          printer('======driver-trip-cancelled');
           Get.find<RideController>().getCurrentRide();
           Get.find<RideController>().stopLocationRecord();
           Get.find<SafetyAlertController>().cancelDriverNeedSafetyStream();
@@ -209,7 +209,7 @@ class PusherHelper{
         driverTripCompleted.subscribe();
         driverTripCompleted.bind("driver-trip-completed.$tripId").listen((event) {
 
-          print('======driver-trip-completed');
+          printer('======driver-trip-completed');
           Get.find<SafetyAlertController>().cancelDriverNeedSafetyStream();
           // Get.find<RideController>().getCurrentRide();
           Get.dialog(

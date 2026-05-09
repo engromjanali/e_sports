@@ -11,7 +11,7 @@ class PhoneVerificationHelper {
 
   static String isPhoneValid(String number , {required bool fromAuthPage}) {
     if (kDebugMode) {
-      print("Phone number that will be parsed : $number");
+      printer("Phone number that will be parsed : $number");
     }
     bool isValid = false;
     try {
@@ -29,7 +29,7 @@ class PhoneVerificationHelper {
       }
     } catch (e) {
       Get.find<LocationController>().countryDialCode = CountryCode.fromCountryCode(Get.find<SplashController>().configModel?.country ?? "BD").dialCode!;
-      debugPrint('Phone Number is not parsing: $e');
+      printer('Phone Number is not parsing: $e');
       return "";
     }
   }
@@ -45,12 +45,12 @@ class PhoneVerificationHelper {
       if(isValid){
         phone =  withCountryCode ? "+${phoneNumber.countryCode}${phoneNumber.nsn}" : phoneNumber.nsn.toString();
         if (kDebugMode) {
-          print("Phone Number : $phone");
+          printer("Phone Number : $phone");
         }
       }
     }catch(e) {
       if (kDebugMode) {
-        print(e.toString());
+        printer(e.toString());
       }
     }
     return phone;
@@ -66,12 +66,12 @@ class PhoneVerificationHelper {
       if(isValid){
         countryCode = "+${phoneNumber.countryCode}";
         if (kDebugMode) {
-          print("Country Code : $countryCode");
+          printer("Country Code : $countryCode");
         }
       }
     }catch(e) {
       if (kDebugMode) {
-        print(e.toString());
+        printer(e.toString());
       }
     }
     return countryCode;

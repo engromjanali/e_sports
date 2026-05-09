@@ -20,7 +20,7 @@ class AddressHelper {
       isInRideModule = isRide;
       isInServiceModule = isService;
     }catch(_) {}
-    print('======== address.zoneId: ${address.zoneId} // ride selected: $isInRideModule // is ride = $isInServiceModule');
+    printer('======== address.zoneId: ${address.zoneId} // ride selected: $isInRideModule // is ride = $isInServiceModule');
 
     Get.find<ApiClient>().updateHeader(
       sharedPreferences.getString(AppConstants.token),
@@ -42,7 +42,7 @@ class AddressHelper {
       addressModel = AddressModel.fromJson(jsonDecode(sharedPreferences.getString(AppConstants.userAddress)!));
     }catch(e) {
       if(!GetPlatform.isWeb) {
-        debugPrint('Address Catch exception : $e');
+        printer('Address Catch exception : $e');
       }
     }
     return addressModel;

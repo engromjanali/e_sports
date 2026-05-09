@@ -10,7 +10,7 @@ DateTime? loginClickTime;
 printLog(dynamic data) {
   if (kLogEnable) {
     if (kDebugMode) {
-      print("$kLogTag${data.toString()}");
+      printer("$kLogTag${data.toString()}");
     }
   }
 }

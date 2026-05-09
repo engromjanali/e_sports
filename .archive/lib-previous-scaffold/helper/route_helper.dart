@@ -200,7 +200,7 @@ class RouteHelper {
       List<int> encoded = utf8.encode(jsonEncode(body.toJson()));
       data = base64Encode(encoded);
     }
-    print('=======splash screen calling-------------: $splash?data=$data&deeplink=$deeplink');
+    printer('=======splash screen calling-------------: $splash?data=$data&deeplink=$deeplink');
     return '$splash?data=$data&deeplink=$deeplink';
   }
   static String getLanguageRoute(String page) => '$language?page=$page';
@@ -386,7 +386,7 @@ class RouteHelper {
   static String getAllStoreScreenRoute() => allStoresScreen;
   static List<GetPage> routes = [
     GetPage(name: initial, page: () {
-      print('=======route: ${Get.parameters['module']} ${Get.parameters['module']} // ${Get.parameters['module'] != null && Get.parameters['module']!.isNotEmpty && Get.parameters['module'] != 'null'}');
+      printer('=======route: ${Get.parameters['module']} ${Get.parameters['module']} // ${Get.parameters['module'] != null && Get.parameters['module']!.isNotEmpty && Get.parameters['module'] != 'null'}');
       if(Get.parameters['qr'] != null) {
         return QrScreen();
       }
@@ -405,7 +405,7 @@ class RouteHelper {
         data = NotificationBodyModel.fromJson(jsonDecode(utf8.decode(decode)));
       }
       String? deeplink = Get.parameters['deeplink'] != 'null' ? Get.parameters['deeplink'] : null;
-      print('-------going to splash screen======2');
+      printer('-------going to splash screen======2');
       return SplashScreen(body: data, deeplinkUrl: deeplink);
     }),
     GetPage(name: language, page: () => ChooseLanguageScreen(fromMenu: Get.parameters['page'] == 'menu')),
@@ -931,11 +931,11 @@ class RouteHelper {
 
   static Widget _waitForModule(String? moduleId, Widget child, {bool fromDeeplink = false}) {
     if(moduleId != null && moduleId.isNotEmpty && moduleId != 'null') {
-      print('=======wait for module: $moduleId');
+      printer('=======wait for module: $moduleId');
       return FutureBuilder(
         future: checkModuleId(moduleId, fromDeeplink: fromDeeplink),
         builder: (context, snapshot) {
-          print('-------module future builder: ${snapshot.connectionState} // has data: ${snapshot.hasData} // error: ${snapshot.hasError}');
+          printer('-------module future builder: ${snapshot.connectionState} // has data: ${snapshot.hasData} // error: ${snapshot.hasError}');
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CustomLoaderWidget());
           }
@@ -955,32 +955,32 @@ class RouteHelper {
       ApiClient apiClient = Get.find<ApiClient>();
       SharedPreferences sharedPreferences = Get.find<SharedPreferences>();
       AddressModel? addressModel = AddressHelper.getUserAddressFromSharedPref();
-      print('-----111-----config model is null: ${Get.find<SplashController>().configModel == null} // address: $addressModel // $fromDeeplink');
+      printer('-----111-----config model is null: ${Get.find<SplashController>().configModel == null} // address: $addressModel // $fromDeeplink');
 
       if(addressModel != null) {
-        print('-------address is not null, proceeding----');
+        printer('-------address is not null, proceeding----');
         if(!fromDeeplink && !GetPlatform.isWeb) {
-          print('-------from deeplink, not executing function');
+          printer('-------from deeplink, not executing function');
           return;
         }
         await _moduleCheck(moduleSlug, apiClient, sharedPreferences, addressModel);
       } else {
         bool v = await Get.find<SplashController>().getModules(headers: {'Content-Type': 'application/json; charset=UTF-8', AppConstants.localizationKey: Get.find<LocalizationController>().locale.languageCode}, dataSource: DataSourceEnum.client);
-        print('-----222-----module fetch status: $v');
+        printer('-----222-----module fetch status: $v');
         if(v) {
           if(Get.find<SplashController>().moduleList != null) {
             bool canContinue = true;
 
             ModuleModel? foundModule;
             for (ModuleModel module in Get.find<SplashController>().moduleList!) {
-              print('-------module slug: ${module.slug} == $moduleSlug');
+              printer('-------module slug: ${module.slug} == $moduleSlug');
               if(module.slug == moduleSlug || module.id.toString() == moduleSlug) {
                 foundModule = module;
                 break;
               }
             }
             if(!AuthHelper.isLoggedIn() && !AuthHelper.isGuestLoggedIn()) {
-              print('-------doing guest login > 1');
+              printer('-------doing guest login > 1');
               ResponseModel responseModel = await Get.find<AuthController>().guestLogin();
               canContinue = responseModel.isSuccess;
             }
@@ -988,7 +988,7 @@ class RouteHelper {
               Get.offAllNamed(getInitialRoute());
               return;
             }
-            print('-------found module: ${foundModule?.slug ?? foundModule?.id} // can route : $canContinue');
+            printer('-------found module: ${foundModule?.slug ?? foundModule?.id} // can route : $canContinue');
             if(foundModule != null) {
               Get.find<SplashController>().setModule(foundModule);
               apiClient.updateHeader(
@@ -1023,15 +1023,15 @@ Future<void> _moduleCheck(String moduleSlug, ApiClient apiClient, SharedPreferen
   if(Get.find<SplashController>().moduleList != null && GetPlatform.isWeb) {
     return;
   }
-  print('----------config model is null: ${Get.find<SplashController>().configModel == null}');
+  printer('----------config model is null: ${Get.find<SplashController>().configModel == null}');
   if(Get.find<SplashController>().configModel == null) {
-    print('======config data call from route Helper');
+    printer('======config data call from route Helper');
     await Get.find<SplashController>().getConfigData(source: DataSourceEnum.client, canRoute: false);
   }
 
-  print('=======module fetching----');
+  printer('=======module fetching----');
   bool v = await Get.find<SplashController>().getModules(dataSource: DataSourceEnum.client);
-  print('=======module fetch status: $v');
+  printer('=======module fetch status: $v');
   if(v) {
     if(Get.find<SplashController>().moduleList != null) {
       ModuleModel? foundModule;
@@ -1041,7 +1041,7 @@ Future<void> _moduleCheck(String moduleSlug, ApiClient apiClient, SharedPreferen
           break;
         }
       }
-      print('-------found module: ${foundModule?.slug ?? foundModule?.id} // route module slug: $moduleSlug');
+      printer('-------found module: ${foundModule?.slug ?? foundModule?.id} // route module slug: $moduleSlug');
       if(foundModule != null) {
         Get.find<SplashController>().setModule(foundModule);
         apiClient.updateHeader(

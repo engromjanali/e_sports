@@ -41,7 +41,7 @@ class WebMenuBar extends StatelessWidget implements PreferredSizeWidget {
                 SizedBox(
                   width: 500,
                   child: GetBuilder<LocationController>(builder: (locationController) {
-                    print('========current route: ${Get.currentRoute} // address: ${AddressHelper.getUserAddressFromSharedPref()}');
+                    printer('========current route: ${Get.currentRoute} // address: ${AddressHelper.getUserAddressFromSharedPref()}');
                       return AddressHelper.getUserAddressFromSharedPref() != null ? InkWell(
                         onTap: () => locationController.navigateToLocationScreen('home'),
                         child: Padding(

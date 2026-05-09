@@ -13,8 +13,8 @@ class RideHelper {
       } else if (Get.find<SplashController>().configModel?.afterTripCompleteSafetyFeatureSetTimeFormat == 'hour') {
         activeTime = activeTime * 3600;
       }
-      print('======check==2=> $time and $activeTime // format: ${Get.find<SplashController>().configModel?.afterTripCompleteSafetyFeatureSetTimeFormat}');
-      print('======check==3=> ${(Get.find<SplashController>().configModel?.afterTripCompleteSafetyFeatureActiveStatus ?? false)} && ${tripDetails.currentStatus ==  "completed"} && ${tripDetails.type != "parcel"} && ${activeTime > time} && ${tripDetails.customerSafetyAlert == null}');
+      printer('======check==2=> $time and $activeTime // format: ${Get.find<SplashController>().configModel?.afterTripCompleteSafetyFeatureSetTimeFormat}');
+      printer('======check==3=> ${(Get.find<SplashController>().configModel?.afterTripCompleteSafetyFeatureActiveStatus ?? false)} && ${tripDetails.currentStatus ==  "completed"} && ${tripDetails.type != "parcel"} && ${activeTime > time} && ${tripDetails.customerSafetyAlert == null}');
       return (Get.find<SplashController>().configModel?.afterTripCompleteSafetyFeatureActiveStatus ?? false) && tripDetails.currentStatus ==  "completed" &&
           tripDetails.type != "parcel" && activeTime > time && tripDetails.customerSafetyAlert == null ? true : false;
     }else{

@@ -173,7 +173,7 @@ class AuthRepository implements AuthRepositoryInterface{
     }
     if (deviceToken != null) {
       if (kDebugMode) {
-        print('--------Device Token---------- $deviceToken');
+        printer('--------Device Token---------- $deviceToken');
       }
     }
     return deviceToken;

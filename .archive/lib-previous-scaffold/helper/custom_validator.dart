@@ -15,7 +15,7 @@ class CustomValidator {
         phone = '+${phoneNumber.countryCode}${phoneNumber.nsn}';
       }
     } catch (e) {
-      debugPrint('Phone Number is not parsing: $e');
+      printer('Phone Number is not parsing: $e');
     }
     return PhoneValid(isValid: isValid, countryCode: countryCode,  phone: phone);
   }

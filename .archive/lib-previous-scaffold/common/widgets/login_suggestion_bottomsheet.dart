@@ -229,10 +229,10 @@ class LoginSuggestionBottomSheet extends StatelessWidget {
             });
           });
         }else {
-          debugPrint("Google Sign-In not supported on this device.");
+          printer("Google Sign-In not supported on this device.");
         }
       }catch(e){
-        debugPrint('Error in google sign in: $e');
+        printer('Error in google sign in: $e');
       }
     }
   }

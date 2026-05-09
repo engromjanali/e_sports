@@ -29,7 +29,7 @@ class ApiClient extends GetxService {
   ApiClient({required this.appBaseUrl, required this.sharedPreferences}) {
     token = sharedPreferences.getString(AppConstants.token);
     if (kDebugMode) {
-      print('Token: $token');
+      printer('Token: $token');
     }
     AddressModel? addressModel;
     try {
@@ -81,7 +81,7 @@ class ApiClient extends GetxService {
       return handleResponse(response, uri, handleError);
     } catch (e) {
       if (kDebugMode) {
-        print('------------${e.toString()}');
+        printer('------------${e.toString()}');
       }
       return Response(statusCode: 1, statusText: noInternetMessage);
     }
@@ -90,8 +90,8 @@ class ApiClient extends GetxService {
   Future<Response> postData(String uri, dynamic body, {Map<String, String>? headers, int? timeout, bool handleError = true,}) async {
     try {
       if (kDebugMode) {
-        print('====> API Call: $uri\nHeader: ${headers ?? _mainHeaders}');
-        print('====> API Body: $body');
+        printer('====> API Call: $uri\nHeader: ${headers ?? _mainHeaders}');
+        printer('====> API Body: $body');
       }
 
       Map<dynamic, dynamic> newBody = {};
@@ -122,8 +122,8 @@ class ApiClient extends GetxService {
     bool handleError = true,
   }) async {
     try {
-      debugPrint('====> API Call: $uri\nHeader: $_mainHeaders');
-      debugPrint(
+      printer('====> API Call: $uri\nHeader: $_mainHeaders');
+      printer(
         '====> API Body: $body with ${multipartBody.length} and multipart ${multipartDoc?.length}',
       );
       http.MultipartRequest request = http.MultipartRequest(
@@ -179,8 +179,8 @@ class ApiClient extends GetxService {
     dynamic body, {Map<String, String>? headers, bool handleError = true}) async {
     try {
       if (kDebugMode) {
-        print('====> API Call: $uri\nHeader: ${headers ?? _mainHeaders}');
-        print('====> API Body: $body');
+        printer('====> API Call: $uri\nHeader: ${headers ?? _mainHeaders}');
+        printer('====> API Body: $body');
       }
       http.Response response = await http.put(Uri.parse(appBaseUrl + uri), body: jsonEncode(body), headers: headers ?? _mainHeaders).timeout(Duration(seconds: timeoutInSeconds));
       return handleResponse(response, uri, handleError);
@@ -196,7 +196,7 @@ class ApiClient extends GetxService {
   }) async {
     try {
       if (kDebugMode) {
-        print('====> API Call: $uri\nHeader: ${headers ?? _mainHeaders}');
+        printer('====> API Call: $uri\nHeader: ${headers ?? _mainHeaders}');
       }
       http.Response response = await http
           .delete(Uri.parse(appBaseUrl + uri), headers: headers ?? _mainHeaders)
@@ -257,7 +257,7 @@ class ApiClient extends GetxService {
       response0 = Response(statusCode: 0, statusText: noInternetMessage);
     }
     if (kDebugMode) {
-      print('====> API Response: [${response0.statusCode}] $uri');
+      printer('====> API Response: [${response0.statusCode}] $uri');
       if (!ResponsiveHelper.isWeb() || response.statusCode != 500) {
         log('====> API Response Body: ${response0.body}');
       }

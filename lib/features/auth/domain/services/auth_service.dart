@@ -1,6 +1,7 @@
 import 'package:e_sports/core/api/api_checker.dart';
 import 'package:e_sports/core/data/models/auth_login_result_model.dart';
 import 'package:e_sports/core/error/exception/app_exception.dart';
+import 'package:e_sports/core/helper/printer.dart';
 import 'package:e_sports/features/auth/domain/services/auth_service_interface.dart';
 import 'package:flutter/foundation.dart';
 
@@ -35,14 +36,14 @@ class AuthService implements AuthServiceInterface {
 
     } on ServerException catch (e) {
       // Don't expose raw server details to the user
-      debugPrint('[AuthService.login] ServerException ${e.statusCode}: ${e.message}');
+      printer('[AuthService.login] ServerException ${e.statusCode}: ${e.message}');
       return const AuthLoginResult(false, 'Something went wrong. Please try again later.');
 
     } on AppException catch (e) {
       return AuthLoginResult(false, e.message);
 
     } catch (e) {
-      debugPrint('[AuthService.login] Unexpected: $e');
+      printer('[AuthService.login] Unexpected: $e');
       return const AuthLoginResult(false, 'Login failed. Please try again.');
     }
   }
@@ -64,7 +65,7 @@ class AuthService implements AuthServiceInterface {
       return AuthLoginResult(false, 'Session expired.');
       
     } on ServerException catch (e) {
-      debugPrint('[AuthService.register] ServerException ${e.statusCode}: ${e.message}');
+      printer('[AuthService.register] ServerException ${e.statusCode}: ${e.message}');
       return const AuthLoginResult(false, 'Registration failed. Please try again later.');
 
     } on AppException catch (e) {

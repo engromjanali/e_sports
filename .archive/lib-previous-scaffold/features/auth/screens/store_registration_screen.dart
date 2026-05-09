@@ -87,7 +87,7 @@ class _StoreRegistrationScreenState extends State<StoreRegistrationScreen> with 
     _countryDialCode = CountryCode.fromCountryCode(Get.find<SplashController>().configModel!.country!).dialCode;
     for (var language in _languageList) {
       if (kDebugMode) {
-        print(language);
+        printer(language);
       }
       _nameController.add(TextEditingController());
       _addressController.add(TextEditingController());

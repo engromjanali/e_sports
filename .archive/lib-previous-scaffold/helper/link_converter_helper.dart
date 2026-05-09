@@ -12,7 +12,7 @@ class LinkConverter{
     String? link;
     if(uri != null) {
       if (kDebugMode) {
-        print('Received Deep Link URI: $uri');
+        printer('Received Deep Link URI: $uri');
       }
 
       String host = uri.host;
@@ -28,7 +28,7 @@ class LinkConverter{
       }
     }
     if (kDebugMode) {
-      print('Converted Deep Link path: $link');
+      printer('Converted Deep Link path: $link');
     }
 
     ///home page: https://ammart-8bc78.web.app/?module=food&from-splash=false
@@ -43,15 +43,15 @@ class LinkConverter{
 
   static Future<void> navigateFromLink(String? link, {Uri? uri}) async {
     if(link != null) {
-      print('====linked route config: ${Get.find<SplashController>().configModel}');
+      printer('====linked route config: ${Get.find<SplashController>().configModel}');
       if(Get.find<SplashController>().configModel == null) {
-        print('======config data call from link converter helper');
+        printer('======config data call from link converter helper');
        await Get.find<SplashController>().getConfigData(notificationBody: null, canRoute: false);
       }
 
       if(link.startsWith('/?module=')) {
         if (kDebugMode) {
-          print('=======Navigating to initial route: $link');
+          printer('=======Navigating to initial route: $link');
         }
         String moduleId = uri?.queryParameters['module'] ?? '';
         Future.delayed(const Duration(milliseconds: 500), () {
@@ -59,7 +59,7 @@ class LinkConverter{
         });
       } else if(link.startsWith(RouteHelper.store) && !GetPlatform.isWeb) {
         if (kDebugMode) {
-          print('=======Navigating to store route: $link');
+          printer('=======Navigating to store route: $link');
           ///store details: https://ammart-8bc78.web.app/store/hungry-puppets46?id=46&page=store&module=food
         }
         int storeID = int.tryParse(uri!.queryParameters['id'] ?? '') ?? 0;
@@ -67,12 +67,12 @@ class LinkConverter{
         String page = uri.queryParameters['page'] ?? '';
         String slug = link.split('/').last;
         Future.delayed(const Duration(milliseconds: 500), () {
-          print('======store route parameters: storeID: $storeID, moduleId: $moduleId, page: $page, slug: $slug');
+          printer('======store route parameters: storeID: $storeID, moduleId: $moduleId, page: $page, slug: $slug');
           Get.toNamed(RouteHelper.getStoreRoute(id: storeID, page: page, slug: slug, moduleId: moduleId, fromDeeplink: true));
         });
       } else if(link.startsWith(RouteHelper.itemDetails) && !GetPlatform.isWeb) {
         if (kDebugMode) {
-          print('=======Navigating to item details route: $link');
+          printer('=======Navigating to item details route: $link');
         }
         int itemID = int.tryParse(uri!.queryParameters['id'] ?? '') ?? 0;
         String moduleId = uri.queryParameters['module'] ?? '';
@@ -91,7 +91,7 @@ class LinkConverter{
         });
       } else {
         if (kDebugMode) {
-          print('=======Unknown deep link route: $link');
+          printer('=======Unknown deep link route: $link');
         }
         Future.delayed(const Duration(milliseconds: 500), () {
           Get.offAllNamed(RouteHelper.getInitialRoute());

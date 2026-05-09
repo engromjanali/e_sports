@@ -79,18 +79,18 @@ class NotificationHelper {
 
     FirebaseMessaging.onMessage.listen((RemoteMessage message) async {
       if (kDebugMode) {
-        print("onMessage: ${message.data['type']}/${message.data}");
+        printer("onMessage: ${message.data['type']}/${message.data}");
       }
 
 
       bool pusherDisConnected = Get.find<SplashController>().pusherConnectionStatus == null || Get.find<SplashController>().pusherConnectionStatus == 'Disconnected' || Get.find<SplashController>().configModel!.webSocketStatus == false;
 
       if (kDebugMode) {
-        print('pusher Disconnected: $pusherDisConnected [${Get.find<SplashController>().pusherConnectionStatus == null} || ${Get.find<SplashController>().pusherConnectionStatus} || ${Get.find<SplashController>().configModel!.webSocketStatus == false}]');
+        printer('pusher Disconnected: $pusherDisConnected [${Get.find<SplashController>().pusherConnectionStatus == null} || ${Get.find<SplashController>().pusherConnectionStatus} || ${Get.find<SplashController>().configModel!.webSocketStatus == false}]');
       }
       /// For Ride Share
       if (message.data['action'] == 'customer_driver_on_the_way' && pusherDisConnected) {
-        print('=======from notification=====1===');
+        printer('=======from notification=====1===');
         Get.back();
         Get.find<RideController>().getRideDetails(
             message.data['ride_request_id']).then((value) {
@@ -280,7 +280,7 @@ class NotificationHelper {
 
     FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) async {
       if (kDebugMode) {
-        print("onOpenApp: ${message.data}");
+        printer("onOpenApp: ${message.data}");
       }
       try{
         if(message.data.isNotEmpty) {
@@ -689,13 +689,13 @@ class NotificationHelper {
       Get.find<SafetyAlertController>().checkDriverNeedSafety();
       Get.find<RideController>().updateRideCurrentState(RideState.ongoingRide);
       Get.find<RideController>().updateRideController();
-      print('------current route: ${Get.currentRoute}');
+      printer('------current route: ${Get.currentRoute}');
       if(Get.currentRoute != '/MapScreen'){
         _toRoute(formSplash, const MapScreen(fromScreen: MapScreenType.splash));
       }
 
     } else if(data['action'] == 'customer_trip_resumed' || data['action'] == 'customer_trip_paused'){
-      print('-----step---1');
+      printer('-----step---1');
       notificationToRouteNavigate(data['ride_request_id'], formSplash);
 
     } else if(data['action'] == 'payment_successful'){
@@ -735,7 +735,7 @@ class NotificationHelper {
         if (value.statusCode == 200) {
           Get.find<RideController>().biddingList.length != 1 ? Get.back() : null;
 
-          print('======bid gotten=====');
+          printer('======bid gotten=====');
           Get.dialog(
               barrierDismissible: true,
               barrierColor: Colors.black.withValues(alpha:0.5),
@@ -770,7 +770,7 @@ class NotificationHelper {
 @pragma('vm:entry-point')
 Future<dynamic> myBackgroundMessageHandler(RemoteMessage message) async {
   if (kDebugMode) {
-    print("onBackground: ${message.data}");
+    printer("onBackground: ${message.data}");
   }
 }
 

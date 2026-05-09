@@ -11,7 +11,7 @@ class RideCart extends StatelessWidget {
       Image.asset(Images.taxiCartIcon, height: 20, width: 20, color: Colors.white),
 
       GetBuilder<RideController>(builder: (rideController) {
-        print('=========cart : ${rideController.haveRunningTrip}');
+        printer('=========cart : ${rideController.haveRunningTrip}');
         return rideController.haveRunningTrip ? Positioned(
           top: -5, right: -5,
           child: Container(

@@ -8,6 +8,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:get/get_connect/http/src/request/request.dart';
 import 'package:http_parser/http_parser.dart';
 import 'package:get/get.dart';
+import 'package:e_sports/core/helper/printer.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
@@ -25,7 +26,7 @@ class ApiClient extends GetxService {
   ApiClient({required this.appBaseUrl, required this.sharedPreferences}) {
     token = sharedPreferences.getString(AppConstants.token);
     if (kDebugMode) {
-      print('Token: $token');
+      printer('Token: $token');
     }
 
     updateHeader(token);
@@ -56,7 +57,7 @@ class ApiClient extends GetxService {
       return handleResponse(response, uri, handleError);
     } catch (e) {
       if (kDebugMode) {
-        print('------------${e.toString()}');
+        printer('------------${e.toString()}');
       }
       throw NetworkException(noInternetMessage);
     }
@@ -68,8 +69,8 @@ class ApiClient extends GetxService {
     
     try {
       if (kDebugMode) {
-        print('====> API Call: $uri\nHeader: ${headers ?? _mainHeaders}');
-        print('====> API Body: $body');
+        printer('====> API Call: $uri\nHeader: ${headers ?? _mainHeaders}');
+        printer('====> API Body: $body');
       }
 
       response = await http.post(
@@ -77,7 +78,7 @@ class ApiClient extends GetxService {
         body: jsonEncode(body), headers: headers ?? _mainHeaders).timeout(Duration(seconds: timeout ?? timeoutInSeconds)
       );
     } catch (e) {
-      print("----> error: $e ");
+      printer("----> error: $e ");
       throw NetworkException(noInternetMessage);
     }
     return handleResponse(response, uri, handleError);
@@ -92,8 +93,8 @@ class ApiClient extends GetxService {
     bool handleError = true,
   }) async {
     try {
-      debugPrint('====> API Call: $uri\nHeader: $_mainHeaders');
-      debugPrint(
+      printer('====> API Call: $uri\nHeader: $_mainHeaders');
+      printer(
         '====> API Body: $body with ${multipartBody.length} and multipart ${multipartDoc?.length}',
       );
       http.MultipartRequest request = http.MultipartRequest(
@@ -149,8 +150,8 @@ class ApiClient extends GetxService {
     dynamic body, {Map<String, String>? headers, bool handleError = true}) async {
     try {
       if (kDebugMode) {
-        print('====> API Call: $uri\nHeader: ${headers ?? _mainHeaders}');
-        print('====> API Body: $body');
+        printer('====> API Call: $uri\nHeader: ${headers ?? _mainHeaders}');
+        printer('====> API Body: $body');
       }
       http.Response response = await http.put(Uri.parse(appBaseUrl + uri), body: jsonEncode(body), headers: headers ?? _mainHeaders).timeout(Duration(seconds: timeoutInSeconds));
       return handleResponse(response, uri, handleError);
@@ -166,7 +167,7 @@ class ApiClient extends GetxService {
   }) async {
     try {
       if (kDebugMode) {
-        print('====> API Call: $uri\nHeader: ${headers ?? _mainHeaders}');
+        printer('====> API Call: $uri\nHeader: ${headers ?? _mainHeaders}');
       }
       http.Response response = await http
           .delete(Uri.parse(appBaseUrl + uri), headers: headers ?? _mainHeaders)

@@ -79,12 +79,12 @@ class ValidateCheck{
       if(isValid){
         phone = withCountryCode ? "+${phoneNumber.countryCode}${phoneNumber.nsn}" : phoneNumber.nsn.toString();
         if (kDebugMode) {
-          print("Phone Number : $phone");
+          printer("Phone Number : $phone");
         }
       }
     }catch(e) {
       if (kDebugMode) {
-        print(e.toString());
+        printer(e.toString());
       }
     }
     return phone;
