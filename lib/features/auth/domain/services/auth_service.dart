@@ -3,7 +3,6 @@ import 'package:e_sports/core/data/models/auth_login_result_model.dart';
 import 'package:e_sports/core/error/exception/app_exception.dart';
 import 'package:e_sports/core/helper/printer.dart';
 import 'package:e_sports/features/auth/domain/services/auth_service_interface.dart';
-import 'package:flutter/foundation.dart';
 
 import '../repositories/auth_repository_interface.dart';
 
@@ -14,7 +13,7 @@ class AuthService implements AuthServiceInterface {
   @override
   Future<AuthLoginResult> login(String? email, String password) async {
     try {
-      final response = await authRepositoryInterface.login(email, password);
+      final Map<String, dynamic> response = await authRepositoryInterface.login(email, password);
       final token = _readToken(response);
 
       if (token == null) {
@@ -51,7 +50,7 @@ class AuthService implements AuthServiceInterface {
   @override
   Future<AuthLoginResult> register(String name, String email, String password) async {
     try {
-      final response = await authRepositoryInterface.register(name, email, password);
+      final Map<String, dynamic> response = await authRepositoryInterface.register(name, email, password);
       return AuthLoginResult(true, _readMessage(response, fallback: 'Registration successful. Please sign in.'));
 
     } on ValidationException catch (e) {
@@ -61,9 +60,7 @@ class AuthService implements AuthServiceInterface {
       return AuthLoginResult(false, e.message);
 
     } on UnauthorizedException catch (_) {
-      ApiChecker.checkUnauthorized(); // redirect to login
       return AuthLoginResult(false, 'Session expired.');
-      
     } on ServerException catch (e) {
       printer('[AuthService.register] ServerException ${e.statusCode}: ${e.message}');
       return const AuthLoginResult(false, 'Registration failed. Please try again later.');
@@ -79,7 +76,7 @@ class AuthService implements AuthServiceInterface {
   @override
   Future<AuthLoginResult> forgotPassword(String email) async {
     try {
-      final response = await authRepositoryInterface.forgotPassword(email);
+      final Map<String, dynamic> response = await authRepositoryInterface.forgotPassword(email);
       return AuthLoginResult(true, _readMessage(response, fallback: 'Password reset instructions sent.'));
 
     } on NetworkException catch (e) {
@@ -120,6 +117,20 @@ class AuthService implements AuthServiceInterface {
 
   @override
   Future<bool> clearUserToken() async => authRepositoryInterface.clearUserToken();
+  
+  @override
+  Future<AuthLoginResult> verifyForgotPasswordOtp(String email, String otp) async {
+    try {
+      final Map<String, dynamic> response = await authRepositoryInterface.verifyForgotPasswordOtp(email, otp);
+      return AuthLoginResult(true, _readMessage(response, fallback: 'Otp verified successfully.'));
+    } on NetworkException catch (e) {
+      return AuthLoginResult(false, e.message);
+    } on AppException catch (e) {
+      return AuthLoginResult(false, e.message);
+    } catch (e) {
+      return const AuthLoginResult(false, 'Unable to verify otp.');
+    }
+  }
 }
 
 

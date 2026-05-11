@@ -1,6 +1,7 @@
 import 'package:e_sports/core/api/api_client.dart';
 import 'package:e_sports/core/constants/app_constants.dart';
 import 'package:e_sports/features/auth/domain/repositories/auth_repository_interface.dart';
+import 'package:get/get_connect/http/src/response/response.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthRepository implements AuthRepositoryInterface {
@@ -55,5 +56,14 @@ class AuthRepository implements AuthRepositoryInterface {
     apiClient.token = null;
     apiClient.updateHeader(null);
     return await sharedPreferences.remove(AppConstants.token);
+  }
+
+  @override
+  Future<Map<String, dynamic>> verifyForgotPasswordOtp(String email, String otp) async {
+    final Response response = await apiClient.postData(
+      AppConstants.verifyForgetPasswordOtpUri,
+      {'email': email, 'otp': otp},
+    );
+    return response.body;
   }
 }

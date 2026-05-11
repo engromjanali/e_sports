@@ -21,6 +21,8 @@ class AppConstants {
   static const String loginUri = "/api/user/signin";
   static const String forgetPaasswordUri = "/api/user/forget-password";
   static const String profileUri = "/api/user/profile";
+  static const String verifyForgetPasswordOtpUri = "/api/user/forget-password-verify";
+  static const String forgetPasswordUri = "/api/user/forget-password";
 
   // static List<ChooseUsModel> whyChooseUsList = [
   //   ChooseUsModel(icon: Images.landingTrusted, title: 'trusted_by_customers_and_store_owners'),

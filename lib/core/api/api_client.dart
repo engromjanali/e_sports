@@ -1,13 +1,16 @@
 import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
+import 'package:e_sports/core/api/api_checker.dart';
 import 'package:e_sports/core/constants/app_constants.dart';
 import 'package:e_sports/core/error/exception/app_exception.dart';
+import 'package:get/get_connect/http/src/request/request.dart';
+import 'package:get/get_connect/http/src/response/response.dart';
+import 'package:get/get_state_manager/src/rx_flutter/rx_disposable.dart';
+import 'package:get/get_utils/src/extensions/internacionalization.dart';
 import 'package:path/path.dart';
 import 'package:file_picker/file_picker.dart';
-import 'package:get/get_connect/http/src/request/request.dart';
 import 'package:http_parser/http_parser.dart';
-import 'package:get/get.dart';
 import 'package:e_sports/core/helper/printer.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -32,6 +35,8 @@ class ApiClient extends GetxService {
     updateHeader(token);
   }
 
+  Map<String, String> getHeader() => _mainHeaders;
+
   Map<String, String> updateHeader(String? token) {
     Map<String, String> header = {};
 
@@ -46,27 +51,21 @@ class ApiClient extends GetxService {
     return header;
   }
 
-  Map<String, String> getHeader() => _mainHeaders;
-
   Future<Response> getData(String uri, {Map<String, dynamic>? query, Map<String, String>? headers, bool handleError = true,}) async {
+    http.Response response;
     try {
       if (kDebugMode) {
         log('====> API Call: $uri\nHeader: ${headers ?? _mainHeaders}');
       }
-      http.Response response = await http.get(Uri.parse(appBaseUrl + uri), headers: headers ?? _mainHeaders).timeout(Duration(seconds: timeoutInSeconds));
-      return handleResponse(response, uri, handleError);
-    } catch (e) {
-      if (kDebugMode) {
-        printer('------------${e.toString()}');
-      }
-      throw NetworkException(noInternetMessage);
+      response = await http.get(Uri.parse(appBaseUrl + uri), headers: headers ?? _mainHeaders).timeout(Duration(seconds: timeoutInSeconds));
+    }catch (e) {
+      response = http.Response(jsonEncode({'message': noInternetMessage}), 1, headers: headers ?? _mainHeaders);
     }
+    return handleResponse(response, uri, handleError);
   }
 
   Future<Response> postData(String uri, dynamic body, {Map<String, String>? headers, int? timeout, bool handleError = true,}) async {
-    
     http.Response response;
-    
     try {
       if (kDebugMode) {
         printer('====> API Call: $uri\nHeader: ${headers ?? _mainHeaders}');
@@ -79,7 +78,7 @@ class ApiClient extends GetxService {
       );
     } catch (e) {
       printer("----> error: $e ");
-      throw NetworkException(noInternetMessage);
+      response = http.Response(jsonEncode({'message': noInternetMessage}), 1, headers: headers ?? _mainHeaders);
     }
     return handleResponse(response, uri, handleError);
   }
@@ -92,6 +91,7 @@ class ApiClient extends GetxService {
     Map<String, String>? headers,
     bool handleError = true,
   }) async {
+    http.Response response;
     try {
       printer('====> API Call: $uri\nHeader: $_mainHeaders');
       printer(
@@ -138,26 +138,27 @@ class ApiClient extends GetxService {
       }
 
       request.fields.addAll(body);
-      http.Response response = await http.Response.fromStream(await request.send());
-      return handleResponse(response, uri, handleError);
+      response = await http.Response.fromStream(await request.send());
     } catch (e) {
-      throw NetworkException(noInternetMessage);
+      response = http.Response(jsonEncode({'message': noInternetMessage}), 1, headers: headers ?? _mainHeaders);
     }
+    return handleResponse(response, uri, handleError);
   }
 
   Future<Response> putData(
     String uri,
     dynamic body, {Map<String, String>? headers, bool handleError = true}) async {
+    http.Response response;
     try {
       if (kDebugMode) {
         printer('====> API Call: $uri\nHeader: ${headers ?? _mainHeaders}');
         printer('====> API Body: $body');
       }
-      http.Response response = await http.put(Uri.parse(appBaseUrl + uri), body: jsonEncode(body), headers: headers ?? _mainHeaders).timeout(Duration(seconds: timeoutInSeconds));
-      return handleResponse(response, uri, handleError);
+      response = await http.put(Uri.parse(appBaseUrl + uri), body: jsonEncode(body), headers: headers ?? _mainHeaders).timeout(Duration(seconds: timeoutInSeconds));
     } catch (e) {
-      throw NetworkException(noInternetMessage);
+      response = http.Response(jsonEncode({'message': noInternetMessage}), 1, headers: headers ?? _mainHeaders);
     }
+    return handleResponse(response, uri, handleError);
   }
 
   Future<Response> deleteData(
@@ -165,17 +166,29 @@ class ApiClient extends GetxService {
     Map<String, String>? headers,
     bool handleError = true,
   }) async {
+    http.Response response;
     try {
       if (kDebugMode) {
         printer('====> API Call: $uri\nHeader: ${headers ?? _mainHeaders}');
       }
-      http.Response response = await http
+      response = await http
           .delete(Uri.parse(appBaseUrl + uri), headers: headers ?? _mainHeaders)
           .timeout(Duration(seconds: timeoutInSeconds));
-      return handleResponse(response, uri, handleError);
     } catch (e) {
-      throw NetworkException(noInternetMessage);
+      response = http.Response(jsonEncode({'message': noInternetMessage}), 1, headers: headers ?? _mainHeaders);
     }
+    return handleResponse(response, uri, handleError);
+  }
+
+  String _extractMessage(Response r, String fallback) {
+    final b = r.body;
+    if (b is Map) {
+      return b['message']?.toString() ??
+          b['error']?.toString() ??
+          (b['errors'] is List ? (b['errors'] as List).first['message']?.toString() : null) ??
+          fallback;
+    }
+    return r.statusText ?? fallback;
   }
 
   Response handleResponse(http.Response response, String uri, bool handleError) {
@@ -184,6 +197,8 @@ class ApiClient extends GetxService {
       body = jsonDecode(response.body);
     } catch (_) {}
 
+    
+      
     Response response0 = Response(
       body: body ?? response.body,
       bodyString: response.body.toString(),
@@ -202,52 +217,54 @@ class ApiClient extends GetxService {
       log('====> API Response Body: ${response0.body}');
     }
 
-    // Extract a clean message from whatever shape the body is
-    String _extractMessage(Response r, String fallback) {
-      final b = r.body;
-      if (b is Map) {
-        return b['message']?.toString() ??
-            b['error']?.toString() ??
-            (b['errors'] is List ? (b['errors'] as List).first['message']?.toString() : null) ??
-            fallback;
-      }
-      return r.statusText ?? fallback;
-    }
-
     // ── Throw typed exceptions based on status code ────────────────────────
-    switch (response.statusCode) {
-      case 200:
-      case 201:
-        return response0;
+    try {
+      switch (response.statusCode) {
+        case 1:
+          throw NetworkException(_extractMessage(response0, noInternetMessage));
 
-      case 400:
-        final errors = (body?['errors'] as Map?)?.cast<String, String>();
-        throw ValidationException(
-          _extractMessage(response0, 'Invalid request.'),
-          fieldErrors: errors,
-        );
+        case 200:
+        case 201:
+          return response0;
 
-      case 401:
-        throw UnauthorizedException(
-          _extractMessage(response0, 'Unauthorized. Please login again.'),
-        );
+        case 400:
+          final errors = (body?['errors'] as Map?)?.cast<String, String>();
+          throw ValidationException(
+            _extractMessage(response0, 'Invalid request.'),
+            fieldErrors: errors,
+          );
 
-      case 404:
-        throw NotFoundException(
-          _extractMessage(response0, 'Resource not found.'),
-        );
+        case 401:
+          ApiChecker.checkUnauthorized();
+          throw UnauthorizedException(
+            _extractMessage(response0, 'Unauthorized. Please login again.'),
+          );
 
-      default:
-        if (response.statusCode >= 500) {
+        case 404:
+          throw NotFoundException(
+            _extractMessage(response0, 'Resource not found.'),
+          );
+
+        default:
+          if (response.statusCode >= 500) {
+            throw ServerException(
+              _extractMessage(response0, 'Server error. Please try again later.'),
+              response.statusCode,
+            );
+          }
           throw ServerException(
-            _extractMessage(response0, 'Server error. Please try again later.'),
+            _extractMessage(response0, 'Unexpected error occurred.'),
             response.statusCode,
           );
-        }
-        throw ServerException(
-          _extractMessage(response0, 'Unexpected error occurred.'),
-          response.statusCode,
-        );
+      }
+    } catch (e) {
+      if(handleError && e is AppException){
+        return Response(statusCode: response.statusCode, statusText: e.message);
+      }
+      else if (handleError){
+        return Response(statusCode: response.statusCode, statusText: 'Something went wrong');
+      }
+      rethrow;
     }
   }
 }

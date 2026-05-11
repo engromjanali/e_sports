@@ -3,8 +3,9 @@ import 'package:e_sports/core/data/models/computed_player_stats.dart';
 import 'package:e_sports/core/data/models/news_model.dart';
 import 'package:e_sports/core/widgets/route_not_found_screen.dart';
 import 'package:e_sports/features/auth/controllers/auth_controller.dart';
-import 'package:e_sports/features/auth/presentation/pages/login_page.dart';
-import 'package:e_sports/features/auth/presentation/pages/registration_page.dart';
+import 'package:e_sports/features/auth/presentation/screen/login_screen.dart';
+import 'package:e_sports/features/auth/presentation/screen/otp_verification_screen.dart';
+import 'package:e_sports/features/auth/presentation/screen/registration_page.dart';
 import 'package:e_sports/features/compare/screens/compare_screen.dart';
 import 'package:e_sports/features/dashboard/screens/dashboard_screen.dart';
 import 'package:e_sports/features/hall_of_fame/screens/hall_of_fame_screen.dart';
@@ -18,7 +19,6 @@ import 'package:get/get.dart';
 
 
 class RouteHelper {
-  
   static const String initial = '/';
   static const String login = '/login';
   static const String registration = '/registration';
@@ -40,6 +40,7 @@ class RouteHelper {
   static const String terms = '/terms';
   static const String support = '/support';
   static const String oldDashboard = '/DashboardScreen';
+  static const String otpVerification = '/otp-verification';
 
 
   static List<GetMiddleware> get authMiddleware => [_AuthMiddleware()];
@@ -207,6 +208,8 @@ class RouteHelper {
       },
       middlewares: authMiddleware,
     ),
+    GetPage(name: RouteHelper.otpVerification, page: () => const OtpVerificationPage()),
+
   ];
 
   static NewsModel? _newsFromRoute() {

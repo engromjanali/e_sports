@@ -6,6 +6,7 @@ abstract class AuthRepositoryInterface {
   String getUserToken();
   bool isLoggedIn();
   Future<bool> clearUserToken();
+  Future<Map<String, dynamic>> verifyForgotPasswordOtp(String email, String otp);
 
   // Other auth flows are disabled for now.
   // Future<dynamic> updateToken();

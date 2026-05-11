@@ -48,6 +48,15 @@ class AuthController extends GetxController implements GetxService {
     return await authServiceInterface.clearUserToken();
   }
 
+  Future<AuthLoginResult> verifyForgotPasswordOtp(String email, String otp) async {
+    _isLoading = true;
+    update();
+    final AuthLoginResult responseModel = await authServiceInterface.verifyForgotPasswordOtp(email, otp);
+    _isLoading = false;
+    update();
+    return responseModel;
+  }
+
   // Other auth flows are disabled for now.
   // void pickImageForReg(...);
   // Future<void> updateToken();
