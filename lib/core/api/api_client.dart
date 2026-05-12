@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:e_sports/core/api/api_checker.dart';
 import 'package:e_sports/core/constants/app_constants.dart';
 import 'package:e_sports/core/error/exception/app_exception.dart';
+import 'package:e_sports/core/widgets/custom_snackbar.dart';
 import 'package:get/get_connect/http/src/request/request.dart';
 import 'package:get/get_connect/http/src/response/response.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_disposable.dart';
@@ -259,9 +260,11 @@ class ApiClient extends GetxService {
       }
     } catch (e) {
       if(handleError && e is AppException){
+        showCustomSnackBar(e.message);
         return Response(statusCode: response.statusCode, statusText: e.message);
       }
       else if (handleError){
+        showCustomSnackBar('Something went wrong');
         return Response(statusCode: response.statusCode, statusText: 'Something went wrong');
       }
       rethrow;
