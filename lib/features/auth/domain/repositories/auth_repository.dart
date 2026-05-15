@@ -16,6 +16,7 @@ class AuthRepository implements AuthRepositoryInterface {
     final response = await apiClient.postData(
       AppConstants.loginUri,
       {'email': email, 'password': password},
+      handleError: false
     );
     return response.body as Map<String, dynamic>;
   }

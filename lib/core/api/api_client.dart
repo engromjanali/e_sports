@@ -56,7 +56,7 @@ class ApiClient extends GetxService {
     http.Response response;
     try {
       if (kDebugMode) {
-        log('====> API Call: $uri\nHeader: ${headers ?? _mainHeaders}');
+        log('====> API Call[get]: $uri\nHeader: ${headers ?? _mainHeaders}');
       }
       response = await http.get(Uri.parse(appBaseUrl + uri), headers: headers ?? _mainHeaders).timeout(Duration(seconds: timeoutInSeconds));
     }catch (e) {
@@ -69,8 +69,8 @@ class ApiClient extends GetxService {
     http.Response response;
     try {
       if (kDebugMode) {
-        printer('====> API Call: $uri\nHeader: ${headers ?? _mainHeaders}');
-        printer('====> API Body: $body');
+        printer('====> API Call [post]: $uri\nHeader: ${headers ?? _mainHeaders}');
+        printer('====> API Body [post]: $body');
       }
 
       response = await http.post(
@@ -94,9 +94,9 @@ class ApiClient extends GetxService {
   }) async {
     http.Response response;
     try {
-      printer('====> API Call: $uri\nHeader: $_mainHeaders');
+      printer('====> API Call [post-multipart]: $uri\nHeader: $_mainHeaders');
       printer(
-        '====> API Body: $body with ${multipartBody.length} and multipart ${multipartDoc?.length}',
+        '====> API Body [post-multipart]: $body with ${multipartBody.length} and multipart ${multipartDoc?.length}',
       );
       http.MultipartRequest request = http.MultipartRequest(
         'POST',
@@ -152,8 +152,8 @@ class ApiClient extends GetxService {
     http.Response response;
     try {
       if (kDebugMode) {
-        printer('====> API Call: $uri\nHeader: ${headers ?? _mainHeaders}');
-        printer('====> API Body: $body');
+        printer('====> API Call [put]: $uri\nHeader: ${headers ?? _mainHeaders}');
+        printer('====> API Body [put]: $body');
       }
       response = await http.put(Uri.parse(appBaseUrl + uri), body: jsonEncode(body), headers: headers ?? _mainHeaders).timeout(Duration(seconds: timeoutInSeconds));
     } catch (e) {
@@ -170,7 +170,7 @@ class ApiClient extends GetxService {
     http.Response response;
     try {
       if (kDebugMode) {
-        printer('====> API Call: $uri\nHeader: ${headers ?? _mainHeaders}');
+        printer('====> API Call [delete]: $uri\nHeader: ${headers ?? _mainHeaders}');
       }
       response = await http
           .delete(Uri.parse(appBaseUrl + uri), headers: headers ?? _mainHeaders)
@@ -214,7 +214,7 @@ class ApiClient extends GetxService {
     );
 
     if (kDebugMode) {
-      log('====> API Response: [${response0.statusCode}] $uri');
+      log('====> API Response : [${response0.statusCode}] $uri');
       log('====> API Response Body: ${response0.body}');
     }
 
@@ -238,7 +238,7 @@ class ApiClient extends GetxService {
         case 401:
           ApiChecker.checkUnauthorized();
           throw UnauthorizedException(
-            _extractMessage(response0, 'Unauthorized. Please login again.'),
+            _extractMessage(response0, 'Session expaired!, please login again.'),
           );
 
         case 404:
