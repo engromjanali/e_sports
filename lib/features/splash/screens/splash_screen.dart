@@ -19,11 +19,16 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   Future<void> _loadConfig() async {
-    final bool isSuccess = await Get.find<SplashController>().getConfig();
+    final SplashController splashController = Get.find<SplashController>();
+    final bool isSuccess = await splashController.getConfig();
     if(!mounted) return;
 
     if(isSuccess) {
-      Get.offAllNamed(RouteHelper.login);
+      if(splashController.shouldShowMaintenance) {
+        Get.offAllNamed(RouteHelper.maintenance);
+      }else {
+        Get.offAllNamed(RouteHelper.login);
+      }
     }else {
       Get.snackbar('Config', 'Unable to load app config. Please try again.');
     }

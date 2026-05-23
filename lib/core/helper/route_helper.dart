@@ -14,6 +14,7 @@ import 'package:e_sports/features/menu/screens/static_content_screen.dart';
 import 'package:e_sports/features/news/screens/news_detail_screen.dart';
 import 'package:e_sports/features/news/screens/news_list_screen.dart';
 import 'package:e_sports/features/profile/screens/profile_screen.dart';
+import 'package:e_sports/features/splash/screens/maintenance_screen.dart';
 import 'package:e_sports/features/splash/screens/splash_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -22,6 +23,7 @@ import 'package:get/get.dart';
 class RouteHelper {
   static const String initial = '/';
   static const String splash = '/splash';
+  static const String maintenance = '/maintenance';
   static const String login = '/login';
   static const String registration = '/registration';
   static const String dashboard = '/dashboard';
@@ -161,6 +163,7 @@ class RouteHelper {
   static List<GetPage> routes = [
     GetPage(name: initial, page: () => const SplashScreen()),
     GetPage(name: splash, page: () => const SplashScreen()),
+    GetPage(name: maintenance, page: () => const MaintenanceScreen()),
     GetPage(name: login, page: () => const LoginPage()),
     GetPage(name: registration, page: () => const RegistrationPage()),
     GetPage(name: dashboard, page: () => const DashboardScreen(), middlewares: authMiddleware),

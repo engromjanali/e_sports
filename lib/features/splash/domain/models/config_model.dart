@@ -1,24 +1,22 @@
+import 'package:e_sports/core/helper/type_converter_helper.dart';
+
 class ConfigModel {
-  final bool? success;
-  final String? message;
-  final Map<String, dynamic> data;
-  final Map<String, dynamic> rawData;
+  final String? version;
+  final bool verifyEmail;
+  final bool maintenanceMode;
+
 
   ConfigModel({
-    this.success,
-    this.message,
-    required this.data,
-    required this.rawData,
+    this.version,
+    required this.verifyEmail,
+    required this.maintenanceMode,
   });
 
   factory ConfigModel.fromJson(Map<String, dynamic> json) {
-    final dynamic dataValue = json['data'];
-
     return ConfigModel(
-      success: json['success'] is bool ? json['success'] : null,
-      message: json['message']?.toString(),
-      data: dataValue is Map<String, dynamic> ? dataValue : <String, dynamic>{},
-      rawData: json,
+      version: json['version']?.toString(),
+      verifyEmail: TypeConverterHelper.readBool(json['verify_email']),
+      maintenanceMode: TypeConverterHelper.readBool(json['maintenance_mode']),
     );
   }
 }
