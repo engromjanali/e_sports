@@ -200,13 +200,15 @@ class ApiClient extends GetxService {
 
     
       
+    final request = response.request;
+
     Response response0 = Response(
       body: body ?? response.body,
       bodyString: response.body.toString(),
       request: Request(
-        headers: response.request!.headers,
-        method: response.request!.method,
-        url: response.request!.url,
+        headers: request?.headers ?? {},
+        method: request?.method ?? 'GET',
+        url: request?.url ?? Uri.parse(appBaseUrl + uri),
       ),
       headers: response.headers,
       statusCode: response.statusCode,

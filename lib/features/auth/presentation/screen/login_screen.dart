@@ -1,3 +1,4 @@
+import 'package:e_sports/core/constants/app_constants.dart';
 import 'package:e_sports/core/helper/route_helper.dart';
 import 'package:e_sports/core/utils/dimensions.dart';
 import 'package:e_sports/core/helper/responsive_helper.dart';
@@ -329,6 +330,16 @@ class _LoginPageState extends State<LoginPage> {
                     fontSize: 11,
                     letterSpacing: 5,
                     fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ),
+              const SizedBox(height: 8),
+              Center(
+                child: Text(
+                  "Version ${AppConstants.appVersion}",
+                  style: Dimensions.mutedText(context).copyWith(
+                    fontSize: 11,
+                    color: AppColors.textMuted.withValues(alpha: 0.45),
                   ),
                 ),
               ),

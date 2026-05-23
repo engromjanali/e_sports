@@ -7,6 +7,11 @@ import 'package:e_sports/features/auth/domain/repositories/auth_repository.dart'
 import 'package:e_sports/features/auth/domain/repositories/auth_repository_interface.dart';
 import 'package:e_sports/features/auth/domain/services/auth_service.dart';
 import 'package:e_sports/features/auth/domain/services/auth_service_interface.dart';
+import 'package:e_sports/features/splash/controllers/splash_controller.dart';
+import 'package:e_sports/features/splash/domain/repositories/splash_repository.dart';
+import 'package:e_sports/features/splash/domain/repositories/splash_repository_interface.dart';
+import 'package:e_sports/features/splash/domain/services/splash_service.dart';
+import 'package:e_sports/features/splash/domain/services/splash_service_interface.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -22,6 +27,11 @@ Future<void> init() async {
 
   // Core API dependency
   Get.lazyPut<ApiClient>(() => ApiClient(appBaseUrl: AppConstants.baseUrl, sharedPreferences: Get.find()), fenix: true);
+
+  // Splash feature dependencies
+  Get.lazyPut<SplashRepositoryInterface>(() => SplashRepository(apiClient: Get.find()), fenix: true);
+  Get.lazyPut<SplashServiceInterface>(() => SplashService(splashRepositoryInterface: Get.find()), fenix: true);
+  Get.lazyPut<SplashController>(() => SplashController(splashServiceInterface: Get.find()), fenix: true);
 
   // Auth feature dependencies
   Get.lazyPut<AuthRepositoryInterface>(() => AuthRepository(apiClient: Get.find(), sharedPreferences: Get.find()), fenix: true);
