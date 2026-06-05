@@ -14,6 +14,7 @@ import 'package:e_sports/features/splash/domain/services/splash_service.dart';
 import 'package:e_sports/features/splash/domain/services/splash_service_interface.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:supabase/supabase.dart';
 
 Future<void> init() async {
 
@@ -28,8 +29,11 @@ Future<void> init() async {
   // Core API dependency
   Get.lazyPut<ApiClient>(() => ApiClient(appBaseUrl: AppConstants.baseUrl, sharedPreferences: Get.find()), fenix: true);
 
+  // Supabase client
+  Get.put<SupabaseClient>(SupabaseClient(AppConstants.supabaseUrl, AppConstants.supabaseAnonKey), permanent: true);
+
   // Splash feature dependencies
-  Get.lazyPut<SplashRepositoryInterface>(() => SplashRepository(apiClient: Get.find()), fenix: true);
+  Get.lazyPut<SplashRepositoryInterface>(() => SplashRepository(apiClient: Get.find(), supabase: Get.find()), fenix: true);
   Get.lazyPut<SplashServiceInterface>(() => SplashService(splashRepositoryInterface: Get.find()), fenix: true);
   Get.lazyPut<SplashController>(() => SplashController(splashServiceInterface: Get.find()), fenix: true);
 

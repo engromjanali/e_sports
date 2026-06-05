@@ -15,6 +15,10 @@ class AppConstants {
 
   static const String baseUrl = 'https://foatball.vercel.app';
 
+  // Supabase
+  static const String supabaseUrl = 'https://wrfsbsxigcaapvjityjv.supabase.co';
+  static const String supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndyZnNic3hpZ2NhYXB2aml0eWp2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA0NTkzMDcsImV4cCI6MjA5NjAzNTMwN30.Otfr-3Kho9SKl0MjNL0NNAQFJwISPSJtz7az4tV-HCA';
+
   /// auth endpoints
   static const String registationUri = "/api/user/registation";
   static const String loginUri = "/api/user/signin";
