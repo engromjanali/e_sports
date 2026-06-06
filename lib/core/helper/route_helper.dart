@@ -238,7 +238,8 @@ class RouteHelper {
 
     final id = Get.parameters['id'];
     if (id == null || id.isEmpty || !Get.isRegistered<NewsController>()) return null;
-    final data = Get.find<NewsController>().newsList.where((item) => item.id == id);
+    final controller = Get.find<NewsController>();
+    final data = [...controller.newsList, ...controller.newsHome].where((item) => item.id == id);
     return data.isEmpty ? null : data.first;
   }
 

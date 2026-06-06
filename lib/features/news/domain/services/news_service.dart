@@ -10,9 +10,9 @@ class NewsService implements NewsServiceInterface {
   NewsService({required this.newsRepositoryInterface});
 
   @override
-  Future<List<NewsModel>> getNews({int? limit, int? offset}) async {
+  Future<List<NewsModel>> getNews({int? limit, int? offset, String? search}) async {
     try {
-      return await newsRepositoryInterface.getNews(limit: limit, offset: offset);
+      return await newsRepositoryInterface.getNews(limit: limit, offset: offset, search: search);
     } on AppException catch (e) {
       printer('[NewsService.getNews] ${e.message}');
       return [];

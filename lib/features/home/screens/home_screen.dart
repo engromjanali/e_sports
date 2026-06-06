@@ -44,7 +44,7 @@ class HomeScreen extends StatelessWidget {
     final home = Get.find<HomeController>();
     return Obx(() {
       final appData = Get.find<AppDataController>();
-      final news = Get.find<NewsController>().newsList;
+      final news = Get.find<NewsController>().newsHome;
       final n = news.isNotEmpty ? news[newsBannerIndex % news.length] : null;
       final players = appData.seasonalPlayers;
       final weeklyPlayers = appData.weeklyPlayers;

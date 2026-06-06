@@ -88,8 +88,16 @@ class BackendDataController extends GetxService{
     
 /// ===================== news ===========================
 
-  Future<List<NewsModel>> fetchNews({int? limit, int? offset}) async {
-    final base = supabase.from('news').select().order('created_at', ascending: false);
+  Future<List<NewsModel>> fetchNews({int? limit, int? offset, String? search}) async {
+    var filter = supabase.from('news').select();
+
+    // Server-side title search (case-insensitive). Applied before order/range.
+    final term = search?.trim() ?? '';
+    if (term.isNotEmpty) {
+      filter = filter.ilike('title', '%$term%');
+    }
+
+    final base = filter.order('created_at', ascending: false);
 
     final data = limit != null
         ? await base.range(offset ?? 0, (offset ?? 0) + limit - 1)

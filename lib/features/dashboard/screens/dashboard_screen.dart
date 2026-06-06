@@ -31,9 +31,9 @@ class _GameArenaScreenState extends State<DashboardScreen> with SingleTickerProv
   void initState() {
     super.initState();
     _newsTimer = Timer.periodic(const Duration(milliseconds: 3800), (_) {
-      final newsList = Get.find<NewsController>().newsList;
-      if (newsList.isNotEmpty) {
-        if (mounted) setState(() => _newsBannerIndex = (_newsBannerIndex + 1) % newsList.length);
+      final newsHome = Get.find<NewsController>().newsHome;
+      if (newsHome.isNotEmpty) {
+        if (mounted) setState(() => _newsBannerIndex = (_newsBannerIndex + 1) % newsHome.length);
       }
     });
   }
