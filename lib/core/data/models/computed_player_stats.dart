@@ -54,10 +54,10 @@ class ComputedPlayerStats {
   });
 
   // Proxy getters for ease of access in the UI
-  int get id => player.id;
+  String get id => player.id;
   String get name => player.name;
   String get short => player.sortName;
-  String get team => player.team;
   int get jerseyNumber => player.jerseyNumber;
+  List<String> get playerRoles => player.playerRoles;
   List<String> get tags => player.tags;
 }

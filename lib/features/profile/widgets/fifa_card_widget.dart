@@ -163,18 +163,10 @@ class FifaCardWidget extends StatelessWidget {
                   Text(
                     player.name.toUpperCase(),
                     style: const TextStyle(
-                      fontSize: 18, 
-                      fontWeight: FontWeight.w900, 
+                      fontSize: 18,
+                      fontWeight: FontWeight.w900,
                       color: AppColors.white,
                       letterSpacing: 1.5,
-                    ),
-                  ),
-                  Text(
-                    player.team.toUpperCase(),
-                    style: TextStyle(
-                      fontSize: 12, 
-                      color: AppColors.white.withOpacity(0.6),
-                      fontWeight: FontWeight.bold,
                     ),
                   ),
                 ],

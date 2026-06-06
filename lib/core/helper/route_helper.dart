@@ -152,7 +152,7 @@ class RouteHelper {
   }
 
   static String getNewsDetailsRoute(int id) => '/news/$id';
-  static String getPlayerProfileRoute(int id) => '/profile/$id';
+  static String getPlayerProfileRoute(String id) => '/profile/$id';
 
   static String? routeFromUri(Uri uri) {
     final String path = uri.scheme == 'esports' && uri.host.isNotEmpty ? '/${uri.host}${uri.path}' : uri.path;
@@ -226,8 +226,8 @@ class RouteHelper {
   }
 
   static ComputedPlayerStats? _playerFromRoute() {
-    final id = int.tryParse(Get.parameters['id'] ?? '');
-    if (id == null || !Get.isRegistered<AppDataController>()) return null;
+    final id = Get.parameters['id'];
+    if (id == null || id.isEmpty || !Get.isRegistered<AppDataController>()) return null;
     final data = Get.find<AppDataController>().rankedPlayers.where((item) => item.id == id);
     return data.isEmpty ? null : data.first;
   }

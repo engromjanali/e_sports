@@ -29,16 +29,16 @@ Future<void> init() async {
   Get.put<SharedPreferences>(sharedPreferences, permanent: true);
   Get.put(ThemeController(sharedPreferences), permanent: true);
 
-  // App data dependencies
-  Get.lazyPut<AppDataRepositoryInterface>(() => AppDataRepository(), fenix: true);
-  Get.lazyPut<AppDataServiceInterface>(() => AppDataService(appDataRepositoryInterface: Get.find()), fenix: true);
-  Get.put(AppDataController(appDataServiceInterface: Get.find()), permanent: true);
-
   // Core API dependency
   Get.lazyPut<ApiClient>(() => ApiClient(appBaseUrl: AppConstants.baseUrl, sharedPreferences: Get.find()), fenix: true);
 
   // Supabase client
   Get.put<SupabaseClient>(SupabaseClient(AppConstants.supabaseUrl, AppConstants.supabaseAnonKey), permanent: true);
+
+  // App data dependencies
+  Get.lazyPut<AppDataRepositoryInterface>(() => AppDataRepository(supabase: Get.find()), fenix: true);
+  Get.lazyPut<AppDataServiceInterface>(() => AppDataService(appDataRepositoryInterface: Get.find()), fenix: true);
+  Get.put(AppDataController(appDataServiceInterface: Get.find()), permanent: true);
 
   // Splash feature dependencies
   Get.lazyPut<SplashRepositoryInterface>(() => SplashRepository(apiClient: Get.find(), supabase: Get.find()), fenix: true);

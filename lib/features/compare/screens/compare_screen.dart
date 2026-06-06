@@ -182,7 +182,7 @@ class _CompareScreenState extends State<CompareScreen> {
                           color: AppColors.white.withOpacity(0.05),
                           borderRadius: Dimensions.borderPill,
                         ),
-                        child: Text("${p.team} · #${p.jerseyNumber}", 
+                        child: Text("#${p.jerseyNumber}",
                           style: TextStyle(color: AppColors.textMuted, fontSize: 9, fontWeight: Dimensions.bold)
                         ),
                       ),
@@ -668,8 +668,6 @@ class PlayerSelectDelegate extends SearchDelegate<ComputedPlayerStats> {
                         Text(p.name, style: TextStyle(color: AppColors.white, fontWeight: Dimensions.bold, fontSize: 14)),
                         Row(
                           children: [
-                            Text(p.team, style: TextStyle(color: AppColors.neonCyan, fontSize: 10, fontWeight: FontWeight.bold)),
-                            Text(" · ", style: TextStyle(color: AppColors.textMuted)),
                             Text("#${p.jerseyNumber}", style: TextStyle(color: AppColors.textMuted, fontSize: 10)),
                           ],
                         ),

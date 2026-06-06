@@ -13,6 +13,7 @@ import '../widgets/get_rewards_cta_widget.dart';
 import '../widgets/match_mini_card_widget.dart';
 import '../widgets/podium_card_widget.dart';
 import '../widgets/top_scorer_card.dart';
+import 'package:flutter/gestures.dart' show PointerDeviceKind;
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../core/helper/route_helper.dart';
@@ -47,6 +48,18 @@ class HomeScreen extends StatelessWidget {
       final weeklyScorers = appData.weeklyScorers;
       final monthlyScorers = appData.monthlyScorers;
 
+      if (appData.isLoading.value || players.isEmpty) {
+        return Column(children: [
+          AppHeader(
+            sub: "Season 2025 · Live",
+            onSearchTap: onSearchTap,
+            onProfileTap: onProfileTap,
+            onMenuTap: onMenuTap,
+          ),
+          const Expanded(child: Center(child: CircularProgressIndicator())),
+        ]);
+      }
+
       final potw = weeklyPlayers.isNotEmpty ? weeklyPlayers.first : players.first;
       final potm = monthlyPlayers.isNotEmpty ? monthlyPlayers.first : players.first;
       final tsotw = weeklyScorers.isNotEmpty ? weeklyScorers.first : players.first;
@@ -59,8 +72,20 @@ class HomeScreen extends StatelessWidget {
           onProfileTap: onProfileTap,
           onMenuTap: onMenuTap,
         ),
-        Expanded(child: SingleChildScrollView(
+        Expanded(child: RefreshIndicator(
+          onRefresh: () => appData.loadData(),
+          child: ScrollConfiguration(
+          behavior: ScrollConfiguration.of(context).copyWith(
+            dragDevices: {
+              PointerDeviceKind.touch,
+              PointerDeviceKind.mouse,
+              PointerDeviceKind.trackpad,
+              PointerDeviceKind.stylus,
+            },
+          ),
+          child: SingleChildScrollView(
           padding: EdgeInsets.zero,
+          physics: const AlwaysScrollableScrollPhysics(),
           child: Column(children: [
 
             // ── My Rank ──
@@ -209,7 +234,7 @@ class HomeScreen extends StatelessWidget {
               ]),
             ),
           ]),
-        )),
+        )))),
       ]);
     });
   }

@@ -60,6 +60,8 @@ class AppDataController extends GetxController {
   final Rx<TimeFilter> currentFilter = TimeFilter.season.obs;
   final Rx<DateTime> seasonStartDate = DateTime(DateTime.now().year, 1, 1).obs;
 
+  final RxBool isLoading = true.obs;
+
   @override
   void onInit() {
     super.onInit();
@@ -67,11 +69,17 @@ class AppDataController extends GetxController {
   }
 
   Future<void> loadData() async {
-    players.assignAll(await appDataServiceInterface.getPlayers());
-    matchEntries.assignAll(await appDataServiceInterface.getMatchEntries());
-    news.assignAll(await appDataServiceInterface.getNews());
-    tournaments.assignAll(await appDataServiceInterface.getTournaments());
-    matches.assignAll(await appDataServiceInterface.getMatches());
+    isLoading.value = true;
+    try {
+      players.assignAll(await appDataServiceInterface.getPlayers());
+      print(players.length);
+      matchEntries.assignAll(await appDataServiceInterface.getMatchEntries());
+      news.assignAll(await appDataServiceInterface.getNews());
+      tournaments.assignAll(await appDataServiceInterface.getTournaments());
+      matches.assignAll(await appDataServiceInterface.getMatches());
+    } finally {
+      isLoading.value = false;
+    }
   }
 
   // ... rest stays exactly the same
@@ -138,7 +146,7 @@ class AppDataController extends GetxController {
   List<ComputedPlayerStats> get monthlyScorers => List.from(monthlyPlayers)..sort((a, b) => b.goals.compareTo(a.goals));
   List<ComputedPlayerStats> get seasonalScorers => List.from(seasonalPlayers)..sort((a, b) => b.goals.compareTo(a.goals));
 
-  ComputedPlayerStats? getPlayerStats(int playerId) {
+  ComputedPlayerStats? getPlayerStats(String playerId) {
     final player = players.firstWhereOrNull((p) => p.id == playerId);
     if (player == null) return null;
     return rankedPlayers.firstWhereOrNull((s) => s.player.id == playerId);

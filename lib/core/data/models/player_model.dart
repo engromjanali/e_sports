@@ -1,9 +1,9 @@
 class PlayerModel {
-  final int id;
+  final String id;
   final String name;
   final String sortName;
-  final String team;
   final int jerseyNumber;
+  final List<String> playerRoles;
   final List<String> tags;
   final String imageUrl;
 
@@ -11,9 +11,21 @@ class PlayerModel {
     required this.id,
     required this.name,
     required this.sortName,
-    required this.team,
     required this.jerseyNumber,
-    required this.tags,
+    this.playerRoles = const [],
+    this.tags = const [],
     this.imageUrl = '',
   });
+
+  factory PlayerModel.fromJson(Map<String, dynamic> json) {
+    return PlayerModel(
+      id: json['id']?.toString() ?? '',
+      name: json['name'] ?? '',
+      sortName: json['sort_name'] ?? '',
+      jerseyNumber: json['jerseyNumber'] ?? 0,
+      playerRoles: (json['playerRoles'] as List?)?.map((e) => e.toString()).toList() ?? const [],
+      tags: (json['customTags'] as List?)?.map((e) => e.toString()).toList() ?? const [],
+      imageUrl: json['profileImageUrl'] ?? '',
+    );
+  }
 }
