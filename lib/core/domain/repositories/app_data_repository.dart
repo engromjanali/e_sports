@@ -1,6 +1,6 @@
 import 'package:e_sports/core/data/models/match_entry_model.dart';
-import 'package:e_sports/core/data/models/match_model.dart';
-import 'package:e_sports/core/data/models/news_model.dart';
+import 'package:e_sports/features/matches/domain/model/match_model.dart';
+import 'package:e_sports/features/news/domain/model/news_model.dart';
 import 'package:e_sports/core/data/models/player_model.dart';
 import 'package:e_sports/core/data/models/tournament_model.dart';
 import 'package:e_sports/core/domain/repositories/app_data_repository_interface.dart';
@@ -26,9 +26,6 @@ class AppDataRepository implements AppDataRepositoryInterface {
     printer("GET match_entries: $data");
     return (data as List).map((e) => MatchEntryModel.fromJson(e as Map<String, dynamic>)).toList();
   }
-
-  @override
-  Future<List<NewsModel>> getNews() async => MockDataSource.getNews();
 
   @override
   Future<List<TournamentModel>> getTournaments() async => MockDataSource.getTournaments();

@@ -1,7 +1,6 @@
 import '../data/models/computed_player_stats.dart';
 import '../data/models/match_entry_model.dart';
 import '../data/models/player_model.dart';
-import '../data/models/news_model.dart';
 import '../data/models/tournament_model.dart';
 import '../domain/services/app_data_service_interface.dart';
 import '../services/filter_service.dart';
@@ -14,7 +13,6 @@ class AppDataController extends GetxController {
 
   final RxList<PlayerModel> players = <PlayerModel>[].obs;
   final RxList<MatchEntryModel> matchEntries = <MatchEntryModel>[].obs;
-  final RxList<NewsModel> news = <NewsModel>[].obs;
   final RxList<TournamentModel> tournaments = <TournamentModel>[].obs;
   // ✅ achievements removed — now auto-computed via AchievementGenerator
 
@@ -33,9 +31,7 @@ class AppDataController extends GetxController {
     isLoading.value = true;
     try {
       players.assignAll(await appDataServiceInterface.getPlayers());
-      print(players.length);
       matchEntries.assignAll(await appDataServiceInterface.getMatchEntries());
-      news.assignAll(await appDataServiceInterface.getNews());
       tournaments.assignAll(await appDataServiceInterface.getTournaments());
     } finally {
       isLoading.value = false;

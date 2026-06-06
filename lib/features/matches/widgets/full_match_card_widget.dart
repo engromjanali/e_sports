@@ -1,6 +1,6 @@
 import 'package:e_sports/core/utils/dimensions.dart';
 import "../../../core/controllers/app_data_controller.dart";
-import "../../../core/data/models/match_model.dart";
+import "../domain/model/match_model.dart";
 import "package:get/get.dart";
 import '../../../core/widgets/glass_card_widget.dart';
 import 'package:flutter/material.dart';

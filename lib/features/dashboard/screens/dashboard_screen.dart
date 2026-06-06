@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../core/controllers/app_data_controller.dart';
+import '../../news/controllers/news_controller.dart';
 import '../../../core/data/models/computed_player_stats.dart';
 import '../../../core/helper/route_helper.dart';
 import 'package:e_sports/core/utils/dimensions.dart';
@@ -30,7 +31,7 @@ class _GameArenaScreenState extends State<DashboardScreen> with SingleTickerProv
   void initState() {
     super.initState();
     _newsTimer = Timer.periodic(const Duration(milliseconds: 3800), (_) {
-      final newsList = Get.find<AppDataController>().news;
+      final newsList = Get.find<NewsController>().newsList;
       if (newsList.isNotEmpty) {
         if (mounted) setState(() => _newsBannerIndex = (_newsBannerIndex + 1) % newsList.length);
       }

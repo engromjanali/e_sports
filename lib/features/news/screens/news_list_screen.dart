@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../core/helper/route_helper.dart';
 import 'package:e_sports/core/utils/dimensions.dart';
+import 'package:e_sports/core/helper/responsive_helper.dart';
 
+import '../domain/model/news_model.dart';
 import '../controllers/news_controller.dart';
 import '../widgets/news_card_widget.dart';
 
@@ -11,7 +13,7 @@ class NewsListScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final controller = Get.put(NewsController());
+    final controller = Get.find<NewsController>();
 
     return Scaffold(
       backgroundColor: AppColors.bg,
@@ -69,21 +71,86 @@ class NewsListScreen extends StatelessWidget {
             // News List
             Expanded(
               child: Obx(() {
+                if (controller.isLoading.value && controller.newsList.isEmpty) {
+                  return Center(
+                    child: CircularProgressIndicator(color: AppColors.neonGold),
+                  );
+                }
+
                 final news = controller.filteredNews;
-                return ListView.separated(
-                  padding: Dimensions.screenAll,
-                  itemCount: news.length,
-                  separatorBuilder: (context, i) => SizedBox(height: Dimensions.md),
-                  itemBuilder: (context, i) => NewsCardWidget(
-                    news: news[i],
-                    onTap: () => controller.goToDetail(news[i]),
-                  ),
+                if (news.isEmpty) {
+                  return Center(
+                    child: Text(
+                      "No news found",
+                      style: TextStyle(color: AppColors.textMuted),
+                    ),
+                  );
+                }
+
+                // Two columns on large tablet / desktop, single column otherwise.
+                final twoColumns =
+                    ResponsiveHelper.isBigTab(context) || ResponsiveHelper.isDesktop(context);
+
+                return RefreshIndicator(
+                  onRefresh: controller.loadNews,
+                  child: twoColumns
+                      ? _buildGrid(controller, news)
+                      : _buildList(controller, news),
                 );
               }),
             ),
           ],
         ),
       ),
+    );
+  }
+
+  // Single-column list (phone / small tablet).
+  Widget _buildList(NewsController controller, List<NewsModel> news) {
+    return ListView.separated(
+      padding: Dimensions.screenAll,
+      physics: const AlwaysScrollableScrollPhysics(),
+      itemCount: news.length,
+      separatorBuilder: (context, i) => SizedBox(height: Dimensions.md),
+      itemBuilder: (context, i) => NewsCardWidget(
+        news: news[i],
+        onTap: () => controller.goToDetail(news[i]),
+      ),
+    );
+  }
+
+  // Two-column grid (large tablet / desktop) — rows of two top-aligned cards.
+  Widget _buildGrid(NewsController controller, List<NewsModel> news) {
+    final rowCount = (news.length / 2).ceil();
+    return ListView.builder(
+      padding: Dimensions.screenAll,
+      physics: const AlwaysScrollableScrollPhysics(),
+      itemCount: rowCount,
+      itemBuilder: (context, row) {
+        final left = news[row * 2];
+        final rightIndex = row * 2 + 1;
+        final right = rightIndex < news.length ? news[rightIndex] : null;
+        return Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Expanded(
+              child: NewsCardWidget(
+                news: left,
+                onTap: () => controller.goToDetail(left),
+              ),
+            ),
+            SizedBox(width: Dimensions.md),
+            Expanded(
+              child: right != null
+                  ? NewsCardWidget(
+                      news: right,
+                      onTap: () => controller.goToDetail(right),
+                    )
+                  : const SizedBox.shrink(),
+            ),
+          ],
+        );
+      },
     );
   }
 }

@@ -1,5 +1,6 @@
 import 'package:e_sports/core/constants/app_constants.dart';
-import 'package:e_sports/core/data/models/match_model.dart';
+import 'package:e_sports/features/matches/domain/model/match_model.dart';
+import 'package:e_sports/features/news/domain/model/news_model.dart';
 import 'package:e_sports/core/enums/match_filter.dart';
 import 'package:e_sports/core/helper/printer.dart';
 import 'package:get/get.dart';
@@ -85,6 +86,20 @@ class BackendDataController extends GetxService{
     return (data as List).map((e) => MatchModel.fromJson(e as Map<String, dynamic>)).toList();
   }
     
+/// ===================== news ===========================
+
+  Future<List<NewsModel>> fetchNews({int? limit, int? offset}) async {
+    final base = supabase.from('news').select().order('created_at', ascending: false);
+
+    final data = limit != null
+        ? await base.range(offset ?? 0, (offset ?? 0) + limit - 1)
+        : await base;
+
+    printer("GET news: $data");
+
+    return (data as List).map((e) => NewsModel.fromJson(e as Map<String, dynamic>)).toList();
+  }
+
 /// ===================== player  ===========================
 
 }

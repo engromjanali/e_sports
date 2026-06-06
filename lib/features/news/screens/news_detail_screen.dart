@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../core/helper/route_helper.dart';
 import 'package:e_sports/core/utils/dimensions.dart';
-import "../../../core/data/models/news_model.dart";
+import "../domain/model/news_model.dart";
 
 class NewsDetailScreen extends StatelessWidget {
   final NewsModel news;
@@ -87,7 +87,7 @@ class NewsDetailScreen extends StatelessWidget {
                             borderRadius: Dimensions.borderPill,
                           ),
                           child: Text(
-                            news.tag.toUpperCase(),
+                            news.category.toUpperCase(),
                             style: TextStyle(
                               fontSize: 9,
                               fontWeight: Dimensions.black,
@@ -125,23 +125,13 @@ class NewsDetailScreen extends StatelessWidget {
                       Icon(Icons.access_time, size: 14, color: AppColors.textMuted),
                       const SizedBox(width: 4),
                       Text(
-                        "${news.time} · Published in ${news.tag}",
+                        "${news.time} · Published in ${news.category}",
                         style: TextStyle(
                           fontSize: Dimensions.sizeTiny,
                           color: AppColors.textMuted,
                         ),
                       ),
                     ],
-                  ),
-                  const SizedBox(height: 20),
-                  Text(
-                    news.description,
-                    style: TextStyle(
-                      fontSize: Dimensions.sizeBody,
-                      fontWeight: Dimensions.bold,
-                      color: AppColors.white.withOpacity(0.9),
-                      height: 1.5,
-                    ),
                   ),
                   const SizedBox(height: 20),
                   Container(

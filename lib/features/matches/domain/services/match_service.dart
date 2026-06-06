@@ -1,4 +1,4 @@
-import 'package:e_sports/core/data/models/match_model.dart';
+import 'package:e_sports/features/matches/domain/model/match_model.dart';
 import 'package:e_sports/core/error/exception/app_exception.dart';
 import 'package:e_sports/core/helper/printer.dart';
 import 'package:e_sports/core/enums/match_filter.dart';

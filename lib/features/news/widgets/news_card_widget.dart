@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:e_sports/core/utils/dimensions.dart';
 import '../../../core/widgets/glass_card_widget.dart';
 import "../../../core/controllers/app_data_controller.dart";
-import "../../../core/data/models/news_model.dart";
+import "../domain/model/news_model.dart";
 import "package:get/get.dart";
 
 class NewsCardWidget extends StatelessWidget {
@@ -32,7 +32,7 @@ class NewsCardWidget extends StatelessWidget {
               // Thumbnail
               if (news.imageUrl != null)
                 AspectRatio(
-                  aspectRatio: 16 / 9,
+                  aspectRatio: 20 / 8,
                   child: ClipRRect(
                     borderRadius: BorderRadius.vertical(top: Radius.circular(Dimensions.radiusCardValue)),
                     child: Stack(
@@ -81,7 +81,7 @@ class NewsCardWidget extends StatelessWidget {
                               ],
                             ),
                             child: Text(
-                              news.tag.toUpperCase(),
+                              news.category.toUpperCase(),
                               style: TextStyle(
                                 fontSize: 8,
                                 fontWeight: Dimensions.black,
@@ -105,7 +105,7 @@ class NewsCardWidget extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          news.tag,
+                          news.category,
                           style: TextStyle(
                             fontSize: Dimensions.sizeTiny,
                             color: AppColors.neonCyan,
@@ -136,7 +136,7 @@ class NewsCardWidget extends StatelessWidget {
                     ),
                     SizedBox(height: Dimensions.sm),
                     Text(
-                      news.description,
+                      news.content,
                       style: TextStyle(
                         fontSize: Dimensions.sizeCaption,
                         color: AppColors.white.withOpacity(0.6),

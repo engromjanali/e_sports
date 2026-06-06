@@ -34,6 +34,9 @@ class AppConstants {
   static const String homeMatch = "/api/user/home-match";
   static const String matches = "/api/user/matches";
 
+  // news
+  static const String news = "/api/user/news";
+
   // current active season
   static const int currentSeason = 1;
 

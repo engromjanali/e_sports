@@ -18,6 +18,11 @@ import 'package:e_sports/features/matches/domain/repositories/match_repository_i
 import 'package:e_sports/features/matches/domain/services/match_service.dart';
 import 'package:e_sports/features/matches/domain/services/match_service_interface.dart';
 import 'package:e_sports/features/home/controllers/home_controller.dart';
+import 'package:e_sports/features/news/controllers/news_controller.dart';
+import 'package:e_sports/features/news/domain/repositories/news_repository.dart';
+import 'package:e_sports/features/news/domain/repositories/news_repository_interface.dart';
+import 'package:e_sports/features/news/domain/services/news_service.dart';
+import 'package:e_sports/features/news/domain/services/news_service_interface.dart';
 import 'package:e_sports/features/splash/controllers/splash_controller.dart';
 import 'package:e_sports/features/splash/domain/repositories/splash_repository.dart';
 import 'package:e_sports/features/splash/domain/repositories/splash_repository_interface.dart';
@@ -65,5 +70,10 @@ Future<void> init() async {
 
   // Home feature dependencies
   Get.lazyPut<HomeController>(() => HomeController(matchServiceInterface: Get.find()), fenix: true);
+
+  // News feature dependencies
+  Get.lazyPut<NewsRepositoryInterface>(() => NewsRepository(supabase: Get.find()), fenix: true);
+  Get.lazyPut<NewsServiceInterface>(() => NewsService(newsRepositoryInterface: Get.find()), fenix: true);
+  Get.lazyPut<NewsController>(() => NewsController(newsServiceInterface: Get.find()), fenix: true);
 
 }

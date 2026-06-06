@@ -1,6 +1,7 @@
 import 'package:e_sports/core/utils/dimensions.dart';
 import 'package:e_sports/core/helper/responsive_helper.dart';
 import 'package:e_sports/features/matches/controllers/match_controller.dart';
+import 'package:e_sports/features/news/controllers/news_controller.dart';
 import '../../../core/controllers/app_data_controller.dart';
 import '../controllers/home_controller.dart';
 
@@ -43,8 +44,8 @@ class HomeScreen extends StatelessWidget {
     final home = Get.find<HomeController>();
     return Obx(() {
       final appData = Get.find<AppDataController>();
-      final news = appData.news;
-      final n = news.isNotEmpty ? news[newsBannerIndex] : null;
+      final news = Get.find<NewsController>().newsList;
+      final n = news.isNotEmpty ? news[newsBannerIndex % news.length] : null;
       final players = appData.seasonalPlayers;
       final weeklyPlayers = appData.weeklyPlayers;
       final monthlyPlayers = appData.monthlyPlayers;
@@ -111,7 +112,7 @@ class HomeScreen extends StatelessWidget {
             if (n != null) Padding(
               padding: EdgeInsets.fromLTRB(Dimensions.xxxl, Dimensions.cardInnerPadding, Dimensions.xxxl, 0),
               child: GestureDetector(
-                onTap: () => Get.toNamed(RouteHelper.getNewsDetailsRoute(n.id)),
+                onTap: () => Get.toNamed(RouteHelper.getNewsDetailsRoute(n.id), arguments: n),
                 child: AnimatedSwitcher(
                   duration: const Duration(milliseconds: 400),
                   transitionBuilder: (child, anim) => FadeTransition(opacity: anim, child: child),

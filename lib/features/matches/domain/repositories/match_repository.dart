@@ -1,6 +1,6 @@
 import 'package:e_sports/core/beckend_service/controller/backend_data_controller.dart';
 import 'package:e_sports/core/constants/app_constants.dart';
-import 'package:e_sports/core/data/models/match_model.dart';
+import 'package:e_sports/features/matches/domain/model/match_model.dart';
 import 'package:e_sports/core/enums/match_filter.dart';
 
 import 'package:e_sports/features/matches/domain/repositories/match_repository_interface.dart';

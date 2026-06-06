@@ -1,6 +1,6 @@
 import 'package:e_sports/core/utils/dimensions.dart';
 import "../../../core/controllers/app_data_controller.dart";
-import "../../../core/data/models/news_model.dart";
+import "../../news/domain/model/news_model.dart";
 import "package:get/get.dart";
 import '../../../core/widgets/glow_circle_widget.dart';
 import 'ring_widget.dart';
@@ -33,7 +33,7 @@ class NewsBannerWidget extends StatelessWidget {
         Padding(
           padding: EdgeInsets.all(Dimensions.huge),
           child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            Text("${n.tag}  ·  ${n.time}",
+            Text("${n.category}  ·  ${n.time}",
                 style: Dimensions.tagLabel(context)),
             SizedBox(height: Dimensions.sm),
             Text("${n.emoji}  ${n.title}",

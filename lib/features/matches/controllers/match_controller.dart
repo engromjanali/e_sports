@@ -1,6 +1,6 @@
 import 'package:e_sports/core/enums/match_filter.dart';
 import 'package:get/get.dart';
-import '../../../core/data/models/match_model.dart';
+import '../domain/model/match_model.dart';
 import '../domain/services/match_service_interface.dart';
 
 class MatchController extends GetxController {

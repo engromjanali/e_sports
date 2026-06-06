@@ -1,6 +1,6 @@
 import 'package:e_sports/core/controllers/app_data_controller.dart';
 import 'package:e_sports/core/data/models/computed_player_stats.dart';
-import 'package:e_sports/core/data/models/news_model.dart';
+import 'package:e_sports/features/news/domain/model/news_model.dart';
 import 'package:e_sports/core/widgets/route_not_found_screen.dart';
 import 'package:e_sports/features/auth/controllers/auth_controller.dart';
 import 'package:e_sports/features/auth/presentation/screen/login_screen.dart';
@@ -12,6 +12,7 @@ import 'package:e_sports/features/hall_of_fame/screens/hall_of_fame_screen.dart'
 import 'package:e_sports/features/matches/screens/matches_screen.dart';
 import 'package:e_sports/features/menu/screens/edit_profile_screen.dart';
 import 'package:e_sports/features/menu/screens/static_content_screen.dart';
+import 'package:e_sports/features/news/controllers/news_controller.dart';
 import 'package:e_sports/features/news/screens/news_detail_screen.dart';
 import 'package:e_sports/features/news/screens/news_list_screen.dart';
 import 'package:e_sports/features/profile/screens/profile_screen.dart';
@@ -154,7 +155,7 @@ class RouteHelper {
     }
   }
 
-  static String getNewsDetailsRoute(int id) => '/news/$id';
+  static String getNewsDetailsRoute(String id) => '/news/$id';
   static String getPlayerProfileRoute(String id) => '/profile/$id';
 
   static String? routeFromUri(Uri uri) {
@@ -230,9 +231,14 @@ class RouteHelper {
   ];
 
   static NewsModel? _newsFromRoute() {
-    final id = int.tryParse(Get.parameters['id'] ?? '');
-    if (id == null || !Get.isRegistered<AppDataController>()) return null;
-    final data = Get.find<AppDataController>().news.where((item) => item.id == id);
+    // Server news carry uuid ids that aren't in AppDataController, so prefer the
+    // model passed via navigation arguments.
+    final arg = Get.arguments;
+    if (arg is NewsModel) return arg;
+
+    final id = Get.parameters['id'];
+    if (id == null || id.isEmpty || !Get.isRegistered<NewsController>()) return null;
+    final data = Get.find<NewsController>().newsList.where((item) => item.id == id);
     return data.isEmpty ? null : data.first;
   }
 
