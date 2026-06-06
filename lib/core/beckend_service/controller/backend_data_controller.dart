@@ -23,9 +23,9 @@ class BackendDataController extends GetxService{
     switch (endpoint){
       case AppConstants.homeMatch:
         return fetchMatchHome(season: season, limit: limit ?? 3);
-      
+
       case AppConstants.matches:
-        return fetchMatch(type: payload1 ?? MatchFilter.all, season: season, limit: limit ?? 10, offset: offset ?? 1);
+        return fetchMatch(type: payload1 ?? MatchFilter.all, season: season, limit: limit ?? 10, offset: offset ?? 0);
 
       default:
         throw "end-point not found";
@@ -38,9 +38,9 @@ class BackendDataController extends GetxService{
     switch (endpoint){
       case AppConstants.homeMatch:
         return fetchMatchHome(season: season, limit: limit ?? 3);
-      
+
       case AppConstants.matches:
-        return fetchMatch(type: payload1 ?? MatchFilter.all, season: season, limit: limit ?? 10, offset: offset ?? 1);
+        return fetchMatch(type: payload1 ?? MatchFilter.all, season: season, limit: limit ?? 10, offset: offset ?? 0);
 
       default:
         throw "end-point not found";
@@ -76,9 +76,10 @@ class BackendDataController extends GetxService{
       query = query.eq('status', type.name);
     }
 
+    // Page is 0-based; translate to an inclusive row range for the server.
     final data = await query.range(
-      offset,
-      offset + limit - 1,
+      offset * limit,
+      offset * limit + limit - 1,
     );
 
     printer("GET matches: $data");
@@ -99,8 +100,9 @@ class BackendDataController extends GetxService{
 
     final base = filter.order('created_at', ascending: false);
 
+    // Page is 0-based; translate to an inclusive row range for the server.
     final data = limit != null
-        ? await base.range(offset ?? 0, (offset ?? 0) + limit - 1)
+        ? await base.range((offset ?? 0) * limit, (offset ?? 0) * limit + limit - 1)
         : await base;
 
     printer("GET news: $data");

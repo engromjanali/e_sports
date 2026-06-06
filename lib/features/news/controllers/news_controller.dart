@@ -8,8 +8,8 @@ class NewsController extends GetxController {
 
   NewsController({required this.newsServiceInterface});
 
-  // How many news items to fetch per page from the server.
-  static const int pageSize = 10;
+  // How many news items to fetch per offset from the server.
+  static const int offsetSize = 10;
 
   // How many news items to highlight on the home screen.
   static const int homeLimit = 3;
@@ -25,13 +25,16 @@ class NewsController extends GetxController {
   final _searchQuery = "".obs;
   String get searchQuery => _searchQuery.value;
 
-  // First-page load.
+  // First-offset load.
   final isLoading = false.obs;
-  // Load-more (next page).
+  // Load-more (next offset).
   final isLoadingMore = false.obs;
-  // Whether the server still has more pages for the current query.
+  // Whether the server still has more offsets for the current query.
   final _hasMore = true.obs;
   bool get hasMore => _hasMore.value;
+
+  // Current 0-based offset of the loaded news list.
+  int _offset = 0;
 
   bool get isEmpty => _news.isEmpty;
 
@@ -58,35 +61,38 @@ class NewsController extends GetxController {
     _searchQuery.value = "";
   }
 
-  // (Re)loads the first page for the current search query.
+  // (Re)loads the first offset (offset 0) for the current search query.
   Future<void> loadNews() async {
     isLoading.value = true;
     try {
-      final page = await newsServiceInterface.getNews(
-        limit: pageSize,
-        offset: 0,
+      _offset = 0;
+      final result = await newsServiceInterface.getNews(
+        limit: offsetSize,
+        offset: _offset,
         search: searchQuery,
       );
-      _news.assignAll(page);
-      _hasMore.value = page.length == pageSize;
+      _news.assignAll(result);
+      _hasMore.value = result.length == offsetSize;
     } finally {
       isLoading.value = false;
     }
   }
 
-  // Fetches and appends the next page for the current search query.
+  // Fetches and appends the next offset for the current search query.
   Future<void> loadMore() async {
     if (!hasMore || isLoadingMore.value || isLoading.value) return;
 
     isLoadingMore.value = true;
     try {
-      final page = await newsServiceInterface.getNews(
-        limit: pageSize,
-        offset: _news.length,
+      final nextPage = _offset + 1;
+      final result = await newsServiceInterface.getNews(
+        limit: offsetSize,
+        offset: nextPage,
         search: searchQuery,
       );
-      _news.addAll(page);
-      _hasMore.value = page.length == pageSize;
+      _news.addAll(result);
+      _offset = nextPage;
+      _hasMore.value = result.length == offsetSize;
     } finally {
       isLoadingMore.value = false;
     }

@@ -61,7 +61,7 @@ class MatchesScreen extends StatelessWidget {
                 ),
                 SizedBox(height: Dimensions.cardInnerPadding),
 
-                // Initial page load for the selected category
+                // Initial offset load for the selected category
                 if (controller.isLoading.value)
                   Padding(
                     padding: EdgeInsets.only(top: Dimensions.massive),

@@ -270,7 +270,7 @@ class _NewsListScreenState extends State<NewsListScreen> {
     );
   }
 
-  // Pagination footer — tap to fetch the next page for the current query.
+  // Pagination footer — tap to fetch the next offset for the current query.
   Widget _loadMoreButton(NewsController controller, bool loadingMore) {
     return Padding(
       padding: EdgeInsets.only(top: Dimensions.sm, bottom: Dimensions.lg),
