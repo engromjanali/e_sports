@@ -74,7 +74,7 @@ class MyRankCard extends StatelessWidget {
                         ),
                         child: ClipOval(
                           child: Image.network(
-                            "https://i.pravatar.cc/150?img=8",
+                            me.image,
                             width: Dimensions.avatarLg,
                             height: Dimensions.avatarLg,
                             fit: BoxFit.cover,
@@ -115,51 +115,52 @@ class MyRankCard extends StatelessWidget {
                               ),
                             ),
                             SizedBox(height: Dimensions.dotLg),
-                            Row(
-                              children: [
-                                // Ribbon rank badge
-                                ClipRRect(
-                                  borderRadius: Dimensions.ribbonLeft,
-                                  child: Container(
-                                    padding: EdgeInsets.fromLTRB(
-                                      Dimensions.md, Dimensions.xs,
-                                      Dimensions.md, Dimensions.xs + 1,
-                                    ),
-                                    decoration: BoxDecoration(
-                                      gradient: AppColors.goldRibbonGradient,
-                                    ),
-                                    child: Text(
-                                      "RANK #1",
-                                      style: TextStyle(
-                                        fontSize: Dimensions.sizeTiny,
-                                        fontWeight: Dimensions.black,
-                                        letterSpacing: 1.4,
-                                        color: AppColors.goldDeep,
+                            if (me.tags.isNotEmpty)
+                              Wrap(
+                                spacing: Dimensions.iconGap,
+                                runSpacing: Dimensions.xs,
+                                crossAxisAlignment: WrapCrossAlignment.center,
+                                children: [
+                                  for (int i = 0; i < me.tags.length; i++)
+                                    (i == 0) ? ClipRRect(
+                                      borderRadius: Dimensions.ribbonLeft,
+                                      child: Container(
+                                        padding: EdgeInsets.fromLTRB(
+                                          Dimensions.md, Dimensions.xs,
+                                          Dimensions.md, Dimensions.xs + 1,
+                                        ),
+                                        decoration: BoxDecoration(
+                                          gradient: AppColors.goldRibbonGradient,
+                                        ),
+                                        child: Text(
+                                          me.tags[i],
+                                          style: TextStyle(
+                                            fontSize: Dimensions.sizeTiny,
+                                            fontWeight: Dimensions.black,
+                                            letterSpacing: 1.4,
+                                            color: AppColors.goldDeep,
+                                          ),
+                                        ),
+                                      ),
+                                    ) : Container(
+                                      padding: Dimensions.pillPadding,
+                                      decoration: BoxDecoration(
+                                        color: AppColors.neonGold.withOpacity(AppColors.opacity10),
+                                        borderRadius: Dimensions.borderSm,
+                                        border: Border.all(
+                                          color: AppColors.neonGold.withOpacity(AppColors.opacity35),
+                                          width: Dimensions.borderThin,
+                                        ),
+                                      ),
+                                      child: Text(
+                                        me.tags[i],
+                                        style: Dimensions.pillLabel(context,
+                                          color: AppColors.goldLight.withOpacity(AppColors.opacity90),
+                                        ),
                                       ),
                                     ),
-                                  ),
-                                ),
-                                SizedBox(width: Dimensions.iconGap),
-                                // Elite ghost pill
-                                Container(
-                                  padding: Dimensions.pillPadding,
-                                  decoration: BoxDecoration(
-                                    color: AppColors.neonGold.withOpacity(AppColors.opacity10),
-                                    borderRadius: Dimensions.borderSm,
-                                    border: Border.all(
-                                      color: AppColors.neonGold.withOpacity(AppColors.opacity35),
-                                      width: Dimensions.borderThin,
-                                    ),
-                                  ),
-                                  child: Text(
-                                    "ELITE GAMER",
-                                    style: Dimensions.pillLabel(context,
-                                      color: AppColors.goldLight.withOpacity(AppColors.opacity90),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
+                                ],
+                              ),
                           ],
                         ),
                       ),

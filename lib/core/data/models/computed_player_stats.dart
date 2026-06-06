@@ -57,6 +57,7 @@ class ComputedPlayerStats {
   String get id => player.id;
   String get name => player.name;
   String get short => player.sortName;
+  String get image =>player.imageUrl;
   int get jerseyNumber => player.jerseyNumber;
   List<String> get playerRoles => player.playerRoles;
   List<String> get tags => player.tags;
