@@ -1,7 +1,7 @@
 import 'package:e_sports/core/constants/app_constants.dart';
 import 'package:e_sports/core/data/models/match_model.dart';
+import 'package:e_sports/core/enums/match_filter.dart';
 import 'package:e_sports/core/helper/printer.dart';
-import 'package:e_sports/features/matches/domain/enum/match_filter.dart';
 import 'package:get/get.dart';
 import 'package:supabase/supabase.dart';
 

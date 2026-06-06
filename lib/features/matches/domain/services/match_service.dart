@@ -1,6 +1,8 @@
 import 'package:e_sports/core/data/models/match_model.dart';
 import 'package:e_sports/core/error/exception/app_exception.dart';
 import 'package:e_sports/core/helper/printer.dart';
+import 'package:e_sports/core/enums/match_filter.dart';
+
 import 'package:e_sports/features/matches/domain/repositories/match_repository_interface.dart';
 import 'package:e_sports/features/matches/domain/services/match_service_interface.dart';
 
@@ -23,9 +25,17 @@ class MatchService implements MatchServiceInterface {
   }
 
   @override
-  Future<List<MatchModel>> getMatches() async {
+  Future<List<MatchModel>> getMatches({
+    MatchFilter type = MatchFilter.all,
+    int limit = 10,
+    int offset = 0,
+  }) async {
     try {
-      return await matchRepositoryInterface.getMatches();
+      return await matchRepositoryInterface.getMatches(
+        type: type,
+        limit: limit,
+        offset: offset,
+      );
     } on AppException catch (e) {
       printer('[MatchService.getMatches] ${e.message}');
       return [];

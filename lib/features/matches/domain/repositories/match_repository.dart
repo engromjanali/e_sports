@@ -1,7 +1,8 @@
 import 'package:e_sports/core/beckend_service/controller/backend_data_controller.dart';
 import 'package:e_sports/core/constants/app_constants.dart';
 import 'package:e_sports/core/data/models/match_model.dart';
-import 'package:e_sports/features/matches/domain/enum/match_filter.dart';
+import 'package:e_sports/core/enums/match_filter.dart';
+
 import 'package:e_sports/features/matches/domain/repositories/match_repository_interface.dart';
 import 'package:get/get.dart';
 import 'package:supabase/supabase.dart';
@@ -22,13 +23,17 @@ class MatchRepository implements MatchRepositoryInterface {
   }
 
   @override
-  Future<List<MatchModel>> getMatches() async {
+  Future<List<MatchModel>> getMatches({
+    MatchFilter type = MatchFilter.all,
+    int limit = 10,
+    int offset = 0,
+  }) async {
     final data = await Get.find<BackendDataController>().getData(
       AppConstants.matches,
-      payload1: MatchFilter.all,
+      payload1: type,
       season: AppConstants.currentSeason,
-      limit: 100,
-      offset: 0,
+      limit: limit,
+      offset: offset,
     );
     return List<MatchModel>.from(data as List);
   }

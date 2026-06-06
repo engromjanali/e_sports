@@ -32,12 +32,8 @@ class MatchesScreen extends StatelessWidget {
     final controller = Get.find<MatchController>();
 
     return Column(children: [
-      AppHeader(
-        sub: "Live & Upcoming Matches",
-        onSearchTap: onSearchTap,
-        onProfileTap: onProfileTap,
-        onMenuTap: onMenuTap,
-      ),
+      AppHeader(sub: "Matches", onSearchTap: onSearchTap, onProfileTap: onProfileTap, onMenuTap: onMenuTap),
+      
       Expanded(
         child: RefreshIndicator(
           onRefresh: controller.reloadData,
@@ -65,11 +61,19 @@ class MatchesScreen extends StatelessWidget {
                 ),
                 SizedBox(height: Dimensions.cardInnerPadding),
 
-                if (controller.isEmpty)
+                // Initial page load for the selected category
+                if (controller.isLoading.value)
+                  Padding(
+                    padding: EdgeInsets.only(top: Dimensions.massive),
+                    child: CircularProgressIndicator(color: AppColors.neonGold),
+                  )
+                else if (controller.isEmpty)
                   Padding(
                     padding: EdgeInsets.only(top: Dimensions.massive),
                     child: Text(
-                      "No matches found",
+                      controller.category == 'all'
+                          ? "No matches found"
+                          : "No ${controller.category} matches found",
                       style: TextStyle(color: AppColors.textMuted),
                     ),
                   ),
@@ -79,12 +83,12 @@ class MatchesScreen extends StatelessWidget {
                       child: FullMatchCard(match: m),
                     )),
 
-                // Pagination — load more
+                // Pagination — load more (per selected category)
                 if (controller.hasMore)
                   Padding(
                     padding: EdgeInsets.only(top: Dimensions.sm, bottom: Dimensions.lg),
                     child: GestureDetector(
-                      onTap: controller.loadMore,
+                      onTap: controller.isLoadingMore.value ? null : controller.loadMore,
                       child: Container(
                         width: double.infinity,
                         padding: EdgeInsets.symmetric(vertical: Dimensions.lg),
@@ -97,14 +101,23 @@ class MatchesScreen extends StatelessWidget {
                             width: Dimensions.borderThin,
                           ),
                         ),
-                        child: Text(
-                          "Load More",
-                          style: TextStyle(
-                            color: AppColors.neonGold,
-                            fontWeight: Dimensions.extraBold,
-                            letterSpacing: Dimensions.trackingNormal,
-                          ),
-                        ),
+                        child: controller.isLoadingMore.value
+                            ? SizedBox(
+                                height: Dimensions.lg,
+                                width: Dimensions.lg,
+                                child: CircularProgressIndicator(
+                                  strokeWidth: Dimensions.borderThin,
+                                  color: AppColors.neonGold,
+                                ),
+                              )
+                            : Text(
+                                "Load More",
+                                style: TextStyle(
+                                  color: AppColors.neonGold,
+                                  fontWeight: Dimensions.extraBold,
+                                  letterSpacing: Dimensions.trackingNormal,
+                                ),
+                              ),
                       ),
                     ),
                   ),
