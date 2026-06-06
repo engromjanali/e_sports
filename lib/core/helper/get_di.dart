@@ -1,4 +1,5 @@
 import 'package:e_sports/core/api/api_client.dart';
+import 'package:e_sports/core/beckend_service/controller/backend_data_controller.dart';
 import 'package:e_sports/core/constants/app_constants.dart';
 import 'package:e_sports/core/controllers/app_data_controller.dart';
 import 'package:e_sports/core/controllers/theme_controller.dart';
@@ -11,6 +12,12 @@ import 'package:e_sports/features/auth/domain/repositories/auth_repository.dart'
 import 'package:e_sports/features/auth/domain/repositories/auth_repository_interface.dart';
 import 'package:e_sports/features/auth/domain/services/auth_service.dart';
 import 'package:e_sports/features/auth/domain/services/auth_service_interface.dart';
+import 'package:e_sports/features/matches/controllers/match_controller.dart';
+import 'package:e_sports/features/matches/domain/repositories/match_repository.dart';
+import 'package:e_sports/features/matches/domain/repositories/match_repository_interface.dart';
+import 'package:e_sports/features/matches/domain/services/match_service.dart';
+import 'package:e_sports/features/matches/domain/services/match_service_interface.dart';
+import 'package:e_sports/features/home/controllers/home_controller.dart';
 import 'package:e_sports/features/splash/controllers/splash_controller.dart';
 import 'package:e_sports/features/splash/domain/repositories/splash_repository.dart';
 import 'package:e_sports/features/splash/domain/repositories/splash_repository_interface.dart';
@@ -31,6 +38,7 @@ Future<void> init() async {
 
   // Core API dependency
   Get.lazyPut<ApiClient>(() => ApiClient(appBaseUrl: AppConstants.baseUrl, sharedPreferences: Get.find()), fenix: true);
+  Get.lazyPut<BackendDataController>(() => BackendDataController(supabase: Get.find()));
 
   // Supabase client
   Get.put<SupabaseClient>(SupabaseClient(AppConstants.supabaseUrl, AppConstants.supabaseAnonKey), permanent: true);
@@ -49,5 +57,13 @@ Future<void> init() async {
   Get.lazyPut<AuthRepositoryInterface>(() => AuthRepository(apiClient: Get.find(), sharedPreferences: Get.find()), fenix: true);
   Get.lazyPut<AuthServiceInterface>(() => AuthService(authRepositoryInterface: Get.find()), fenix: true);
   Get.lazyPut<AuthController>(() => AuthController(authServiceInterface: Get.find()), fenix: true);
-  
+
+  // Matches feature dependencies
+  Get.lazyPut<MatchRepositoryInterface>(() => MatchRepository(supabase: Get.find()), fenix: true);
+  Get.lazyPut<MatchServiceInterface>(() => MatchService(matchRepositoryInterface: Get.find()), fenix: true);
+  Get.lazyPut<MatchController>(() => MatchController(matchServiceInterface: Get.find()), fenix: true);
+
+  // Home feature dependencies
+  Get.lazyPut<HomeController>(() => HomeController(matchServiceInterface: Get.find()), fenix: true);
+
 }

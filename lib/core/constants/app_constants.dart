@@ -30,6 +30,14 @@ class AppConstants {
   // config
   static const String configUri = "/api/user/config";
 
+  // matchs
+  static const String homeMatch = "/api/user/home-match";
+  static const String matches = "/api/user/matches";
+
+  // current active season
+  static const int currentSeason = 1;
+
+
   // static List<ChooseUsModel> whyChooseUsList = [
   //   ChooseUsModel(icon: Images.landingTrusted, title: 'trusted_by_customers_and_store_owners'),
   //   ChooseUsModel(icon: Images.landingStores, title: 'thousands_of_stores'),
@@ -60,3 +68,4 @@ class AppConstants {
   static const String distanceWise = 'distance_wise';
   static const String dayWise = 'day_wise';
 }
+

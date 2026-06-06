@@ -1,22 +1,26 @@
+import 'package:e_sports/features/matches/controllers/match_controller.dart';
 import 'package:get/get.dart';
-import '../../../core/controllers/app_data_controller.dart';
-import '../../../core/data/models/match_model.dart';
+import '../../matches/domain/services/match_service_interface.dart';
 
 class HomeController extends GetxController {
-  final AppDataController _appData = Get.find<AppDataController>();
+  final MatchServiceInterface matchServiceInterface;
 
-  // How many matches to preview on the home screen
-  static const int previewCount = 3;
+  HomeController({required this.matchServiceInterface});
 
-  // Live & upcoming matches highlighted on the home screen,
-  // falling back to whatever matches exist if none are live/upcoming.
-  List<MatchModel> get matches {
-    final all = _appData.matches;
-    final highlighted =
-        all.where((m) => m.status == 'live' || m.status == 'upcoming').toList();
-    final source = highlighted.isNotEmpty ? highlighted : all.toList();
-    return source.take(previewCount).toList();
+  final RxBool isLoading = false.obs;
+
+  @override
+  void onInit() {
+    super.onInit();
+    reloadData();
   }
 
-  Future<void> reloadData() => _appData.loadData();
+  Future<void> reloadData() async {
+    isLoading.value = true;
+    try {
+      await Get.find<MatchController>().getMatchesHome();
+    } finally {
+      isLoading.value = false;
+    }
+  }
 }

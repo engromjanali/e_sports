@@ -29,7 +29,7 @@ class MatchesScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final controller = Get.put(MatchController());
+    final controller = Get.find<MatchController>();
 
     return Column(children: [
       AppHeader(
