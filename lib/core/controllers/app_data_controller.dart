@@ -41,11 +41,15 @@ import '../data/models/player_model.dart';
 import '../data/models/news_model.dart';
 import '../data/models/match_model.dart';
 import '../data/models/tournament_model.dart';
+import '../domain/services/app_data_service_interface.dart';
 import '../services/filter_service.dart';
-import '../services/mock_data_source.dart';
 import 'package:get/get.dart';
 
 class AppDataController extends GetxController {
+  final AppDataServiceInterface appDataServiceInterface;
+
+  AppDataController({required this.appDataServiceInterface});
+
   final RxList<PlayerModel> players = <PlayerModel>[].obs;
   final RxList<MatchEntryModel> matchEntries = <MatchEntryModel>[].obs;
   final RxList<NewsModel> news = <NewsModel>[].obs;
@@ -59,20 +63,24 @@ class AppDataController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    _loadData();
+    loadData();
   }
 
-  void _loadData() {
-    players.assignAll(MockDataSource.getPlayers());
-    matchEntries.assignAll(MockDataSource.getMatchEntries());
-    news.assignAll(MockDataSource.getNews());
-    tournaments.assignAll(MockDataSource.getTournaments());
-    matches.assignAll(_getMockMatches());
-    // ✅ no achievements load needed
+  Future<void> loadData() async {
+    players.assignAll(await appDataServiceInterface.getPlayers());
+    matchEntries.assignAll(await appDataServiceInterface.getMatchEntries());
+    news.assignAll(await appDataServiceInterface.getNews());
+    tournaments.assignAll(await appDataServiceInterface.getTournaments());
+    matches.assignAll(await appDataServiceInterface.getMatches());
   }
 
   // ... rest stays exactly the same
   // --- Actions ---
+  
+  Future<void> getPlayer()async{
+
+  }
+
 
   void addMatchEntry(MatchEntryModel entry) {
     matchEntries.add(entry);
@@ -134,16 +142,5 @@ class AppDataController extends GetxController {
     final player = players.firstWhereOrNull((p) => p.id == playerId);
     if (player == null) return null;
     return rankedPlayers.firstWhereOrNull((s) => s.player.id == playerId);
-  }
-
-  List<MatchModel> _getMockMatches() {
-    return [
-      MatchModel(id: '1', team1: 'Empire FC', team2: 'Vikings', time: '18:00', date: 'TODAY', status: 'live', tournament: 'Winter Cup'),
-      MatchModel(id: '2', team1: 'Legends', team2: 'PBCC', time: '20:30', date: 'TOMORROW', status: 'upcoming', tournament: 'Winter Cup'),
-      MatchModel(id: '3', team1: 'Brothers', team2: 'Rebels', time: '15:00', date: 'YESTERDAY', status: 'completed', tournament: 'Winter Cup'),
-      MatchModel(id: '4', team1: 'Elite FC', team2: 'Phoenix', time: '22:00', date: 'TODAY', status: 'upcoming', tournament: 'Winter Cup'),
-      MatchModel(id: '5', team1: 'Strikers', team2: 'Defenders', time: '09:00', date: '28 MAR', status: 'upcoming', tournament: 'Summer League'),
-      MatchModel(id: '6', team1: 'Vikings', team2: 'Legends', time: '12:00', date: 'COMPLETED', status: 'completed', tournament: 'Pro Series'),
-    ];
   }
 }

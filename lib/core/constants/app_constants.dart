@@ -1,7 +1,7 @@
 
 class AppConstants {
   static const String appName = 'e-sports';
-  static const String appVersion = '12.12.3'; ///Flutter sdk 3.41.7
+  static const String appVersion = '1.0.0'; ///Flutter sdk 3.41.7
 
   static const String fontFamily = 'Roboto';
   static const bool payInWevView = false;

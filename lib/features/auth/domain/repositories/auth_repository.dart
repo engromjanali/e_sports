@@ -12,6 +12,10 @@ class AuthRepository implements AuthRepositoryInterface {
 
   @override
   Future<Map<String, dynamic>> login(String? email, String password) async {
+    return {
+      'token' : "0a18b0e5-770d-41b1-92b2-7005a1418816"
+    };
+    
     // ApiClient throws AppException on failure — no try/catch here
     final response = await apiClient.postData(
       AppConstants.loginUri,

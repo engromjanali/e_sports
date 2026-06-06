@@ -1,7 +1,7 @@
 class PlayerModel {
   final int id;
   final String name;
-  final String short;
+  final String sortName;
   final String team;
   final int jerseyNumber;
   final List<String> tags;
@@ -10,7 +10,7 @@ class PlayerModel {
   const PlayerModel({
     required this.id,
     required this.name,
-    required this.short,
+    required this.sortName,
     required this.team,
     required this.jerseyNumber,
     required this.tags,

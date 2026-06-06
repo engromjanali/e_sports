@@ -1,6 +1,7 @@
 import 'dart:math';
 import '../data/models/achievement_model.dart';
 import '../data/models/match_entry_model.dart';
+import '../data/models/match_model.dart';
 import '../data/models/news_model.dart';
 import '../data/models/player_model.dart';
 import '../data/models/tournament_model.dart';
@@ -8,25 +9,25 @@ import 'package:flutter/material.dart';
 
 class MockDataSource {
   static List<PlayerModel> getPlayers() => [
-        const PlayerModel(id: 1, name: "Aryan Bhuiyan", short: "Aryan", team: "Empire FC", jerseyNumber: 10, tags: ["RANK #1", "VIP", "ELITE"],
+        const PlayerModel(id: 1, name: "Aryan Bhuiyan", sortName: "Aryan", team: "Empire FC", jerseyNumber: 10, tags: ["RANK #1", "VIP", "ELITE"],
           imageUrl: "https://imageio.forbes.com/specials-images/imageserve/663e595b4509f97fdafb95f5/0x0.jpg?format=jpg&crop=383,383,x1045,y23,safe&height=416&width=416&fit=bounds"),
-        const PlayerModel(id: 2, name: "Owasikur Rahman", short: "Owasikur", team: "Brothers", jerseyNumber: 7, tags: ["RANK #2", "VIP", "PRO"],
+        const PlayerModel(id: 2, name: "Owasikur Rahman", sortName: "Owasikur", team: "Brothers", jerseyNumber: 7, tags: ["RANK #2", "VIP", "PRO"],
           imageUrl: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQqgucNaWMtVt_NB5N3XSZF7UPFnz8TmtSuvQ&s"),
-        const PlayerModel(id: 3, name: "Asif Reza", short: "Asif", team: "Vikings", jerseyNumber: 9, tags: ["RANK #3", "ELITE"],
+        const PlayerModel(id: 3, name: "Asif Reza", sortName: "Asif", team: "Vikings", jerseyNumber: 9, tags: ["RANK #3", "ELITE"],
           imageUrl: "https://imageio.forbes.com/specials-images/imageserve/663e595b4509f97fdafb95f5/0x0.jpg?format=jpg&crop=383,383,x1045,y23,safe&height=416&width=416&fit=bounds"),
-        const PlayerModel(id: 4, name: "Shariq Ul Baari", short: "Shariq", team: "Legends", jerseyNumber: 11, tags: ["VIP", "STRIKER"],
+        const PlayerModel(id: 4, name: "Shariq Ul Baari", sortName: "Shariq", team: "Legends", jerseyNumber: 11, tags: ["VIP", "STRIKER"],
           imageUrl: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQqgucNaWMtVt_NB5N3XSZF7UPFnz8TmtSuvQ&s"),
-        const PlayerModel(id: 5, name: "Suran Lohani", short: "Suran", team: "PBCC", jerseyNumber: 8, tags: ["PRO","Season 1 champion","MVP","player of the month aplir 24","player of the month may 24","player of the month june 24","player of the month july 24","player of the month august 24","PRO","Season 1 champion","MVP","player of the month aplir 24","player of the month may 24","player of the month june 24","player of the month july 24","player of the month august 24","PRO","Season 1 champion","MVP","player of the month aplir 24","player of the month may 24","player of the month june 24","player of the month july 24","player of the month august 24","PRO","Season 1 champion","MVP","player of the month aplir 24","player of the month may 24","player of the month june 24","player of the month july 24","player of the month august 24",],
+        const PlayerModel(id: 5, name: "Suran Lohani", sortName: "Suran", team: "PBCC", jerseyNumber: 8, tags: ["PRO","Season 1 champion","MVP","player of the month aplir 24","player of the month may 24","player of the month june 24","player of the month july 24","player of the month august 24","PRO","Season 1 champion","MVP","player of the month aplir 24","player of the month may 24","player of the month june 24","player of the month july 24","player of the month august 24","PRO","Season 1 champion","MVP","player of the month aplir 24","player of the month may 24","player of the month june 24","player of the month july 24","player of the month august 24","PRO","Season 1 champion","MVP","player of the month aplir 24","player of the month may 24","player of the month june 24","player of the month july 24","player of the month august 24",],
           imageUrl: "https://imageio.forbes.com/specials-images/imageserve/663e595b4509f97fdafb95f5/0x0.jpg?format=jpg&crop=383,383,x1045,y23,safe&height=416&width=416&fit=bounds"),
-        const PlayerModel(id: 6, name: "Farhan Ahmed", short: "Farhan", team: "Rebels", jerseyNumber: 22, tags: ["MEMBER"],
+        const PlayerModel(id: 6, name: "Farhan Ahmed", sortName: "Farhan", team: "Rebels", jerseyNumber: 22, tags: ["MEMBER"],
           imageUrl: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQqgucNaWMtVt_NB5N3XSZF7UPFnz8TmtSuvQ&s"),
-        const PlayerModel(id: 7, name: "Zubair Hashmi", short: "Zubair", team: "Elite FC", jerseyNumber: 5, tags: ["DEFENDER"],
+        const PlayerModel(id: 7, name: "Zubair Hashmi", sortName: "Zubair", team: "Elite FC", jerseyNumber: 5, tags: ["DEFENDER"],
           imageUrl: "https://imageio.forbes.com/specials-images/imageserve/663e595b4509f97fdafb95f5/0x0.jpg?format=jpg&crop=383,383,x1045,y23,safe&height=416&width=416&fit=bounds"),
-        const PlayerModel(id: 8, name: "Tanvir Hasan", short: "Tanvir", team: "Empire FC", jerseyNumber: 1, tags: ["GK"],
+        const PlayerModel(id: 8, name: "Tanvir Hasan", sortName: "Tanvir", team: "Empire FC", jerseyNumber: 1, tags: ["GK"],
           imageUrl: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQqgucNaWMtVt_NB5N3XSZF7UPFnz8TmtSuvQ&s"),
-        const PlayerModel(id: 9, name: "Ahsan abir", short: "abir", team: "Vikings", jerseyNumber: 14, tags: ["MID"],
+        const PlayerModel(id: 9, name: "Ahsan abir", sortName: "abir", team: "Vikings", jerseyNumber: 14, tags: ["MID"],
           imageUrl: "https://imageio.forbes.com/specials-images/imageserve/663e595b4509f97fdafb95f5/0x0.jpg?format=jpg&crop=383,383,x1045,y23,safe&height=416&width=416&fit=bounds"),
-        const PlayerModel(id: 10, name: "Mehedi Hassan", short: "Mehedi", team: "Brothers", jerseyNumber: 12, tags: ["SUB"],
+        const PlayerModel(id: 10, name: "Mehedi Hassan", sortName: "Mehedi", team: "Brothers", jerseyNumber: 12, tags: ["SUB"],
           imageUrl: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQqgucNaWMtVt_NB5N3XSZF7UPFnz8TmtSuvQ&s"),
       ];
 
@@ -223,6 +224,15 @@ class MockDataSource {
           ],
           bracket: [],
         ),
+      ];
+
+  static List<MatchModel> getMatches() => [
+        MatchModel(id: '1', team1: 'Empire FC', team2: 'Vikings', time: '18:00', date: 'TODAY', status: 'live', tournament: 'Winter Cup'),
+        MatchModel(id: '2', team1: 'Legends', team2: 'PBCC', time: '20:30', date: 'TOMORROW', status: 'upcoming', tournament: 'Winter Cup'),
+        MatchModel(id: '3', team1: 'Brothers', team2: 'Rebels', time: '15:00', date: 'YESTERDAY', status: 'completed', tournament: 'Winter Cup'),
+        MatchModel(id: '4', team1: 'Elite FC', team2: 'Phoenix', time: '22:00', date: 'TODAY', status: 'upcoming', tournament: 'Winter Cup'),
+        MatchModel(id: '5', team1: 'Strikers', team2: 'Defenders', time: '09:00', date: '28 MAR', status: 'upcoming', tournament: 'Summer League'),
+        MatchModel(id: '6', team1: 'Vikings', team2: 'Legends', time: '12:00', date: 'COMPLETED', status: 'completed', tournament: 'Pro Series'),
       ];
 
       // static List<AchievementModel> getAchievements() => [
