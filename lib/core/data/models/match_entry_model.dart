@@ -20,4 +20,18 @@ class MatchEntryModel {
     required this.cleanSheet,
     required this.motm,
   });
+
+  factory MatchEntryModel.fromJson(Map<String, dynamic> json) {
+    return MatchEntryModel(
+      id: json['id']?.toString() ?? '',
+      playerId: json['playerId']?.toString() ?? '',
+      date: DateTime.tryParse(json['date']?.toString() ?? '') ?? DateTime.now(),
+      result: json['result']?.toString() ?? 'draw',
+      goals: (json['goals'] as num?)?.toInt() ?? 0,
+      goalsConceded: (json['goalsConceded'] as num?)?.toInt() ?? 0,
+      hattrick: ((json['hattricks'] as num?)?.toInt() ?? 0) > 0,
+      cleanSheet: json['cleanSheet'] == true,
+      motm: json['motm'] == true,
+    );
+  }
 }

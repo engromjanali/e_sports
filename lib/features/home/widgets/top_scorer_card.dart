@@ -109,24 +109,37 @@ class TopScorerCard extends StatelessWidget {
                         height: Dimensions.avatarMdLg,
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
-                          gradient: LinearGradient(
-                            begin: Alignment.topLeft,
-                            end: Alignment.bottomRight,
-                            colors: [c, c.withOpacity(0.5)],
-                          ),
                           border: Border.all(
                             color: AppColors.white.withOpacity(AppColors.opacity30),
                             width: Dimensions.borderThick,
                           ),
                           boxShadow: Dimensions.subtleGlow(c, opacity: 0.5, blur: 10),
                         ),
-                        alignment: Alignment.center,
-                        child: Text(
-                          player.name[0],
-                          style: TextStyle(
-                            fontSize: Dimensions.sizeHeadingLg,
-                            fontWeight: Dimensions.black,
-                            color: AppColors.white,
+                        child: ClipOval(
+                          child: Image.network(
+                            player.image,
+                            width: Dimensions.avatarMdLg,
+                            height: Dimensions.avatarMdLg,
+                            fit: BoxFit.cover,
+                            errorBuilder: (_, __, ___) => Container(
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                gradient: LinearGradient(
+                                  begin: Alignment.topLeft,
+                                  end: Alignment.bottomRight,
+                                  colors: [c, c.withOpacity(0.5)],
+                                ),
+                              ),
+                              alignment: Alignment.center,
+                              child: Text(
+                                player.name[0],
+                                style: TextStyle(
+                                  fontSize: Dimensions.sizeHeadingLg,
+                                  fontWeight: Dimensions.black,
+                                  color: AppColors.white,
+                                ),
+                              ),
+                            ),
                           ),
                         ),
                       ),

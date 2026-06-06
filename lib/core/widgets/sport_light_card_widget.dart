@@ -19,8 +19,6 @@ class SpotlightCardWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final imageUrl = "https://i.pravatar.cc/150?img=15";
-
     return Container(
       decoration: BoxDecoration(
         gradient: gradient,
@@ -111,7 +109,7 @@ class SpotlightCardWidget extends StatelessWidget {
                             ),
                             child: ClipOval(
                               child: Image.network(
-                                imageUrl,
+                                player.image,
                                 width: Dimensions.avatarXxl,
                                 height: Dimensions.avatarXxl,
                                 fit: BoxFit.cover,

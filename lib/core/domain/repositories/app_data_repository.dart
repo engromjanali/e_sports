@@ -21,7 +21,11 @@ class AppDataRepository implements AppDataRepositoryInterface {
   }
 
   @override
-  Future<List<MatchEntryModel>> getMatchEntries() async => MockDataSource.getMatchEntries();
+  Future<List<MatchEntryModel>> getMatchEntries() async {
+    final data = await supabase.from('match_entries').select();
+    printer("GET match_entries: $data");
+    return (data as List).map((e) => MatchEntryModel.fromJson(e as Map<String, dynamic>)).toList();
+  }
 
   @override
   Future<List<NewsModel>> getNews() async => MockDataSource.getNews();

@@ -147,7 +147,7 @@ class HomeScreen extends StatelessWidget {
 
                 // ── POTW + POTM ──
                 SectionHeadingWidget(
-                  title: "⭐ Player of Week / Month",
+                  title: "⭐ Player of Week & Month",
                   sub: "Season 2025 spotlight",
                   onAll: () => Get.toNamed(RouteHelper.hallOfFame),
                 ),
@@ -184,13 +184,11 @@ class HomeScreen extends StatelessWidget {
                 ],
 
                 // ── TSOTW/M ──
-                SectionHeadingWidget(title: "⭐ Top Score of The Week / Month", sub: "Season 2025 spotlight"),
+                SectionHeadingWidget(title: "⭐ Top Score of The Week & Month", sub: "Season 2025 spotlight"),
                 Row(children: [
-                  Expanded(child: TopScorerCard(player: tsotw, label: "TSOTW · THIS WEEK", badge: "👑",
-                      gradient: AppColors.blueHeroGradient)),
+                  Expanded(child: TopScorerCard(player: tsotw, label: "TSOTW · THIS WEEK", badge: "👑", gradient: AppColors.blueHeroGradient)),
                   SizedBox(width: Dimensions.lg),
-                  Expanded(child: TopScorerCard(player: tsotm, label: "TSOTM · DECEMBER", badge: "🏆",
-                      gradient: AppColors.orangeHeroGradient)),
+                  Expanded(child: TopScorerCard(player: tsotm, label: "TSOTM · DECEMBER", badge: "🏆", gradient: AppColors.orangeHeroGradient)),
                 ]),
                 SizedBox(height: Dimensions.xxxl),
 
@@ -221,7 +219,7 @@ class HomeScreen extends StatelessWidget {
                 ],
 
                 // ── Upcoming Matches ──
-                SectionHeadingWidget(title: "🎮 Upcoming Matches", onAll: () => onNavigate(1)),
+                SectionHeadingWidget(title: "🎮 Live & Upcoming Matches", onAll: () => onNavigate(1)),
                 ...appData.matches.take(3).map((m) => Padding(
                       padding: EdgeInsets.only(bottom: Dimensions.md),
                       child: MatchMiniCard(match: m),

@@ -81,7 +81,7 @@ class MyRankCard extends StatelessWidget {
                             errorBuilder: (_, __, ___) => Container(
                               color: AppColors.goldDeep,
                               alignment: Alignment.center,
-                              child: Text("A",
+                              child: Text(me.name.isNotEmpty ? me.name[0] : 'I',
                                   style: TextStyle(
                                     fontSize: Dimensions.sizeDisplay - 2,
                                     fontWeight: Dimensions.black,
