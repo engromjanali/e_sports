@@ -1,6 +1,6 @@
 import 'package:e_sports/core/utils/dimensions.dart';
 import 'package:e_sports/core/helper/responsive_helper.dart';
-import '../../../core/controllers/app_data_controller.dart';
+import '../controllers/match_controller.dart';
 import 'package:get/get.dart';
 import '../../../core/widgets/app_footer_widget.dart';
 import '../../../core/widgets/app_header_widget.dart';
@@ -8,59 +8,113 @@ import '../widgets/filter_chip_widget.dart';
 import '../widgets/full_match_card_widget.dart';
 import 'package:flutter/material.dart';
 
-class MatchesScreen extends StatefulWidget {
+class MatchesScreen extends StatelessWidget {
   final VoidCallback? onSearchTap;
   final VoidCallback? onProfileTap;
   final VoidCallback? onMenuTap;
   const MatchesScreen({super.key, this.onSearchTap, this.onProfileTap, this.onMenuTap});
-  @override State<MatchesScreen> createState() => _MatchesScreenState();
-}
 
-class _MatchesScreenState extends State<MatchesScreen> {
-  String _filter = "live";
+  Color _chipColor(String f) {
+    switch (f) {
+      case "live":
+        return AppColors.neonRed;
+      case "upcoming":
+        return AppColors.neonBlue;
+      case "completed":
+        return AppColors.neonGreen;
+      default:
+        return AppColors.textSecondary;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    final all = Get.find<AppDataController>().matches;
-    final filtered = _filter == "all" ? all : all.where((m) => m.status == _filter).toList();
+    final controller = Get.put(MatchController());
 
     return Column(children: [
       AppHeader(
         sub: "Live & Upcoming Matches",
-        onSearchTap: widget.onSearchTap,
-        onProfileTap: widget.onProfileTap,
-        onMenuTap: widget.onMenuTap,
+        onSearchTap: onSearchTap,
+        onProfileTap: onProfileTap,
+        onMenuTap: onMenuTap,
       ),
-      Expanded(child: SingleChildScrollView(
-        padding: Dimensions.screenAll,
-        child: Column(children: [
-          // Filter chips
-          SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            child: Row(children: [
-              for (final f in ["live", "upcoming", "completed", "all"])
-                Padding(
-                  padding: EdgeInsets.only(right: Dimensions.md),
-                  child: FilterChipWidget(
-                    label: f[0].toUpperCase() + f.substring(1),
-                    active: _filter == f,
-                    onTap: () => setState(() => _filter = f),
-                    color: f == "live" ? AppColors.neonRed :
-                    f == "upcoming" ? AppColors.neonBlue :
-                    f == "completed" ? AppColors.neonGreen : AppColors.textSecondary,
-                  ),
+      Expanded(
+        child: RefreshIndicator(
+          onRefresh: controller.reloadData,
+          child: Obx(() {
+            final matches = controller.matches;
+            return SingleChildScrollView(
+              padding: Dimensions.screenAll,
+              physics: const AlwaysScrollableScrollPhysics(),
+              child: Column(children: [
+                // Filter chips
+                SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(children: [
+                    for (final f in MatchController.categories)
+                      Padding(
+                        padding: EdgeInsets.only(right: Dimensions.md),
+                        child: FilterChipWidget(
+                          label: f[0].toUpperCase() + f.substring(1),
+                          active: controller.category == f,
+                          onTap: () => controller.setCategory(f),
+                          color: _chipColor(f),
+                        ),
+                      ),
+                  ]),
                 ),
-            ]),
-          ),
-          SizedBox(height: Dimensions.cardInnerPadding),
+                SizedBox(height: Dimensions.cardInnerPadding),
 
-          ...filtered.map((m) => Padding(
-            padding: EdgeInsets.only(bottom: Dimensions.lg),
-            child: FullMatchCard(match: m),
-          )),
-          if (ResponsiveHelper.isDesktop(context)) AppDesktopFooter(),
-        ]),
-      )),
+                if (controller.isEmpty)
+                  Padding(
+                    padding: EdgeInsets.only(top: Dimensions.massive),
+                    child: Text(
+                      "No matches found",
+                      style: TextStyle(color: AppColors.textMuted),
+                    ),
+                  ),
+
+                ...matches.map((m) => Padding(
+                      padding: EdgeInsets.only(bottom: Dimensions.lg),
+                      child: FullMatchCard(match: m),
+                    )),
+
+                // Pagination — load more
+                if (controller.hasMore)
+                  Padding(
+                    padding: EdgeInsets.only(top: Dimensions.sm, bottom: Dimensions.lg),
+                    child: GestureDetector(
+                      onTap: controller.loadMore,
+                      child: Container(
+                        width: double.infinity,
+                        padding: EdgeInsets.symmetric(vertical: Dimensions.lg),
+                        alignment: Alignment.center,
+                        decoration: BoxDecoration(
+                          color: AppColors.neonGold.withOpacity(AppColors.opacity10),
+                          borderRadius: Dimensions.borderDef,
+                          border: Border.all(
+                            color: AppColors.neonGold.withOpacity(AppColors.opacity25),
+                            width: Dimensions.borderThin,
+                          ),
+                        ),
+                        child: Text(
+                          "Load More",
+                          style: TextStyle(
+                            color: AppColors.neonGold,
+                            fontWeight: Dimensions.extraBold,
+                            letterSpacing: Dimensions.trackingNormal,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+
+                if (ResponsiveHelper.isDesktop(context)) AppDesktopFooter(),
+              ]),
+            );
+          }),
+        ),
+      ),
     ]);
   }
 }

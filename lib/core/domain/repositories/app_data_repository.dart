@@ -34,5 +34,9 @@ class AppDataRepository implements AppDataRepositoryInterface {
   Future<List<TournamentModel>> getTournaments() async => MockDataSource.getTournaments();
 
   @override
-  Future<List<MatchModel>> getMatches() async => MockDataSource.getMatches();
+  Future<List<MatchModel>> getMatches() async {
+    final data = await supabase.from('matches').select();
+    printer("GET matches: $data");
+    return (data as List).map((e) => MatchModel.fromJson(e as Map<String, dynamic>)).toList();
+  }
 }

@@ -9,6 +9,7 @@ import 'package:e_sports/features/auth/presentation/screen/registration_page.dar
 import 'package:e_sports/features/compare/screens/compare_screen.dart';
 import 'package:e_sports/features/dashboard/screens/dashboard_screen.dart';
 import 'package:e_sports/features/hall_of_fame/screens/hall_of_fame_screen.dart';
+import 'package:e_sports/features/matches/screens/matches_screen.dart';
 import 'package:e_sports/features/menu/screens/edit_profile_screen.dart';
 import 'package:e_sports/features/menu/screens/static_content_screen.dart';
 import 'package:e_sports/features/news/screens/news_detail_screen.dart';
@@ -16,6 +17,7 @@ import 'package:e_sports/features/news/screens/news_list_screen.dart';
 import 'package:e_sports/features/profile/screens/profile_screen.dart';
 import 'package:e_sports/features/splash/screens/maintenance_screen.dart';
 import 'package:e_sports/features/splash/screens/splash_screen.dart';
+import 'package:e_sports/core/utils/dimensions.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -29,6 +31,7 @@ class RouteHelper {
   static const String dashboard = '/dashboard';
   static const String home = '/home';
   static const String matches = '/matches';
+  static const String matchesScreen = '/matches-screen';
   static const String ranks = '/ranks';
   static const String profile = '/profile';
   static const String playerProfile = '/profile/:id';
@@ -170,6 +173,14 @@ class RouteHelper {
     GetPage(name: oldDashboard, page: () => const DashboardScreen(), middlewares: authMiddleware),
     GetPage(name: home, page: () => const DashboardScreen(initialTab: 0), middlewares: authMiddleware),
     GetPage(name: matches, page: () => const DashboardScreen(initialTab: 1), middlewares: authMiddleware),
+    GetPage(
+      name: matchesScreen,
+      page: () => const Scaffold(
+        backgroundColor: AppColors.bg,
+        body: SafeArea(child: MatchesScreen()),
+      ),
+      middlewares: authMiddleware,
+    ),
     GetPage(name: ranks, page: () => const DashboardScreen(initialTab: 2), middlewares: authMiddleware),
     GetPage(name: profile, page: () => const ProfileScreen(isSubScreen: true), middlewares: authMiddleware),
     GetPage(name: rewards, page: () => const DashboardScreen(initialTab: 3), middlewares: authMiddleware),

@@ -75,50 +75,50 @@ class MockDataSource {
   //   return entries;
   // }
 
-  static List<MatchEntryModel> getMatchEntries() {
-    final now = DateTime.now();
-    final List<MatchEntryModel> entries = [];
-    final random = Random();
+  // static List<MatchEntryModel> getMatchEntries() {
+  //   final now = DateTime.now();
+  //   final List<MatchEntryModel> entries = [];
+  //   final random = Random();
 
-    for (int pId = 1; pId <= 10; pId++) {
-      final int matchCount = random.nextInt(21) + 10; // 10 to 30
-      for (int i = 0; i < matchCount; i++) {
-        final date = now.subtract(Duration(days: i + (pId * 2)));
-        final r = random.nextInt(10);
-        String result;
-        int goals;
-        int goalsConceded;
+  //   for (int pId = 1; pId <= 10; pId++) {
+  //     final int matchCount = random.nextInt(21) + 10; // 10 to 30
+  //     for (int i = 0; i < matchCount; i++) {
+  //       final date = now.subtract(Duration(days: i + (pId * 2)));
+  //       final r = random.nextInt(10);
+  //       String result;
+  //       int goals;
+  //       int goalsConceded;
 
-        if (r < 6) {
-          result = 'win';
-          goals = random.nextInt(4) + (i % 2);
-          goalsConceded = random.nextInt(max(1, goals));
-        } else if (r < 8) {
-          result = 'draw';
-          goals = random.nextInt(3);
-          goalsConceded = goals;
-        } else {
-          result = 'loss';
-          goals = random.nextInt(2);
-          goalsConceded = goals + random.nextInt(3) + 1;
-        }
+  //       if (r < 6) {
+  //         result = 'win';
+  //         goals = random.nextInt(4) + (i % 2);
+  //         goalsConceded = random.nextInt(max(1, goals));
+  //       } else if (r < 8) {
+  //         result = 'draw';
+  //         goals = random.nextInt(3);
+  //         goalsConceded = goals;
+  //       } else {
+  //         result = 'loss';
+  //         goals = random.nextInt(2);
+  //         goalsConceded = goals + random.nextInt(3) + 1;
+  //       }
 
-        entries.add(MatchEntryModel(
-          id: 'm_${pId}_$i',
-          playerId: pId.toString(),
-          date: date,
-          result: result,
-          goals: goals,
-          goalsConceded: goalsConceded,
-          hattrick: goals >= 3,
-          cleanSheet: goalsConceded == 0,
-          motm: (result == 'win' && random.nextDouble() > 0.3) ||
-              (result == 'draw' && random.nextDouble() > 0.7),
-        ));
-      }
-    }
-    return entries;
-  }
+  //       entries.add(MatchEntryModel(
+  //         id: 'm_${pId}_$i',
+  //         playerId: pId.toString(),
+  //         date: date,
+  //         result: result,
+  //         goals: goals,
+  //         goalsConceded: goalsConceded,
+  //         hattrick: goals >= 3,
+  //         cleanSheet: goalsConceded == 0,
+  //         motm: (result == 'win' && random.nextDouble() > 0.3) ||
+  //             (result == 'draw' && random.nextDouble() > 0.7),
+  //       ));
+  //     }
+  //   }
+  //   return entries;
+  // }
 
   static List<NewsModel> getNews() => [
         NewsModel(
@@ -226,14 +226,14 @@ class MockDataSource {
         ),
       ];
 
-  static List<MatchModel> getMatches() => [
-        MatchModel(id: '1', team1: 'Empire FC', team2: 'Vikings', time: '18:00', date: 'TODAY', status: 'live', tournament: 'Winter Cup'),
-        MatchModel(id: '2', team1: 'Legends', team2: 'PBCC', time: '20:30', date: 'TOMORROW', status: 'upcoming', tournament: 'Winter Cup'),
-        MatchModel(id: '3', team1: 'Brothers', team2: 'Rebels', time: '15:00', date: 'YESTERDAY', status: 'completed', tournament: 'Winter Cup'),
-        MatchModel(id: '4', team1: 'Elite FC', team2: 'Phoenix', time: '22:00', date: 'TODAY', status: 'upcoming', tournament: 'Winter Cup'),
-        MatchModel(id: '5', team1: 'Strikers', team2: 'Defenders', time: '09:00', date: '28 MAR', status: 'upcoming', tournament: 'Summer League'),
-        MatchModel(id: '6', team1: 'Vikings', team2: 'Legends', time: '12:00', date: 'COMPLETED', status: 'completed', tournament: 'Pro Series'),
-      ];
+  // static List<MatchModel> getMatches() => [
+  //       MatchModel(id: '1', team1: 'Empire FC', team2: 'Vikings', time: '18:00', date: 'TODAY', status: 'live', tournament: 'Winter Cup'),
+  //       MatchModel(id: '2', team1: 'Legends', team2: 'PBCC', time: '20:30', date: 'TOMORROW', status: 'upcoming', tournament: 'Winter Cup'),
+  //       MatchModel(id: '3', team1: 'Brothers', team2: 'Rebels', time: '15:00', date: 'YESTERDAY', status: 'completed', tournament: 'Winter Cup'),
+  //       MatchModel(id: '4', team1: 'Elite FC', team2: 'Phoenix', time: '22:00', date: 'TODAY', status: 'upcoming', tournament: 'Winter Cup'),
+  //       MatchModel(id: '5', team1: 'Strikers', team2: 'Defenders', time: '09:00', date: '28 MAR', status: 'upcoming', tournament: 'Summer League'),
+  //       MatchModel(id: '6', team1: 'Vikings', team2: 'Legends', time: '12:00', date: 'COMPLETED', status: 'completed', tournament: 'Pro Series'),
+  //     ];
 
       // static List<AchievementModel> getAchievements() => [
       //   const AchievementModel(id: 1, title: "First Blood", description: "Score the first goal of a match.", icon: 'assets/icons/ach_1.png', date: '2024-01-15', category: 'Special', color: Colors.red),

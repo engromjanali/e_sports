@@ -1,6 +1,7 @@
 import 'package:e_sports/core/utils/dimensions.dart';
 import 'package:e_sports/core/helper/responsive_helper.dart';
 import '../../../core/controllers/app_data_controller.dart';
+import '../controllers/home_controller.dart';
 
 import '../../../core/widgets/app_footer_widget.dart';
 import '../../../core/widgets/app_header_widget.dart';
@@ -38,6 +39,7 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final home = Get.put(HomeController());
     return Obx(() {
       final appData = Get.find<AppDataController>();
       final news = appData.news;
@@ -220,7 +222,7 @@ class HomeScreen extends StatelessWidget {
 
                 // ── Upcoming Matches ──
                 SectionHeadingWidget(title: "🎮 Live & Upcoming Matches", onAll: () => onNavigate(1)),
-                ...appData.matches.take(3).map((m) => Padding(
+                ...home.matches.map((m) => Padding(
                       padding: EdgeInsets.only(bottom: Dimensions.md),
                       child: MatchMiniCard(match: m),
                     )),
