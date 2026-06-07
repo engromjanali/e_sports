@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:e_sports/core/utils/dimensions.dart';
 import '../../../core/widgets/glass_card_widget.dart';
 import '../../../core/widgets/player_avater.dart';
-import "../../../core/controllers/app_data_controller.dart";
 import "../../../core/data/models/computed_player_stats.dart";
 import "package:get/get.dart";
 

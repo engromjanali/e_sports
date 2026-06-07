@@ -1,7 +1,6 @@
 import 'dart:math';
 import 'package:e_sports/core/utils/dimensions.dart';
 import "package:get/get.dart";
-import "../../../core/controllers/app_data_controller.dart";
 import "../../../core/data/models/computed_player_stats.dart";
 import 'package:flutter/material.dart';
 

@@ -1,12 +1,7 @@
 import 'package:e_sports/core/api/api_client.dart';
 import 'package:e_sports/core/beckend_service/controller/backend_data_controller.dart';
 import 'package:e_sports/core/constants/app_constants.dart';
-import 'package:e_sports/core/controllers/app_data_controller.dart';
 import 'package:e_sports/core/controllers/theme_controller.dart';
-import 'package:e_sports/core/domain/repositories/app_data_repository.dart';
-import 'package:e_sports/core/domain/repositories/app_data_repository_interface.dart';
-import 'package:e_sports/core/domain/services/app_data_service.dart';
-import 'package:e_sports/core/domain/services/app_data_service_interface.dart';
 import 'package:e_sports/features/auth/controllers/auth_controller.dart';
 import 'package:e_sports/features/auth/domain/repositories/auth_repository.dart';
 import 'package:e_sports/features/auth/domain/repositories/auth_repository_interface.dart';
@@ -52,11 +47,6 @@ Future<void> init() async {
 
   // Supabase client
   Get.put<SupabaseClient>(SupabaseClient(AppConstants.supabaseUrl, AppConstants.supabaseAnonKey), permanent: true);
-
-  // App data dependencies
-  Get.lazyPut<AppDataRepositoryInterface>(() => AppDataRepository(supabase: Get.find()), fenix: true);
-  Get.lazyPut<AppDataServiceInterface>(() => AppDataService(appDataRepositoryInterface: Get.find()), fenix: true);
-  Get.put(AppDataController(appDataServiceInterface: Get.find()), permanent: true);
 
   // Player feature dependencies
   Get.lazyPut<PlayerRepositoryInterface>(() => PlayerRepository(), fenix: true);

@@ -1,5 +1,4 @@
 import 'package:e_sports/core/utils/dimensions.dart';
-import "../../../core/controllers/app_data_controller.dart";
 import "../../news/domain/model/news_model.dart";
 import "package:get/get.dart";
 import '../../../core/widgets/glow_circle_widget.dart';

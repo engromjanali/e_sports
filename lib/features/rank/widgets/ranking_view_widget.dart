@@ -5,7 +5,6 @@ import 'package:e_sports/core/utils/dimensions.dart';
 import 'package:e_sports/core/helper/responsive_helper.dart';
 import '../../../core/widgets/app_footer_widget.dart';
 import '../../../core/widgets/section_heading_widget.dart';
-import "../../../core/controllers/app_data_controller.dart";
 import '../../../core/data/models/computed_player_stats.dart';
 import '../controllers/rank_controller.dart';
 import 'premium_hero_card.dart';

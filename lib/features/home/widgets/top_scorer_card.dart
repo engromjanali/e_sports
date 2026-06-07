@@ -1,5 +1,4 @@
 import 'package:e_sports/core/utils/dimensions.dart';
-import "../../../core/controllers/app_data_controller.dart";
 import "package:get/get.dart";
 import 'diagonal_slash_printer_widget.dart';
 import 'stat_chip_widget.dart';
