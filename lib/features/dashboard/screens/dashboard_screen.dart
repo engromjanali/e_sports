@@ -11,7 +11,7 @@ import '../../menu/screens/menu_screen.dart';
 import '../../home/screens/home_screen.dart';
 import '../../matches/screens/matches_screen.dart';
 import '../../rank/screens/rank_screen.dart';
-import '../../rewards/screens/reward_screen.dart';
+
 
 class DashboardScreen extends StatefulWidget {
   final int initialTab;
@@ -52,12 +52,11 @@ class _GameArenaScreenState extends State<DashboardScreen> with SingleTickerProv
     super.dispose();
   }
 
-  // ── 5 tabs — Fame removed ──────────────────────────────────────────────────
+  // ── 4 tabs — Fame & Rewards removed ────────────────────────────────────────
   static const _tabs = [
     _TabDef(icon: Icons.home_outlined, label: "Home"),
     _TabDef(icon: Icons.sports_esports_outlined, label: "Matches"),
     _TabDef(icon: Icons.leaderboard_outlined, label: "Ranks"),
-    _TabDef(icon: Icons.card_giftcard_outlined, label: "Rewards"),
     _TabDef(icon: Icons.menu_outlined, label: "Menu"),
   ];
 
@@ -138,15 +137,8 @@ class _GameArenaScreenState extends State<DashboardScreen> with SingleTickerProv
           onMenuTap: ResponsiveHelper.isDesktop(context) ? _openDesktopMenu : null,
         );
       case 3:
-        return RewardsScreen(
-          key: const ValueKey(4),
-          onSearchTap: _openSearch,
-          onProfileTap: _openMyProfile,
-          onMenuTap: ResponsiveHelper.isDesktop(context) ? _openDesktopMenu : null,
-        );
-      case 4:
         return MenuScreen(
-          key: const ValueKey(5),
+          key: const ValueKey(3),
           onSearchTap: _openSearch,
           onProfileTap: _openMyProfile,
           onMenuTap: ResponsiveHelper.isDesktop(context) ? _openDesktopMenu : null,
@@ -178,8 +170,7 @@ class _GameArenaScreenState extends State<DashboardScreen> with SingleTickerProv
             _buildDrawerItem(0, Icons.home_outlined, "Home"),
             _buildDrawerItem(1, Icons.sports_esports_outlined, "Matches"),
             _buildDrawerItem(2, Icons.leaderboard_outlined, "Ranks"),
-            _buildDrawerItem(3, Icons.card_giftcard_outlined, "Rewards"),
-            _buildDrawerItem(4, Icons.menu_outlined, "Menu"),
+            _buildDrawerItem(3, Icons.menu_outlined, "Menu"),
           ],
         ),
       ),

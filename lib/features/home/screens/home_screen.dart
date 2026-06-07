@@ -12,7 +12,6 @@ import '../widgets/news_branner.dart';
 import '../../../core/widgets/quick_nav_item_widget.dart';
 import '../../../core/widgets/section_heading_widget.dart';
 import '../../../core/widgets/sport_light_card_widget.dart';
-import '../widgets/get_rewards_cta_widget.dart';
 import '../widgets/match_mini_card_widget.dart';
 import '../widgets/podium_card_widget.dart';
 import '../widgets/top_scorer_card.dart';
@@ -137,8 +136,6 @@ class HomeScreen extends StatelessWidget {
                   Expanded(child: QuickNavItem(icon: "⚔️", label: "VS",      sub: "Comp",  color: AppColors.neonRed,    onTap: () => Get.toNamed(RouteHelper.compare))),
                   SizedBox(width: 4),
                   Expanded(child: QuickNavItem(icon: "📰", label: "News",    sub: "Lat.",  color: AppColors.neonCyan,   onTap: () => Get.toNamed(RouteHelper.news))),
-                  SizedBox(width: 4),
-                  Expanded(child: QuickNavItem(icon: "🪙", label: "Rewards", sub: "Earn",  color: AppColors.neonGold,   onTap: () => onNavigate(3))),
                 ],
               ),
             ),
@@ -232,8 +229,6 @@ class HomeScreen extends StatelessWidget {
                       child: MatchMiniCard(match: m),
                     )),
 
-                // ── Get Rewards CTA ──
-                GetRewardsCta(onTap: () => onNavigate(3)),
                 if (ResponsiveHelper.isDesktop(context)) AppDesktopFooter(),
                 SizedBox(height: Dimensions.xxxl),
               ]),

@@ -36,7 +36,6 @@ class RouteHelper {
   static const String ranks = '/ranks';
   static const String profile = '/profile';
   static const String playerProfile = '/profile/:id';
-  static const String rewards = '/rewards';
   static const String menu = '/menu';
   static const String compare = '/compare';
   static const String news = '/news';
@@ -64,8 +63,6 @@ class RouteHelper {
       case 2:
         return ranks;
       case 3:
-        return rewards;
-      case 4:
         return menu;
       default:
         return home;
@@ -184,8 +181,7 @@ class RouteHelper {
     ),
     GetPage(name: ranks, page: () => const DashboardScreen(initialTab: 2), middlewares: authMiddleware),
     GetPage(name: profile, page: () => const ProfileScreen(isSubScreen: true), middlewares: authMiddleware),
-    GetPage(name: rewards, page: () => const DashboardScreen(initialTab: 3), middlewares: authMiddleware),
-    GetPage(name: menu, page: () => const DashboardScreen(initialTab: 4), middlewares: authMiddleware),
+    GetPage(name: menu, page: () => const DashboardScreen(initialTab: 3), middlewares: authMiddleware),
     GetPage(name: compare, page: () => const CompareScreen(), middlewares: authMiddleware),
     GetPage(name: news, page: () => const NewsListScreen(), middlewares: authMiddleware),
     GetPage(name: hallOfFame, page: () => const HallOfFameScreen(), middlewares: authMiddleware),
