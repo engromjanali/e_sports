@@ -10,12 +10,7 @@ class SpotlightCardWidget extends StatelessWidget {
   final String badge;
   final Gradient gradient;
 
-  const SpotlightCardWidget({
-    required this.player,
-    required this.label,
-    required this.badge,
-    required this.gradient,
-  });
+  const SpotlightCardWidget({super.key,  required this.player, required this.label, required this.badge, required this.gradient});
 
   @override
   Widget build(BuildContext context) {

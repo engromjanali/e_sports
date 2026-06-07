@@ -15,7 +15,7 @@ class LeaderboardScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final controller = Get.put(RankController());
+    final controller = Get.find<RankController>();
 
     return Column(
       children: [

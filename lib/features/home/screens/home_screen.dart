@@ -151,7 +151,7 @@ class HomeScreen extends StatelessWidget {
 
                 // ── POTW + POTM ──
                 SectionHeadingWidget(
-                  title: "⭐ Player of Week & Month",
+                  title: "⭐ Player of The Week & Month",
                   sub: "Season 2025 spotlight",
                   onAll: () => Get.toNamed(RouteHelper.hallOfFame),
                 ),

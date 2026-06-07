@@ -1,9 +1,16 @@
+import 'package:e_sports/features/rank/domain/model/leader_board_player_model.dart';
+import 'package:e_sports/features/rank/domain/model/player_of_the_week_and_month_model.dart';
+import 'package:e_sports/features/rank/domain/services/rank_service_interface.dart';
 import 'package:get/get.dart';
 import '../../player/controllers/player_controller.dart';
 import '../../../core/data/models/computed_player_stats.dart';
 
 class RankController extends GetxController {
+  final RankServiceInterface rankServiceInterface;
   final player = Get.find<PlayerController>();
+
+  RankController({required this.rankServiceInterface});
+
 
   // Tab index: 0 for Players, 1 for Scorers
   final _tabIndex = 0.obs;
@@ -11,6 +18,70 @@ class RankController extends GetxController {
   void setTabIndex(int index) => _tabIndex.value = index;
 
   List<ComputedPlayerStats> get rankedPlayers => player.rankedPlayers;
+
+  // PLAYER OF THE WEEK & MONTH HOME
+  PlayerOfTheWeekAndMonthModel? _playerOfTheWeekAndMonthModel;
+  PlayerOfTheWeekAndMonthModel? get playerOfTheWeekAndMonthModel => _playerOfTheWeekAndMonthModel;
+
+  // PLAYER OF THE WEEK & MONTH HOME
+  PlayerOfTheWeekAndMonthModel? _topScoreOfTheWeekAndMonth;
+  PlayerOfTheWeekAndMonthModel? get topScoreOfTheWeekAndMonth => _topScoreOfTheWeekAndMonth;
+
+  // OVER ALL TOP 3 PLAYER
+  List<LeaderboardPlayerModel>? _overAllTopThreePlayer;
+  List<LeaderboardPlayerModel>? get overAllTopThreePlayer => _overAllTopThreePlayer;
+
+  // SEASONAL TOP 3 PLAYER 
+  List<LeaderboardPlayerModel>? _seasonalTopThreePlayer;
+  List<LeaderboardPlayerModel>? get seasonalTopThreePlayer => _seasonalTopThreePlayer;
+  
+  // OVER ALL TOP 3 PLAYER
+  List<LeaderboardPlayerModel>? _overAllTopThreeScorer;
+  List<LeaderboardPlayerModel>? get overAllTopThreeScorer => _overAllTopThreeScorer;
+
+  // SEASONAL TOP 3 PLAYER
+  List<LeaderboardPlayerModel>? _seasonalTopThreeScorer;
+  List<LeaderboardPlayerModel>? get seasonalTopThreeScorer => _seasonalTopThreeScorer;
+
+  @override
+  void onInit() {
+    super.onInit();
+    getPlayerOfTheWeekAndMonth();
+    getOverAllTopThreePlayer();
+    getSeasonalTopThreePlayer();
+    getOverAllTopThreeScorer();
+    getSeasonalTopThreeScorer();
+  }
+
+  // PLAYER OF THE WEEK & MONTH HOME
+  Future<void> getPlayerOfTheWeekAndMonth() async {
+    _playerOfTheWeekAndMonthModel = await rankServiceInterface.getPlayerOfTheWeekAndMonth();
+    update();
+  }
+
+  // OVER ALL TOP 3 PLAYER
+  Future<void> getOverAllTopThreePlayer() async {
+    _overAllTopThreePlayer = await rankServiceInterface.getOverAllTopThreePlayer();
+    update();
+  }
+
+  // SEASONAL TOP 3 PLAYER
+  Future<void> getSeasonalTopThreePlayer() async {
+    _seasonalTopThreePlayer = await rankServiceInterface.getSeasonalTopThreePlayer();
+    update();
+  }
+
+  // OVER ALL TOP 3 SCORER
+  Future<void> getOverAllTopThreeScorer() async {
+    _overAllTopThreeScorer = await rankServiceInterface.getOverAllTopThreeScorer();
+    update();
+  }
+
+  // SEASONAL TOP 3 SCORER
+  Future<void> getSeasonalTopThreeScorer() async {
+    _seasonalTopThreeScorer = await rankServiceInterface.getSeasonalTopThreeScorer();
+    update();
+  }
 
   // Selected Season for the Overall/Season card
   final _selectedSeason = 'overall'.obs;
