@@ -1,5 +1,5 @@
 import 'package:e_sports/core/utils/dimensions.dart';
-import '../../../core/controllers/app_data_controller.dart';
+import '../../player/controllers/player_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -7,10 +7,10 @@ class MyRankCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Obx(() {
-      final appData = Get.find<AppDataController>();
-      if (appData.rankedPlayers.isEmpty) return const SizedBox.shrink();
-      
-      final me = appData.rankedPlayers.first; // Default authenticated player
+      final player = Get.find<PlayerController>();
+      if (player.rankedPlayers.isEmpty) return const SizedBox.shrink();
+
+      final me = player.rankedPlayers.first; // Default authenticated player
       String wlabel = "${me.rank}";
       
       return Container(

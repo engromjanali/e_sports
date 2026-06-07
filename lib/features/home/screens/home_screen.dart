@@ -2,7 +2,7 @@ import 'package:e_sports/core/utils/dimensions.dart';
 import 'package:e_sports/core/helper/responsive_helper.dart';
 import 'package:e_sports/features/matches/controllers/match_controller.dart';
 import 'package:e_sports/features/news/controllers/news_controller.dart';
-import '../../../core/controllers/app_data_controller.dart';
+import '../../player/controllers/player_controller.dart';
 import '../controllers/home_controller.dart';
 
 import '../../../core/widgets/app_footer_widget.dart';
@@ -43,16 +43,16 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final home = Get.find<HomeController>();
     return Obx(() {
-      final appData = Get.find<AppDataController>();
+      final playerData = Get.find<PlayerController>();
       final news = Get.find<NewsController>().newsHome;
       final n = news.isNotEmpty ? news[newsBannerIndex % news.length] : null;
-      final players = appData.seasonalPlayers;
-      final weeklyPlayers = appData.weeklyPlayers;
-      final monthlyPlayers = appData.monthlyPlayers;
-      final weeklyScorers = appData.weeklyScorers;
-      final monthlyScorers = appData.monthlyScorers;
+      final players = playerData.seasonalPlayers;
+      final weeklyPlayers = playerData.weeklyPlayers;
+      final monthlyPlayers = playerData.monthlyPlayers;
+      final weeklyScorers = playerData.weeklyScorers;
+      final monthlyScorers = playerData.monthlyScorers;
 
-      if (appData.isLoading.value || players.isEmpty) {
+      if (playerData.isLoading.value || players.isEmpty) {
         return Column(children: [
           AppHeader(
             sub: "Season 2025 · Live",
@@ -78,7 +78,7 @@ class HomeScreen extends StatelessWidget {
         ),
         Expanded(child: RefreshIndicator(
           onRefresh: () async {
-            await appData.loadData();
+            await playerData.loadData();
             await home.reloadData();
           },
           child: ScrollConfiguration(
@@ -200,10 +200,10 @@ class HomeScreen extends StatelessWidget {
                 SizedBox(height: Dimensions.xxxl),
 
                 // ── Overall Top Scorer ──
-                if (appData.seasonalScorers.length >= 3) ...[
+                if (playerData.seasonalScorers.length >= 3) ...[
                   SectionHeadingWidget(title: "🥇 Overall Top 3 Scorer", onAll: () => onNavigate(2)),
                   PodiumCard(
-                    players: [appData.seasonalScorers[0], appData.seasonalScorers[1], appData.seasonalScorers[2]],
+                    players: [playerData.seasonalScorers[0], playerData.seasonalScorers[1], playerData.seasonalScorers[2]],
                     title: "All-Time Rankings",
                     accentColor: AppColors.neonRed,
                     statLabel: "GOALS",
@@ -213,10 +213,10 @@ class HomeScreen extends StatelessWidget {
                 ],
 
                 // ── Seasonal Top Scorer ──
-                if (appData.seasonalScorers.length >= 3) ...[
+                if (playerData.seasonalScorers.length >= 3) ...[
                   SectionHeadingWidget(title: "🥇 Seasonal Top 3 Scorer", onAll: () => onNavigate(2)),
                   PodiumCard(
-                    players: [appData.seasonalScorers[0], appData.seasonalScorers[1], appData.seasonalScorers[2]],
+                    players: [playerData.seasonalScorers[0], playerData.seasonalScorers[1], playerData.seasonalScorers[2]],
                     title: "Seasonal Rankings",
                     accentColor: AppColors.neonCyan,
                     statLabel: "GOALS",

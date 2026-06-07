@@ -37,6 +37,10 @@ class AppConstants {
   // news
   static const String news = "/api/user/news";
 
+  // player
+  static const String players = "/api/user/players";
+  static const String matchEntries = "/api/user/match-entries";
+
   // current active season
   static const int currentSeason = 1;
 

@@ -1,4 +1,5 @@
 import '../../../core/controllers/app_data_controller.dart';
+import '../../player/controllers/player_controller.dart';
 import '../../../core/data/models/tournament_model.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
@@ -571,7 +572,7 @@ class _BracketSection extends StatelessWidget {
 class _TournamentLeaderboard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final players = Get.find<AppDataController>().rankedPlayers;
+    final players = Get.find<PlayerController>().rankedPlayers;
     final medals = ["🥇", "🥈", "🥉"];
     final colors = [
       AppColors.gold,

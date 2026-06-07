@@ -17,6 +17,11 @@ import 'package:e_sports/features/matches/domain/repositories/match_repository.d
 import 'package:e_sports/features/matches/domain/repositories/match_repository_interface.dart';
 import 'package:e_sports/features/matches/domain/services/match_service.dart';
 import 'package:e_sports/features/matches/domain/services/match_service_interface.dart';
+import 'package:e_sports/features/player/controllers/player_controller.dart';
+import 'package:e_sports/features/player/domain/repositories/player_repository.dart';
+import 'package:e_sports/features/player/domain/repositories/player_repository_interface.dart';
+import 'package:e_sports/features/player/domain/services/player_service.dart';
+import 'package:e_sports/features/player/domain/services/player_service_interface.dart';
 import 'package:e_sports/features/home/controllers/home_controller.dart';
 import 'package:e_sports/features/news/controllers/news_controller.dart';
 import 'package:e_sports/features/news/domain/repositories/news_repository.dart';
@@ -52,6 +57,11 @@ Future<void> init() async {
   Get.lazyPut<AppDataRepositoryInterface>(() => AppDataRepository(supabase: Get.find()), fenix: true);
   Get.lazyPut<AppDataServiceInterface>(() => AppDataService(appDataRepositoryInterface: Get.find()), fenix: true);
   Get.put(AppDataController(appDataServiceInterface: Get.find()), permanent: true);
+
+  // Player feature dependencies
+  Get.lazyPut<PlayerRepositoryInterface>(() => PlayerRepository(), fenix: true);
+  Get.lazyPut<PlayerServiceInterface>(() => PlayerService(playerRepositoryInterface: Get.find()), fenix: true);
+  Get.put(PlayerController(playerServiceInterface: Get.find()), permanent: true);
 
   // Splash feature dependencies
   Get.lazyPut<SplashRepositoryInterface>(() => SplashRepository(apiClient: Get.find(), supabase: Get.find()), fenix: true);

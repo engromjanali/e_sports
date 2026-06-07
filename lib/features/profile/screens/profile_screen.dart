@@ -10,7 +10,7 @@ import '../../../core/widgets/player_tags_widget.dart';
 import '../../../core/widgets/section_heading_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../../../core/controllers/app_data_controller.dart';
+import '../../player/controllers/player_controller.dart';
 import '../../../core/data/models/computed_player_stats.dart';
 import '../widgets/profile_analytics_tab.dart';
 import '../models/player_performance.dart';
@@ -39,10 +39,10 @@ class ProfileScreen extends StatefulWidget {
 class _ProfileScreenState extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
-    final appData = Get.find<AppDataController>();
-    final p = widget.player ?? appData.rankedPlayers.first;
+    final player = Get.find<PlayerController>();
+    final p = widget.player ?? player.rankedPlayers.first;
     final last20 = p.last20;
-    final maxStats = appData.maxStats;
+    final maxStats = player.maxStats;
 
     final content = DefaultTabController(
       length: 2,

@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../../../core/controllers/app_data_controller.dart';
+import '../../player/controllers/player_controller.dart';
 import '../../news/controllers/news_controller.dart';
 import '../../../core/data/models/computed_player_stats.dart';
 import '../../../core/helper/route_helper.dart';
@@ -95,7 +95,7 @@ class _GameArenaScreenState extends State<DashboardScreen> with SingleTickerProv
   void _openSearch() {
     showSearch(
       context: context,
-      delegate: PlayerSearchDelegate(Get.find<AppDataController>().rankedPlayers),
+      delegate: PlayerSearchDelegate(Get.find<PlayerController>().rankedPlayers),
     );
   }
 

@@ -1,5 +1,5 @@
 import 'package:e_sports/core/utils/dimensions.dart';
-import '../../../core/controllers/app_data_controller.dart';
+import '../../player/controllers/player_controller.dart';
 import '../../../core/data/models/computed_player_stats.dart';
 import '../../../core/helper/route_helper.dart';
 import '../../../core/widgets/app_header_widget.dart';
@@ -23,7 +23,7 @@ class _CompareScreenState extends State<CompareScreen> {
   void _selectPlayer(int index) async {
     final player = await showSearch<ComputedPlayerStats>(
       context: context,
-      delegate: PlayerSelectDelegate(Get.find<AppDataController>().rankedPlayers),
+      delegate: PlayerSelectDelegate(Get.find<PlayerController>().rankedPlayers),
     );
     if (player != null) {
       setState(() {

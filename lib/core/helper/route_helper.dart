@@ -1,4 +1,4 @@
-import 'package:e_sports/core/controllers/app_data_controller.dart';
+import 'package:e_sports/features/player/controllers/player_controller.dart';
 import 'package:e_sports/core/data/models/computed_player_stats.dart';
 import 'package:e_sports/features/news/domain/model/news_model.dart';
 import 'package:e_sports/core/widgets/route_not_found_screen.dart';
@@ -245,8 +245,8 @@ class RouteHelper {
 
   static ComputedPlayerStats? _playerFromRoute() {
     final id = Get.parameters['id'];
-    if (id == null || id.isEmpty || !Get.isRegistered<AppDataController>()) return null;
-    final data = Get.find<AppDataController>().rankedPlayers.where((item) => item.id == id);
+    if (id == null || id.isEmpty || !Get.isRegistered<PlayerController>()) return null;
+    final data = Get.find<PlayerController>().rankedPlayers.where((item) => item.id == id);
     return data.isEmpty ? null : data.first;
   }
 }

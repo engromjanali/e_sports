@@ -1,6 +1,8 @@
 import 'package:e_sports/core/constants/app_constants.dart';
 import 'package:e_sports/features/matches/domain/model/match_model.dart';
 import 'package:e_sports/features/news/domain/model/news_model.dart';
+import 'package:e_sports/core/data/models/player_model.dart';
+import 'package:e_sports/core/data/models/match_entry_model.dart';
 import 'package:e_sports/core/enums/match_filter.dart';
 import 'package:e_sports/core/helper/printer.dart';
 import 'package:get/get.dart';
@@ -111,6 +113,18 @@ class BackendDataController extends GetxService{
   }
 
 /// ===================== player  ===========================
+
+  Future<List<PlayerModel>> fetchPlayers() async {
+    final data = await supabase.from('players').select();
+    printer("GET players: $data");
+    return (data as List).map((e) => PlayerModel.fromJson(e as Map<String, dynamic>)).toList();
+  }
+
+  Future<List<MatchEntryModel>> fetchMatchEntries() async {
+    final data = await supabase.from('match_entries').select();
+    printer("GET match_entries: $data");
+    return (data as List).map((e) => MatchEntryModel.fromJson(e as Map<String, dynamic>)).toList();
+  }
 
 }
 
