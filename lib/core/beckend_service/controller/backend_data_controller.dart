@@ -1,6 +1,8 @@
 import 'package:e_sports/core/constants/app_constants.dart';
 import 'package:e_sports/features/matches/domain/model/match_model.dart';
 import 'package:e_sports/features/news/domain/model/news_model.dart';
+import 'package:e_sports/features/rank/domain/model/leader_board_player_model.dart';
+import 'package:e_sports/features/rank/domain/model/player_of_the_week_and_month_model.dart';
 import 'package:e_sports/core/data/models/player_model.dart';
 import 'package:e_sports/core/data/models/match_entry_model.dart';
 import 'package:e_sports/core/enums/match_filter.dart';
@@ -28,6 +30,30 @@ class BackendDataController extends GetxService{
 
       case AppConstants.matches:
         return fetchMatch(type: payload1 ?? MatchFilter.all, season: season, limit: limit ?? 10, offset: offset ?? 0);
+
+      case AppConstants.news:
+        return fetchNews();
+
+      case AppConstants.players:
+        return fetchPlayers();
+
+      case AppConstants.matchEntries:
+        return fetchMatchEntries();
+
+      case AppConstants.playerOfTheWeekAndMonth:
+        return fetchPlayerOfTheWeekAndMonth();
+
+      case AppConstants.overAllTopThreePlayer:
+        return fetchOverAllTopThreePlayer();
+
+      case AppConstants.seasonalTopThreePlayer:
+        return fetchSeasonalTopThreePlayer();
+
+      case AppConstants.overAllTopThreeScorer:
+        return fetchOverAllTopThreeScorer();
+
+      case AppConstants.seasonalTopThreeScorer:
+        return fetchSeasonalTopThreeScorer();
 
       default:
         throw "end-point not found";
@@ -125,6 +151,35 @@ class BackendDataController extends GetxService{
     printer("GET match_entries: $data");
     return (data as List).map((e) => MatchEntryModel.fromJson(e as Map<String, dynamic>)).toList();
   }
+
+/// ===================== rank home ===========================
+
+  Future<PlayerOfTheWeekAndMonthModel?> fetchPlayerOfTheWeekAndMonth() async {
+    // TODO: no backend source yet — wire up once the table/endpoint exists.
+    throw UnimplementedError();
+  }
+
+  Future<List<LeaderboardPlayerModel>> fetchOverAllTopThreePlayer() async {
+    // TODO: no backend source yet — wire up once the table/endpoint exists.
+    throw UnimplementedError();
+  }
+
+  Future<List<LeaderboardPlayerModel>> fetchSeasonalTopThreePlayer() async {
+    // TODO: no backend source yet — wire up once the table/endpoint exists.
+    throw UnimplementedError();
+  }
+
+  Future<List<LeaderboardPlayerModel>> fetchOverAllTopThreeScorer() async {
+    // TODO: no backend source yet — wire up once the table/endpoint exists.
+    throw UnimplementedError();
+  }
+
+  Future<List<LeaderboardPlayerModel>> fetchSeasonalTopThreeScorer() async {
+    // TODO: no backend source yet — wire up once the table/endpoint exists.
+    throw UnimplementedError();
+  }
+
+  // ========================= rank ======================================
 
 }
 

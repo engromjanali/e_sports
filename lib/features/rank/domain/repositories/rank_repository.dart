@@ -1,6 +1,9 @@
+import 'package:e_sports/core/beckend_service/controller/backend_data_controller.dart';
+import 'package:e_sports/core/constants/app_constants.dart';
 import 'package:e_sports/features/rank/domain/model/leader_board_player_model.dart';
 import 'package:e_sports/features/rank/domain/model/player_of_the_week_and_month_model.dart';
 import 'package:e_sports/features/rank/domain/repositories/rank_repository_interface.dart';
+import 'package:get/get.dart';
 import 'package:supabase/supabase.dart';
 
 class RankRepository implements RankRepositoryInterface {
@@ -8,28 +11,50 @@ class RankRepository implements RankRepositoryInterface {
 
   RankRepository({required this.supabase});
 
+  // Route through the getData switch by endpoint, like MatchRepository.
+
   @override
-  Future<PlayerOfTheWeekAndMonthModel?> getPlayerOfTheWeekAndMonth() {
-    throw UnimplementedError();
+  Future<PlayerOfTheWeekAndMonthModel?> getPlayerOfTheWeekAndMonth() async {
+    final data = await Get.find<BackendDataController>().getData(
+      AppConstants.playerOfTheWeekAndMonth,
+      season: AppConstants.currentSeason,
+    );
+    return data as PlayerOfTheWeekAndMonthModel?;
   }
 
   @override
-  Future<List<LeaderboardPlayerModel>> getOverAllTopThreePlayer() {
-    throw UnimplementedError();
+  Future<List<LeaderboardPlayerModel>> getOverAllTopThreePlayer() async {
+    final data = await Get.find<BackendDataController>().getData(
+      AppConstants.overAllTopThreePlayer,
+      season: AppConstants.currentSeason,
+    );
+    return List<LeaderboardPlayerModel>.from(data as List);
   }
 
   @override
-  Future<List<LeaderboardPlayerModel>> getSeasonalTopThreePlayer() {
-    throw UnimplementedError();
+  Future<List<LeaderboardPlayerModel>> getSeasonalTopThreePlayer() async {
+    final data = await Get.find<BackendDataController>().getData(
+      AppConstants.seasonalTopThreePlayer,
+      season: AppConstants.currentSeason,
+    );
+    return List<LeaderboardPlayerModel>.from(data as List);
   }
 
   @override
-  Future<List<LeaderboardPlayerModel>> getOverAllTopThreeScorer() {
-    throw UnimplementedError();
+  Future<List<LeaderboardPlayerModel>> getOverAllTopThreeScorer() async {
+    final data = await Get.find<BackendDataController>().getData(
+      AppConstants.overAllTopThreeScorer,
+      season: AppConstants.currentSeason,
+    );
+    return List<LeaderboardPlayerModel>.from(data as List);
   }
 
   @override
-  Future<List<LeaderboardPlayerModel>> getSeasonalTopThreeScorer() {
-    throw UnimplementedError();
+  Future<List<LeaderboardPlayerModel>> getSeasonalTopThreeScorer() async {
+    final data = await Get.find<BackendDataController>().getData(
+      AppConstants.seasonalTopThreeScorer,
+      season: AppConstants.currentSeason,
+    );
+    return List<LeaderboardPlayerModel>.from(data as List);
   }
 }

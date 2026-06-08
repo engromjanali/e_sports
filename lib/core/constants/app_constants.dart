@@ -41,6 +41,13 @@ class AppConstants {
   static const String players = "/api/user/players";
   static const String matchEntries = "/api/user/match-entries";
 
+  // rank
+  static const String playerOfTheWeekAndMonth = "/api/user/player-of-the-week-and-month";
+  static const String overAllTopThreePlayer = "/api/user/overall-top-three-player";
+  static const String seasonalTopThreePlayer = "/api/user/seasonal-top-three-player";
+  static const String overAllTopThreeScorer = "/api/user/overall-top-three-scorer";
+  static const String seasonalTopThreeScorer = "/api/user/seasonal-top-three-scorer";
+
   // current active season
   static const int currentSeason = 1;
 
