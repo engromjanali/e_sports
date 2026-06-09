@@ -48,10 +48,10 @@ Future<void> init() async {
 
   // Core API dependency
   Get.lazyPut<ApiClient>(() => ApiClient(appBaseUrl: AppConstants.baseUrl, sharedPreferences: Get.find()), fenix: true);
-  Get.lazyPut<BackendDataController>(() => BackendDataController(supabase: Get.find()));
 
-  // Supabase client
+  // Supabase client — must be registered before BackendDataController
   Get.put<SupabaseClient>(SupabaseClient(AppConstants.supabaseUrl, AppConstants.supabaseAnonKey), permanent: true);
+  Get.lazyPut<BackendDataController>(() => BackendDataController(supabase: Get.find()), fenix: true);
 
   // Player feature dependencies
   Get.lazyPut<PlayerRepositoryInterface>(() => PlayerRepository(), fenix: true);
@@ -59,7 +59,7 @@ Future<void> init() async {
   Get.put(PlayerController(playerServiceInterface: Get.find()), permanent: true);
 
   // Splash feature dependencies
-  Get.lazyPut<SplashRepositoryInterface>(() => SplashRepository(apiClient: Get.find(), supabase: Get.find()), fenix: true);
+  Get.lazyPut<SplashRepositoryInterface>(() => SplashRepository(backendDataController: Get.find()), fenix: true);
   Get.lazyPut<SplashServiceInterface>(() => SplashService(splashRepositoryInterface: Get.find()), fenix: true);
   Get.lazyPut<SplashController>(() => SplashController(splashServiceInterface: Get.find()), fenix: true);
 

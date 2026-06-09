@@ -31,10 +31,10 @@ class MatchModel {
   factory MatchModel.fromJson(Map<String, dynamic> json) {
     return MatchModel(
       id: json['id']?.toString() ?? '',
-      team1: json['homeTeam']?.toString() ?? '',
-      team2: json['awayTeam']?.toString() ?? '',
-      score1: (json['homeScore'] as num?)?.toInt().toString() ?? '0',
-      score2: (json['awayScore'] as num?)?.toInt().toString() ?? '0',
+      team1: json['hometeam']?.toString() ?? '',
+      team2: json['awayteam']?.toString() ?? '',
+      score1: (json['homescore'] as num?)?.toInt().toString() ?? '0',
+      score2: (json['awayscore'] as num?)?.toInt().toString() ?? '0',
       time: '',
       date: json['date']?.toString() ?? '',
       status: json['status']?.toString() ?? 'upcoming',

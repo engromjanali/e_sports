@@ -11,8 +11,6 @@ class NewsRepository implements NewsRepositoryInterface {
 
   @override
   Future<List<NewsModel>> getNews({int? limit, int? offset, String? search}) async {
-    // News isn't season-scoped, so it doesn't go through the season-required
-    // getData router — call fetchNews directly.
     return Get.find<BackendDataController>().fetchNews(limit: limit, offset: offset, search: search);
   }
 }

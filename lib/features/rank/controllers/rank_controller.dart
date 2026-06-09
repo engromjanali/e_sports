@@ -1,122 +1,182 @@
+import 'package:e_sports/core/data/models/computed_player_stats.dart';
+import 'package:e_sports/core/data/models/player_model.dart';
 import 'package:e_sports/features/rank/domain/model/leader_board_player_model.dart';
 import 'package:e_sports/features/rank/domain/model/player_of_the_week_and_month_model.dart';
 import 'package:e_sports/features/rank/domain/services/rank_service_interface.dart';
 import 'package:get/get.dart';
-import '../../player/controllers/player_controller.dart';
-import '../../../core/data/models/computed_player_stats.dart';
 
 class RankController extends GetxController {
   final RankServiceInterface rankServiceInterface;
-  final player = Get.find<PlayerController>();
 
   RankController({required this.rankServiceInterface});
 
-
-  // Tab index: 0 for Players, 1 for Scorers
+  // Tab index: 0 = Players, 1 = Scorers
   final _tabIndex = 0.obs;
   int get tabIndex => _tabIndex.value;
   void setTabIndex(int index) => _tabIndex.value = index;
 
-  List<ComputedPlayerStats> get rankedPlayers => player.rankedPlayers;
+  bool _isLoading = false;
+  bool get isLoading => _isLoading;
 
-  // PLAYER OF THE WEEK & MONTH HOME
+  // ── Raw backend data ──────────────────────────────────────────────────────
+
   PlayerOfTheWeekAndMonthModel? _playerOfTheWeekAndMonthModel;
-  PlayerOfTheWeekAndMonthModel? get playerOfTheWeekAndMonthModel => _playerOfTheWeekAndMonthModel;
 
-  // PLAYER OF THE WEEK & MONTH HOME
-  PlayerOfTheWeekAndMonthModel? _topScoreOfTheWeekAndMonth;
-  PlayerOfTheWeekAndMonthModel? get topScoreOfTheWeekAndMonth => _topScoreOfTheWeekAndMonth;
+  List<LeaderboardPlayerModel> _overAllTopThreePlayer  = [];
+  List<LeaderboardPlayerModel> _seasonalTopThreePlayer = [];
+  List<LeaderboardPlayerModel> _overAllTopThreeScorer  = [];
+  List<LeaderboardPlayerModel> _seasonalTopThreeScorer = [];
 
-  // OVER ALL TOP 3 PLAYER
-  List<LeaderboardPlayerModel>? _overAllTopThreePlayer;
-  List<LeaderboardPlayerModel>? get overAllTopThreePlayer => _overAllTopThreePlayer;
+  // ── Season toggle ─────────────────────────────────────────────────────────
 
-  // SEASONAL TOP 3 PLAYER 
-  List<LeaderboardPlayerModel>? _seasonalTopThreePlayer;
-  List<LeaderboardPlayerModel>? get seasonalTopThreePlayer => _seasonalTopThreePlayer;
-  
-  // OVER ALL TOP 3 PLAYER
-  List<LeaderboardPlayerModel>? _overAllTopThreeScorer;
-  List<LeaderboardPlayerModel>? get overAllTopThreeScorer => _overAllTopThreeScorer;
+  final _selectedSeason = 'overall'.obs;
+  String get selectedSeason => _selectedSeason.value;
+  void setSelectedSeason(String val) {
+    _selectedSeason.value = val.toLowerCase();
+    update();
+  }
 
-  // SEASONAL TOP 3 PLAYER
-  List<LeaderboardPlayerModel>? _seasonalTopThreeScorer;
-  List<LeaderboardPlayerModel>? get seasonalTopThreeScorer => _seasonalTopThreeScorer;
+  // ── Active lists (switch with season selector) ────────────────────────────
+
+  List<ComputedPlayerStats> get activePlayers => selectedSeason == 'overall'
+      ? _toStatsList(_overAllTopThreePlayer)
+      : _toStatsList(_seasonalTopThreePlayer);
+
+  List<ComputedPlayerStats> get activeScorers => selectedSeason == 'overall'
+      ? _toStatsList(_overAllTopThreeScorer)
+      : _toStatsList(_seasonalTopThreeScorer);
+
+  // ── Hero highlights ───────────────────────────────────────────────────────
+  //
+  // Week / Month come from the awards table via PlayerOfTheWeekAndMonthModel.
+  // Season uses the top entry of the active list.
+
+  ComputedPlayerStats? get potWeek => _playerOfTheWeekAndMonthModel?.weekModel != null
+      ? _weekModelToStats(_playerOfTheWeekAndMonthModel!.weekModel, 1)
+      : null;
+
+  ComputedPlayerStats? get potMonth => _playerOfTheWeekAndMonthModel?.monthModel != null
+      ? _weekModelToStats(_playerOfTheWeekAndMonthModel!.monthModel, 1)
+      : null;
+
+  ComputedPlayerStats? get potSeason =>
+      activePlayers.isNotEmpty ? activePlayers.first : null;
+
+  // Scorer highlight cards map to the same award entry (scorer stats shown via isScorer flag).
+  ComputedPlayerStats? get sotWeek  => potWeek;
+  ComputedPlayerStats? get sotMonth => potMonth;
+  ComputedPlayerStats? get sotSeason =>
+      activeScorers.isNotEmpty ? activeScorers.first : null;
+
+  // ── List sections fed to RankingViewWidget ────────────────────────────────
+
+  // Weekly / monthly sections show the single award winner as a list entry.
+  List<ComputedPlayerStats> get weeklyPlayers  => potWeek  != null ? [potWeek!]  : [];
+  List<ComputedPlayerStats> get monthlyPlayers => potMonth != null ? [potMonth!] : [];
+  List<ComputedPlayerStats> get seasonalPlayers => activePlayers;
+
+  List<ComputedPlayerStats> get weeklyScorers  => sotWeek  != null ? [sotWeek!]  : [];
+  List<ComputedPlayerStats> get monthlyScorers => sotMonth != null ? [sotMonth!] : [];
+  List<ComputedPlayerStats> get seasonalScorers => activeScorers;
+
+  // Fallback used by PremiumHeroCard when the highlight slot is null.
+  List<ComputedPlayerStats> get rankedPlayers => activePlayers;
+
+  // ── Lifecycle ─────────────────────────────────────────────────────────────
 
   @override
   void onInit() {
     super.onInit();
-    getPlayerOfTheWeekAndMonth();
-    getOverAllTopThreePlayer();
-    getSeasonalTopThreePlayer();
-    getOverAllTopThreeScorer();
-    getSeasonalTopThreeScorer();
+    _fetchAll();
   }
 
-  // PLAYER OF THE WEEK & MONTH HOME
-  Future<void> getPlayerOfTheWeekAndMonth() async {
-    _playerOfTheWeekAndMonthModel = await rankServiceInterface.getPlayerOfTheWeekAndMonth();
+  Future<void> _fetchAll() async {
+    _isLoading = true;
+    update();
+    await Future.wait([
+      getPlayerOfTheWeekAndMonth(),
+      getOverAllTopThreePlayer(),
+      getSeasonalTopThreePlayer(),
+      getOverAllTopThreeScorer(),
+      getSeasonalTopThreeScorer(),
+    ]);
+    _isLoading = false;
     update();
   }
 
-  // OVER ALL TOP 3 PLAYER
+  // ── Public fetch methods ──────────────────────────────────────────────────
+
+  Future<void> getPlayerOfTheWeekAndMonth() async {
+    _playerOfTheWeekAndMonthModel =
+        await rankServiceInterface.getPlayerOfTheWeekAndMonth();
+    update();
+  }
+
   Future<void> getOverAllTopThreePlayer() async {
     _overAllTopThreePlayer = await rankServiceInterface.getOverAllTopThreePlayer();
     update();
   }
 
-  // SEASONAL TOP 3 PLAYER
   Future<void> getSeasonalTopThreePlayer() async {
-    _seasonalTopThreePlayer = await rankServiceInterface.getSeasonalTopThreePlayer();
+    _seasonalTopThreePlayer =
+        await rankServiceInterface.getSeasonalTopThreePlayer();
     update();
   }
 
-  // OVER ALL TOP 3 SCORER
   Future<void> getOverAllTopThreeScorer() async {
     _overAllTopThreeScorer = await rankServiceInterface.getOverAllTopThreeScorer();
     update();
   }
 
-  // SEASONAL TOP 3 SCORER
   Future<void> getSeasonalTopThreeScorer() async {
-    _seasonalTopThreeScorer = await rankServiceInterface.getSeasonalTopThreeScorer();
+    _seasonalTopThreeScorer =
+        await rankServiceInterface.getSeasonalTopThreeScorer();
     update();
   }
 
-  // Selected Season for the Overall/Season card
-  final _selectedSeason = 'overall'.obs;
-  String get selectedSeason => _selectedSeason.value;
-  void setSelectedSeason(String val) {
-    _selectedSeason.value = val;
-    final now = DateTime.now();
-    if (val.toLowerCase() == 'overall') {
-      player.seasonStartDate.value = DateTime(2000, 1, 1);
-    } else if (val.contains('2024')) {
-      player.seasonStartDate.value = DateTime(2024, 7, 1);
-    } else if (val.contains('2025')) {
-      player.seasonStartDate.value = DateTime(2025, 7, 1);
-    }
+  String get tabLabel => _tabIndex.value == 0 ? "Players" : "Scorers";
+
+  // ── Adapters: backend models → ComputedPlayerStats ────────────────────────
+
+  List<ComputedPlayerStats> _toStatsList(List<LeaderboardPlayerModel> list) {
+    return list.asMap().entries.map((entry) {
+      final rank = entry.key + 1;
+      final m    = entry.value;
+      return ComputedPlayerStats(
+        player: PlayerModel(
+          id: m.id,
+          name: m.name,
+          sortName: m.short,
+          jerseyNumber: 0,
+          playerRoles: m.tags,
+          imageUrl: m.image,
+        ),
+        goals:   m.goals,
+        wins:    m.wins,
+        draws:   m.draws,
+        losses:  m.losses,
+        matches: m.matches,
+        pts:     m.pts,
+        rank:    rank,
+      );
+    }).toList();
   }
 
-  // ─── Players Data ──────────────────────────────────────────────────────────
-  List<ComputedPlayerStats> get weeklyPlayers => player.weeklyPlayers;
-  List<ComputedPlayerStats> get monthlyPlayers => player.monthlyPlayers;
-  List<ComputedPlayerStats> get seasonalPlayers => player.seasonalPlayers;
-
-  // ─── Scorers Data ──────────────────────────────────────────────────────────
-  List<ComputedPlayerStats> get weeklyScorers => player.weeklyScorers;
-  List<ComputedPlayerStats> get monthlyScorers => player.monthlyScorers;
-  List<ComputedPlayerStats> get seasonalScorers => player.seasonalScorers;
-
-  // ─── Highlights ────────────────────────────────────────────────────────────
-  ComputedPlayerStats? get potWeek => weeklyPlayers.isNotEmpty ? weeklyPlayers.first : null;
-  ComputedPlayerStats? get potMonth => monthlyPlayers.isNotEmpty ? monthlyPlayers.first : null;
-  ComputedPlayerStats? get potSeason => seasonalPlayers.isNotEmpty ? seasonalPlayers.first : null;
-
-  ComputedPlayerStats? get sotWeek => weeklyScorers.isNotEmpty ? weeklyScorers.first : null;
-  ComputedPlayerStats? get sotMonth => monthlyScorers.isNotEmpty ? monthlyScorers.first : null;
-  ComputedPlayerStats? get sotSeason => seasonalScorers.isNotEmpty ? seasonalScorers.first : null;
-
-  // ─── Labels ────────────────────────────────────────────────────────────────
-  String get tabLabel => _tabIndex.value == 0 ? "Players" : "Scorers";
+  ComputedPlayerStats _weekModelToStats(PlayerOfTheWeelModel m, int rank) {
+    return ComputedPlayerStats(
+      player: PlayerModel(
+        id: m.id,
+        name: m.name,
+        sortName: m.short,
+        jerseyNumber: 0,
+        playerRoles: m.tags,
+        imageUrl: m.image,
+      ),
+      goals:   m.goals,
+      wins:    m.wins,
+      matches: m.matches,
+      pts:     m.pts,
+      rank:    rank,
+    );
+  }
 }

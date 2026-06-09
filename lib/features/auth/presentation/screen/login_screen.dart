@@ -163,14 +163,44 @@ class _LoginPageState extends State<LoginPage> {
               ),
               
               const SizedBox(height: 8),
-              
-              // Small subtitle
-              Text(
-                "Access your profile with your credentials",
-                style: Dimensions.mutedText(context).copyWith(
-                  fontSize: 14,
-                  letterSpacing: 0.2,
-                ),
+
+              // Small subtitle with test-fill shortcut icon
+              Row(
+                children: [
+                  Expanded(
+                    child: Text(
+                      "Access your profile with your credentials",
+                      style: Dimensions.mutedText(context).copyWith(
+                        fontSize: 14,
+                        letterSpacing: 0.2,
+                      ),
+                    ),
+                  ),
+                  GestureDetector(
+                    onTap: () {
+                      _emailController.text = 'test@gmail.com';
+                      _passwordController.text = '12345678';
+                    },
+                    child: Tooltip(
+                      message: 'Fill test credentials',
+                      child: Container(
+                        padding: const EdgeInsets.all(6),
+                        decoration: BoxDecoration(
+                          color: AppColors.neonGold.withValues(alpha: 0.08),
+                          borderRadius: BorderRadius.circular(8),
+                          border: Border.all(
+                            color: AppColors.neonGold.withValues(alpha: 0.2),
+                          ),
+                        ),
+                        child: const Icon(
+                          Icons.electric_bolt_rounded,
+                          color: AppColors.neonGold,
+                          size: 16,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
               ),
               
               const SizedBox(height: 56),
