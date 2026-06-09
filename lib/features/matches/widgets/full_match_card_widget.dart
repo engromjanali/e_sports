@@ -11,11 +11,14 @@ class FullMatchCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isLive = match.status == "live";
-    final isCompleted = match.status == "completed" || match.status == "finished";
+    final isCompleted = match.status == "finished";
+    final isCancelled = match.status == "cancelled";
     Color statusColor = isLive
         ? AppColors.neonRed
         : isCompleted
         ? AppColors.neonGreen
+        : isCancelled
+        ? AppColors.textMuted
         : AppColors.neonBlue;
 
     return GlassCardWidget(
@@ -82,7 +85,7 @@ class FullMatchCard extends StatelessWidget {
               borderRadius: Dimensions.borderMd + const BorderRadius.all(Radius.circular(4)),
               border: Border.all(color: AppColors.glassBorder),
             ),
-            child: Text(isCompleted ? ("${match.score1} - ${match.score2}") : "VS",
+            child: Text(isCompleted ? ("${match.score1} - ${match.score2}") : isCancelled ? "–" : "VS",
                 style: TextStyle(
                     fontSize: Dimensions.sizeTitleLarge,
                     fontWeight: Dimensions.black,
@@ -126,7 +129,27 @@ class FullMatchCard extends StatelessWidget {
           ),
         ],
 
-        if (!isCompleted && match.slots != null) ...[
+        if (isCancelled) ...[
+          SizedBox(height: Dimensions.lg),
+          Container(
+            width: double.infinity,
+            padding: EdgeInsets.symmetric(vertical: Dimensions.dotLg),
+            decoration: BoxDecoration(
+              color: AppColors.textMuted.withOpacity(AppColors.opacity10),
+              borderRadius: Dimensions.borderDef,
+              border: Border.all(color: AppColors.textMuted.withOpacity(AppColors.opacity20)),
+            ),
+            child: Text("MATCH CANCELLED",
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: Dimensions.sizeBody,
+                  fontWeight: Dimensions.extraBold,
+                  color: AppColors.textMuted,
+                )),
+          ),
+        ],
+
+        if (!isCompleted && !isCancelled && match.slots != null) ...[
           SizedBox(height: Dimensions.md),
           Row(mainAxisAlignment: MainAxisAlignment.center, children: [
             Text("👥 ${match.slots} players joined",

@@ -61,7 +61,7 @@ Future<void> init() async {
   // Splash feature dependencies
   Get.lazyPut<SplashRepositoryInterface>(() => SplashRepository(backendDataController: Get.find()), fenix: true);
   Get.lazyPut<SplashServiceInterface>(() => SplashService(splashRepositoryInterface: Get.find()), fenix: true);
-  Get.lazyPut<SplashController>(() => SplashController(splashServiceInterface: Get.find()), fenix: true);
+  Get.put<SplashController>(SplashController(splashServiceInterface: Get.find()), permanent: true);
 
   // Auth feature dependencies
   Get.lazyPut<AuthRepositoryInterface>(() => AuthRepository(apiClient: Get.find(), sharedPreferences: Get.find()), fenix: true);

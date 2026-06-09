@@ -20,8 +20,10 @@ class MatchesScreen extends StatelessWidget {
         return AppColors.neonRed;
       case "upcoming":
         return AppColors.neonBlue;
-      case "completed":
+      case "finished":
         return AppColors.neonGreen;
+      case "cancelled":
+        return AppColors.textMuted;
       default:
         return AppColors.textSecondary;
     }

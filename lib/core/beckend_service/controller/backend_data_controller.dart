@@ -84,17 +84,20 @@ class BackendDataController extends GetxService{
 
   Future<ConfigModel> fetchConfig() async {
     final settings = await supabase.from('app_settings').select().single();
-    final seasonRows = await supabase.from('season').select('id');
+    final seasonRows = await supabase
+        .from('season')
+        .select('id, name, is_current')
+        .order('id', ascending: true);
 
     final merged = {
       'version':          settings['version'],
       'verify_email':     settings['verify_email'],
       'maintenance_mode': settings['maintenance_mode'],
       'current_season':   settings['current_season_id'],
-      'seasons':          seasonRows.map((r) => r['id']).toList(),
+      'seasons':          seasonRows,
     };
 
-    printer("GET config: $merged");
+    printer("GET ${AppConstants.configUri}: $merged");
     return ConfigModel.fromJson(merged);
   }
 
@@ -127,12 +130,12 @@ class BackendDataController extends GetxService{
       result.addAll(upcomingMatches);
     }
 
-    printer("GET home matches: $result");
+    printer("GET ${AppConstants.homeMatch}: $result");
     return result.map((e) => MatchModel.fromJson(e as Map<String, dynamic>)).toList();
   }
 
   Future<List<MatchModel>> fetchMatch({required MatchFilter type, required int season, required int limit, required int offset}) async {
-    var query = supabase.from('matches').select().eq('season', season);
+    var query = supabase.from('matches').select().eq('season_id', season);
 
     if (type != MatchFilter.all) {
       query = query.eq('status', type.name);
@@ -144,7 +147,7 @@ class BackendDataController extends GetxService{
       offset * limit + limit - 1,
     );
 
-    printer("GET matches: $data");
+    printer("GET ${AppConstants.matches}: $data");
 
     return (data as List).map((e) => MatchModel.fromJson(e as Map<String, dynamic>)).toList();
   }

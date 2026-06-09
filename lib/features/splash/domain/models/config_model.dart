@@ -1,11 +1,12 @@
 import 'package:e_sports/core/helper/type_converter_helper.dart';
+import 'package:e_sports/features/splash/domain/models/season_model.dart';
 
 class ConfigModel {
   final String? version;
   final bool verifyEmail;
   final bool maintenanceMode;
   final int? currentSeason;
-  final List<int> seasons;
+  final List<SeasonModel> seasons;
 
   ConfigModel({
     this.version,
@@ -21,7 +22,10 @@ class ConfigModel {
       verifyEmail: TypeConverterHelper.readBool(json['verify_email']),
       maintenanceMode: TypeConverterHelper.readBool(json['maintenance_mode']),
       currentSeason: TypeConverterHelper.readInt(json['current_season']),
-      seasons: TypeConverterHelper.readIntList(json['seasons']),
+      seasons: (json['seasons'] as List?)
+              ?.map((s) => SeasonModel.fromJson(s as Map<String, dynamic>))
+              .toList() ??
+          const [],
     );
   }
 }

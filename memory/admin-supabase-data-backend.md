@@ -11,6 +11,6 @@ Built modules (clean arch: entity → model → datasource → repository → us
 
 DB columns are **lowercase** (verified against live schema): `profileimageurl`, `jerseynumber`, `playerroles`, `customtags`, `createdat`, `hometeam`, `awayteam`, `homescore`, `awayscore`, `playerid`, `matchid`, `goalsconceded`, `cleansheet`, `motm`, `cleansheets`, `motmcount`, `avgrating`. Postgres folded the DDL's unquoted camelCase. Admin models map these exact lowercase keys (the consumer app reads camelCase keys, e.g. `json['jerseyNumber']`, so those are likely latent-null bugs there — not fixed per instruction). `matches` uses `season_id` (consumer app's `backend_data_controller` still queries a legacy `season` column).
 
-`matches.status` CHECK allows `upcoming / live / completed / cancelled` (NOT `postponed`). `match_entries.result` allows `win / loss / draw`. Admin `kMatchStatuses` matches the live values.
+`matches.status` CHECK allows `upcoming / live / finished / cancelled` (`completed` was renamed to `finished` via ALTER TABLE). `match_entries.result` allows `win / loss / draw`. Admin `kMatchStatuses` matches the live values.
 
 **Manual setup required:** create a public Supabase Storage bucket named `media` (see `AppConstants.storageBucket`) with folders `players/` and `news/`, or image uploads will fail.

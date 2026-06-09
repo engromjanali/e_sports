@@ -4,9 +4,5 @@ import 'package:e_sports/core/enums/match_filter.dart';
 
 abstract class MatchRepositoryInterface {
   Future<List<MatchModel>> getHomeMatches();
-  Future<List<MatchModel>> getMatches({
-    MatchFilter type = MatchFilter.all,
-    int limit = 10,
-    int offset = 0,
-  });
+  Future<List<MatchModel>> getMatches({MatchFilter type = MatchFilter.all, int limit = 10, int offset = 0,});
 }

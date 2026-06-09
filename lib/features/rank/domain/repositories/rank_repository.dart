@@ -1,5 +1,6 @@
 import 'package:e_sports/core/beckend_service/controller/backend_data_controller.dart';
 import 'package:e_sports/core/constants/app_constants.dart';
+import 'package:e_sports/core/helper/app_helper.dart';
 import 'package:e_sports/features/rank/domain/model/leader_board_player_model.dart';
 import 'package:e_sports/features/rank/domain/model/player_of_the_week_and_month_model.dart';
 import 'package:e_sports/features/rank/domain/repositories/rank_repository_interface.dart';
@@ -17,7 +18,7 @@ class RankRepository implements RankRepositoryInterface {
   Future<PlayerOfTheWeekAndMonthModel?> getPlayerOfTheWeekAndMonth() async {
     final data = await Get.find<BackendDataController>().getData(
       AppConstants.playerOfTheWeekAndMonth,
-      season: AppConstants.currentSeason,
+      season: AppHelper.season,
     );
     return data as PlayerOfTheWeekAndMonthModel?;
   }
@@ -26,7 +27,7 @@ class RankRepository implements RankRepositoryInterface {
   Future<List<LeaderboardPlayerModel>> getOverAllTopThreePlayer() async {
     final data = await Get.find<BackendDataController>().getData(
       AppConstants.overAllTopThreePlayer,
-      season: AppConstants.currentSeason,
+      season: AppHelper.season,
     );
     return List<LeaderboardPlayerModel>.from(data as List);
   }
@@ -35,7 +36,7 @@ class RankRepository implements RankRepositoryInterface {
   Future<List<LeaderboardPlayerModel>> getSeasonalTopThreePlayer() async {
     final data = await Get.find<BackendDataController>().getData(
       AppConstants.seasonalTopThreePlayer,
-      season: AppConstants.currentSeason,
+      season: AppHelper.season,
     );
     return List<LeaderboardPlayerModel>.from(data as List);
   }
@@ -44,7 +45,7 @@ class RankRepository implements RankRepositoryInterface {
   Future<List<LeaderboardPlayerModel>> getOverAllTopThreeScorer() async {
     final data = await Get.find<BackendDataController>().getData(
       AppConstants.overAllTopThreeScorer,
-      season: AppConstants.currentSeason,
+      season: AppHelper.season,
     );
     return List<LeaderboardPlayerModel>.from(data as List);
   }
@@ -53,7 +54,7 @@ class RankRepository implements RankRepositoryInterface {
   Future<List<LeaderboardPlayerModel>> getSeasonalTopThreeScorer() async {
     final data = await Get.find<BackendDataController>().getData(
       AppConstants.seasonalTopThreeScorer,
-      season: AppConstants.currentSeason,
+      season: AppHelper.season,
     );
     return List<LeaderboardPlayerModel>.from(data as List);
   }

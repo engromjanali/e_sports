@@ -1,3 +1,4 @@
+import 'package:e_sports/core/constants/app_constants.dart';
 import 'package:e_sports/core/enums/match_filter.dart';
 import 'package:get/get.dart';
 import '../domain/model/match_model.dart';
@@ -9,10 +10,10 @@ class MatchController extends GetxController {
   MatchController({required this.matchServiceInterface});
 
   // Category-wise filter options
-  static const List<String> categories = ['all', 'live', 'upcoming', 'finished'];
+  static const List<String> categories = ['all', 'live', 'upcoming', 'finished', 'cancelled'];
 
   // How many matches to fetch per offset from the server
-  static const int offsetSize = 10;
+  static const int offsetSize = AppConstants.offsetSize;
 
   // How many matches to highlight on the home screen
   static const int homeLimit = 3;
