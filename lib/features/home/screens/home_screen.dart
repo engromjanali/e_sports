@@ -47,13 +47,7 @@ class HomeScreen extends StatelessWidget {
       final playerData = Get.find<PlayerController>();
       final news = Get.find<NewsController>().newsHome;
       final n = news.isNotEmpty ? news[newsBannerIndex % news.length] : null;
-      final players = playerData.seasonalPlayers;
-      final weeklyPlayers = playerData.weeklyPlayers;
-      final monthlyPlayers = playerData.monthlyPlayers;
-      final weeklyScorers = playerData.weeklyScorers;
-      final monthlyScorers = playerData.monthlyScorers;
-
-      if (playerData.isLoading.value || players.isEmpty) {
+      if (playerData.isLoading.value) {
         return Column(children: [
           AppHeader(
             sub: Get.find<SplashController>().configModel?.seasons.firstWhereOrNull((season) => season.id == Get.find<SplashController>().configModel?.currentSeason)?.name  ?? "Season XX",
@@ -64,11 +58,6 @@ class HomeScreen extends StatelessWidget {
           const Expanded(child: Center(child: CircularProgressIndicator())),
         ]);
       }
-
-      final potw = weeklyPlayers.isNotEmpty ? weeklyPlayers.first : players.first;
-      final potm = monthlyPlayers.isNotEmpty ? monthlyPlayers.first : players.first;
-      final tsotw = weeklyScorers.isNotEmpty ? weeklyScorers.first : players.first;
-      final tsotm = monthlyScorers.isNotEmpty ? monthlyScorers.first : players.first;
 
       return GetBuilder<RankController>(
         builder: (rankController) {

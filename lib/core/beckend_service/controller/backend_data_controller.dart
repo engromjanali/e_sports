@@ -202,7 +202,7 @@ class BackendDataController extends GetxService{
     final weekRow = await supabase
         .from('awards')
         .select('*, players($_playerCols)')
-        .eq('award_type', 'player_of_week')
+        .eq('award_type', 'potw')
         .order('created_at', ascending: false)
         .limit(1)
         .maybeSingle();
@@ -210,7 +210,7 @@ class BackendDataController extends GetxService{
     final monthRow = await supabase
         .from('awards')
         .select('*, players($_playerCols)')
-        .eq('award_type', 'player_of_month')
+        .eq('award_type', 'potm')
         .order('created_at', ascending: false)
         .limit(1)
         .maybeSingle();
@@ -236,16 +236,18 @@ class BackendDataController extends GetxService{
       weekModel: _buildWeekModel(weekRow, weekStats),
       monthModel: _buildWeekModel(monthRow, monthStats),
     );
-    printer("GET player of week/month: $result");
+    printer("GET ${AppConstants.playerOfTheWeekAndMonth}: $result");
     return result;
   }
   
   Future<PlayerOfTheWeekAndMonthModel?> fetchScorerOfTheWeekAndMonth() async {
-   // Fetch the most recent award of each type with the related player row.
+    // Fetch the most recent top_scorer award for the week (week column not null)
+    // and for the month (month column not null).
     final weekRow = await supabase
         .from('awards')
         .select('*, players($_playerCols)')
-        .eq('award_type', 'player_of_week')
+        .eq('award_type', 'top_scorer')
+        .not('week', 'is', null)
         .order('created_at', ascending: false)
         .limit(1)
         .maybeSingle();
@@ -253,7 +255,8 @@ class BackendDataController extends GetxService{
     final monthRow = await supabase
         .from('awards')
         .select('*, players($_playerCols)')
-        .eq('award_type', 'player_of_month')
+        .eq('award_type', 'top_scorer')
+        .not('month', 'is', null)
         .order('created_at', ascending: false)
         .limit(1)
         .maybeSingle();
@@ -279,7 +282,7 @@ class BackendDataController extends GetxService{
       weekModel: _buildWeekModel(weekRow, weekStats),
       monthModel: _buildWeekModel(monthRow, monthStats),
     );
-    printer("GET player of week/month: $result");
+    printer("GET ${AppConstants.scorerOfTheWeekAndMonth}: $result");
     return result;
   }
 
@@ -340,13 +343,13 @@ class BackendDataController extends GetxService{
     for (final row in data as List) {
       final id = row['player_id']?.toString() ?? '';
       agg.putIfAbsent(id, () => {
-        'player': row['players'], 'goals': 0, 'wins': 0, 'draws': 0, 'losses': 0, 'matches': 0,
+        'player': row['players'], 'goals': 0, 'wins': 0, 'draws': 0, 'losses': 0, 'appearances': 0,
       });
-      agg[id]!['goals']   = (agg[id]!['goals']   as int) + ((row['goals']   as num?)?.toInt() ?? 0);
-      agg[id]!['wins']    = (agg[id]!['wins']    as int) + ((row['wins']    as num?)?.toInt() ?? 0);
-      agg[id]!['draws']   = (agg[id]!['draws']   as int) + ((row['draws']   as num?)?.toInt() ?? 0);
-      agg[id]!['losses']  = (agg[id]!['losses']  as int) + ((row['losses']  as num?)?.toInt() ?? 0);
-      agg[id]!['matches'] = (agg[id]!['matches'] as int) + ((row['matches'] as num?)?.toInt() ?? 0);
+      agg[id]!['goals']       = (agg[id]!['goals']       as int) + ((row['goals']       as num?)?.toInt() ?? 0);
+      agg[id]!['wins']        = (agg[id]!['wins']        as int) + ((row['wins']        as num?)?.toInt() ?? 0);
+      agg[id]!['draws']       = (agg[id]!['draws']       as int) + ((row['draws']       as num?)?.toInt() ?? 0);
+      agg[id]!['losses']      = (agg[id]!['losses']      as int) + ((row['losses']      as num?)?.toInt() ?? 0);
+      agg[id]!['appearances'] = (agg[id]!['appearances'] as int) + ((row['appearances'] as num?)?.toInt() ?? 0);
     }
     return agg;
   }
@@ -355,7 +358,7 @@ class BackendDataController extends GetxService{
       _rowToLeaderboard(
         (e['player'] as Map<String, dynamic>?) ?? {},
         {'goals': e['goals'], 'wins': e['wins'], 'draws': e['draws'],
-         'losses': e['losses'], 'matches': e['matches']},
+         'losses': e['losses'], 'appearances': e['appearances']},
       );
 
   LeaderboardPlayerModel _rowToLeaderboard(
@@ -368,7 +371,7 @@ class BackendDataController extends GetxService{
       short:   player['sort_name']?.toString() ?? player['name']?.toString() ?? '',
       image:   player['profileimageurl']?.toString() ?? '',
       tags:    _readStringList(player['playerroles']),
-      matches: (stats['matches'] as num?)?.toInt() ?? 0,
+      matches: (stats['appearances'] as num?)?.toInt() ?? 0,
       wins:    wins,
       draws:   draws,
       losses:  (stats['losses']  as num?)?.toInt() ?? 0,
@@ -389,7 +392,7 @@ class BackendDataController extends GetxService{
       short:   player['sort_name']?.toString() ?? player['name']?.toString() ?? '',
       image:   player['profileimageurl']?.toString() ?? '',
       tags:    _readStringList(player['playerroles']),
-      matches: (stats?['matches'] as num?)?.toInt() ?? 0,
+      matches: (stats?['appearances'] as num?)?.toInt() ?? 0,
       goals:   (stats?['goals']   as num?)?.toInt() ?? 0,
       pts:     _pts(wins, draws),
       wins:    wins,

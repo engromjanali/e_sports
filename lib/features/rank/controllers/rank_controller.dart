@@ -107,7 +107,7 @@ class RankController extends GetxController {
   }
 
   Future<void> getScorerOfTheWeekAndMonth() async {
-    _playerOfTheWeekAndMonthModel = await rankServiceInterface.getPlayerOfTheWeekAndMonth();
+    _scorerOfTheWeekAndMonthModel = await rankServiceInterface.getScorerOfTheWeekAndMonth();
     update();
   }
 
