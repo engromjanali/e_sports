@@ -21,8 +21,8 @@ class MatchRepository implements MatchRepositoryInterface {
   }
 
   @override
-  Future<List<MatchModel>> getMatches({MatchFilter type = MatchFilter.all, int limit = 10, int offset = 0,}) async {
-    final data = await Get.find<BackendDataController>().getData(AppConstants.matches, payload1: type, season: AppHelper.season, limit: limit, offset: offset,);
+  Future<List<MatchModel>> getMatches({MatchFilter type = MatchFilter.all, int limit = 10, int offset = 0, required int season}) async {
+    final data = await Get.find<BackendDataController>().getData(AppConstants.matches, payload1: type, season: season, limit: limit, offset: offset,);
     return List<MatchModel>.from(data as List);
   }
 }

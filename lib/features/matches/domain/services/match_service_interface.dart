@@ -8,5 +8,6 @@ abstract class MatchServiceInterface {
     MatchFilter type = MatchFilter.all,
     int limit = 10,
     int offset = 0,
+    required int season,
   });
 }

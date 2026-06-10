@@ -122,3 +122,5 @@ CREATE TABLE public.app_settings (
   CONSTRAINT app_settings_pkey PRIMARY KEY (id),
   CONSTRAINT app_settings_current_season_id_fkey FOREIGN KEY (current_season_id) REFERENCES public.season(id)
 );
+
+match status {{live, upcoming, finished, cancelled, all}}

@@ -29,12 +29,14 @@ class MatchService implements MatchServiceInterface {
     MatchFilter type = MatchFilter.all,
     int limit = 10,
     int offset = 0,
+    required int season,
   }) async {
     try {
       return await matchRepositoryInterface.getMatches(
         type: type,
         limit: limit,
         offset: offset,
+        season: season,
       );
     } on AppException catch (e) {
       printer('[MatchService.getMatches] ${e.message}');

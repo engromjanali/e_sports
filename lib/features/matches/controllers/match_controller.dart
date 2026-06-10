@@ -1,5 +1,8 @@
 import 'package:e_sports/core/constants/app_constants.dart';
 import 'package:e_sports/core/enums/match_filter.dart';
+import 'package:e_sports/core/helper/app_helper.dart';
+import 'package:e_sports/features/splash/controllers/splash_controller.dart';
+import 'package:e_sports/features/splash/domain/models/season_model.dart';
 import 'package:get/get.dart';
 import '../domain/model/match_model.dart';
 import '../domain/services/match_service_interface.dart';
@@ -24,6 +27,16 @@ class MatchController extends GetxController {
   // Matches shown for the active category (server-paginated).
   final RxList<MatchModel> matches = <MatchModel>[].obs;
 
+  // Season list populated from config on init.
+  final RxList<SeasonModel> seasons = <SeasonModel>[].obs;
+  final _selectedSeasonId = 0.obs;
+  int get selectedSeasonId => _selectedSeasonId.value;
+  SeasonModel? get selectedSeason =>
+      seasons.cast<SeasonModel?>().firstWhere(
+        (s) => s?.id == _selectedSeasonId.value,
+        orElse: () => null,
+      );
+
   // Per-category cache so switching back to a previously viewed category
   // doesn't refetch, plus a "server still has more offsets" flag and the current
   // 0-based offset per category.
@@ -46,7 +59,30 @@ class MatchController extends GetxController {
   @override
   void onInit() {
     super.onInit();
+    _initSeasons();
     setCategory(category);
+  }
+
+  void _initSeasons() {
+    try {
+      final config = Get.find<SplashController>().configModel;
+      if (config != null && config.seasons.isNotEmpty) {
+        seasons.assignAll(config.seasons);
+        _selectedSeasonId.value = config.currentSeason ?? AppHelper.season;
+        return;
+      }
+    } catch (_) {}
+    _selectedSeasonId.value = AppHelper.season;
+  }
+
+  // Changes the active season and clears the entire cache so all categories reload.
+  Future<void> setSeason(int seasonId) async {
+    if (_selectedSeasonId.value == seasonId) return;
+    _selectedSeasonId.value = seasonId;
+    _cache.clear();
+    _hasMore.clear();
+    _offset.clear();
+    await setCategory(category);
   }
 
   // Switches the active category, loading its first offset on first visit and
@@ -66,6 +102,7 @@ class MatchController extends GetxController {
         type: MatchFilter.values.byName(category),
         limit: offsetSize,
         offset: 0,
+        season: _selectedSeasonId.value,
       );
       _cache[category] = result;
       _offset[category] = 0;
@@ -88,6 +125,7 @@ class MatchController extends GetxController {
         type: MatchFilter.values.byName(category),
         limit: offsetSize,
         offset: nextPage,
+        season: _selectedSeasonId.value,
       );
       current.addAll(result);
       _cache[category] = current;
