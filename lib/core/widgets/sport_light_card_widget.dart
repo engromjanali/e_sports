@@ -1,11 +1,11 @@
 import 'package:e_sports/core/utils/dimensions.dart';
-import '../data/models/computed_player_stats.dart';
+import 'package:e_sports/features/rank/domain/model/player_of_the_week_and_month_model.dart';
 import 'player_tags_widget.dart';
 import 'package:flutter/material.dart';
 
 
 class SpotlightCardWidget extends StatelessWidget {
-  final ComputedPlayerStats player;
+  final PlayerOfTheWeeKModel? player;
   final String label;
   final String badge;
   final Gradient gradient;
@@ -104,7 +104,7 @@ class SpotlightCardWidget extends StatelessWidget {
                             ),
                             child: ClipOval(
                               child: Image.network(
-                                player.image,
+                                player?.image ?? '',
                                 width: Dimensions.avatarXxl,
                                 height: Dimensions.avatarXxl,
                                 fit: BoxFit.cover,
@@ -132,9 +132,7 @@ class SpotlightCardWidget extends StatelessWidget {
                                   color: AppColors.goldDeep.withOpacity(0.5),
                                   alignment: Alignment.center,
                                   child: Text(
-                                    player.name.isNotEmpty
-                                        ? player.name[0].toUpperCase()
-                                        : "?",
+                                    (player?.name ?? '').isNotEmpty ? player!.name[0].toUpperCase(): "?",
                                     style: TextStyle(
                                       fontSize: Dimensions.sizeDisplay - 2,
                                       fontWeight: Dimensions.black,
@@ -171,7 +169,7 @@ class SpotlightCardWidget extends StatelessWidget {
 
                       // Name
                       Text(
-                        player.short,
+                        player?.short ?? "xxxxxxx",
                         style: TextStyle(
                           fontSize: Dimensions.sizeSubtitle,
                           fontWeight: Dimensions.black,
@@ -183,13 +181,13 @@ class SpotlightCardWidget extends StatelessWidget {
                       
                       // Dynamic Tags
                       PlayerTagsWidget(
-                        tags: player.tags,
+                        tags: player?.tags ?? [],
                         accentColor: AppColors.neonGold,
                       ),
                       
                       SizedBox(height: Dimensions.sm),
                       Text(
-                        "${player.matches} matches",
+                        "${player?.matches} matches",
                         style: TextStyle(
                           fontSize: Dimensions.sizeBody,
                           color: AppColors.white.withOpacity(AppColors.opacity45),
@@ -210,23 +208,23 @@ class SpotlightCardWidget extends StatelessWidget {
                         SizedBox(height: Dimensions.xxxl * 2),
                         _StatRow(
                           label: "Goals",
-                          value: "${player.goals}",
+                          value: "${player?.goals}",
                           accentColor: AppColors.neonGold,
-                          fillFraction: (player.goals / 20).clamp(0.0, 1.0),
+                          fillFraction: player?.goals == null ? 0.0 : (player!.goals / 20).clamp(0.0, 1.0),
                         ),
                         SizedBox(height: Dimensions.md),
                         _StatRow(
                           label: "Points",
-                          value: "${player.pts}",
+                          value: "${player?.pts}",
                           accentColor: AppColors.neonGold,
-                          fillFraction: (player.pts / 100).clamp(0.0, 1.0),
+                          fillFraction: player?.pts == null ? 0.0 : (player!.pts / 100).clamp(0.0, 1.0),
                         ),
                         SizedBox(height: Dimensions.md),
                         _StatRow(
                           label: "Win",
-                          value: "${player.wins}",
+                          value: "${player?.wins}",
                           accentColor: AppColors.neonGold,
-                          fillFraction: (player.wins / 10).clamp(0.0, 1.0),
+                          fillFraction: player?.wins == null ? 0.0 : (player!.wins / 10).clamp(0.0, 1.0),
                         ),
                       ],
                     ),

@@ -10,8 +10,7 @@ class AppHelper {
 
   static int get season {
     try {
-      return Get.find<SplashController>().configModel?.currentSeason
-          ?? AppConstants.currentSeason;
+      return Get.find<SplashController>().configModel?.currentSeason ?? AppConstants.currentSeason;
     } catch (_) {
       return AppConstants.currentSeason;
     }

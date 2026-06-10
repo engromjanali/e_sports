@@ -47,6 +47,9 @@ class BackendDataController extends GetxService{
       case AppConstants.playerOfTheWeekAndMonth:
         return fetchPlayerOfTheWeekAndMonth();
 
+      case AppConstants.scorerOfTheWeekAndMonth:
+        return fetchScorerOfTheWeekAndMonth();
+
       case AppConstants.overAllTopThreePlayer:
         return fetchOverAllTopThreePlayer();
 
@@ -236,6 +239,49 @@ class BackendDataController extends GetxService{
     printer("GET player of week/month: $result");
     return result;
   }
+  
+  Future<PlayerOfTheWeekAndMonthModel?> fetchScorerOfTheWeekAndMonth() async {
+   // Fetch the most recent award of each type with the related player row.
+    final weekRow = await supabase
+        .from('awards')
+        .select('*, players($_playerCols)')
+        .eq('award_type', 'player_of_week')
+        .order('created_at', ascending: false)
+        .limit(1)
+        .maybeSingle();
+
+    final monthRow = await supabase
+        .from('awards')
+        .select('*, players($_playerCols)')
+        .eq('award_type', 'player_of_month')
+        .order('created_at', ascending: false)
+        .limit(1)
+        .maybeSingle();
+
+    if (weekRow == null || monthRow == null) return null;
+
+    final weekStats = await supabase
+        .from('player_season_stats')
+        .select()
+        .eq('player_id', weekRow['player_id'])
+        .eq('season_id', weekRow['season_id'])
+        .maybeSingle();
+
+    final monthStats = await supabase
+        .from('player_season_stats')
+        .select()
+        .eq('player_id', monthRow['player_id'])
+        .eq('season_id', monthRow['season_id'])
+        .maybeSingle();
+
+    final result = PlayerOfTheWeekAndMonthModel(
+      season: weekRow['season_id']?.toString() ?? '',
+      weekModel: _buildWeekModel(weekRow, weekStats),
+      monthModel: _buildWeekModel(monthRow, monthStats),
+    );
+    printer("GET player of week/month: $result");
+    return result;
+  }
 
   Future<List<LeaderboardPlayerModel>> fetchOverAllTopThreePlayer() async {
     final agg = await _aggregateAllSeasons();
@@ -331,12 +377,12 @@ class BackendDataController extends GetxService{
     );
   }
 
-  PlayerOfTheWeelModel _buildWeekModel(
+  PlayerOfTheWeeKModel _buildWeekModel(
       Map<String, dynamic> award, Map<String, dynamic>? stats) {
     final player = (award['players'] as Map<String, dynamic>?) ?? {};
     final wins  = (stats?['wins']  as num?)?.toInt() ?? 0;
     final draws = (stats?['draws'] as num?)?.toInt() ?? 0;
-    return PlayerOfTheWeelModel(
+    return PlayerOfTheWeeKModel(
       season:  award['season_id']?.toString() ?? '',
       id:      player['id']?.toString() ?? '',
       name:    player['name']?.toString() ?? '',

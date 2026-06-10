@@ -20,6 +20,9 @@ class RankController extends GetxController {
 
 
   PlayerOfTheWeekAndMonthModel? _playerOfTheWeekAndMonthModel;
+  PlayerOfTheWeekAndMonthModel? get playerOfTheWeekAndMonthModel => _playerOfTheWeekAndMonthModel;
+  PlayerOfTheWeekAndMonthModel? _scorerOfTheWeekAndMonthModel;
+  PlayerOfTheWeekAndMonthModel? get socrerOfTheWeekAndMonthModel => _scorerOfTheWeekAndMonthModel;
   List<LeaderboardPlayerModel> _overAllTopThreePlayer  = [];
   List<LeaderboardPlayerModel> get overAllTopThreePlayer => _overAllTopThreePlayer;
   List<LeaderboardPlayerModel> _seasonalTopThreePlayer = [];
@@ -28,6 +31,8 @@ class RankController extends GetxController {
   List<LeaderboardPlayerModel> get overAllTopThreeScorer => _overAllTopThreeScorer;
   List<LeaderboardPlayerModel> _seasonalTopThreeScorer = [];
   List<LeaderboardPlayerModel> get seasonalTopThreeScorer => _seasonalTopThreeScorer;
+
+
 
   final _selectedSeason = 'overall'.obs;
   String get selectedSeason => _selectedSeason.value;
@@ -55,8 +60,7 @@ class RankController extends GetxController {
   // Scorer highlight cards map to the same award entry (scorer stats shown via isScorer flag).
   ComputedPlayerStats? get sotWeek  => potWeek;
   ComputedPlayerStats? get sotMonth => potMonth;
-  ComputedPlayerStats? get sotSeason =>
-      activeScorers.isNotEmpty ? activeScorers.first : null;
+  ComputedPlayerStats? get sotSeason => activeScorers.isNotEmpty ? activeScorers.first : null;
 
   // ── List sections fed to RankingViewWidget ────────────────────────────────
 
@@ -85,6 +89,7 @@ class RankController extends GetxController {
     update();
     await Future.wait([
       getPlayerOfTheWeekAndMonth(),
+      getScorerOfTheWeekAndMonth(),
       getOverAllTopThreePlayer(),
       getSeasonalTopThreePlayer(),
       getOverAllTopThreeScorer(),
@@ -97,6 +102,11 @@ class RankController extends GetxController {
   // ── Public fetch methods ──────────────────────────────────────────────────
 
   Future<void> getPlayerOfTheWeekAndMonth() async {
+    _playerOfTheWeekAndMonthModel = await rankServiceInterface.getPlayerOfTheWeekAndMonth();
+    update();
+  }
+
+  Future<void> getScorerOfTheWeekAndMonth() async {
     _playerOfTheWeekAndMonthModel = await rankServiceInterface.getPlayerOfTheWeekAndMonth();
     update();
   }
@@ -149,7 +159,7 @@ class RankController extends GetxController {
     }).toList();
   }
 
-  ComputedPlayerStats _weekModelToStats(PlayerOfTheWeelModel m, int rank) {
+  ComputedPlayerStats _weekModelToStats(PlayerOfTheWeeKModel m, int rank) {
     return ComputedPlayerStats(
       player: PlayerModel(
         id: m.id,

@@ -3,6 +3,8 @@ import 'package:e_sports/features/rank/domain/model/player_of_the_week_and_month
 
 abstract class RankServiceInterface {
   Future<PlayerOfTheWeekAndMonthModel?> getPlayerOfTheWeekAndMonth();
+  
+  Future<PlayerOfTheWeekAndMonthModel?> getScorerOfTheWeekAndMonth();
 
   Future<List<LeaderboardPlayerModel>> getOverAllTopThreePlayer();
 

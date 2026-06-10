@@ -167,6 +167,7 @@ class AppColors {
 }
 
 Color playerColor(String name) {
+  if(name.isEmpty) name = 'N';
   final colors = [
     const Color(0xFF3B82F6), const Color(0xFFEF4444), const Color(0xFFF59E0B),
     const Color(0xFF10B981), const Color(0xFF8B5CF6), const Color(0xFFEC4899), const Color(0xFF06B6D4),

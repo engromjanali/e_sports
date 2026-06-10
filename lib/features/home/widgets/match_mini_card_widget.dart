@@ -1,6 +1,5 @@
 import 'package:e_sports/core/utils/dimensions.dart';
 import "../../matches/domain/model/match_model.dart";
-import "package:get/get.dart";
 import '../../../core/widgets/glass_card_widget.dart';
 import 'package:flutter/material.dart';
 
@@ -16,21 +15,22 @@ class MatchMiniCard extends StatelessWidget {
         horizontal: Dimensions.cardInnerPadding,
         vertical: Dimensions.body2,
       ),
-      borderColor: isLive
-          ? AppColors.neonRed.withOpacity(AppColors.opacity30)
-          : AppColors.glassBorder,
+      borderColor: isLive ? AppColors.neonRed.withOpacity(AppColors.opacity30) : AppColors.glassBorder,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Row(children: [
-            Text("⚽", style: TextStyle(fontSize: Dimensions.sizeHeadingLg + 2)), // Default emoji
-            SizedBox(width: Dimensions.md),
-            Text(match.team1,
-                style: TextStyle(
-                    fontSize: Dimensions.sizeBody,
-                    fontWeight: Dimensions.bold,
-                    color: AppColors.textPrimary)),
-          ]),
+          Expanded(
+            child: Row(children: [
+              Text("⚽", style: TextStyle(fontSize: Dimensions.sizeHeadingLg + 2)), // Default emoji
+              SizedBox(width: Dimensions.md),
+              Text(match.team1,
+                  style: TextStyle(
+                      fontSize: Dimensions.sizeBody,
+                      fontWeight: Dimensions.bold,
+                      color: AppColors.textPrimary)),
+            ]),
+          ),
+
           Column(children: [
             Text(match.date, style: TextStyle(
               fontSize: Dimensions.sizeCaption,
@@ -56,15 +56,18 @@ class MatchMiniCard extends StatelessWidget {
                         fontWeight: Dimensions.extraBold)),
               ]),
           ]),
-          Row(children: [
-            Text(match.team2,
-                style: TextStyle(
-                    fontSize: Dimensions.sizeBody,
-                    fontWeight: Dimensions.bold,
-                    color: AppColors.textPrimary)),
-            SizedBox(width: Dimensions.md),
-            Text("⚽", style: TextStyle(fontSize: Dimensions.sizeHeadingLg + 2)),
-          ]),
+
+          Expanded(
+            child: Row(mainAxisAlignment: MainAxisAlignment.end, children: [
+              Text(match.team2,
+                  style: TextStyle(
+                      fontSize: Dimensions.sizeBody,
+                      fontWeight: Dimensions.bold,
+                      color: AppColors.textPrimary)),
+              SizedBox(width: Dimensions.md),
+              Text("⚽", style: TextStyle(fontSize: Dimensions.sizeHeadingLg + 2)),
+            ]),
+          ),
         ],
       ),
     );

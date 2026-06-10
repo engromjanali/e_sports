@@ -24,6 +24,15 @@ class RankRepository implements RankRepositoryInterface {
   }
 
   @override
+  Future<PlayerOfTheWeekAndMonthModel?> getScorerOfTheWeekAndMonth() async {
+    final data = await Get.find<BackendDataController>().getData(
+      AppConstants.scorerOfTheWeekAndMonth,
+      season: AppHelper.season,
+    );
+    return data as PlayerOfTheWeekAndMonthModel?;
+  }
+
+  @override
   Future<List<LeaderboardPlayerModel>> getOverAllTopThreePlayer() async {
     final data = await Get.find<BackendDataController>().getData(
       AppConstants.overAllTopThreePlayer,

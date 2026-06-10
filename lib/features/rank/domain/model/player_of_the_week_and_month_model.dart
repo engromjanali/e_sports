@@ -1,7 +1,7 @@
 class PlayerOfTheWeekAndMonthModel {
   final String season;
-  final PlayerOfTheWeelModel weekModel;
-  final PlayerOfTheWeelModel monthModel;
+  final PlayerOfTheWeeKModel weekModel;
+  final PlayerOfTheWeeKModel monthModel;
 
   PlayerOfTheWeekAndMonthModel({
     required this.season,
@@ -26,7 +26,7 @@ class PlayerOfTheWeekAndMonthModel {
   }
 }
 
-class PlayerOfTheWeelModel {
+class PlayerOfTheWeeKModel {
   final String season;
   final String id;
   final String name;
@@ -38,7 +38,7 @@ class PlayerOfTheWeelModel {
   final int pts;
   final int wins;
 
-  PlayerOfTheWeelModel({
+  PlayerOfTheWeeKModel({
     required this.season,
     required this.id,
     required this.name,
@@ -51,8 +51,8 @@ class PlayerOfTheWeelModel {
     required this.wins,
   });
   
-  factory PlayerOfTheWeelModel.fromJson(Map<String, dynamic> json) {
-    return PlayerOfTheWeelModel(
+  factory PlayerOfTheWeeKModel.fromJson(Map<String, dynamic> json) {
+    return PlayerOfTheWeeKModel(
       season: json['season'] as String,
       id: json['id'] as String,
       name: json['name'] as String,

@@ -1,4 +1,5 @@
 import 'package:e_sports/core/utils/dimensions.dart';
+import 'package:e_sports/features/rank/domain/model/player_of_the_week_and_month_model.dart';
 import "package:get/get.dart";
 import 'diagonal_slash_printer_widget.dart';
 import 'stat_chip_widget.dart';
@@ -7,7 +8,7 @@ import 'package:flutter/material.dart';
 import '../../../core/data/models/computed_player_stats.dart';
 
 class TopScorerCard extends StatelessWidget {
-  final ComputedPlayerStats player;
+  final PlayerOfTheWeeKModel? player;
   final String label, badge;
   final Gradient gradient;
 
@@ -20,9 +21,9 @@ class TopScorerCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final c = playerColor(player.name);
-    final double ratio = player.matches > 0
-        ? (player.goals / player.matches)
+    final c = playerColor(player?.name ?? '');
+    final double ratio = (player?.matches ?? 0) > 0
+        ? ((player?.goals ?? 0) / (player?.matches ?? 0))
         : 0.0;
 
     return Container(
@@ -116,7 +117,7 @@ class TopScorerCard extends StatelessWidget {
                         ),
                         child: ClipOval(
                           child: Image.network(
-                            player.image,
+                            player?.image ?? '',
                             width: Dimensions.avatarMdLg,
                             height: Dimensions.avatarMdLg,
                             fit: BoxFit.cover,
@@ -131,7 +132,7 @@ class TopScorerCard extends StatelessWidget {
                               ),
                               alignment: Alignment.center,
                               child: Text(
-                                player.name[0],
+                                    (player?.name ?? '').isNotEmpty ? player!.name[0].toUpperCase(): "?",
                                 style: TextStyle(
                                   fontSize: Dimensions.sizeHeadingLg,
                                   fontWeight: Dimensions.black,
@@ -148,7 +149,7 @@ class TopScorerCard extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              player.short.toUpperCase(),
+                              player?.short ?? "xxxxxxx",
                               style: TextStyle(
                                 fontSize: Dimensions.sizeBody2,
                                 fontWeight: Dimensions.black,
@@ -172,7 +173,7 @@ class TopScorerCard extends StatelessWidget {
                                 ),
                                 SizedBox(width: Dimensions.xs + 1),
                                 Text(
-                                  "${player.matches} matches",
+                                  "${player?.matches} matches",
                                   style: TextStyle(
                                     fontSize: 8.5,
                                     color: AppColors.white.withOpacity(AppColors.opacity55),
@@ -183,7 +184,7 @@ class TopScorerCard extends StatelessWidget {
                             ),
                             SizedBox(height: Dimensions.xs),
                             PlayerTagsWidget(
-                              tags: player.tags,
+                              tags: player?.tags ?? [],
                               accentColor: AppColors.neonGold,
                             ),
                           ],
@@ -203,7 +204,7 @@ class TopScorerCard extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
                       Text(
-                        "${player.goals}",
+                        "${player?.goals}",
                         style: TextStyle(
                           fontSize: Dimensions.sizeHero,
                           fontWeight: Dimensions.black,
@@ -250,13 +251,13 @@ class TopScorerCard extends StatelessWidget {
                     children: [
                       StatChipWidget(
                         label: "MTH",
-                        value: "${player.matches}",
+                        value: "${player?.matches}",
                         color: AppColors.white.withOpacity(0.7),
                       ),
                       SizedBox(width: Dimensions.iconGap),
                       StatChipWidget(
                         label: "Win",
-                        value: "${player.wins}",
+                        value: "${player?.wins}",
                         color: AppColors.white.withOpacity(0.7),
                       ),
                       SizedBox(width: Dimensions.iconGap),

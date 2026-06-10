@@ -24,6 +24,19 @@ class RankService implements RankServiceInterface {
   }
 
   @override
+  Future<PlayerOfTheWeekAndMonthModel?> getScorerOfTheWeekAndMonth() async {
+    try {
+      return await rankRepositoryInterface.getScorerOfTheWeekAndMonth();
+    } on AppException catch (e) {
+      printer('[RankService.getPlayerOfTheWeekAndMonth] ${e.message}');
+      return null;
+    } catch (e) {
+      printer('[RankService.getPlayerOfTheWeekAndMonth] Unexpected: $e');
+      return null;
+    }
+  }
+
+  @override
   Future<List<LeaderboardPlayerModel>> getOverAllTopThreePlayer() async {
     try {
       return await rankRepositoryInterface.getOverAllTopThreePlayer();

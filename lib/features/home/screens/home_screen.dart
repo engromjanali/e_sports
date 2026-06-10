@@ -160,10 +160,10 @@ class HomeScreen extends StatelessWidget {
                       onAll: () => Get.toNamed(RouteHelper.hallOfFame),
                     ),
                     Row(children: [
-                      Expanded(child: SpotlightCardWidget(player: potw, label: "POTW", badge: "👑",
+                      Expanded(child: SpotlightCardWidget(player: rankController.playerOfTheWeekAndMonthModel?.weekModel, label: "POTW", badge: "👑",
                           gradient: AppColors.blueHeroGradient)),
                       SizedBox(width: Dimensions.lg),
-                      Expanded(child: SpotlightCardWidget(player: potm, label: "POTM", badge: "🏆",
+                      Expanded(child: SpotlightCardWidget(player:  rankController.playerOfTheWeekAndMonthModel?.monthModel, label: "POTM", badge: "🏆",
                           gradient: AppColors.orangeHeroGradient)),
                     ]),
                     SizedBox(height: Dimensions.xxxl),
@@ -194,9 +194,9 @@ class HomeScreen extends StatelessWidget {
                     // ── TSOTW/M ──
                     SectionHeadingWidget(title: "⭐ Top Score of The Week & Month", sub: "Season 2025 spotlight"),
                     Row(children: [
-                      Expanded(child: TopScorerCard(player: tsotw, label: "TSOTW · THIS WEEK", badge: "👑", gradient: AppColors.blueHeroGradient)),
+                      Expanded(child: TopScorerCard(player: rankController.socrerOfTheWeekAndMonthModel?.weekModel, label: "TSOTW · THIS WEEK", badge: "👑", gradient: AppColors.blueHeroGradient)),
                       SizedBox(width: Dimensions.lg),
-                      Expanded(child: TopScorerCard(player: tsotm, label: "TSOTM · DECEMBER", badge: "🏆", gradient: AppColors.orangeHeroGradient)),
+                      Expanded(child: TopScorerCard(player: rankController.socrerOfTheWeekAndMonthModel?.monthModel, label: "TSOTM · DECEMBER", badge: "🏆", gradient: AppColors.orangeHeroGradient)),
                     ]),
                     SizedBox(height: Dimensions.xxxl),
           

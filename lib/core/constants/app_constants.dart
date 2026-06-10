@@ -42,6 +42,7 @@ class AppConstants {
   static const String matchEntries = "/api/user/match-entries";
 
   // rank
+  static const String scorerOfTheWeekAndMonth = "/api/user/scorer-of-the-week-and-month";
   static const String playerOfTheWeekAndMonth = "/api/user/player-of-the-week-and-month";
   static const String overAllTopThreePlayer = "/api/user/overall-top-three-player";
   static const String seasonalTopThreePlayer = "/api/user/seasonal-top-three-player";
@@ -49,8 +50,7 @@ class AppConstants {
   static const String seasonalTopThreeScorer = "/api/user/seasonal-top-three-scorer";
 
   // current active season
-  static const int currentSeason = 1;
-
+  static const int currentSeason = 4;
 
   // static List<ChooseUsModel> whyChooseUsList = [
   //   ChooseUsModel(icon: Images.landingTrusted, title: 'trusted_by_customers_and_store_owners'),
