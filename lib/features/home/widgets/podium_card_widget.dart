@@ -1,10 +1,10 @@
 import 'package:e_sports/core/utils/dimensions.dart';
-import '../../../core/data/models/computed_player_stats.dart';
+import 'package:e_sports/features/rank/domain/model/leader_board_player_model.dart';
 import '../../../core/widgets/glass_card_widget.dart';
 import 'package:flutter/material.dart';
 
 class PodiumCard extends StatelessWidget {
-  final List<ComputedPlayerStats> players;
+  final List<LeaderboardPlayerModel> players;
   final String title;
   final Color? accentColor;
   final String statLabel;
@@ -54,40 +54,24 @@ class PodiumCard extends StatelessWidget {
           SizedBox(height: Dimensions.massive),
           Row(
             children: [
-              Expanded(child: _RankBox(
-                player: players[0],
-                rank: 1,
-                rankLabel: "1ST",
-                gradientColors: AppColors.podiumGradientColors[0],
-                glowColor: accentColor ?? AppColors.podiumGlowColors[0],
-                badgeColor: AppColors.podiumBadgeColors[0],
-                statLabel: statLabel,
-                badgeAlignment: badgeAlignment,
-              )),
-              SizedBox(width: Dimensions.md),
-              Expanded(child: _RankBox(
-                player: players[1],
-                rank: 2,
-                rankLabel: "2ND",
-                gradientColors: AppColors.podiumGradientColors[1],
-                glowColor: accentColor?.withOpacity(0.5) ?? AppColors.podiumGlowColors[1],
-                badgeColor: AppColors.podiumBadgeColors[1],
-                statLabel: statLabel,
-                badgeAlignment: badgeAlignment,
-              )),
-              SizedBox(width: Dimensions.md),
-              Expanded(child: _RankBox(
-                player: players[2],
-                rank: 3,
-                rankLabel: "3RD",
-                gradientColors: AppColors.podiumGradientColors[2],
-                glowColor: accentColor?.withOpacity(0.3) ?? AppColors.podiumGlowColors[2],
-                badgeColor: AppColors.podiumBadgeColors[2],
-                statLabel: statLabel,
-                badgeAlignment: badgeAlignment,
-              )),
+              for (int i = 0; i < players.length; i++) ...[
+                Expanded(
+                  child: _RankBox(
+                    player: players[i],
+                    rank: i + 1,
+                    rankLabel: "${i + 1}ST",
+                    gradientColors: AppColors.podiumGradientColors[i],
+                    glowColor: accentColor ?? AppColors.podiumGlowColors[i],
+                    badgeColor: AppColors.podiumBadgeColors[i],
+                    statLabel: statLabel,
+                    badgeAlignment: badgeAlignment,
+                  ),
+                ),
+                if (i != players.length - 1)
+                  SizedBox(width: Dimensions.md),
+              ],
             ],
-          ),
+          )
         ],
       ),
     );
@@ -95,7 +79,7 @@ class PodiumCard extends StatelessWidget {
 }
 
 class _RankBox extends StatelessWidget {
-  final ComputedPlayerStats player;
+  final LeaderboardPlayerModel player;
   final int rank;
   final String rankLabel;
   final List<Color> gradientColors;
@@ -120,7 +104,7 @@ class _RankBox extends StatelessWidget {
     const double avatarSize = Dimensions.avatarPodium;
     const double overflowAmt = 10.0;
 
-    final imageUrl = player.player.imageUrl;
+    final imageUrl = player.image;
 
     return Stack(
       clipBehavior: Clip.none,

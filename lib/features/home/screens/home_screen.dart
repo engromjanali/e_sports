@@ -2,6 +2,8 @@ import 'package:e_sports/core/utils/dimensions.dart';
 import 'package:e_sports/core/helper/responsive_helper.dart';
 import 'package:e_sports/features/matches/controllers/match_controller.dart';
 import 'package:e_sports/features/news/controllers/news_controller.dart';
+import 'package:e_sports/features/rank/controllers/rank_controller.dart';
+import 'package:e_sports/features/splash/controllers/splash_controller.dart';
 import '../../player/controllers/player_controller.dart';
 import '../controllers/home_controller.dart';
 
@@ -54,7 +56,7 @@ class HomeScreen extends StatelessWidget {
       if (playerData.isLoading.value || players.isEmpty) {
         return Column(children: [
           AppHeader(
-            sub: "Season 2025 · Live",
+            sub: Get.find<SplashController>().configModel?.seasons.firstWhereOrNull((season) => season.id == Get.find<SplashController>().configModel?.currentSeason)?.name  ?? "Season XX",
             onSearchTap: onSearchTap,
             onProfileTap: onProfileTap,
             onMenuTap: onMenuTap,
@@ -68,174 +70,178 @@ class HomeScreen extends StatelessWidget {
       final tsotw = weeklyScorers.isNotEmpty ? weeklyScorers.first : players.first;
       final tsotm = monthlyScorers.isNotEmpty ? monthlyScorers.first : players.first;
 
-      return Column(children: [
-        AppHeader(
-          sub: "Season 2025 · Live",
-          onSearchTap: onSearchTap,
-          onProfileTap: onProfileTap,
-          onMenuTap: onMenuTap,
-        ),
-        Expanded(child: RefreshIndicator(
-          onRefresh: () async {
-            await playerData.loadData();
-            await home.reloadData();
-          },
-          child: ScrollConfiguration(
-          behavior: ScrollConfiguration.of(context).copyWith(
-            dragDevices: {
-              PointerDeviceKind.touch,
-              PointerDeviceKind.mouse,
-              PointerDeviceKind.trackpad,
-              PointerDeviceKind.stylus,
-            },
-          ),
-          child: SingleChildScrollView(
-          padding: EdgeInsets.zero,
-          physics: const AlwaysScrollableScrollPhysics(),
-          child: Column(children: [
-
-            // ── My Rank ──
-            Padding(
-              padding: Dimensions.screenH,
-              child: Column(
-                children: [
-                  SizedBox(height: Dimensions.xxxl),
-                  SectionHeadingWidget(title: "📍 My Rank"),
-                  MyRankCard(),
-                  SizedBox(height: Dimensions.cardInnerPadding),
-                ],
-              ),
+      return GetBuilder<RankController>(
+        builder: (rankController) {
+          return Column(children: [
+            AppHeader(
+              sub: Get.find<SplashController>().configModel?.seasons.firstWhereOrNull((season) => season.id == Get.find<SplashController>().configModel?.currentSeason)?.name  ?? "Season XX",
+              onSearchTap: onSearchTap,
+              onProfileTap: onProfileTap,
+              onMenuTap: onMenuTap,
             ),
-
-            // ── News Banner ──
-            if (n != null) Padding(
-              padding: EdgeInsets.fromLTRB(Dimensions.xxxl, Dimensions.cardInnerPadding, Dimensions.xxxl, 0),
-              child: GestureDetector(
-                onTap: () => Get.toNamed(RouteHelper.getNewsDetailsRoute(n.id), arguments: n),
-                child: AnimatedSwitcher(
-                  duration: const Duration(milliseconds: 400),
-                  transitionBuilder: (child, anim) => FadeTransition(opacity: anim, child: child),
-                  child: NewsBannerWidget(
-                    n: n, index: newsBannerIndex, news: news, onDot: onNewsBannerTap,
-                    key: ValueKey(newsBannerIndex),
-                  ),
-                ),
+            Expanded(child: RefreshIndicator(
+              onRefresh: () async {
+                await playerData.loadData();
+                await home.reloadData();
+              },
+              child: ScrollConfiguration(
+              behavior: ScrollConfiguration.of(context).copyWith(
+                dragDevices: {
+                  PointerDeviceKind.touch,
+                  PointerDeviceKind.mouse,
+                  PointerDeviceKind.trackpad,
+                  PointerDeviceKind.stylus,
+                },
               ),
-            ),
-            SizedBox(height: Dimensions.cardInnerPadding),
-
-            // ── Quick Nav ──
-            Padding(
-              padding: Dimensions.screenH,
-              child: Row(
-                children: [
-                  Expanded(child: QuickNavItem(icon: "🎮", label: "Matches", sub: "Live",  color: AppColors.neonBlue,   onTap: () => onNavigate(1))),
-                  SizedBox(width: 4),
-                  Expanded(child: QuickNavItem(icon: "📊", label: "Ranks",   sub: "Tops",  color: AppColors.neonPurple, onTap: () => onNavigate(2))),
-                  SizedBox(width: 4),
-                  Expanded(child: QuickNavItem(icon: "⚔️", label: "VS",      sub: "Comp",  color: AppColors.neonRed,    onTap: () => Get.toNamed(RouteHelper.compare))),
-                  SizedBox(width: 4),
-                  Expanded(child: QuickNavItem(icon: "📰", label: "News",    sub: "Lat.",  color: AppColors.neonCyan,   onTap: () => Get.toNamed(RouteHelper.news))),
-                ],
-              ),
-            ),
-            SizedBox(height: Dimensions.massive),
-
-            Padding(
-              padding: Dimensions.screenH,
+              child: SingleChildScrollView(
+              padding: EdgeInsets.zero,
+              physics: const AlwaysScrollableScrollPhysics(),
               child: Column(children: [
-
-                // ── Hall of Fame Banner ───────────────────────────────────────
-                _HallOfFameBanner(),
-                SizedBox(height: Dimensions.xxxl),
-
-                // ── POTW + POTM ──
-                SectionHeadingWidget(
-                  title: "⭐ Player of The Week & Month",
-                  sub: "Season 2025 spotlight",
-                  onAll: () => Get.toNamed(RouteHelper.hallOfFame),
+          
+                // ── My Rank ──
+                Padding(
+                  padding: Dimensions.screenH,
+                  child: Column(
+                    children: [
+                      SizedBox(height: Dimensions.xxxl),
+                      SectionHeadingWidget(title: "📍 My Rank"),
+                      MyRankCard(),
+                      SizedBox(height: Dimensions.cardInnerPadding),
+                    ],
+                  ),
                 ),
-                Row(children: [
-                  Expanded(child: SpotlightCardWidget(player: potw, label: "POTW", badge: "👑",
-                      gradient: AppColors.blueHeroGradient)),
-                  SizedBox(width: Dimensions.lg),
-                  Expanded(child: SpotlightCardWidget(player: potm, label: "POTM", badge: "🏆",
-                      gradient: AppColors.orangeHeroGradient)),
-                ]),
-                SizedBox(height: Dimensions.xxxl),
-
-                // ── Overall Top 3 ──
-                if (players.length >= 3) ...[
-                  SectionHeadingWidget(title: "🥇 Overall Top 3 Players", onAll: () => onNavigate(2)),
-                  PodiumCard(
-                    players: [players[0], players[1], players[2]],
-                    title: "All-Time Rankings",
-                    badgeAlignment: Alignment.topRight,
+          
+                // ── News Banner ──
+                if (n != null) Padding(
+                  padding: EdgeInsets.fromLTRB(Dimensions.xxxl, Dimensions.cardInnerPadding, Dimensions.xxxl, 0),
+                  child: GestureDetector(
+                    onTap: () => Get.toNamed(RouteHelper.getNewsDetailsRoute(n.id), arguments: n),
+                    child: AnimatedSwitcher(
+                      duration: const Duration(milliseconds: 400),
+                      transitionBuilder: (child, anim) => FadeTransition(opacity: anim, child: child),
+                      child: NewsBannerWidget(
+                        n: n, index: newsBannerIndex, news: news, onDot: onNewsBannerTap,
+                        key: ValueKey(newsBannerIndex),
+                      ),
+                    ),
                   ),
-                  SizedBox(height: Dimensions.xxxl),
-                ],
-
-                // ── Seasonal Top 3 ──
-                if (players.length >= 3) ...[
-                  SectionHeadingWidget(title: "🥇 Seasonal Top 3 Players", onAll: () => onNavigate(2)),
-                  PodiumCard(
-                    players: [players[0], players[1], players[2]],
-                    title: "Seasonal Rankings",
-                    accentColor: AppColors.neonPurple,
-                    badgeAlignment: Alignment.topRight,
+                ),
+                SizedBox(height: Dimensions.cardInnerPadding),
+          
+                // ── Quick Nav ──
+                Padding(
+                  padding: Dimensions.screenH,
+                  child: Row(
+                    children: [
+                      Expanded(child: QuickNavItem(icon: "🎮", label: "Matches", sub: "Live",  color: AppColors.neonBlue,   onTap: () => onNavigate(1))),
+                      SizedBox(width: 4),
+                      Expanded(child: QuickNavItem(icon: "📊", label: "Ranks",   sub: "Tops",  color: AppColors.neonPurple, onTap: () => onNavigate(2))),
+                      SizedBox(width: 4),
+                      Expanded(child: QuickNavItem(icon: "⚔️", label: "VS",      sub: "Comp",  color: AppColors.neonRed,    onTap: () => Get.toNamed(RouteHelper.compare))),
+                      SizedBox(width: 4),
+                      Expanded(child: QuickNavItem(icon: "📰", label: "News",    sub: "Lat.",  color: AppColors.neonCyan,   onTap: () => Get.toNamed(RouteHelper.news))),
+                    ],
                   ),
-                  SizedBox(height: Dimensions.xxxl),
-                ],
-
-                // ── TSOTW/M ──
-                SectionHeadingWidget(title: "⭐ Top Score of The Week & Month", sub: "Season 2025 spotlight"),
-                Row(children: [
-                  Expanded(child: TopScorerCard(player: tsotw, label: "TSOTW · THIS WEEK", badge: "👑", gradient: AppColors.blueHeroGradient)),
-                  SizedBox(width: Dimensions.lg),
-                  Expanded(child: TopScorerCard(player: tsotm, label: "TSOTM · DECEMBER", badge: "🏆", gradient: AppColors.orangeHeroGradient)),
-                ]),
-                SizedBox(height: Dimensions.xxxl),
-
-                // ── Overall Top Scorer ──
-                if (playerData.seasonalScorers.length >= 3) ...[
-                  SectionHeadingWidget(title: "🥇 Overall Top 3 Scorer", onAll: () => onNavigate(2)),
-                  PodiumCard(
-                    players: [playerData.seasonalScorers[0], playerData.seasonalScorers[1], playerData.seasonalScorers[2]],
-                    title: "All-Time Rankings",
-                    accentColor: AppColors.neonRed,
-                    statLabel: "GOALS",
-                    badgeAlignment: Alignment.topRight,
-                  ),
-                  SizedBox(height: Dimensions.xxxl),
-                ],
-
-                // ── Seasonal Top Scorer ──
-                if (playerData.seasonalScorers.length >= 3) ...[
-                  SectionHeadingWidget(title: "🥇 Seasonal Top 3 Scorer", onAll: () => onNavigate(2)),
-                  PodiumCard(
-                    players: [playerData.seasonalScorers[0], playerData.seasonalScorers[1], playerData.seasonalScorers[2]],
-                    title: "Seasonal Rankings",
-                    accentColor: AppColors.neonCyan,
-                    statLabel: "GOALS",
-                    badgeAlignment: Alignment.topRight,
-                  ),
-                  SizedBox(height: Dimensions.xxxl),
-                ],
-
-                // ── Upcoming Matches ──
-                SectionHeadingWidget(title: "🎮 Live & Upcoming Matches", onAll: () => onNavigate(1)),
-                ...Get.find<MatchController>().matchesHome.map((m) => Padding(
-                      padding: EdgeInsets.only(bottom: Dimensions.md),
-                      child: MatchMiniCard(match: m),
-                    )),
-
-                if (ResponsiveHelper.isDesktop(context)) AppDesktopFooter(),
-                SizedBox(height: Dimensions.xxxl),
+                ),
+                SizedBox(height: Dimensions.massive),
+          
+                Padding(
+                  padding: Dimensions.screenH,
+                  child: Column(children: [
+          
+                    // ── Hall of Fame Banner ───────────────────────────────────────
+                    _HallOfFameBanner(),
+                    SizedBox(height: Dimensions.xxxl),
+          
+                    // ── POTW + POTM ──
+                    SectionHeadingWidget(
+                      title: "⭐ Player of The Week & Month",
+                      sub: "Season 2025 spotlight",
+                      onAll: () => Get.toNamed(RouteHelper.hallOfFame),
+                    ),
+                    Row(children: [
+                      Expanded(child: SpotlightCardWidget(player: potw, label: "POTW", badge: "👑",
+                          gradient: AppColors.blueHeroGradient)),
+                      SizedBox(width: Dimensions.lg),
+                      Expanded(child: SpotlightCardWidget(player: potm, label: "POTM", badge: "🏆",
+                          gradient: AppColors.orangeHeroGradient)),
+                    ]),
+                    SizedBox(height: Dimensions.xxxl),
+          
+                    // ── Overall Top 3 ──
+                    if (rankController.overAllTopThreePlayer.isNotEmpty) ...[
+                      SectionHeadingWidget(title: "🥇 Overall Top 3 Players", onAll: () => onNavigate(2)),
+                      PodiumCard(
+                        players: rankController.overAllTopThreePlayer ?? [],
+                        title: "All-Time Rankings",
+                        badgeAlignment: Alignment.topRight,
+                      ),
+                      SizedBox(height: Dimensions.xxxl),
+                    ],
+          
+                    // ── Seasonal Top 3 ──
+                    if (rankController.seasonalTopThreePlayer.isNotEmpty) ...[
+                      SectionHeadingWidget(title: "🥇 Seasonal Top 3 Players", onAll: () => onNavigate(2)),
+                      PodiumCard(
+                        players: rankController.seasonalTopThreePlayer ?? [],
+                        title: "Seasonal Rankings",
+                        accentColor: AppColors.neonPurple,
+                        badgeAlignment: Alignment.topRight,
+                      ),
+                      SizedBox(height: Dimensions.xxxl),
+                    ],
+          
+                    // ── TSOTW/M ──
+                    SectionHeadingWidget(title: "⭐ Top Score of The Week & Month", sub: "Season 2025 spotlight"),
+                    Row(children: [
+                      Expanded(child: TopScorerCard(player: tsotw, label: "TSOTW · THIS WEEK", badge: "👑", gradient: AppColors.blueHeroGradient)),
+                      SizedBox(width: Dimensions.lg),
+                      Expanded(child: TopScorerCard(player: tsotm, label: "TSOTM · DECEMBER", badge: "🏆", gradient: AppColors.orangeHeroGradient)),
+                    ]),
+                    SizedBox(height: Dimensions.xxxl),
+          
+                    // ── Overall Top Scorer ──
+                    if (rankController.overAllTopThreePlayer.isNotEmpty) ...[
+                      SectionHeadingWidget(title: "🥇 Overall Top 3 Scorer", onAll: () => onNavigate(2)),
+                      PodiumCard(
+                        players: rankController.overAllTopThreePlayer ?? [],
+                        title: "All-Time Rankings",
+                        accentColor: AppColors.neonRed,
+                        statLabel: "GOALS",
+                        badgeAlignment: Alignment.topRight,
+                      ),
+                      SizedBox(height: Dimensions.xxxl),
+                    ],
+          
+                    // ── Seasonal Top Scorer ──
+                    if (rankController.seasonalTopThreeScorer.isNotEmpty) ...[
+                      SectionHeadingWidget(title: "🥇 Seasonal Top 3 Scorer", onAll: () => onNavigate(2)),
+                      PodiumCard(
+                        players: rankController.seasonalTopThreeScorer ?? [],
+                        title: "Seasonal Rankings",
+                        accentColor: AppColors.neonCyan,
+                        statLabel: "GOALS",
+                        badgeAlignment: Alignment.topRight,
+                      ),
+                      SizedBox(height: Dimensions.xxxl),
+                    ],
+          
+                    // ── Upcoming Matches ──
+                    SectionHeadingWidget(title: "🎮 Live & Upcoming Matches", onAll: () => onNavigate(1)),
+                    ...Get.find<MatchController>().matchesHome.map((m) => Padding(
+                          padding: EdgeInsets.only(bottom: Dimensions.md),
+                          child: MatchMiniCard(match: m),
+                        )),
+          
+                    if (ResponsiveHelper.isDesktop(context)) AppDesktopFooter(),
+                    SizedBox(height: Dimensions.xxxl),
+                  ]),
+                ),
               ]),
-            ),
-          ]),
-        )))),
-      ]);
+            )))),
+          ]);
+        }
+      );
     });
   }
 }

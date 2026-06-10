@@ -86,7 +86,6 @@ class _GameArenaAppState extends State<GameArenaApp> {
   Widget build(BuildContext context) {
     return GetBuilder<ThemeController>(
       builder: (themeController) => GetMaterialApp(
-        title: "House Of Elites",
         debugShowCheckedModeBanner: false,
         theme: themeController.lightTheme,
         darkTheme: themeController.darkTheme,

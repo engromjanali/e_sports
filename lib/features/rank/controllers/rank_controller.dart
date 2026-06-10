@@ -18,16 +18,16 @@ class RankController extends GetxController {
   bool _isLoading = false;
   bool get isLoading => _isLoading;
 
-  // ── Raw backend data ──────────────────────────────────────────────────────
 
   PlayerOfTheWeekAndMonthModel? _playerOfTheWeekAndMonthModel;
-
   List<LeaderboardPlayerModel> _overAllTopThreePlayer  = [];
+  List<LeaderboardPlayerModel> get overAllTopThreePlayer => _overAllTopThreePlayer;
   List<LeaderboardPlayerModel> _seasonalTopThreePlayer = [];
+  List<LeaderboardPlayerModel> get seasonalTopThreePlayer => _seasonalTopThreePlayer;
   List<LeaderboardPlayerModel> _overAllTopThreeScorer  = [];
+  List<LeaderboardPlayerModel> get overAllTopThreeScorer => _overAllTopThreeScorer;
   List<LeaderboardPlayerModel> _seasonalTopThreeScorer = [];
-
-  // ── Season toggle ─────────────────────────────────────────────────────────
+  List<LeaderboardPlayerModel> get seasonalTopThreeScorer => _seasonalTopThreeScorer;
 
   final _selectedSeason = 'overall'.obs;
   String get selectedSeason => _selectedSeason.value;
@@ -35,8 +35,6 @@ class RankController extends GetxController {
     _selectedSeason.value = val.toLowerCase();
     update();
   }
-
-  // ── Active lists (switch with season selector) ────────────────────────────
 
   List<ComputedPlayerStats> get activePlayers => selectedSeason == 'overall'
       ? _toStatsList(_overAllTopThreePlayer)
@@ -46,21 +44,13 @@ class RankController extends GetxController {
       ? _toStatsList(_overAllTopThreeScorer)
       : _toStatsList(_seasonalTopThreeScorer);
 
-  // ── Hero highlights ───────────────────────────────────────────────────────
-  //
-  // Week / Month come from the awards table via PlayerOfTheWeekAndMonthModel.
-  // Season uses the top entry of the active list.
-
-  ComputedPlayerStats? get potWeek => _playerOfTheWeekAndMonthModel?.weekModel != null
-      ? _weekModelToStats(_playerOfTheWeekAndMonthModel!.weekModel, 1)
-      : null;
+  ComputedPlayerStats? get potWeek => _playerOfTheWeekAndMonthModel?.weekModel != null ? _weekModelToStats(_playerOfTheWeekAndMonthModel!.weekModel, 1)  : null;
 
   ComputedPlayerStats? get potMonth => _playerOfTheWeekAndMonthModel?.monthModel != null
       ? _weekModelToStats(_playerOfTheWeekAndMonthModel!.monthModel, 1)
       : null;
 
-  ComputedPlayerStats? get potSeason =>
-      activePlayers.isNotEmpty ? activePlayers.first : null;
+  ComputedPlayerStats? get potSeason => activePlayers.isNotEmpty ? activePlayers.first : null;
 
   // Scorer highlight cards map to the same award entry (scorer stats shown via isScorer flag).
   ComputedPlayerStats? get sotWeek  => potWeek;
@@ -107,8 +97,7 @@ class RankController extends GetxController {
   // ── Public fetch methods ──────────────────────────────────────────────────
 
   Future<void> getPlayerOfTheWeekAndMonth() async {
-    _playerOfTheWeekAndMonthModel =
-        await rankServiceInterface.getPlayerOfTheWeekAndMonth();
+    _playerOfTheWeekAndMonthModel = await rankServiceInterface.getPlayerOfTheWeekAndMonth();
     update();
   }
 
@@ -118,8 +107,7 @@ class RankController extends GetxController {
   }
 
   Future<void> getSeasonalTopThreePlayer() async {
-    _seasonalTopThreePlayer =
-        await rankServiceInterface.getSeasonalTopThreePlayer();
+    _seasonalTopThreePlayer = await rankServiceInterface.getSeasonalTopThreePlayer();
     update();
   }
 
@@ -129,8 +117,7 @@ class RankController extends GetxController {
   }
 
   Future<void> getSeasonalTopThreeScorer() async {
-    _seasonalTopThreeScorer =
-        await rankServiceInterface.getSeasonalTopThreeScorer();
+    _seasonalTopThreeScorer = await rankServiceInterface.getSeasonalTopThreeScorer();
     update();
   }
 

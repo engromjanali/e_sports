@@ -192,8 +192,7 @@ class BackendDataController extends GetxService{
 /// ===================== rank home ===========================
 
   // Columns fetched from `players` for every rank query.
-  static const String _playerCols =
-      'id, name, profileimageurl, playerroles, sort_name';
+  static const String _playerCols = 'id, name, profileimageurl, playerroles, sort_name';
 
   Future<PlayerOfTheWeekAndMonthModel?> fetchPlayerOfTheWeekAndMonth() async {
     // Fetch the most recent award of each type with the related player row.
