@@ -11,6 +11,8 @@ import 'package:e_sports/features/dashboard/screens/dashboard_screen.dart';
 import 'package:e_sports/features/hall_of_fame/screens/hall_of_fame_screen.dart';
 import 'package:e_sports/features/matches/screens/matches_screen.dart';
 import 'package:e_sports/features/menu/screens/edit_profile_screen.dart';
+import 'package:e_sports/features/faq/controllers/faq_controller.dart';
+import 'package:e_sports/features/faq/screens/faq_screen.dart';
 import 'package:e_sports/features/menu/screens/static_content_screen.dart';
 import 'package:e_sports/features/news/controllers/news_controller.dart';
 import 'package:e_sports/features/news/screens/news_detail_screen.dart';
@@ -188,7 +190,12 @@ class RouteHelper {
     GetPage(name: editProfile, page: () => const EditProfileScreen(), middlewares: authMiddleware),
     GetPage(
       name: faq,
-      page: () => StaticContentScreen(data: staticContentDataFromRoute(faq)),
+      page: () => const FaqScreen(),
+      binding: BindingsBuilder(() {
+        if (!Get.isRegistered<FaqController>()) {
+          Get.find<FaqController>();
+        }
+      }),
       middlewares: authMiddleware,
     ),
     GetPage(

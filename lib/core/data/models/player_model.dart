@@ -22,10 +22,19 @@ class PlayerModel {
       id: json['id']?.toString() ?? '',
       name: json['name'] ?? '',
       sortName: json['sort_name'] ?? '',
-      jerseyNumber: json['jerseyNumber'] ?? 0,
-      playerRoles: (json['playerRoles'] as List?)?.map((e) => e.toString()).toList() ?? const [],
-      tags: (json['customTags'] as List?)?.map((e) => e.toString()).toList() ?? const [],
-      imageUrl: json['profileImageUrl'] ?? '',
+      jerseyNumber: (json['jerseynumber'] as num?)?.toInt() ?? 0,
+      playerRoles: _extractNames(json['player_player_roles'], 'player_role'),
+      tags: _extractNames(json['player_custom_tags'], 'custom_tags'),
+      imageUrl: json['profileimageurl'] ?? '',
     );
+  }
+
+  static List<String> _extractNames(dynamic list, String key) {
+    if (list is! List) return const [];
+    return list
+        .map((item) =>
+            (item[key] as Map<String, dynamic>?)?['name']?.toString() ?? '')
+        .where((n) => n.isNotEmpty)
+        .toList();
   }
 }

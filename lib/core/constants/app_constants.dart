@@ -16,8 +16,8 @@ class AppConstants {
   static const String baseUrl = 'https://foatball.vercel.app';
 
   // Supabase
-  static const String supabaseUrl = 'https://wrfsbsxigcaapvjityjv.supabase.co';
-  static const String supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndyZnNic3hpZ2NhYXB2aml0eWp2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA0NTkzMDcsImV4cCI6MjA5NjAzNTMwN30.Otfr-3Kho9SKl0MjNL0NNAQFJwISPSJtz7az4tV-HCA';
+  static const String supabaseUrl = 'https://ttietyuwaamuiziwzmst.supabase.co';
+  static const String supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InR0aWV0eXV3YWFtdWl6aXd6bXN0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODEzNjYyNzIsImV4cCI6MjA5Njk0MjI3Mn0.9fDKu8rn7edXyPu1LpGuP2M7ocM6gkD1KiHTTZHKWYs';
 
   /// auth endpoints
   static const String registationUri = "/api/user/registation";
@@ -48,6 +48,9 @@ class AppConstants {
   static const String seasonalTopThreePlayer = "/api/user/seasonal-top-three-player";
   static const String overAllTopThreeScorer = "/api/user/overall-top-three-scorer";
   static const String seasonalTopThreeScorer = "/api/user/seasonal-top-three-scorer";
+
+  // faq
+  static const String faqs = "/api/user/faqs";
 
   // current active season
   static const int currentSeason = 4;

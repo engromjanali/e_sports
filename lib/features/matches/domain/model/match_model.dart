@@ -29,6 +29,7 @@ class MatchModel {
   });
 
   factory MatchModel.fromJson(Map<String, dynamic> json) {
+    final comp = json['competitions'] as Map<String, dynamic>?;
     return MatchModel(
       id: json['id']?.toString() ?? '',
       team1: json['hometeam']?.toString() ?? '',
@@ -38,7 +39,7 @@ class MatchModel {
       time: '',
       date: json['date']?.toString() ?? '',
       status: json['status']?.toString() ?? 'upcoming',
-      tournament: json['competition']?.toString() ?? '',
+      tournament: comp?['name']?.toString() ?? '',
     );
   }
 }

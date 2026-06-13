@@ -33,7 +33,7 @@ class NewsModel {
       category: json['category']?.toString() ?? '',
       // 'date' is a display string on the server; keep it for the UI.
       time: json['date']?.toString() ?? '',
-      emoji: json['emoji'],
+      emoji: json['emoji']?.toString() ?? '📰',
       hot: json['hot'] as bool? ?? false,
       author: json['author']?.toString() ?? '',
       date: DateTime.tryParse(json['created_at']?.toString() ?? '') ?? DateTime(1970),

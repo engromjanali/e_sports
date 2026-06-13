@@ -23,6 +23,11 @@ import 'package:e_sports/features/news/domain/repositories/news_repository.dart'
 import 'package:e_sports/features/news/domain/repositories/news_repository_interface.dart';
 import 'package:e_sports/features/news/domain/services/news_service.dart';
 import 'package:e_sports/features/news/domain/services/news_service_interface.dart';
+import 'package:e_sports/features/faq/controllers/faq_controller.dart';
+import 'package:e_sports/features/faq/repositories/faq_repository.dart';
+import 'package:e_sports/features/faq/repositories/faq_repository_interface.dart';
+import 'package:e_sports/features/faq/services/faq_service.dart';
+import 'package:e_sports/features/faq/services/faq_service_interface.dart';
 import 'package:e_sports/features/rank/controllers/rank_controller.dart';
 import 'package:e_sports/features/rank/domain/repositories/rank_repository.dart';
 import 'package:e_sports/features/rank/domain/repositories/rank_repository_interface.dart';
@@ -80,6 +85,11 @@ Future<void> init() async {
   Get.lazyPut<NewsRepositoryInterface>(() => NewsRepository(supabase: Get.find()), fenix: true);
   Get.lazyPut<NewsServiceInterface>(() => NewsService(newsRepositoryInterface: Get.find()), fenix: true);
   Get.lazyPut<NewsController>(() => NewsController(newsServiceInterface: Get.find()), fenix: true);
+
+  // FAQ feature dependencies
+  Get.lazyPut<FaqRepositoryInterface>(() => FaqRepository(), fenix: true);
+  Get.lazyPut<FaqServiceInterface>(() => FaqService(faqRepositoryInterface: Get.find()), fenix: true);
+  Get.lazyPut<FaqController>(() => FaqController(faqServiceInterface: Get.find()), fenix: true);
 
   // Rank feature dependencies
   Get.lazyPut<RankRepositoryInterface>(() => RankRepository(supabase: Get.find()), fenix: true);

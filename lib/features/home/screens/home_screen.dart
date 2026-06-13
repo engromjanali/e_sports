@@ -190,10 +190,10 @@ class HomeScreen extends StatelessWidget {
                     SizedBox(height: Dimensions.xxxl),
           
                     // ── Overall Top Scorer ──
-                    if (rankController.overAllTopThreePlayer.isNotEmpty) ...[
+                    if (rankController.overAllTopThreeScorer.isNotEmpty) ...[
                       SectionHeadingWidget(title: "🥇 Overall Top 3 Scorer", onAll: () => onNavigate(2)),
                       PodiumCard(
-                        players: rankController.overAllTopThreePlayer ?? [],
+                        players: rankController.overAllTopThreeScorer,
                         title: "All-Time Rankings",
                         accentColor: AppColors.neonRed,
                         statLabel: "GOALS",
