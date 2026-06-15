@@ -49,10 +49,10 @@ class RankController extends GetxController {
       ? _toStatsList(_overAllTopThreeScorer)
       : _toStatsList(_seasonalTopThreeScorer);
 
-  ComputedPlayerStats? get potWeek => _playerOfTheWeekAndMonthModel?.weekModel != null ? _weekModelToStats(_playerOfTheWeekAndMonthModel!.weekModel, 1)  : null;
+  ComputedPlayerStats? get potWeek => _playerOfTheWeekAndMonthModel?.weekModel != null ? _weekModelToStats(_playerOfTheWeekAndMonthModel!.weekModel!, 1)  : null;
 
   ComputedPlayerStats? get potMonth => _playerOfTheWeekAndMonthModel?.monthModel != null
-      ? _weekModelToStats(_playerOfTheWeekAndMonthModel!.monthModel, 1)
+      ? _weekModelToStats(_playerOfTheWeekAndMonthModel!.monthModel!, 1)
       : null;
 
   ComputedPlayerStats? get potSeason => activePlayers.isNotEmpty ? activePlayers.first : null;

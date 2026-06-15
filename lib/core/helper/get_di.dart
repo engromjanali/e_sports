@@ -61,7 +61,7 @@ Future<void> init() async {
   // Player feature dependencies
   Get.lazyPut<PlayerRepositoryInterface>(() => PlayerRepository(), fenix: true);
   Get.lazyPut<PlayerServiceInterface>(() => PlayerService(playerRepositoryInterface: Get.find()), fenix: true);
-  Get.put(PlayerController(playerServiceInterface: Get.find()), permanent: true);
+  Get.put(PlayerController(playerServiceInterface: Get.find(), sharedPreferences: Get.find()), permanent: true);
 
   // Splash feature dependencies
   Get.lazyPut<SplashRepositoryInterface>(() => SplashRepository(backendDataController: Get.find()), fenix: true);

@@ -68,6 +68,7 @@ class HomeScreen extends StatelessWidget {
               onProfileTap: onProfileTap,
               onMenuTap: onMenuTap,
             ),
+
             Expanded(child: RefreshIndicator(
               onRefresh: () async {
                 await playerData.loadData();

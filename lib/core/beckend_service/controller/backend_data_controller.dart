@@ -1,4 +1,5 @@
 import 'package:e_sports/core/constants/app_constants.dart';
+import 'package:e_sports/core/data/models/my_rank_model.dart';
 import 'package:e_sports/features/faq/models/faq_model.dart';
 import 'package:e_sports/features/matches/domain/model/match_model.dart';
 import 'package:e_sports/features/news/domain/model/news_model.dart';
@@ -46,10 +47,10 @@ class BackendDataController extends GetxService{
         return fetchMatchEntries();
 
       case AppConstants.playerOfTheWeekAndMonth:
-        return fetchPlayerOfTheWeekAndMonth();
+        return fetchPlayerOfTheWeekAndMonth(season: season);
 
       case AppConstants.scorerOfTheWeekAndMonth:
-        return fetchScorerOfTheWeekAndMonth();
+        return fetchScorerOfTheWeekAndMonth(season: season);
 
       case AppConstants.overAllTopThreePlayer:
         return fetchOverAllTopThreePlayer();
@@ -192,6 +193,22 @@ class BackendDataController extends GetxService{
     return (data as List).map((e) => FaqModel.fromJson(e as Map<String, dynamic>)).toList();
   }
 
+/// ===================== auth ===========================
+
+  /// Returns the player's UUID if email + password match a row in `players`,
+  /// or null if no match is found.
+  Future<String?> fetchPlayerByCredentials({required String email, required String password}) async {
+    final data = await supabase
+        .from('players')
+        .select('id')
+        .eq('email', email)
+        .eq('password', password)
+        .maybeSingle();
+    final id = data?['id']?.toString();
+    printer("AUTH fetchPlayerByCredentials: ${id != null ? 'found' : 'not found'}");
+    return id;
+  }
+
 /// ===================== player  ===========================
 
   Future<List<PlayerModel>> fetchPlayers() async {
@@ -203,9 +220,35 @@ class BackendDataController extends GetxService{
   }
 
   Future<List<MatchEntryModel>> fetchMatchEntries() async {
-    final data = await supabase.from('match_entries').select();
+    final data = await supabase.from('match_entries').select('*, matches(date)');
     printer("GET match_entries: $data");
     return (data as List).map((e) => MatchEntryModel.fromJson(e as Map<String, dynamic>)).toList();
+  }
+
+/// ===================== my rank ===========================
+
+  Future<MyRankModel?> fetchMyRank({required String playerId, required int seasonId}) async {
+    final data = await supabase
+        .from('player_season_stats')
+        .select()
+        .eq('season_id', seasonId);
+
+    final rows = (data as List).cast<Map<String, dynamic>>();
+
+    // Sort all rows by pts descending (same formula used everywhere)
+    rows.sort((a, b) => _ptsFromMap(b).compareTo(_ptsFromMap(a)));
+
+    final idx = rows.indexWhere((r) => r['player_id']?.toString() == playerId);
+    if (idx == -1) {
+      printer("GET myRank: player $playerId not found in season $seasonId stats");
+      return null;
+    }
+
+    final row = rows[idx];
+    final pts = _ptsFromMap(row);
+    final result = MyRankModel.fromJson(row, rank: idx + 1, pts: pts);
+    printer("GET myRank: rank=${result.rank} pts=${result.pts} for player $playerId");
+    return result;
   }
 
 /// ===================== rank home ===========================
@@ -214,10 +257,99 @@ class BackendDataController extends GetxService{
   static const String _playerCols =
       'id, name, profileimageurl, sort_name, player_player_roles(player_role(name))';
 
-  // awards table removed — these features are not in use.
-  Future<PlayerOfTheWeekAndMonthModel?> fetchPlayerOfTheWeekAndMonth() async => null;
+  // Player / Scorer of the week & month are computed live from match_entries
+  // (joined to matches for the date and players for display fields), since the
+  // awards table was removed. "Week" = last 7 days, "Month" = current calendar
+  // month. Player ranks by points; Scorer ranks by goals.
+  Future<PlayerOfTheWeekAndMonthModel?> fetchPlayerOfTheWeekAndMonth({required int season}) async =>
+      _fetchTopOfWeekAndMonth(season: season, byGoals: false);
 
-  Future<PlayerOfTheWeekAndMonthModel?> fetchScorerOfTheWeekAndMonth() async => null;
+  Future<PlayerOfTheWeekAndMonthModel?> fetchScorerOfTheWeekAndMonth({required int season}) async =>
+      _fetchTopOfWeekAndMonth(season: season, byGoals: true);
+
+  Future<PlayerOfTheWeekAndMonthModel?> _fetchTopOfWeekAndMonth({required int season, required bool byGoals}) async {
+    final data = await supabase
+        .from('match_entries')
+        .select('*, matches(date), players($_playerCols)')
+        .eq('season_id', season);
+
+    final rows = (data as List).cast<Map<String, dynamic>>();
+
+    final now = DateTime.now();
+    final weekStart = now.subtract(const Duration(days: 7));
+    final monthStart = DateTime(now.year, now.month, 1);
+
+    final week = _topInRange(rows, since: weekStart, byGoals: byGoals);
+    final month = _topInRange(rows, since: monthStart, byGoals: byGoals);
+
+    if (week == null && month == null) {
+      printer("GET ${byGoals ? 'scorer' : 'player'} of week/month: no entries in range");
+      return null;
+    }
+
+    return PlayerOfTheWeekAndMonthModel(
+      season: season.toString(),
+      weekModel: week,
+      monthModel: month,
+    );
+  }
+
+  // Aggregate entries whose match date is on/after [since], then return the top
+  // player (by goals or points) as a PlayerOfTheWeeKModel, or null if none.
+  PlayerOfTheWeeKModel? _topInRange(
+    List<Map<String, dynamic>> rows, {
+    required DateTime since,
+    required bool byGoals,
+  }) {
+    final Map<String, Map<String, dynamic>> agg = {};
+
+    for (final row in rows) {
+      final dateStr = (row['matches'] as Map<String, dynamic>?)?['date']?.toString();
+      final date = DateTime.tryParse(dateStr ?? '');
+      if (date == null || date.isBefore(since)) continue;
+
+      final id = row['playerid']?.toString() ?? '';
+      if (id.isEmpty) continue;
+
+      final a = agg.putIfAbsent(id, () => {
+        'player': row['players'],
+        'goals': 0, 'wins': 0, 'draws': 0, 'losses': 0,
+        'matches': 0, 'goalsconceded': 0, 'motmcount': 0, 'hattricks': 0,
+      });
+
+      final result = row['result']?.toString();
+      a['matches']       = (a['matches']       as int) + 1;
+      a['goals']         = (a['goals']         as int) + ((row['goals']         as num?)?.toInt() ?? 0);
+      a['goalsconceded'] = (a['goalsconceded'] as int) + ((row['goalsconceded'] as num?)?.toInt() ?? 0);
+      a['hattricks']     = (a['hattricks']     as int) + ((row['hattricks']     as num?)?.toInt() ?? 0);
+      if (result == 'win')  a['wins']   = (a['wins']   as int) + 1;
+      if (result == 'draw') a['draws']  = (a['draws']  as int) + 1;
+      if (result == 'loss') a['losses'] = (a['losses'] as int) + 1;
+      if (row['motm'] == true) a['motmcount'] = (a['motmcount'] as int) + 1;
+    }
+
+    if (agg.isEmpty) return null;
+
+    final list = agg.values.toList()
+      ..sort((x, y) => byGoals
+          ? (y['goals'] as int).compareTo(x['goals'] as int)
+          : _ptsFromMap(y).compareTo(_ptsFromMap(x)));
+
+    final top = list.first;
+    final player = (top['player'] as Map<String, dynamic>?) ?? {};
+    return PlayerOfTheWeeKModel(
+      season:  '',
+      id:      player['id']?.toString() ?? '',
+      name:    player['name']?.toString() ?? '',
+      short:   player['sort_name']?.toString() ?? player['name']?.toString() ?? '',
+      image:   player['profileimageurl']?.toString() ?? '',
+      tags:    _readNestedNames(player['player_player_roles'], 'player_role'),
+      matches: top['matches'] as int,
+      goals:   top['goals'] as int,
+      pts:     _ptsFromMap(top),
+      wins:    top['wins'] as int,
+    );
+  }
 
   Future<List<LeaderboardPlayerModel>> fetchOverAllTopThreePlayer() async {
     final agg = await _aggregateAllSeasons();

@@ -18,6 +18,7 @@ import 'package:e_sports/features/news/controllers/news_controller.dart';
 import 'package:e_sports/features/news/screens/news_detail_screen.dart';
 import 'package:e_sports/features/news/screens/news_list_screen.dart';
 import 'package:e_sports/features/profile/screens/profile_screen.dart';
+import 'package:e_sports/features/splash/controllers/splash_controller.dart';
 import 'package:e_sports/features/splash/screens/maintenance_screen.dart';
 import 'package:e_sports/features/splash/screens/splash_screen.dart';
 import 'package:e_sports/core/utils/dimensions.dart';
@@ -50,6 +51,10 @@ class RouteHelper {
   static const String support = '/support';
   static const String oldDashboard = '/DashboardScreen';
   static const String otpVerification = '/otp-verification';
+
+  /// Route to return to after the splash screen restores app config — set when
+  /// an authed route is opened directly (e.g. a web refresh) before config loads.
+  static String? pendingRoute;
 
 
   static List<GetMiddleware> get authMiddleware => [_AuthMiddleware()];
@@ -257,10 +262,26 @@ class RouteHelper {
 class _AuthMiddleware extends GetMiddleware {
   @override
   RouteSettings? redirect(String? route) {
-    if(!Get.isRegistered<AuthController>() || Get.find<AuthController>().isLoggedIn()) {
-      return null;
+    // 1) Config must be loaded first. It's loaded in main(), but if it failed
+    //    (e.g. no network) bounce through splash to (re)load it with retry UI,
+    //    remembering the route to return to afterwards.
+    if (!Get.isRegistered<SplashController>() || Get.find<SplashController>().configModel == null) {
+      if (route != null && route != RouteHelper.splash && route != RouteHelper.initial) {
+        RouteHelper.pendingRoute = route;
+      }
+      return const RouteSettings(name: RouteHelper.initial);
     }
 
-    return const RouteSettings(name: RouteHelper.login);
+    // 2) Maintenance / forced update takes priority once config is known.
+    if (Get.find<SplashController>().shouldShowMaintenance) {
+      return const RouteSettings(name: RouteHelper.maintenance);
+    }
+
+    // 3) Authorization — not logged in → login.
+    if (Get.isRegistered<AuthController>() && !Get.find<AuthController>().isLoggedIn()) {
+      return const RouteSettings(name: RouteHelper.login);
+    }
+
+    return null; // config loaded + not in maintenance + authorized → allow.
   }
 }

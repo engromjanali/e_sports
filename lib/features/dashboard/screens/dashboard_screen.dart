@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import '../../auth/controllers/auth_controller.dart';
 import '../../player/controllers/player_controller.dart';
 import '../../news/controllers/news_controller.dart';
 import '../../../core/data/models/computed_player_stats.dart';
@@ -167,12 +168,65 @@ class _GameArenaScreenState extends State<DashboardScreen> with SingleTickerProv
                 ),
               ),
             ),
+            // Primary navigation
             _buildDrawerItem(0, Icons.home_outlined, "Home"),
             _buildDrawerItem(1, Icons.sports_esports_outlined, "Matches"),
             _buildDrawerItem(2, Icons.leaderboard_outlined, "Ranks"),
-            _buildDrawerItem(3, Icons.menu_outlined, "Menu"),
+
+            Divider(color: AppColors.glassBorder, height: Dimensions.xl, indent: Dimensions.screenPadding, endIndent: Dimensions.screenPadding),
+
+            // Menu options (kept here instead of a separate Menu tab on desktop)
+            _buildDrawerLink(Icons.edit_outlined, "Edit Profile", AppColors.neonCyan, () => Get.toNamed(RouteHelper.editProfile)),
+            _buildDrawerLink(Icons.help_outline, "FAQ", AppColors.neonGreen, () => Get.toNamed(RouteHelper.faq)),
+            _buildDrawerLink(Icons.privacy_tip_outlined, "Privacy Policy", AppColors.neonPurple, () => Get.toNamed(RouteHelper.privacyPolicy)),
+            _buildDrawerLink(Icons.description_outlined, "Terms & Conditions", AppColors.neonBlue, () => Get.toNamed(RouteHelper.terms)),
+            _buildDrawerLink(Icons.support_agent_outlined, "Help & Support", AppColors.neonOrange, () => Get.toNamed(RouteHelper.support)),
+            _buildDrawerLink(Icons.logout, "Logout", AppColors.neonRed, _confirmLogout),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _buildDrawerLink(IconData icon, String title, Color iconColor, VoidCallback onTap) {
+    return ListTile(
+      leading: Icon(icon, color: iconColor),
+      title: Text(
+        title,
+        style: TextStyle(color: AppColors.white, fontWeight: Dimensions.medium),
+      ),
+      onTap: () {
+        Navigator.of(context).pop();
+        onTap();
+      },
+    );
+  }
+
+  void _confirmLogout() {
+    showDialog(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        backgroundColor: AppColors.bgCard,
+        shape: RoundedRectangleBorder(
+          borderRadius: Dimensions.borderLg,
+          side: BorderSide(color: AppColors.glassBorder),
+        ),
+        title: Text("Logout", style: TextStyle(color: AppColors.white, fontWeight: Dimensions.black)),
+        content: Text("Do you want to logout from the app?", style: TextStyle(color: AppColors.textMuted)),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(dialogContext).pop(),
+            child: Text("Cancel", style: TextStyle(color: AppColors.textMuted)),
+          ),
+          TextButton(
+            onPressed: () async {
+              Navigator.of(dialogContext).pop();
+              await Get.find<AuthController>().clearUserToken();
+              Get.offAllNamed(RouteHelper.login);
+            },
+            child: const Text("Logout", style: TextStyle(color: AppColors.neonRed)),
+          ),
+        ],
       ),
     );
   }

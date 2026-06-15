@@ -1,14 +1,31 @@
 import 'package:get/get.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import '../../../core/constants/app_constants.dart';
 import '../../../core/data/models/computed_player_stats.dart';
 import '../../../core/data/models/match_entry_model.dart';
+import '../../../core/data/models/my_rank_model.dart';
 import '../../../core/data/models/player_model.dart';
+import '../../../core/helper/printer.dart';
 import '../../../core/services/filter_service.dart';
+import '../../../features/splash/controllers/splash_controller.dart';
 import '../domain/services/player_service_interface.dart';
 
 class PlayerController extends GetxController {
   final PlayerServiceInterface playerServiceInterface;
+  final SharedPreferences sharedPreferences;
 
-  PlayerController({required this.playerServiceInterface});
+  PlayerController({
+    required this.playerServiceInterface,
+    required this.sharedPreferences,
+  });
+
+  static const String _selectedPlayerKey = 'selected_player_id';
+
+  final RxString _selectedPlayerId = ''.obs;
+  String get selectedPlayerId => _selectedPlayerId.value;
+
+  final Rx<MyRankModel?> myRank = Rx<MyRankModel?>(null);
+  final RxBool isMyRankLoading = false.obs;
 
   final RxList<PlayerModel> players = <PlayerModel>[].obs;
   final RxList<MatchEntryModel> matchEntries = <MatchEntryModel>[].obs;
@@ -21,7 +38,49 @@ class PlayerController extends GetxController {
   @override
   void onInit() {
     super.onInit();
+    _selectedPlayerId.value = sharedPreferences.getString(_selectedPlayerKey) ?? '';
+    // On app restart the player selection key may be empty but the auth token
+    // (which IS the player UUID) is still in prefs — use it as fallback.
+    if (_selectedPlayerId.value.isEmpty) {
+      final token = sharedPreferences.getString(AppConstants.token) ?? '';
+      if (token.isNotEmpty) _selectedPlayerId.value = token;
+    }
     loadData();
+  }
+
+  void setSelectedPlayer(String id) {
+    _selectedPlayerId.value = id;
+    sharedPreferences.setString(_selectedPlayerKey, id);
+    // Refresh rank immediately if the season is already known.
+    final season = _currentSeasonId;
+    if (season != null) fetchMyRank(playerId: id, seasonId: season);
+  }
+
+  int? get _currentSeasonId {
+    try {
+      return Get.find<SplashController>().configModel?.currentSeason;
+    } catch (_) {
+      return null;
+    }
+  }
+
+  Future<void> fetchMyRank({required String playerId, required int seasonId}) async {
+    if (playerId.isEmpty) return;
+    isMyRankLoading.value = true;
+    try {
+      myRank.value = await playerServiceInterface.getMyRank(
+        playerId: playerId,
+        seasonId: seasonId,
+      );
+      printer('[PlayerController] myRank fetched: rank=${myRank.value?.rank} pts=${myRank.value?.pts}');
+    } finally {
+      isMyRankLoading.value = false;
+    }
+  }
+
+  ComputedPlayerStats? get selectedPlayer {
+    if (_selectedPlayerId.value.isEmpty) return null;
+    return rankedPlayers.firstWhereOrNull((s) => s.id == _selectedPlayerId.value);
   }
 
   Future<void> loadData() async {

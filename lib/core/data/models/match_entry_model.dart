@@ -22,16 +22,19 @@ class MatchEntryModel {
   });
 
   factory MatchEntryModel.fromJson(Map<String, dynamic> json) {
+    final matchDate = (json['matches'] as Map<String, dynamic>?)?['date']?.toString()
+        ?? json['created_at']?.toString()
+        ?? '';
     return MatchEntryModel(
       id: json['id']?.toString() ?? '',
-      playerId: json['playerId']?.toString() ?? '',
-      date: DateTime.tryParse(json['date']?.toString() ?? '') ?? DateTime.now(),
+      playerId: json['playerid']?.toString() ?? '',
+      date: DateTime.tryParse(matchDate) ?? DateTime(2000),
       result: json['result']?.toString() ?? 'draw',
       goals: (json['goals'] as num?)?.toInt() ?? 0,
-      goalsConceded: (json['goalsConceded'] as num?)?.toInt() ?? 0,
+      goalsConceded: (json['goalsconceded'] as num?)?.toInt() ?? 0,
       hattrick: ((json['hattricks'] as num?)?.toInt() ?? 0) > 0,
-      cleanSheet: json['cleanSheet'] == true,
-      motm: json['motm'] == true,
+      cleanSheet: json['cleansheet'] as bool? ?? false,
+      motm: json['motm'] as bool? ?? false,
     );
   }
 }

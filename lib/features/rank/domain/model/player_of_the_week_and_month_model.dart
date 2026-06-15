@@ -1,19 +1,23 @@
 class PlayerOfTheWeekAndMonthModel {
   final String season;
-  final PlayerOfTheWeeKModel weekModel;
-  final PlayerOfTheWeeKModel monthModel;
+  final PlayerOfTheWeeKModel? weekModel;
+  final PlayerOfTheWeeKModel? monthModel;
 
   PlayerOfTheWeekAndMonthModel({
     required this.season,
     required this.weekModel,
     required this.monthModel,
   });
-  
+
   factory PlayerOfTheWeekAndMonthModel.fromJson(Map<String, dynamic> json) {
     return PlayerOfTheWeekAndMonthModel(
-      season: json['season'] as String,
-      weekModel: json['week_model'],
-      monthModel: json['month_model'],
+      season: json['season']?.toString() ?? '',
+      weekModel: json['week_model'] == null
+          ? null
+          : PlayerOfTheWeeKModel.fromJson(json['week_model'] as Map<String, dynamic>),
+      monthModel: json['month_model'] == null
+          ? null
+          : PlayerOfTheWeeKModel.fromJson(json['month_model'] as Map<String, dynamic>),
     );
   }
 

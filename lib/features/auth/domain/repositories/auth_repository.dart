@@ -1,7 +1,9 @@
 import 'package:e_sports/core/api/api_client.dart';
+import 'package:e_sports/core/beckend_service/controller/backend_data_controller.dart';
 import 'package:e_sports/core/constants/app_constants.dart';
+import 'package:e_sports/core/error/exception/app_exception.dart';
 import 'package:e_sports/features/auth/domain/repositories/auth_repository_interface.dart';
-import 'package:get/get_connect/http/src/response/response.dart';
+import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthRepository implements AuthRepositoryInterface {
@@ -12,17 +14,14 @@ class AuthRepository implements AuthRepositoryInterface {
 
   @override
   Future<Map<String, dynamic>> login(String? email, String password) async {
-    return {
-      'token' : "0a18b0e5-770d-41b1-92b2-7005a1418816"
-    };
-    
-    // ApiClient throws AppException on failure — no try/catch here
-    final response = await apiClient.postData(
-      AppConstants.loginUri,
-      {'email': email, 'password': password},
-      handleError: false
+    final playerId = await Get.find<BackendDataController>().fetchPlayerByCredentials(
+      email: email?.trim() ?? '',
+      password: password,
     );
-    return response.body as Map<String, dynamic>;
+    if (playerId == null || playerId.isEmpty) {
+      throw const UnauthorizedException('Invalid email or password.');
+    }
+    return {'token': playerId};
   }
 
   @override

@@ -6,6 +6,7 @@ class PlayerModel {
   final List<String> playerRoles;
   final List<String> tags;
   final String imageUrl;
+  final String email;
 
   const PlayerModel({
     required this.id,
@@ -15,6 +16,7 @@ class PlayerModel {
     this.playerRoles = const [],
     this.tags = const [],
     this.imageUrl = '',
+    this.email = '',
   });
 
   factory PlayerModel.fromJson(Map<String, dynamic> json) {
@@ -26,6 +28,7 @@ class PlayerModel {
       playerRoles: _extractNames(json['player_player_roles'], 'player_role'),
       tags: _extractNames(json['player_custom_tags'], 'custom_tags'),
       imageUrl: json['profileimageurl'] ?? '',
+      email: json['email']?.toString() ?? '',
     );
   }
 

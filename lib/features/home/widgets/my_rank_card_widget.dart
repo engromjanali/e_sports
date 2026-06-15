@@ -4,15 +4,15 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class MyRankCard extends StatelessWidget {
+  const MyRankCard({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Obx(() {
       final player = Get.find<PlayerController>();
-      if (player.rankedPlayers.isEmpty) return const SizedBox.shrink();
-
-      final me = player.rankedPlayers.first; // Default authenticated player
-      String wlabel = "${me.rank}";
-      
+      final me = player.selectedPlayer ?? player.rankedPlayers.firstOrNull;
+      if (me == null) return const SizedBox.shrink();
+      String rank = "${me.rank}";
       return Container(
       decoration: BoxDecoration(
         borderRadius: Dimensions.borderXl,
@@ -41,10 +41,10 @@ class MyRankCard extends StatelessWidget {
               child: SizedBox(
                 width: 300,
                 child: Text(
-                  "#$wlabel",
+                  "#$rank",
                   textAlign: TextAlign.right,
                   style: TextStyle(
-                    fontSize: wlabel.length > 5 ? 60 : 80,
+                    fontSize: rank.length > 5 ? 60 : 80,
                     fontWeight: Dimensions.black,
                     color: AppColors.neonGold.withOpacity(AppColors.opacity7),
                     height: Dimensions.lineHeightCompact,

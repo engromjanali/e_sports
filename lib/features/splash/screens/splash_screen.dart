@@ -1,5 +1,6 @@
 import 'package:e_sports/core/helper/route_helper.dart';
 import 'package:e_sports/core/utils/dimensions.dart';
+import 'package:e_sports/features/auth/controllers/auth_controller.dart';
 import 'package:e_sports/features/splash/controllers/splash_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -20,13 +21,20 @@ class _SplashScreenState extends State<SplashScreen> {
 
   Future<void> _loadConfig() async {
     final SplashController splashController = Get.find<SplashController>();
-    final bool isSuccess = await splashController.getConfig();
+    // Config is normally loaded in main(); only fetch here if it's still
+    // missing (a previous failure + manual retry, or a cold-start race).
+    final bool isSuccess = splashController.configModel != null || await splashController.getConfig();
     if(!mounted) return;
 
     if(isSuccess) {
       if(splashController.shouldShowMaintenance) {
         Get.offAllNamed(RouteHelper.maintenance);
-      }else {
+      } else if (Get.find<AuthController>().isLoggedIn()) {
+        // Return to the route the user refreshed on (if any), else home.
+        final target = RouteHelper.pendingRoute ?? RouteHelper.home;
+        RouteHelper.pendingRoute = null;
+        Get.offAllNamed(target);
+      } else {
         Get.offAllNamed(RouteHelper.login);
       }
     }else {

@@ -6,6 +6,7 @@ import 'package:e_sports/core/helper/get_di.dart' as di;
 import 'package:e_sports/core/helper/route_helper.dart';
 import 'package:e_sports/core/utils/dimensions.dart';
 import 'package:e_sports/core/widgets/route_not_found_screen.dart';
+import 'package:e_sports/features/splash/controllers/splash_controller.dart';
 import 'package:e_sports/firebase_options.dart';
 import 'package:flutter/foundation.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -27,6 +28,12 @@ void main() async{
   );
   
   await di.init();
+
+  // Load app config first so season, maintenance and auth state are ready
+  // before the first route is evaluated — works for cold start and web refresh.
+  try {
+    await Get.find<SplashController>().getConfig();
+  } catch (_) {}
 
   SystemChrome.setSystemUIOverlayStyle(
     const SystemUiOverlayStyle(

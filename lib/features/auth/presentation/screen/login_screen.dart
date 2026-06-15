@@ -3,6 +3,7 @@ import 'package:e_sports/core/helper/route_helper.dart';
 import 'package:e_sports/core/utils/dimensions.dart';
 import 'package:e_sports/core/helper/responsive_helper.dart';
 import 'package:e_sports/features/auth/controllers/auth_controller.dart';
+import 'package:e_sports/features/player/controllers/player_controller.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -57,6 +58,11 @@ class _LoginPageState extends State<LoginPage> {
 
     final response = await authController.login(email, password);
     if(response.isSuccess) {
+      // The returned token IS the player's UUID — set it as the active player.
+      final uuid = authController.getUserToken();
+      if (uuid.isNotEmpty) {
+        Get.find<PlayerController>().setSelectedPlayer(uuid);
+      }
       Get.offAllNamed(RouteHelper.home);
     }else {
       Get.snackbar('Login failed', response.message);
