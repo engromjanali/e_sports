@@ -4,6 +4,7 @@ import 'package:e_sports/core/utils/dimensions.dart';
 import 'package:e_sports/core/helper/responsive_helper.dart';
 import 'package:e_sports/features/auth/controllers/auth_controller.dart';
 import 'package:e_sports/features/player/controllers/player_controller.dart';
+import 'package:e_sports/features/profile/controllers/profile_controller.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -58,10 +59,12 @@ class _LoginPageState extends State<LoginPage> {
 
     final response = await authController.login(email, password);
     if(response.isSuccess) {
-      // The returned token IS the player's UUID — set it as the active player.
+      // The returned token IS the player's UUID — set it as the active player
+      // and load the full profile into ProfileController.
       final uuid = authController.getUserToken();
       if (uuid.isNotEmpty) {
         Get.find<PlayerController>().setSelectedPlayer(uuid);
+        await Get.find<ProfileController>().fetchProfile(id: uuid);
       }
       Get.offAllNamed(RouteHelper.home);
     }else {

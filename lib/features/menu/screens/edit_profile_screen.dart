@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 
 import '../../../core/controllers/theme_controller.dart';
 import 'package:e_sports/core/utils/dimensions.dart';
+import '../../profile/controllers/profile_controller.dart';
 
 class EditProfileScreen extends StatefulWidget {
   const EditProfileScreen({super.key});
@@ -12,18 +13,19 @@ class EditProfileScreen extends StatefulWidget {
 }
 
 class _EditProfileScreenState extends State<EditProfileScreen> {
+  final ProfileController _profile = Get.find<ProfileController>();
+
   late final TextEditingController _nameController;
   late final TextEditingController _emailController;
   late final TextEditingController _tagController;
-  late final TextEditingController _bioController;
 
   @override
   void initState() {
     super.initState();
-    _nameController = TextEditingController(text: "The Elite Player");
-    _emailController = TextEditingController(text: "elite.player@example.com");
-    _tagController = TextEditingController(text: "@elite");
-    _bioController = TextEditingController(text: "Focused on climbing the leaderboard and collecting rewards.");
+    final user = _profile.user;
+    _nameController = TextEditingController(text: user?.name ?? '');
+    _emailController = TextEditingController(text: user?.email ?? '');
+    _tagController = TextEditingController(text: user?.sortName ?? '');
   }
 
   @override
@@ -31,8 +33,28 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     _nameController.dispose();
     _emailController.dispose();
     _tagController.dispose();
-    _bioController.dispose();
     super.dispose();
+  }
+
+  Future<void> _save() async {
+    final name = _nameController.text.trim();
+    if (name.isEmpty) {
+      Get.snackbar('Edit Profile', 'Name cannot be empty');
+      return;
+    }
+    final ok = await _profile.updateProfile(
+      name: name,
+      sortName: _tagController.text.trim(),
+      email: _emailController.text.trim().isEmpty ? null : _emailController.text.trim(),
+    );
+    Get.snackbar(
+      ok ? 'Profile Updated' : 'Update Failed',
+      ok ? 'Your profile changes were saved.' : 'Could not save changes. Please try again.',
+      snackPosition: SnackPosition.BOTTOM,
+      backgroundColor: AppColors.neonGoldDim,
+      colorText: Colors.black,
+      margin: EdgeInsets.all(Dimensions.md),
+    );
   }
 
   @override
@@ -106,35 +128,17 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 ),
                 SizedBox(height: Dimensions.md),
                 _ProfileField(
-                  label: "Gamer Tag",
+                  label: "Sort Name",
                   controller: _tagController,
                   titleColor: titleColor,
                   subtitleColor: subtitleColor,
                   borderColor: borderColor,
                 ),
-                SizedBox(height: Dimensions.md),
-                _ProfileField(
-                  label: "Bio",
-                  controller: _bioController,
-                  titleColor: titleColor,
-                  subtitleColor: subtitleColor,
-                  borderColor: borderColor,
-                  maxLines: 4,
-                ),
                 SizedBox(height: Dimensions.lg),
                 SizedBox(
                   width: double.infinity,
                   child: ElevatedButton(
-                    onPressed: () {
-                      Get.snackbar(
-                        "Profile Updated",
-                        "Your profile changes were saved locally for this session.",
-                        snackPosition: SnackPosition.BOTTOM,
-                        backgroundColor: AppColors.neonGoldDim,
-                        colorText: Colors.black,
-                        margin: EdgeInsets.all(Dimensions.md),
-                      );
-                    },
+                    onPressed: _save,
                     style: ElevatedButton.styleFrom(
                       backgroundColor: AppColors.neonGoldDim,
                       foregroundColor: Colors.black,
@@ -166,7 +170,6 @@ class _ProfileField extends StatelessWidget {
   final Color titleColor;
   final Color subtitleColor;
   final Color borderColor;
-  final int maxLines;
 
   const _ProfileField({
     required this.label,
@@ -174,7 +177,6 @@ class _ProfileField extends StatelessWidget {
     required this.titleColor,
     required this.subtitleColor,
     required this.borderColor,
-    this.maxLines = 1,
   });
 
   @override
@@ -193,7 +195,6 @@ class _ProfileField extends StatelessWidget {
         SizedBox(height: Dimensions.xs),
         TextField(
           controller: controller,
-          maxLines: maxLines,
           style: TextStyle(
             color: titleColor,
             fontSize: Dimensions.sizeBody,

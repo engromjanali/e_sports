@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../auth/controllers/auth_controller.dart';
 import '../../player/controllers/player_controller.dart';
+import '../../profile/controllers/profile_controller.dart';
 import '../../news/controllers/news_controller.dart';
 import '../../../core/data/models/computed_player_stats.dart';
 import '../../../core/helper/route_helper.dart';
@@ -222,6 +223,7 @@ class _GameArenaScreenState extends State<DashboardScreen> with SingleTickerProv
             onPressed: () async {
               Navigator.of(dialogContext).pop();
               await Get.find<AuthController>().clearUserToken();
+              Get.find<ProfileController>().clear();
               Get.offAllNamed(RouteHelper.login);
             },
             child: const Text("Logout", style: TextStyle(color: AppColors.neonRed)),

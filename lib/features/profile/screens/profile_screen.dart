@@ -11,6 +11,7 @@ import '../../../core/widgets/section_heading_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../player/controllers/player_controller.dart';
+import '../controllers/profile_controller.dart';
 import '../../../core/data/models/computed_player_stats.dart';
 import '../widgets/profile_analytics_tab.dart';
 import '../models/player_performance.dart';
@@ -40,7 +41,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
     final player = Get.find<PlayerController>();
-    final p = widget.player ?? player.rankedPlayers.first;
+    // For "My Profile" use the logged-in user's id from ProfileController;
+    // otherwise show the player passed via navigation.
+    final myId = Get.find<ProfileController>().userId;
+    final p = widget.player
+        ?? player.rankedPlayers.firstWhereOrNull((s) => s.id == myId)
+        ?? player.rankedPlayers.firstOrNull;
+    if (p == null) {
+      return widget.isSubScreen
+          ? const Scaffold(backgroundColor: AppColors.bg, body: Center(child: CircularProgressIndicator()))
+          : const Center(child: CircularProgressIndicator());
+    }
     final last20 = p.last20;
     final maxStats = player.maxStats;
 

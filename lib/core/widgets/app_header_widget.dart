@@ -1,4 +1,5 @@
 import 'package:e_sports/core/utils/dimensions.dart';
+import 'package:e_sports/features/profile/controllers/profile_controller.dart';
 import 'player_avater.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -98,14 +99,16 @@ class AppHeader extends StatelessWidget {
             SizedBox(width: Dimensions.md),
             GestureDetector(
               onTap: onProfileTap,
-              child: Stack(children: [
-                PlayerAvatarWidget(
-                  name: "T",
+              child: Obx(() {
+                final user = Get.find<ProfileController>().user;
+                return PlayerAvatarWidget(
+                  name: user?.name ?? "",
+                  imageUrl: user?.imageUrl ?? "",
                   size: Dimensions.headerIconSize,
                   online: true,
                   borderColor: AppColors.neonGold,
-                ),
-              ]),
+                );
+              }),
             ),
             if (onMenuTap != null) ...[
               SizedBox(width: Dimensions.md),

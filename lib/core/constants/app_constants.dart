@@ -40,6 +40,7 @@ class AppConstants {
   // player
   static const String players = "/api/user/players";
   static const String matchEntries = "/api/user/match-entries";
+  static const String myRank = "/api/user/my-rank";
 
   // rank
   static const String scorerOfTheWeekAndMonth = "/api/user/scorer-of-the-week-and-month";

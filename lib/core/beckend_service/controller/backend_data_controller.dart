@@ -4,6 +4,7 @@ import 'package:e_sports/features/faq/models/faq_model.dart';
 import 'package:e_sports/features/matches/domain/model/match_model.dart';
 import 'package:e_sports/features/news/domain/model/news_model.dart';
 import 'package:e_sports/features/rank/domain/model/leader_board_player_model.dart';
+import 'package:e_sports/features/profile/models/user_model.dart';
 import 'package:e_sports/features/rank/domain/model/player_of_the_week_and_month_model.dart';
 import 'package:e_sports/core/data/models/player_model.dart';
 import 'package:e_sports/core/data/models/match_entry_model.dart';
@@ -46,6 +47,12 @@ class BackendDataController extends GetxService{
       case AppConstants.matchEntries:
         return fetchMatchEntries();
 
+      case AppConstants.myRank:
+        return fetchMyRank(playerId: payload1 as String, seasonId: season);
+
+      case AppConstants.profileUri:
+        return fetchProfile(id: payload1 as String);
+
       case AppConstants.playerOfTheWeekAndMonth:
         return fetchPlayerOfTheWeekAndMonth(season: season);
 
@@ -78,6 +85,22 @@ class BackendDataController extends GetxService{
 
       case AppConstants.matches:
         return fetchMatch(type: payload1 ?? MatchFilter.all, season: season, limit: limit ?? 10, offset: offset ?? 0);
+
+      case AppConstants.loginUri:
+        final creds = payload1 as Map<String, dynamic>;
+        return fetchPlayerByCredentials(
+          email: creds['email'] as String,
+          password: creds['password'] as String,
+        );
+
+      case AppConstants.profileUri:
+        final p = payload1 as Map<String, dynamic>;
+        return updateProfile(
+          id: p['id'] as String,
+          name: p['name'] as String,
+          sortName: p['sort_name'] as String,
+          email: p['email'] as String?,
+        );
 
       default:
         throw "end-point not found";
@@ -207,6 +230,42 @@ class BackendDataController extends GetxService{
     final id = data?['id']?.toString();
     printer("AUTH fetchPlayerByCredentials: ${id != null ? 'found' : 'not found'}");
     return id;
+  }
+
+/// ===================== profile ===========================
+
+  // Columns + relations for a single player's profile row.
+  static const String _profileCols =
+      '*, player_player_roles(player_role(name)), player_custom_tags(custom_tags(name))';
+
+  Future<UserModel?> fetchProfile({required String id}) async {
+    final data = await supabase
+        .from('players')
+        .select(_profileCols)
+        .eq('id', id)
+        .maybeSingle();
+    printer("GET profile ($id): $data");
+    return data == null ? null : UserModel.fromJson(data);
+  }
+
+  Future<UserModel?> updateProfile({
+    required String id,
+    required String name,
+    required String sortName,
+    String? email,
+  }) async {
+    final data = await supabase
+        .from('players')
+        .update({
+          'name': name,
+          'sort_name': sortName,
+          'email': ?email,
+        })
+        .eq('id', id)
+        .select(_profileCols)
+        .maybeSingle();
+    printer("UPDATE profile ($id): $data");
+    return data == null ? null : UserModel.fromJson(data);
   }
 
 /// ===================== player  ===========================

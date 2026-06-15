@@ -13,6 +13,11 @@ import 'package:e_sports/features/matches/domain/repositories/match_repository_i
 import 'package:e_sports/features/matches/domain/services/match_service.dart';
 import 'package:e_sports/features/matches/domain/services/match_service_interface.dart';
 import 'package:e_sports/features/player/controllers/player_controller.dart';
+import 'package:e_sports/features/profile/controllers/profile_controller.dart';
+import 'package:e_sports/features/profile/domain/repositories/profile_repository.dart';
+import 'package:e_sports/features/profile/domain/repositories/profile_repository_interface.dart';
+import 'package:e_sports/features/profile/domain/services/profile_service.dart';
+import 'package:e_sports/features/profile/domain/services/profile_service_interface.dart';
 import 'package:e_sports/features/player/domain/repositories/player_repository.dart';
 import 'package:e_sports/features/player/domain/repositories/player_repository_interface.dart';
 import 'package:e_sports/features/player/domain/services/player_service.dart';
@@ -72,6 +77,11 @@ Future<void> init() async {
   Get.lazyPut<AuthRepositoryInterface>(() => AuthRepository(apiClient: Get.find(), sharedPreferences: Get.find()), fenix: true);
   Get.lazyPut<AuthServiceInterface>(() => AuthService(authRepositoryInterface: Get.find()), fenix: true);
   Get.lazyPut<AuthController>(() => AuthController(authServiceInterface: Get.find()), fenix: true);
+
+  // Profile feature dependencies
+  Get.lazyPut<ProfileRepositoryInterface>(() => ProfileRepository(), fenix: true);
+  Get.lazyPut<ProfileServiceInterface>(() => ProfileService(profileRepositoryInterface: Get.find()), fenix: true);
+  Get.put(ProfileController(profileServiceInterface: Get.find()), permanent: true);
 
   // Matches feature dependencies
   Get.lazyPut<MatchRepositoryInterface>(() => MatchRepository(supabase: Get.find()), fenix: true);
