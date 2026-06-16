@@ -5,7 +5,8 @@ import 'package:e_sports/core/utils/dimensions.dart';
 import 'package:e_sports/core/helper/responsive_helper.dart';
 import '../../../core/widgets/app_footer_widget.dart';
 import '../../../core/widgets/section_heading_widget.dart';
-import '../../../core/data/models/computed_player_stats.dart';
+import '../domain/model/rank_mvp_model.dart';
+import '../domain/model/rank_list_item_model.dart';
 import '../../splash/domain/models/season_model.dart';
 import '../../splash/domain/models/season_period.dart';
 import '../controllers/rank_controller.dart';
@@ -22,13 +23,18 @@ class RankingViewWidget extends StatelessWidget {
     final controller = Get.find<RankController>();
     
     return Obx(() {
-      final hWeek = isScorer ? controller.sotWeek : controller.potWeek;
-      final hMonth = isScorer ? controller.sotMonth : controller.potMonth;
-      final hSeason = isScorer ? controller.sotSeason : controller.potSeason;
+      final hWeek = controller.weekMvp;
+      final hMonth = controller.monthMvp;
+      final hSeason = controller.seasonMvp;
 
-      final lWeek = isScorer ? controller.weeklyScorers : controller.weeklyPlayers;
-      final lMonth = isScorer ? controller.monthlyScorers : controller.monthlyPlayers;
-      final lSeason = isScorer ? controller.seasonalScorers : controller.seasonalPlayers;
+      final lWeek = controller.weeklyList;
+      final lMonth = controller.monthlyList;
+      final lSeason = controller.seasonList;
+
+      // Season id passed to the detail screen (null = overall).
+      final weekDetailSeason = controller.currentSeasonId;
+      final monthDetailSeason = controller.currentSeasonId;
+      final seasonMvpDetailSeason = controller.mvpSeasonOverall ? null : controller.mvpSeasonId;
 
       return SingleChildScrollView(
         padding: Dimensions.screenAll,
@@ -58,25 +64,40 @@ class RankingViewWidget extends StatelessWidget {
                 );
 
                 // A hero card, or an empty-state placeholder (still showing the
-                // period selector) when the period has no player.
-                Widget hero(MvpType type, ComputedPlayerStats? player, Widget? action) {
-                  if (player == null) return _EmptyHeroCard(type: type, action: action, compact: compact);
+                // period selector) when the period has no player. [detailSeason]
+                // is the season passed to the detail screen (null = overall).
+                Widget hero(MvpType type, RankMvpModel? player, Widget? action, int? detailSeason, bool loading) {
+                  if (player == null) {
+                    if (loading) {
+                      return SizedBox(
+                        height: compact ? 150 : 180,
+                        child: Center(
+                          child: SizedBox(
+                            height: Dimensions.iconMd,
+                            width: Dimensions.iconMd,
+                            child: CircularProgressIndicator(strokeWidth: Dimensions.borderMedium, color: AppColors.neonGold),
+                          ),
+                        ),
+                      );
+                    }
+                    return _EmptyHeroCard(type: type, action: action, compact: compact);
+                  }
                   return GestureDetector(
-                    onTap: () => Get.toNamed(RouteHelper.getPlayerProfileRoute(player.id)),
+                    onTap: () => Get.toNamed(RouteHelper.getRankDetailRoute(player.id, seasonId: detailSeason)),
                     child: PremiumHeroCard(type: type, player: player, isScorer: isScorer, action: action, compact: compact),
                   );
                 }
 
                 final cards = <Widget>[
-                  hero(MvpType.week, hWeek, weekSelector),
-                  hero(MvpType.month, hMonth, monthSelector),
+                  hero(MvpType.week, hWeek, weekSelector, weekDetailSeason, controller.weekMvpLoading.value),
+                  hero(MvpType.month, hMonth, monthSelector, monthDetailSeason, controller.monthMvpLoading.value),
                   hero(MvpType.season, hSeason, _SeasonFilter(
                     seasons: controller.seasons,
                     overall: controller.mvpSeasonOverall,
                     seasonId: controller.mvpSeasonId,
                     onOverallChanged: controller.setMvpSeasonOverall,
                     onSeasonSelected: controller.setMvpSeason,
-                  )),
+                  ), seasonMvpDetailSeason, controller.seasonMvpLoading.value),
                 ];
 
                 final row = Row(
@@ -105,6 +126,8 @@ class RankingViewWidget extends StatelessWidget {
               title: isScorer ? "Weekly Scorers" : "Weekly Rankings",
               players: lWeek,
               isScorer: isScorer,
+              loading: controller.weeklyLoading.value,
+              detailSeason: controller.weeklySeasonId,
               trailing: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
@@ -129,6 +152,8 @@ class RankingViewWidget extends StatelessWidget {
               title: isScorer ? "Monthly Scorers" : "Monthly Rankings",
               players: lMonth,
               isScorer: isScorer,
+              loading: controller.monthlyLoading.value,
+              detailSeason: controller.currentSeasonId,
               trailing: _PeriodSelector(
                 periods: controller.months,
                 selectedNumber: controller.selectedMonthNumber,
@@ -142,6 +167,8 @@ class RankingViewWidget extends StatelessWidget {
               title: isScorer ? "Season Top Scorers" : "Season Standings",
               players: lSeason,
               isScorer: isScorer,
+              loading: controller.seasonLoading.value,
+              detailSeason: controller.listSeasonOverall ? null : controller.listSeasonId,
               trailing: _SeasonFilter(
                 seasons: controller.seasons,
                 overall: controller.listSeasonOverall,
@@ -160,15 +187,19 @@ class RankingViewWidget extends StatelessWidget {
 
 class _ListSection extends StatelessWidget {
   final String title;
-  final List<ComputedPlayerStats> players;
+  final List<RankListItemModel> players;
   final bool isScorer;
   final Widget? trailing;
+  final bool loading;
+  final int? detailSeason;
 
   const _ListSection({
     required this.title,
     required this.players,
     required this.isScorer,
     this.trailing,
+    this.loading = false,
+    this.detailSeason,
   });
 
   @override
@@ -181,20 +212,37 @@ class _ListSection extends StatelessWidget {
           sub: "Full ranking order",
           trailing: trailing,
         ),
-        ListView.separated(
-          shrinkWrap: true,
-          physics: const NeverScrollableScrollPhysics(),
-          padding: EdgeInsets.zero,
-          itemCount: players.length,
-          separatorBuilder: (context, i) => SizedBox(height: Dimensions.sm),
-          itemBuilder: (context, i) => GestureDetector(
-            onTap: () => Get.toNamed(RouteHelper.getPlayerProfileRoute(players[i].id)),
-            child: MiniPlayerCard(
-              player: players[i],
-              isScorer: isScorer,
+        if (loading && players.isEmpty)
+          Padding(
+            padding: EdgeInsets.symmetric(vertical: Dimensions.xl),
+            child: Center(
+              child: SizedBox(
+                height: Dimensions.iconMd,
+                width: Dimensions.iconMd,
+                child: CircularProgressIndicator(strokeWidth: Dimensions.borderMedium, color: AppColors.neonGold),
+              ),
+            ),
+          )
+        else if (players.isEmpty)
+          Padding(
+            padding: EdgeInsets.symmetric(vertical: Dimensions.xl),
+            child: Text("No data for this period", style: TextStyle(color: AppColors.textMuted, fontSize: Dimensions.sizeSmall)),
+          )
+        else
+          ListView.separated(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            padding: EdgeInsets.zero,
+            itemCount: players.length,
+            separatorBuilder: (context, i) => SizedBox(height: Dimensions.sm),
+            itemBuilder: (context, i) => GestureDetector(
+              onTap: () => Get.toNamed(RouteHelper.getRankDetailRoute(players[i].id, seasonId: detailSeason)),
+              child: MiniPlayerCard(
+                player: players[i],
+                isScorer: isScorer,
+              ),
             ),
           ),
-        ),
       ],
     );
   }

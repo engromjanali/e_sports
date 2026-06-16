@@ -18,6 +18,8 @@ import 'package:e_sports/features/news/controllers/news_controller.dart';
 import 'package:e_sports/features/news/screens/news_detail_screen.dart';
 import 'package:e_sports/features/news/screens/news_list_screen.dart';
 import 'package:e_sports/features/profile/screens/profile_screen.dart';
+import 'package:e_sports/features/rank/controllers/rank_detail_controller.dart';
+import 'package:e_sports/features/rank/screens/rank_detail_screen.dart';
 import 'package:e_sports/features/splash/controllers/splash_controller.dart';
 import 'package:e_sports/features/splash/screens/maintenance_screen.dart';
 import 'package:e_sports/features/splash/screens/splash_screen.dart';
@@ -39,6 +41,7 @@ class RouteHelper {
   static const String ranks = '/ranks';
   static const String profile = '/profile';
   static const String playerProfile = '/profile/:id';
+  static const String rankDetail = '/rank-detail/:id';
   static const String menu = '/menu';
   static const String compare = '/compare';
   static const String news = '/news';
@@ -161,6 +164,8 @@ class RouteHelper {
 
   static String getNewsDetailsRoute(String id) => '/news/$id';
   static String getPlayerProfileRoute(String id) => '/profile/$id';
+  static String getRankDetailRoute(String id, {int? seasonId}) =>
+      seasonId == null ? '/rank-detail/$id' : '/rank-detail/$id?season=$seasonId';
 
   static String? routeFromUri(Uri uri) {
     final String path = uri.scheme == 'esports' && uri.host.isNotEmpty ? '/${uri.host}${uri.path}' : uri.path;
@@ -232,6 +237,18 @@ class RouteHelper {
         final player = _playerFromRoute();
         return player == null ? const RouteNotFoundScreen() : ProfileScreen(player: player, isSubScreen: true);
       },
+      middlewares: authMiddleware,
+    ),
+    GetPage(
+      name: rankDetail,
+      page: () => const RankDetailScreen(),
+      binding: BindingsBuilder(() {
+        final id = Get.parameters['id'];
+        if (id == null || id.isEmpty) return;
+        final seasonStr = Get.parameters['season'];
+        final seasonId = seasonStr == null ? null : int.tryParse(seasonStr);
+        Get.find<RankDetailController>().load(playerId: id, seasonId: seasonId);
+      }),
       middlewares: authMiddleware,
     ),
     GetPage(name: RouteHelper.otpVerification, page: () => const OtpVerificationPage()),

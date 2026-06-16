@@ -15,7 +15,7 @@ class ProfileRepository implements ProfileRepositoryInterface {
       payload1: id,
       season: AppHelper.season,
     );
-    return data as UserModel?;
+    return data == null ? null : UserModel.fromJson(data as Map<String, dynamic>);
   }
 
   @override
@@ -30,6 +30,6 @@ class ProfileRepository implements ProfileRepositoryInterface {
       payload1: {'id': id, 'name': name, 'sort_name': sortName, 'email': email},
       season: AppHelper.season,
     );
-    return data as UserModel?;
+    return data == null ? null : UserModel.fromJson(data as Map<String, dynamic>);
   }
 }

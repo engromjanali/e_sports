@@ -42,13 +42,29 @@ class AppConstants {
   static const String matchEntries = "/api/user/match-entries";
   static const String myRank = "/api/user/my-rank";
 
-  // rank
+  // rank (legacy — home spotlight)
   static const String scorerOfTheWeekAndMonth = "/api/user/scorer-of-the-week-and-month";
   static const String playerOfTheWeekAndMonth = "/api/user/player-of-the-week-and-month";
   static const String overAllTopThreePlayer = "/api/user/overall-top-three-player";
   static const String seasonalTopThreePlayer = "/api/user/seasonal-top-three-player";
   static const String overAllTopThreeScorer = "/api/user/overall-top-three-scorer";
   static const String seasonalTopThreeScorer = "/api/user/seasonal-top-three-scorer";
+
+  // rank — server-driven MVP cards (period × player/scorer)
+  static const String weekMvpPlayer    = "/api/user/rank/week-mvp-player";
+  static const String weekMvpScorer    = "/api/user/rank/week-mvp-scorer";
+  static const String monthMvpPlayer   = "/api/user/rank/month-mvp-player";
+  static const String monthMvpScorer   = "/api/user/rank/month-mvp-scorer";
+  static const String seasonMvpPlayer  = "/api/user/rank/season-mvp-player";
+  static const String seasonMvpScorer  = "/api/user/rank/season-mvp-scorer";
+
+  // rank — server-driven list sections (type param: player|scorer)
+  static const String weeklyRanks     = "/api/user/rank/weekly-ranks";
+  static const String monthlyRanks    = "/api/user/rank/monthly-ranks";
+  static const String seasonStandings = "/api/user/rank/season-standings";
+
+  // rank — player detail
+  static const String playerRankDetail = "/api/user/rank/player-detail";
 
   // faq
   static const String faqs = "/api/user/faqs";

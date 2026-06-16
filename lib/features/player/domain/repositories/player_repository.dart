@@ -16,7 +16,7 @@ class PlayerRepository implements PlayerRepositoryInterface {
       AppConstants.players,
       season: AppHelper.season,
     );
-    return List<PlayerModel>.from(data as List);
+    return (data as List).map((e) => PlayerModel.fromJson(e as Map<String, dynamic>)).toList();
   }
 
   @override
@@ -25,7 +25,7 @@ class PlayerRepository implements PlayerRepositoryInterface {
       AppConstants.matchEntries,
       season: AppHelper.season,
     );
-    return List<MatchEntryModel>.from(data as List);
+    return (data as List).map((e) => MatchEntryModel.fromJson(e as Map<String, dynamic>)).toList();
   }
 
   @override
@@ -35,6 +35,8 @@ class PlayerRepository implements PlayerRepositoryInterface {
       payload1: playerId,
       season: seasonId,
     );
-    return data as MyRankModel?;
+    if (data == null) return null;
+    final m = data as Map<String, dynamic>;
+    return MyRankModel.fromJson(m, rank: m['rank'] as int, pts: m['pts'] as int);
   }
 }

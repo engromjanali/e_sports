@@ -2,11 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:e_sports/core/utils/dimensions.dart';
 import '../../../core/widgets/glass_card_widget.dart';
 import '../../../core/widgets/player_avater.dart';
-import "../../../core/data/models/computed_player_stats.dart";
-import "package:get/get.dart";
+import '../domain/model/rank_list_item_model.dart';
 
 class MiniPlayerCard extends StatelessWidget {
-  final ComputedPlayerStats player;
+  final RankListItemModel player;
   final bool isScorer;
 
   const MiniPlayerCard({
@@ -53,6 +52,7 @@ class MiniPlayerCard extends StatelessWidget {
 
           PlayerAvatarWidget(
             name: player.name,
+            imageUrl: player.image,
             size: 40,
             borderColor: AppColors.white.withOpacity(0.1),
           ),

@@ -6,7 +6,8 @@ import 'faq_repository_interface.dart';
 
 class FaqRepository implements FaqRepositoryInterface {
   @override
-  Future<List<FaqModel>> getFaqs() {
-    return Get.find<BackendDataController>().fetchFaqs();
+  Future<List<FaqModel>> getFaqs() async {
+    final data = await Get.find<BackendDataController>().fetchFaqs();
+    return data.map((e) => FaqModel.fromJson(e)).toList();
   }
 }

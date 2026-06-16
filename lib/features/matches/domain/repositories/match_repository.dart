@@ -17,12 +17,12 @@ class MatchRepository implements MatchRepositoryInterface {
   Future<List<MatchModel>> getHomeMatches() async {
     final data = await Get.find<BackendDataController>().getData(
       AppConstants.homeMatch,  season: AppHelper.season,limit: 3,);
-    return List<MatchModel>.from(data as List);
+    return (data as List).map((e) => MatchModel.fromJson(e as Map<String, dynamic>)).toList();
   }
 
   @override
   Future<List<MatchModel>> getMatches({MatchFilter type = MatchFilter.all, int limit = 10, int offset = 0, required int season}) async {
     final data = await Get.find<BackendDataController>().getData(AppConstants.matches, payload1: type, season: season, limit: limit, offset: offset,);
-    return List<MatchModel>.from(data as List);
+    return (data as List).map((e) => MatchModel.fromJson(e as Map<String, dynamic>)).toList();
   }
 }

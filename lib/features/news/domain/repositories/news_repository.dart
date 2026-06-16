@@ -11,6 +11,8 @@ class NewsRepository implements NewsRepositoryInterface {
 
   @override
   Future<List<NewsModel>> getNews({int? limit, int? offset, String? search}) async {
-    return Get.find<BackendDataController>().fetchNews(limit: limit, offset: offset, search: search);
+    final data = await Get.find<BackendDataController>()
+        .fetchNews(limit: limit, offset: offset, search: search);
+    return data.map((e) => NewsModel.fromJson(e)).toList();
   }
 }

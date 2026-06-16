@@ -34,6 +34,7 @@ import 'package:e_sports/features/faq/repositories/faq_repository_interface.dart
 import 'package:e_sports/features/faq/services/faq_service.dart';
 import 'package:e_sports/features/faq/services/faq_service_interface.dart';
 import 'package:e_sports/features/rank/controllers/rank_controller.dart';
+import 'package:e_sports/features/rank/controllers/rank_detail_controller.dart';
 import 'package:e_sports/features/rank/domain/repositories/rank_repository.dart';
 import 'package:e_sports/features/rank/domain/repositories/rank_repository_interface.dart';
 import 'package:e_sports/features/rank/domain/services/rank_service.dart';
@@ -107,5 +108,6 @@ Future<void> init() async {
   Get.lazyPut<RankRepositoryInterface>(() => RankRepository(supabase: Get.find()), fenix: true);
   Get.lazyPut<RankServiceInterface>(() => RankService(rankRepositoryInterface: Get.find()), fenix: true);
   Get.lazyPut<RankController>(() => RankController(rankServiceInterface: Get.find()), fenix: true);
+  Get.lazyPut<RankDetailController>(() => RankDetailController(rankServiceInterface: Get.find()), fenix: true);
 
 }

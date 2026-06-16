@@ -249,13 +249,13 @@ import 'package:e_sports/core/utils/dimensions.dart';
 import '../../../core/widgets/glass_card_widget.dart';
 import '../../../core/widgets/player_avater.dart';
 import '../../../core/widgets/player_tags_widget.dart';
-import '../../../core/data/models/computed_player_stats.dart';
+import '../domain/model/rank_mvp_model.dart';
 
 enum MvpType { week, month, season }
 
 class PremiumHeroCard extends StatelessWidget {
   final MvpType type;
-  final ComputedPlayerStats player;
+  final RankMvpModel player;
   final Widget? action;
   final bool isScorer;
 
@@ -350,7 +350,7 @@ class PremiumHeroCard extends StatelessWidget {
                   children: [
                     PlayerAvatarWidget(
                       name: player.name,
-                      imageUrl: player.player.imageUrl,
+                      imageUrl: player.image,
                       size: compact ? Dimensions.avatarXl : Dimensions.avatarGiant,
                       borderColor: accentColor.withOpacity(AppColors.opacity40),
                     ),
@@ -466,7 +466,7 @@ class _Badge extends StatelessWidget {
 // ── Stats Grid ────────────────────────────────────────────────────────────────
 
 class _StatsGrid extends StatelessWidget {
-  final ComputedPlayerStats player;
+  final RankMvpModel player;
   final Color accentColor;
   final bool compact;
   const _StatsGrid({

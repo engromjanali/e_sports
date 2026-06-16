@@ -10,9 +10,10 @@ class SplashRepository implements SplashRepositoryInterface {
 
   @override
   Future<ConfigModel> getConfig() async {
-    return await backendDataController.getData(
+    final data = await backendDataController.getData(
       AppConstants.configUri,
       season: 0,
-    ) as ConfigModel;
+    );
+    return ConfigModel.fromJson(data as Map<String, dynamic>);
   }
 }

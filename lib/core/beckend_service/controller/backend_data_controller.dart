@@ -1,16 +1,6 @@
 import 'package:e_sports/core/constants/app_constants.dart';
-import 'package:e_sports/core/data/models/my_rank_model.dart';
-import 'package:e_sports/features/faq/models/faq_model.dart';
-import 'package:e_sports/features/matches/domain/model/match_model.dart';
-import 'package:e_sports/features/news/domain/model/news_model.dart';
-import 'package:e_sports/features/rank/domain/model/leader_board_player_model.dart';
-import 'package:e_sports/features/profile/models/user_model.dart';
-import 'package:e_sports/features/rank/domain/model/player_of_the_week_and_month_model.dart';
-import 'package:e_sports/core/data/models/player_model.dart';
-import 'package:e_sports/core/data/models/match_entry_model.dart';
 import 'package:e_sports/core/enums/match_filter.dart';
 import 'package:e_sports/core/helper/printer.dart';
-import 'package:e_sports/features/splash/domain/models/config_model.dart';
 import 'package:get/get.dart';
 import 'package:supabase/supabase.dart';
 
@@ -71,6 +61,30 @@ class BackendDataController extends GetxService{
       case AppConstants.seasonalTopThreeScorer:
         return fetchSeasonalTopThreeScorer(season: season);
 
+      // ── Server-driven rank: MVP cards (6) ──
+      case AppConstants.weekMvpPlayer:
+        return fetchWeekMvpPlayer(payload1 as Map<String, dynamic>);
+      case AppConstants.weekMvpScorer:
+        return fetchWeekMvpScorer(payload1 as Map<String, dynamic>);
+      case AppConstants.monthMvpPlayer:
+        return fetchMonthMvpPlayer(payload1 as Map<String, dynamic>);
+      case AppConstants.monthMvpScorer:
+        return fetchMonthMvpScorer(payload1 as Map<String, dynamic>);
+      case AppConstants.seasonMvpPlayer:
+        return fetchSeasonMvpPlayer(payload1 as Map<String, dynamic>);
+      case AppConstants.seasonMvpScorer:
+        return fetchSeasonMvpScorer(payload1 as Map<String, dynamic>);
+
+      // ── Server-driven rank: list sections (3) ──
+      case AppConstants.weeklyRanks:
+      case AppConstants.monthlyRanks:
+      case AppConstants.seasonStandings:
+        return fetchRankList(payload1 as Map<String, dynamic>);
+
+      // ── Server-driven rank: player detail ──
+      case AppConstants.playerRankDetail:
+        return fetchPlayerRankDetail(payload1 as Map<String, dynamic>);
+
       default:
         throw "end-point not found";
 
@@ -110,7 +124,7 @@ class BackendDataController extends GetxService{
 
 /// ==================== config ========================
 
-  Future<ConfigModel> fetchConfig() async {
+  Future<Map<String, dynamic>> fetchConfig() async {
     final settings = await supabase.from('app_settings').select().single();
     final seasonRows = await supabase
         .from('season')
@@ -126,12 +140,12 @@ class BackendDataController extends GetxService{
     };
 
     printer("GET ${AppConstants.configUri}: $merged");
-    return ConfigModel.fromJson(merged);
+    return merged;
   }
 
 /// ==================== match ========================
 
-  Future<List<MatchModel>> fetchMatchHome({required int season, required int limit}) async {
+  Future<List<Map<String, dynamic>>> fetchMatchHome({required int season, required int limit}) async {
     // Live matches take priority on the home screen (most recent first).
     final liveMatches = await supabase
         .from('matches')
@@ -159,10 +173,10 @@ class BackendDataController extends GetxService{
     }
 
     printer("GET ${AppConstants.homeMatch}: $result");
-    return result.map((e) => MatchModel.fromJson(e as Map<String, dynamic>)).toList();
+    return result.cast<Map<String, dynamic>>();
   }
 
-  Future<List<MatchModel>> fetchMatch({required MatchFilter type, required int season, required int limit, required int offset}) async {
+  Future<List<Map<String, dynamic>>> fetchMatch({required MatchFilter type, required int season, required int limit, required int offset}) async {
     var query = supabase.from('matches').select('*, competitions(name)').eq('season_id', season);
 
     if (type != MatchFilter.all) {
@@ -177,12 +191,12 @@ class BackendDataController extends GetxService{
 
     printer("GET ${AppConstants.matches}: $data");
 
-    return (data as List).map((e) => MatchModel.fromJson(e as Map<String, dynamic>)).toList();
+    return (data as List).cast<Map<String, dynamic>>();
   }
     
 /// ===================== news ===========================
 
-  Future<List<NewsModel>> fetchNews({int? limit, int? offset, String? search}) async {
+  Future<List<Map<String, dynamic>>> fetchNews({int? limit, int? offset, String? search}) async {
     var filter = supabase.from('news').select();
 
     // Server-side title search (case-insensitive). Applied before order/range.
@@ -200,12 +214,12 @@ class BackendDataController extends GetxService{
 
     printer("GET news: $data");
 
-    return (data as List).map((e) => NewsModel.fromJson(e as Map<String, dynamic>)).toList();
+    return (data as List).cast<Map<String, dynamic>>();
   }
 
 /// ===================== faq ===========================
 
-  Future<List<FaqModel>> fetchFaqs() async {
+  Future<List<Map<String, dynamic>>> fetchFaqs() async {
     final data = await supabase
         .from('faqs')
         .select()
@@ -213,7 +227,7 @@ class BackendDataController extends GetxService{
         .order('display_order', ascending: true)
         .order('id', ascending: true);
     printer("GET faqs: $data");
-    return (data as List).map((e) => FaqModel.fromJson(e as Map<String, dynamic>)).toList();
+    return (data as List).cast<Map<String, dynamic>>();
   }
 
 /// ===================== auth ===========================
@@ -238,17 +252,17 @@ class BackendDataController extends GetxService{
   static const String _profileCols =
       '*, player_player_roles(player_role(name)), player_custom_tags(custom_tags(name))';
 
-  Future<UserModel?> fetchProfile({required String id}) async {
+  Future<Map<String, dynamic>?> fetchProfile({required String id}) async {
     final data = await supabase
         .from('players')
         .select(_profileCols)
         .eq('id', id)
         .maybeSingle();
     printer("GET profile ($id): $data");
-    return data == null ? null : UserModel.fromJson(data);
+    return data;
   }
 
-  Future<UserModel?> updateProfile({
+  Future<Map<String, dynamic>?> updateProfile({
     required String id,
     required String name,
     required String sortName,
@@ -265,29 +279,36 @@ class BackendDataController extends GetxService{
         .select(_profileCols)
         .maybeSingle();
     printer("UPDATE profile ($id): $data");
-    return data == null ? null : UserModel.fromJson(data);
+    return data;
   }
 
 /// ===================== player  ===========================
 
-  Future<List<PlayerModel>> fetchPlayers() async {
+  Future<List<Map<String, dynamic>>> fetchPlayers() async {
     final data = await supabase.from('players').select(
       '*, player_player_roles(player_role(name)), player_custom_tags(custom_tags(name))',
     );
     printer("GET players: $data");
-    return (data as List).map((e) => PlayerModel.fromJson(e as Map<String, dynamic>)).toList();
+    return (data as List).cast<Map<String, dynamic>>();
   }
 
-  Future<List<MatchEntryModel>> fetchMatchEntries() async {
-    // `*` includes season_id; matches(date) supplies the period date.
-    final data = await supabase.from('match_entries').select('*, matches(date)');
+  Future<List<Map<String, dynamic>>> fetchMatchEntries() async {
+    // No FK to `matches`; join the match date manually by matchid and inject it
+    // as `matches.date` so MatchEntryModel.fromJson keeps working unchanged.
+    final matchDates = await _matchDateMap();
+    final data = (await supabase.from('match_entries').select('*') as List)
+        .cast<Map<String, dynamic>>();
+    for (final row in data) {
+      final d = matchDates[row['matchid']?.toString()];
+      row['matches'] = {'date': d?.toIso8601String()};
+    }
     printer("GET match_entries: $data");
-    return (data as List).map((e) => MatchEntryModel.fromJson(e as Map<String, dynamic>)).toList();
+    return data;
   }
 
 /// ===================== my rank ===========================
 
-  Future<MyRankModel?> fetchMyRank({required String playerId, required int seasonId}) async {
+  Future<Map<String, dynamic>?> fetchMyRank({required String playerId, required int seasonId}) async {
     final data = await supabase
         .from('player_season_stats')
         .select()
@@ -304,10 +325,9 @@ class BackendDataController extends GetxService{
       return null;
     }
 
-    final row = rows[idx];
-    final pts = _ptsFromMap(row);
-    final result = MyRankModel.fromJson(row, rank: idx + 1, pts: pts);
-    printer("GET myRank: rank=${result.rank} pts=${result.pts} for player $playerId");
+    // Return the matched row with the server-computed rank + pts attached.
+    final result = {...rows[idx], 'rank': idx + 1, 'pts': _ptsFromMap(rows[idx])};
+    printer("GET myRank: rank=${result['rank']} pts=${result['pts']} for player $playerId");
     return result;
   }
 
@@ -326,19 +346,25 @@ class BackendDataController extends GetxService{
   // Rank screen's selectable season periods (SeasonModel.weeks/months, which are
   // 7-day chunks / calendar months sliced from the season start). The home
   // spotlight deliberately keeps the simpler rolling window.
-  Future<PlayerOfTheWeekAndMonthModel?> fetchPlayerOfTheWeekAndMonth({required int season}) async =>
+  Future<Map<String, dynamic>?> fetchPlayerOfTheWeekAndMonth({required int season}) async =>
       _fetchTopOfWeekAndMonth(season: season, byGoals: false);
 
-  Future<PlayerOfTheWeekAndMonthModel?> fetchScorerOfTheWeekAndMonth({required int season}) async =>
+  Future<Map<String, dynamic>?> fetchScorerOfTheWeekAndMonth({required int season}) async =>
       _fetchTopOfWeekAndMonth(season: season, byGoals: true);
 
-  Future<PlayerOfTheWeekAndMonthModel?> _fetchTopOfWeekAndMonth({required int season, required bool byGoals}) async {
+  Future<Map<String, dynamic>?> _fetchTopOfWeekAndMonth({required int season, required bool byGoals}) async {
+    final matchDates = await _matchDateMap();
     final data = await supabase
         .from('match_entries')
-        .select('*, matches(date), players($_playerCols)')
+        .select('*, players($_playerCols)')
         .eq('season_id', season);
 
     final rows = (data as List).cast<Map<String, dynamic>>();
+    // Inject the manually-joined date so _topInRange can read matches.date.
+    for (final row in rows) {
+      final d = matchDates[row['matchid']?.toString()];
+      row['matches'] = {'date': d?.toIso8601String()};
+    }
 
     final now = DateTime.now();
     final weekStart = now.subtract(const Duration(days: 7));
@@ -352,16 +378,17 @@ class BackendDataController extends GetxService{
       return null;
     }
 
-    return PlayerOfTheWeekAndMonthModel(
-      season: season.toString(),
-      weekModel: week,
-      monthModel: month,
-    );
+    // Raw shape consumed by PlayerOfTheWeekAndMonthModel.fromJson on the repo side.
+    return {
+      'season': season.toString(),
+      'week_model': week,
+      'month_model': month,
+    };
   }
 
   // Aggregate entries whose match date is on/after [since], then return the top
   // player (by goals or points) as a PlayerOfTheWeeKModel, or null if none.
-  PlayerOfTheWeeKModel? _topInRange(
+  Map<String, dynamic>? _topInRange(
     List<Map<String, dynamic>> rows, {
     required DateTime since,
     required bool byGoals,
@@ -402,62 +429,270 @@ class BackendDataController extends GetxService{
 
     final top = list.first;
     final player = (top['player'] as Map<String, dynamic>?) ?? {};
-    return PlayerOfTheWeeKModel(
-      season:  '',
-      id:      player['id']?.toString() ?? '',
-      name:    player['name']?.toString() ?? '',
-      short:   player['sort_name']?.toString() ?? player['name']?.toString() ?? '',
-      image:   player['profileimageurl']?.toString() ?? '',
-      tags:    _readNestedNames(player['player_player_roles'], 'player_role'),
-      matches: top['matches'] as int,
-      goals:   top['goals'] as int,
-      pts:     _ptsFromMap(top),
-      wins:    top['wins'] as int,
-    );
+    // Raw shape matching PlayerOfTheWeeKModel.fromJson (all keys non-null).
+    return {
+      'season':  '',
+      'id':      player['id']?.toString() ?? '',
+      'name':    player['name']?.toString() ?? '',
+      'short':   player['sort_name']?.toString() ?? player['name']?.toString() ?? '',
+      'image':   player['profileimageurl']?.toString() ?? '',
+      'tags':    _readNestedNames(player['player_player_roles'], 'player_role'),
+      'matches': top['matches'] as int,
+      'goals':   top['goals'] as int,
+      'pts':     _ptsFromMap(top),
+      'wins':    top['wins'] as int,
+    };
   }
 
-  Future<List<LeaderboardPlayerModel>> fetchOverAllTopThreePlayer() async {
+  Future<List<Map<String, dynamic>>> fetchOverAllTopThreePlayer() async {
     final agg = await _aggregateAllSeasons();
     final sorted = agg.values.toList()
       ..sort((a, b) => _ptsFromMap(b).compareTo(_ptsFromMap(a)));
-    final result = sorted.take(3).map(_aggToLeaderboard).toList();
+    final result = sorted.take(3).map(_aggToLeaderboardMap).toList();
     printer("GET overall top 3 players: $result");
     return result;
   }
 
-  Future<List<LeaderboardPlayerModel>> fetchSeasonalTopThreePlayer({required int season}) async {
+  Future<List<Map<String, dynamic>>> fetchSeasonalTopThreePlayer({required int season}) async {
     final data = await supabase
         .from('player_season_stats')
         .select('*, players($_playerCols)')
         .eq('season_id', season);
     final result = (data as List)
-        .map((r) => _rowToLeaderboard(r['players'] as Map<String, dynamic>? ?? {}, r as Map<String, dynamic>))
+        .map((r) => _rowToLeaderboardMap(r['players'] as Map<String, dynamic>? ?? {}, r as Map<String, dynamic>))
         .toList()
-      ..sort((a, b) => b.pts.compareTo(a.pts));
+      ..sort((a, b) => (b['pts'] as int).compareTo(a['pts'] as int));
     printer("GET seasonal top 3 players (season $season): $result");
     return result.take(3).toList();
   }
 
-  Future<List<LeaderboardPlayerModel>> fetchOverAllTopThreeScorer() async {
+  Future<List<Map<String, dynamic>>> fetchOverAllTopThreeScorer() async {
     final agg = await _aggregateAllSeasons();
     final sorted = agg.values.toList()
       ..sort((a, b) => (b['goals'] as int).compareTo(a['goals'] as int));
-    final result = sorted.take(3).map(_aggToLeaderboard).toList();
+    final result = sorted.take(3).map(_aggToLeaderboardMap).toList();
     printer("GET overall top 3 scorers: $result");
     return result;
   }
 
-  Future<List<LeaderboardPlayerModel>> fetchSeasonalTopThreeScorer({required int season}) async {
+  Future<List<Map<String, dynamic>>> fetchSeasonalTopThreeScorer({required int season}) async {
     final data = await supabase
         .from('player_season_stats')
         .select('*, players($_playerCols)')
         .eq('season_id', season);
     final result = (data as List)
-        .map((r) => _rowToLeaderboard(r['players'] as Map<String, dynamic>? ?? {}, r as Map<String, dynamic>))
+        .map((r) => _rowToLeaderboardMap(r['players'] as Map<String, dynamic>? ?? {}, r as Map<String, dynamic>))
         .toList()
-      ..sort((a, b) => b.goals.compareTo(a.goals));
+      ..sort((a, b) => (b['goals'] as int).compareTo(a['goals'] as int));
     printer("GET seasonal top 3 scorers (season $season): $result");
     return result.take(3).toList();
+  }
+
+/// ===================== server-driven rank (per-section) =====================
+
+  // Payload keys: season_id:int?, start:ISO, end:ISO, type:'player'|'scorer',
+  // overall:bool?, player_id:String?, limit:int?.
+
+  // ── MVP wrappers (6): each returns the single top player map, or null. ──
+  Future<Map<String, dynamic>?> fetchWeekMvpPlayer(Map<String, dynamic> p)   => _topRankInRange(p, byGoals: false);
+  Future<Map<String, dynamic>?> fetchWeekMvpScorer(Map<String, dynamic> p)   => _topRankInRange(p, byGoals: true);
+  Future<Map<String, dynamic>?> fetchMonthMvpPlayer(Map<String, dynamic> p)  => _topRankInRange(p, byGoals: false);
+  Future<Map<String, dynamic>?> fetchMonthMvpScorer(Map<String, dynamic> p)  => _topRankInRange(p, byGoals: true);
+  Future<Map<String, dynamic>?> fetchSeasonMvpPlayer(Map<String, dynamic> p) => _topRankInRange(p, byGoals: false);
+  Future<Map<String, dynamic>?> fetchSeasonMvpScorer(Map<String, dynamic> p) => _topRankInRange(p, byGoals: true);
+
+  Future<Map<String, dynamic>?> _topRankInRange(Map<String, dynamic> p, {required bool byGoals}) async {
+    final list = await _rankEntriesInRange(
+      seasonId: p['season_id'] as int?,
+      start: DateTime.parse(p['start'].toString()).toUtc(),
+      end: DateTime.parse(p['end'].toString()).toUtc(),
+      byGoals: byGoals,
+      overall: p['overall'] == true,
+    );
+    return list.isEmpty ? null : list.first;
+  }
+
+  // ── List sections (3): full ranked list (player or scorer order). ──
+  Future<List<Map<String, dynamic>>> fetchRankList(Map<String, dynamic> p) async {
+    final list = await _rankEntriesInRange(
+      seasonId: p['season_id'] as int?,
+      start: DateTime.parse(p['start'].toString()).toUtc(),
+      end: DateTime.parse(p['end'].toString()).toUtc(),
+      byGoals: p['type'] == 'scorer',
+      overall: p['overall'] == true,
+    );
+    final limit = p['limit'] as int?;
+    return limit == null ? list : list.take(limit).toList();
+  }
+
+  // ── Player detail: rank + aggregates for the window + last-20 / history. ──
+  Future<Map<String, dynamic>?> fetchPlayerRankDetail(Map<String, dynamic> p) async {
+    final playerId = p['player_id'].toString();
+    final seasonId = p['season_id'] as int?;
+    final overall = p['overall'] == true || seasonId == null;
+    final start = DateTime.parse(p['start'].toString()).toUtc();
+    final end = DateTime.parse(p['end'].toString()).toUtc();
+
+    final ranked = await _rankEntriesInRange(
+      seasonId: seasonId, start: start, end: end, byGoals: false, overall: overall,
+    );
+    final me = ranked.firstWhereOrNull((r) => r['id'] == playerId);
+    if (me == null) {
+      printer("GET rank detail: $playerId not found in range");
+      return null;
+    }
+
+    // This player's entries (most-recent first) for last-20 + match history.
+    // Date is joined manually by matchid (no FK between match_entries/matches).
+    final matchDates = await _matchDateMap();
+    var eq = supabase
+        .from('match_entries')
+        .select('*')
+        .eq('playerid', playerId);
+    if (!overall) eq = eq.eq('season_id', seasonId);
+    final entryRows = (await eq) as List;
+
+    final entries = entryRows
+        .map((e) => e as Map<String, dynamic>)
+        .where((e) {
+          final d = matchDates[e['matchid']?.toString()];
+          return d != null && !d.isBefore(start) && d.isBefore(end);
+        })
+        .toList()
+      ..sort((a, b) {
+        final da = matchDates[a['matchid']?.toString()] ?? DateTime(2000);
+        final db = matchDates[b['matchid']?.toString()] ?? DateTime(2000);
+        return db.compareTo(da);
+      });
+
+    // Attach the resolved date so RankDetailMatch.fromJson can read it.
+    for (final e in entries) {
+      e['date'] = matchDates[e['matchid']?.toString()]?.toIso8601String();
+    }
+
+    final last20 = entries.take(20).map((e) => e['result']?.toString() ?? 'draw').toList();
+    int cleansheets = 0;
+    for (final e in entries) {
+      if (e['cleansheet'] == true) cleansheets++;
+    }
+
+    final result = {
+      ...me,
+      'cleansheets': cleansheets,
+      'last20': last20,
+      'match_history': entries.take(20).toList(),
+    };
+    printer("GET rank detail ($playerId): rank=${result['rank']} pts=${result['pts']}");
+    return result;
+  }
+
+  // Aggregate match_entries for [seasonId] within [start,end), one row per player,
+  // ranked by pts (byGoals=false) or goals (byGoals=true). Replicates
+  // StatsService.calculateMatchPoints (per-match) so numbers match the app.
+  // `match_entries` has no FK to `matches`, so PostgREST can't embed the date.
+  // The date is joined manually by matchid via this map.
+  Future<Map<String, DateTime>> _matchDateMap() async {
+    final rows = (await supabase.from('matches').select('id, date') as List)
+        .cast<Map<String, dynamic>>();
+    final map = <String, DateTime>{};
+    for (final r in rows) {
+      final d = DateTime.tryParse(r['date']?.toString() ?? '');
+      if (d != null) map[r['id'].toString()] = d.toUtc();
+    }
+    return map;
+  }
+
+  Future<List<Map<String, dynamic>>> _rankEntriesInRange({
+    required int? seasonId,
+    required DateTime start,
+    required DateTime end,
+    required bool byGoals,
+    bool overall = false,
+  }) async {
+    final matchDates = await _matchDateMap();
+    var q = supabase
+        .from('match_entries')
+        .select('*, players($_playerCols)');
+    if (!overall && seasonId != null) q = q.eq('season_id', seasonId);
+    final rows = (await q as List).cast<Map<String, dynamic>>();
+
+    final s = start.toUtc();
+    final e = end.toUtc();
+    final Map<String, Map<String, dynamic>> agg = {};
+
+    for (final row in rows) {
+      final d = matchDates[row['matchid']?.toString()];
+      if (d == null || d.isBefore(s) || !d.isBefore(e)) continue;
+
+      final id = row['playerid']?.toString() ?? '';
+      if (id.isEmpty) continue;
+
+      final a = agg.putIfAbsent(id, () => {
+        'player': row['players'],
+        'matches': 0, 'goals': 0, 'gf': 0, 'ga': 0,
+        'wins': 0, 'draws': 0, 'losses': 0, 'pts': 0,
+      });
+
+      final result = row['result']?.toString();
+      final goals = (row['goals'] as num?)?.toInt() ?? 0;
+      final conceded = (row['goalsconceded'] as num?)?.toInt() ?? 0;
+      final hattrick = ((row['hattricks'] as num?)?.toInt() ?? 0) > 0;
+      final motm = row['motm'] == true;
+
+      a['matches'] = (a['matches'] as int) + 1;
+      a['goals'] = (a['goals'] as int) + goals;
+      a['gf'] = (a['gf'] as int) + goals;
+      a['ga'] = (a['ga'] as int) + conceded;
+      if (result == 'win') a['wins'] = (a['wins'] as int) + 1;
+      if (result == 'draw') a['draws'] = (a['draws'] as int) + 1;
+      if (result == 'loss') a['losses'] = (a['losses'] as int) + 1;
+
+      // StatsService.calculateMatchPoints, summed per match.
+      int mp = 0;
+      if (result == 'win') mp += 3;
+      if (result == 'draw') mp += 1;
+      if (result == 'loss') mp -= 1;
+      mp += goals - conceded;
+      if (hattrick) mp += 1;
+      if (motm) mp += 2;
+      a['pts'] = (a['pts'] as int) + mp;
+    }
+
+    final list = agg.values.map(_aggToRankMap).toList();
+    list.sort((x, y) {
+      if (byGoals) {
+        if (y['goals'] != x['goals']) return (y['goals'] as int).compareTo(x['goals'] as int);
+        return (y['pts'] as int).compareTo(x['pts'] as int);
+      }
+      if (y['pts'] != x['pts']) return (y['pts'] as int).compareTo(x['pts'] as int);
+      if (y['goals'] != x['goals']) return (y['goals'] as int).compareTo(x['goals'] as int);
+      return ((y['gf'] as int) - (y['ga'] as int)).compareTo((x['gf'] as int) - (x['ga'] as int));
+    });
+    for (int i = 0; i < list.length; i++) {
+      list[i]['rank'] = i + 1;
+    }
+    return list;
+  }
+
+  // Aggregated rank entry -> flat display map (tags pre-computed server-side).
+  Map<String, dynamic> _aggToRankMap(Map<String, dynamic> a) {
+    final player = (a['player'] as Map<String, dynamic>?) ?? {};
+    return {
+      'id':      player['id']?.toString() ?? '',
+      'name':    player['name']?.toString() ?? '',
+      'short':   player['sort_name']?.toString() ?? player['name']?.toString() ?? '',
+      'image':   player['profileimageurl']?.toString() ?? '',
+      'tags':    _readNestedNames(player['player_player_roles'], 'player_role'),
+      'rank':    0,
+      'matches': a['matches'] as int,
+      'wins':    a['wins'] as int,
+      'draws':   a['draws'] as int,
+      'losses':  a['losses'] as int,
+      'goals':   a['goals'] as int,
+      'gf':      a['gf'] as int,
+      'ga':      a['ga'] as int,
+      'pts':     a['pts'] as int,
+    };
   }
 
   // ========================= rank helpers ======================================
@@ -488,8 +723,9 @@ class BackendDataController extends GetxService{
     return agg;
   }
 
-  LeaderboardPlayerModel _aggToLeaderboard(Map<String, dynamic> e) =>
-      _rowToLeaderboard(
+  // Aggregated cross-season entry -> flat leaderboard map.
+  Map<String, dynamic> _aggToLeaderboardMap(Map<String, dynamic> e) =>
+      _rowToLeaderboardMap(
         (e['player'] as Map<String, dynamic>?) ?? {},
         {
           'goals': e['goals'], 'wins': e['wins'], 'draws': e['draws'],
@@ -499,21 +735,23 @@ class BackendDataController extends GetxService{
         },
       );
 
-  LeaderboardPlayerModel _rowToLeaderboard(
+  // Player row + stats row -> flat leaderboard map (tags/pts pre-computed
+  // server-side) matching the LeaderboardPlayerModel fields the repo builds.
+  Map<String, dynamic> _rowToLeaderboardMap(
       Map<String, dynamic> player, Map<String, dynamic> stats) {
-    return LeaderboardPlayerModel(
-      id:      player['id']?.toString() ?? '',
-      name:    player['name']?.toString() ?? '',
-      short:   player['sort_name']?.toString() ?? player['name']?.toString() ?? '',
-      image:   player['profileimageurl']?.toString() ?? '',
-      tags:    _readNestedNames(player['player_player_roles'], 'player_role'),
-      matches: (stats['appearances'] as num?)?.toInt() ?? 0,
-      wins:    (stats['wins']    as num?)?.toInt() ?? 0,
-      draws:   (stats['draws']   as num?)?.toInt() ?? 0,
-      losses:  (stats['losses']  as num?)?.toInt() ?? 0,
-      goals:   (stats['goals']   as num?)?.toInt() ?? 0,
-      pts:     _ptsFromMap(stats),
-    );
+    return {
+      'id':      player['id']?.toString() ?? '',
+      'name':    player['name']?.toString() ?? '',
+      'short':   player['sort_name']?.toString() ?? player['name']?.toString() ?? '',
+      'image':   player['profileimageurl']?.toString() ?? '',
+      'tags':    _readNestedNames(player['player_player_roles'], 'player_role'),
+      'matches': (stats['appearances'] as num?)?.toInt() ?? 0,
+      'wins':    (stats['wins']    as num?)?.toInt() ?? 0,
+      'draws':   (stats['draws']   as num?)?.toInt() ?? 0,
+      'losses':  (stats['losses']  as num?)?.toInt() ?? 0,
+      'goals':   (stats['goals']   as num?)?.toInt() ?? 0,
+      'pts':     _ptsFromMap(stats),
+    };
   }
 
 
