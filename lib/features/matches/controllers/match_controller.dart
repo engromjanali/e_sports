@@ -27,10 +27,14 @@ class MatchController extends GetxController {
   // Matches shown for the active category (server-paginated).
   final RxList<MatchModel> matches = <MatchModel>[].obs;
 
-  // Season list populated from config on init.
+  // Season list populated from config on init (active seasons only).
   final RxList<SeasonModel> seasons = <SeasonModel>[].obs;
   final _selectedSeasonId = 0.obs;
   int get selectedSeasonId => _selectedSeasonId.value;
+
+  // Current season from app_settings.current_season_id (for the "current" badge).
+  int? _currentSeasonId;
+  int? get currentSeasonId => _currentSeasonId;
   SeasonModel? get selectedSeason =>
       seasons.cast<SeasonModel?>().firstWhere(
         (s) => s?.id == _selectedSeasonId.value,
@@ -67,7 +71,8 @@ class MatchController extends GetxController {
     try {
       final config = Get.find<SplashController>().configModel;
       if (config != null && config.seasons.isNotEmpty) {
-        seasons.assignAll(config.seasons);
+        _currentSeasonId = config.currentSeason;
+        seasons.assignAll(config.seasons.where((s) => s.status));
         _selectedSeasonId.value = config.currentSeason ?? AppHelper.season;
         return;
       }

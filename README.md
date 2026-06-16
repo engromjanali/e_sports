@@ -53,7 +53,7 @@ CREATE TABLE public.season (
   name text,
   start_date timestamp with time zone NOT NULL DEFAULT now(),
   end_date timestamp with time zone,
-  is_current boolean NOT NULL DEFAULT false,
+  status boolean NOT NULL DEFAULT true,
   CONSTRAINT season_pkey PRIMARY KEY (id)
 );
 
@@ -310,8 +310,10 @@ Defines competition seasons (e.g. "Season 1", "2024/25").
 | `id` | bigint (auto) | Primary key |
 | `name` | text | Season display name |
 | `start_date` | timestamptz | Season start |
-| `end_date` | timestamptz | Season end (nullable) |
-| `is_current` | boolean | Whether this is the active season |
+| `end_date` | timestamptz | Season end (nullable → ongoing, treated as "until today") |
+| `status` | boolean | Active/inactive. Inactive seasons are hidden from season dropdowns. |
+
+> **Current season** comes from `app_settings.current_season_id` (not a column here). The app slices each season into `weeks` (7-day chunks) and `months` (calendar months) from `start_date`/`end_date` for the rank screen.
 
 ---
 

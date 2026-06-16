@@ -114,7 +114,7 @@ class BackendDataController extends GetxService{
     final settings = await supabase.from('app_settings').select().single();
     final seasonRows = await supabase
         .from('season')
-        .select('id, name, is_current, start_date, end_date')
+        .select('id, name, status, start_date, end_date')
         .order('id', ascending: true);
 
     final merged = {

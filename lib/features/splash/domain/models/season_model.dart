@@ -4,7 +4,7 @@ import 'package:e_sports/features/splash/domain/services/season_period_builder.d
 class SeasonModel {
   final int id;
   final String name;
-  final bool isCurrent;
+  final bool status; // active/inactive
   final DateTime? startDate; // UTC
   final DateTime? endDate;   // UTC, null => ongoing
 
@@ -17,7 +17,7 @@ class SeasonModel {
   const SeasonModel({
     required this.id,
     required this.name,
-    this.isCurrent = false,
+    this.status = true,
     this.startDate,
     this.endDate,
     this.weeks = const [],
@@ -38,7 +38,7 @@ class SeasonModel {
     return SeasonModel(
       id: (json['id'] as num).toInt(),
       name: json['name']?.toString() ?? '',
-      isCurrent: json['is_current'] as bool? ?? false,
+      status: json['status'] as bool? ?? true,
       startDate: start,
       endDate: end,
       weeks: start == null
@@ -56,7 +56,7 @@ class SeasonModel {
   Map<String, dynamic> toJson() => {
         'id': id,
         'name': name,
-        'is_current': isCurrent,
+        'status': status,
         'start_date': startDate?.toIso8601String(),
         'end_date': endDate?.toIso8601String(),
         'weeks': weeks.map((w) => w.toJson()).toList(),

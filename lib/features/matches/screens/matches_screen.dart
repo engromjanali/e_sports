@@ -119,7 +119,7 @@ class _SeasonDropdown extends StatelessWidget {
                   if (isActive)
                     Icon(Icons.check_rounded,
                         size: Dimensions.iconSm, color: AppColors.neonGold),
-                  if (season.isCurrent)
+                  if (season.id == controller.currentSeasonId)
                     Container(
                       margin: EdgeInsets.only(left: Dimensions.xs),
                       padding: EdgeInsets.symmetric(
@@ -235,8 +235,16 @@ class _MatchesScreenState extends State<MatchesScreen> {
                           ]),
                         ),
                       ),
-                      if (_controller.seasons.isNotEmpty)
+                      if (_controller.seasons.isNotEmpty) ...[
+                        Container(
+                          width: Dimensions.borderThin,
+                          height: Dimensions.iconLg,
+                          margin: EdgeInsets.symmetric(
+                              horizontal: Dimensions.md),
+                          color: AppColors.textMuted.withOpacity(AppColors.opacity30),
+                        ),
                         _SeasonDropdown(controller: _controller),
+                      ],
                     ]),
                     SizedBox(height: Dimensions.cardInnerPadding),
 
