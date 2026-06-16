@@ -1,8 +1,13 @@
 import 'package:e_sports/core/data/models/computed_player_stats.dart';
 import 'package:e_sports/core/data/models/player_model.dart';
+import 'package:e_sports/core/services/filter_service.dart';
+import 'package:e_sports/features/player/controllers/player_controller.dart';
 import 'package:e_sports/features/rank/domain/model/leader_board_player_model.dart';
 import 'package:e_sports/features/rank/domain/model/player_of_the_week_and_month_model.dart';
 import 'package:e_sports/features/rank/domain/services/rank_service_interface.dart';
+import 'package:e_sports/features/splash/controllers/splash_controller.dart';
+import 'package:e_sports/features/splash/domain/models/season_model.dart';
+import 'package:e_sports/features/splash/domain/models/season_period.dart';
 import 'package:get/get.dart';
 
 class RankController extends GetxController {
@@ -49,28 +54,90 @@ class RankController extends GetxController {
       ? _toStatsList(_overAllTopThreeScorer)
       : _toStatsList(_seasonalTopThreeScorer);
 
-  ComputedPlayerStats? get potWeek => _playerOfTheWeekAndMonthModel?.weekModel != null ? _weekModelToStats(_playerOfTheWeekAndMonthModel!.weekModel!, 1)  : null;
+  // ── Selectable week / month periods (from the current season) ──────────────
 
-  ComputedPlayerStats? get potMonth => _playerOfTheWeekAndMonthModel?.monthModel != null
-      ? _weekModelToStats(_playerOfTheWeekAndMonthModel!.monthModel!, 1)
-      : null;
+  SeasonModel? get _currentSeason {
+    try {
+      final cfg = Get.find<SplashController>().configModel;
+      if (cfg == null) return null;
+      return cfg.seasons.firstWhereOrNull((s) => s.id == cfg.currentSeason)
+          ?? cfg.seasons.firstWhereOrNull((s) => s.isCurrent)
+          ?? (cfg.seasons.isNotEmpty ? cfg.seasons.last : null);
+    } catch (_) {
+      return null;
+    }
+  }
+
+  List<SeasonPeriod> get weeks => _currentSeason?.weeks ?? const [];
+  List<SeasonPeriod> get months => _currentSeason?.months ?? const [];
+
+  final _selectedWeekNumber = RxnInt();
+  final _selectedMonthNumber = RxnInt();
+  int? get selectedWeekNumber => _selectedWeekNumber.value;
+  int? get selectedMonthNumber => _selectedMonthNumber.value;
+
+  void setSelectedWeek(int n) {
+    _selectedWeekNumber.value = n;
+    update();
+  }
+
+  void setSelectedMonth(int n) {
+    _selectedMonthNumber.value = n;
+    update();
+  }
+
+  SeasonPeriod? get _selectedWeekPeriod =>
+      weeks.firstWhereOrNull((w) => w.number == _selectedWeekNumber.value)
+          ?? (weeks.isNotEmpty ? weeks.last : null);
+
+  SeasonPeriod? get _selectedMonthPeriod =>
+      months.firstWhereOrNull((m) => m.number == _selectedMonthNumber.value)
+          ?? (months.isNotEmpty ? months.last : null);
+
+  // Default selection: the period containing today, else last (past end) / first.
+  int _defaultNumber(List<SeasonPeriod> periods) {
+    if (periods.isEmpty) return 1;
+    final now = DateTime.now().toUtc();
+    final hit = periods.firstWhereOrNull((p) => p.contains(now));
+    if (hit != null) return hit.number;
+    if (now.isBefore(periods.first.startDate)) return periods.first.number;
+    return periods.last.number;
+  }
+
+  // ── Period rankings (computed client-side from PlayerController data) ───────
+
+  PlayerController get _pc => Get.find<PlayerController>();
+
+  List<ComputedPlayerStats> _rankInPeriod(SeasonPeriod? p) {
+    if (p == null) return const [];
+    return FilterService.getRankedPlayersInRange(
+      players: _pc.players.toList(),
+      allEntries: _pc.matchEntries.toList(),
+      start: p.startDate,
+      end: p.endDate,
+      seasonId: _currentSeason?.id,
+    );
+  }
 
   ComputedPlayerStats? get potSeason => activePlayers.isNotEmpty ? activePlayers.first : null;
-
-  // Scorer highlight cards map to the same award entry (scorer stats shown via isScorer flag).
-  ComputedPlayerStats? get sotWeek  => potWeek;
-  ComputedPlayerStats? get sotMonth => potMonth;
   ComputedPlayerStats? get sotSeason => activeScorers.isNotEmpty ? activeScorers.first : null;
+
+  // Highlight cards = top of the selected period's ranking.
+  ComputedPlayerStats? get potWeek  => weeklyPlayers.isNotEmpty  ? weeklyPlayers.first  : null;
+  ComputedPlayerStats? get potMonth => monthlyPlayers.isNotEmpty ? monthlyPlayers.first : null;
+  ComputedPlayerStats? get sotWeek  => weeklyScorers.isNotEmpty  ? weeklyScorers.first  : null;
+  ComputedPlayerStats? get sotMonth => monthlyScorers.isNotEmpty ? monthlyScorers.first : null;
 
   // ── List sections fed to RankingViewWidget ────────────────────────────────
 
-  // Weekly / monthly sections show the single award winner as a list entry.
-  List<ComputedPlayerStats> get weeklyPlayers  => potWeek  != null ? [potWeek!]  : [];
-  List<ComputedPlayerStats> get monthlyPlayers => potMonth != null ? [potMonth!] : [];
+  // Full rankings for the selected week / month period.
+  List<ComputedPlayerStats> get weeklyPlayers  => _rankInPeriod(_selectedWeekPeriod);
+  List<ComputedPlayerStats> get monthlyPlayers => _rankInPeriod(_selectedMonthPeriod);
   List<ComputedPlayerStats> get seasonalPlayers => activePlayers;
 
-  List<ComputedPlayerStats> get weeklyScorers  => sotWeek  != null ? [sotWeek!]  : [];
-  List<ComputedPlayerStats> get monthlyScorers => sotMonth != null ? [sotMonth!] : [];
+  // Scorers = same period entries, re-sorted by goals.
+  List<ComputedPlayerStats> get weeklyScorers  => List.of(weeklyPlayers)..sort((a, b) => b.goals.compareTo(a.goals));
+  List<ComputedPlayerStats> get monthlyScorers => List.of(monthlyPlayers)..sort((a, b) => b.goals.compareTo(a.goals));
   List<ComputedPlayerStats> get seasonalScorers => activeScorers;
 
   // Fallback used by PremiumHeroCard when the highlight slot is null.
@@ -81,6 +148,8 @@ class RankController extends GetxController {
   @override
   void onInit() {
     super.onInit();
+    _selectedWeekNumber.value = _defaultNumber(weeks);
+    _selectedMonthNumber.value = _defaultNumber(months);
     _fetchAll();
   }
 
@@ -159,21 +228,4 @@ class RankController extends GetxController {
     }).toList();
   }
 
-  ComputedPlayerStats _weekModelToStats(PlayerOfTheWeeKModel m, int rank) {
-    return ComputedPlayerStats(
-      player: PlayerModel(
-        id: m.id,
-        name: m.name,
-        sortName: m.short,
-        jerseyNumber: 0,
-        playerRoles: m.tags,
-        imageUrl: m.image,
-      ),
-      goals:   m.goals,
-      wins:    m.wins,
-      matches: m.matches,
-      pts:     m.pts,
-      rank:    rank,
-    );
-  }
 }

@@ -114,7 +114,7 @@ class BackendDataController extends GetxService{
     final settings = await supabase.from('app_settings').select().single();
     final seasonRows = await supabase
         .from('season')
-        .select('id, name, is_current')
+        .select('id, name, is_current, start_date, end_date')
         .order('id', ascending: true);
 
     final merged = {
@@ -279,6 +279,7 @@ class BackendDataController extends GetxService{
   }
 
   Future<List<MatchEntryModel>> fetchMatchEntries() async {
+    // `*` includes season_id; matches(date) supplies the period date.
     final data = await supabase.from('match_entries').select('*, matches(date)');
     printer("GET match_entries: $data");
     return (data as List).map((e) => MatchEntryModel.fromJson(e as Map<String, dynamic>)).toList();
@@ -316,10 +317,15 @@ class BackendDataController extends GetxService{
   static const String _playerCols =
       'id, name, profileimageurl, sort_name, player_player_roles(player_role(name))';
 
-  // Player / Scorer of the week & month are computed live from match_entries
-  // (joined to matches for the date and players for display fields), since the
-  // awards table was removed. "Week" = last 7 days, "Month" = current calendar
-  // month. Player ranks by points; Scorer ranks by goals.
+  // Player / Scorer of the week & month for the HOME screen spotlight.
+  // Computed live from match_entries (joined to matches for the date and players
+  // for display), since the awards table was removed. "Week" = last 7 days,
+  // "Month" = current calendar month. Player ranks by points; Scorer by goals.
+  //
+  // NOTE: this is a rolling-window single-top, intentionally DIFFERENT from the
+  // Rank screen's selectable season periods (SeasonModel.weeks/months, which are
+  // 7-day chunks / calendar months sliced from the season start). The home
+  // spotlight deliberately keeps the simpler rolling window.
   Future<PlayerOfTheWeekAndMonthModel?> fetchPlayerOfTheWeekAndMonth({required int season}) async =>
       _fetchTopOfWeekAndMonth(season: season, byGoals: false);
 

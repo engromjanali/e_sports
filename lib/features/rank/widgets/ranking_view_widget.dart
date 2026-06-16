@@ -6,6 +6,7 @@ import 'package:e_sports/core/helper/responsive_helper.dart';
 import '../../../core/widgets/app_footer_widget.dart';
 import '../../../core/widgets/section_heading_widget.dart';
 import '../../../core/data/models/computed_player_stats.dart';
+import '../../splash/domain/models/season_period.dart';
 import '../controllers/rank_controller.dart';
 import 'premium_hero_card.dart';
 import 'mini_player_card.dart';
@@ -32,58 +33,89 @@ class RankingViewWidget extends StatelessWidget {
         padding: Dimensions.screenAll,
         child: Column(
           children: [
-            // ─── 3 Highlight Cards (Horizontal Scroll) ──────────────────────
-            SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              clipBehavior: Clip.none,
-              child: Row(
-                children: [
-                  _HeroWrapper(child: GestureDetector(
-                    onTap: hWeek == null ? null : () => Get.toNamed(RouteHelper.getPlayerProfileRoute(hWeek.id)),
-                    child: PremiumHeroCard(
-                      type: MvpType.week, 
-                      player: hWeek ?? controller.rankedPlayers.first, 
-                      isScorer: isScorer,
-                    ),
+            // ─── 3 Highlight Cards ──────────────────────────────────────────
+            // Desktop: all 3 fit side-by-side within the content width.
+            // Mobile: horizontal scroll, each card ~85% of the viewport.
+            LayoutBuilder(
+              builder: (context, constraints) {
+                final isDesktop = ResponsiveHelper.isDesktop(context);
+                final gap = Dimensions.xl;
+                final cardWidth = isDesktop ? (constraints.maxWidth - gap * 2) / 3 : constraints.maxWidth * 0.85;
+
+                final weekSelector = _PeriodSelector(
+                  periods: controller.weeks,
+                  selectedNumber: controller.selectedWeekNumber,
+                  onSelected: controller.setSelectedWeek,
+                );
+                final monthSelector = _PeriodSelector(
+                  periods: controller.months,
+                  selectedNumber: controller.selectedMonthNumber,
+                  onSelected: controller.setSelectedMonth,
+                );
+
+                // A hero card, or an empty-state placeholder (still showing the
+                // period selector) when the period has no player.
+                Widget hero(MvpType type, ComputedPlayerStats? player, Widget? action) {
+                  if (player == null) return _EmptyHeroCard(type: type, action: action);
+                  return GestureDetector(
+                    onTap: () => Get.toNamed(RouteHelper.getPlayerProfileRoute(player.id)),
+                    child: PremiumHeroCard(type: type, player: player, isScorer: isScorer, action: action),
+                  );
+                }
+
+                final cards = <Widget>[
+                  hero(MvpType.week, hWeek, weekSelector),
+                  hero(MvpType.month, hMonth, monthSelector),
+                  hero(MvpType.season, hSeason, _SeasonSelector(
+                    selected: controller.selectedSeason,
+                    onSelected: controller.setSelectedSeason,
                   )),
-                  _HeroWrapper(child: GestureDetector(
-                    onTap: hMonth == null ? null : () => Get.toNamed(RouteHelper.getPlayerProfileRoute(hMonth.id)),
-                    child: PremiumHeroCard(
-                      type: MvpType.month, 
-                      player: hMonth ?? controller.rankedPlayers.first, 
-                      isScorer: isScorer,
-                    ),
-                  )),
-                  _HeroWrapper(child: GestureDetector(
-                    onTap: hSeason == null ? null : () => Get.toNamed(RouteHelper.getPlayerProfileRoute(hSeason.id)),
-                    child: PremiumHeroCard(
-                      type: MvpType.season, 
-                      player: hSeason ?? controller.rankedPlayers.first, 
-                      isScorer: isScorer,
-                      action: _SeasonSelector(
-                        selected: controller.selectedSeason,
-                        onSelected: controller.setSelectedSeason,
-                      ),
-                    ),
-                  )),
-                ],
-              ),
+                ];
+
+                final row = Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    for (int i = 0; i < cards.length; i++) ...[
+                      SizedBox(width: cardWidth, child: cards[i]),
+                      if (i < cards.length - 1) SizedBox(width: gap),
+                    ],
+                  ],
+                );
+
+                return isDesktop
+                    ? row
+                    : SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
+                        clipBehavior: Clip.none,
+                        child: row,
+                      );
+              },
             ),
             SizedBox(height: Dimensions.massive),
 
             // ─── Weekly Full List ───────────────────────────────────────────
             _ListSection(
-              title: isScorer ? "Weekly Scorers" : "Weekly Rankings", 
-              players: lWeek, 
+              title: isScorer ? "Weekly Scorers" : "Weekly Rankings",
+              players: lWeek,
               isScorer: isScorer,
+              trailing: _PeriodSelector(
+                periods: controller.weeks,
+                selectedNumber: controller.selectedWeekNumber,
+                onSelected: controller.setSelectedWeek,
+              ),
             ),
             SizedBox(height: Dimensions.xl),
 
             // ─── Monthly Full List ──────────────────────────────────────────
             _ListSection(
-              title: isScorer ? "Monthly Scorers" : "Monthly Rankings", 
-              players: lMonth, 
+              title: isScorer ? "Monthly Scorers" : "Monthly Rankings",
+              players: lMonth,
               isScorer: isScorer,
+              trailing: _PeriodSelector(
+                periods: controller.months,
+                selectedNumber: controller.selectedMonthNumber,
+                onSelected: controller.setSelectedMonth,
+              ),
             ),
             SizedBox(height: Dimensions.xl),
 
@@ -102,20 +134,6 @@ class RankingViewWidget extends StatelessWidget {
         ),
       );
     });
-  }
-}
-
-class _HeroWrapper extends StatelessWidget {
-  final Widget child;
-  const _HeroWrapper({required this.child});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: MediaQuery.of(context).size.width * 0.85,
-      padding: EdgeInsets.only(right: Dimensions.xl),
-      child: child,
-    );
   }
 }
 
@@ -211,6 +229,126 @@ class _SeasonSelector extends StatelessWidget {
           ),
         ),
       )).toList(),
+    );
+  }
+}
+
+/// Dropdown for selecting a week / month period of the current season.
+/// Shows nothing when the season has no periods (e.g. config not loaded).
+class _PeriodSelector extends StatelessWidget {
+  final List<SeasonPeriod> periods;
+  final int? selectedNumber;
+  final void Function(int) onSelected;
+
+  const _PeriodSelector({
+    required this.periods,
+    required this.selectedNumber,
+    required this.onSelected,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    if (periods.isEmpty) return const SizedBox.shrink();
+    final label = periods
+        .firstWhere((p) => p.number == selectedNumber, orElse: () => periods.last)
+        .name; // "week-3" / "month-2"
+
+    return PopupMenuButton<int>(
+      onSelected: onSelected,
+      offset: const Offset(0, 40),
+      shape: RoundedRectangleBorder(borderRadius: Dimensions.borderCard),
+      color: AppColors.bgCard,
+      constraints: const BoxConstraints(maxHeight: 400),
+      child: Container(
+        padding: EdgeInsets.symmetric(horizontal: Dimensions.md, vertical: Dimensions.xs),
+        decoration: BoxDecoration(
+          color: AppColors.white.withOpacity(AppColors.opacity10),
+          borderRadius: Dimensions.borderPill,
+          border: Border.all(color: AppColors.white.withOpacity(AppColors.opacity20)),
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              label.toUpperCase(),
+              style: TextStyle(
+                fontSize: 9,
+                fontWeight: Dimensions.black,
+                color: AppColors.white,
+                letterSpacing: 1.0,
+              ),
+            ),
+            SizedBox(width: 4),
+            Icon(Icons.keyboard_arrow_down, size: 14, color: AppColors.white),
+          ],
+        ),
+      ),
+      itemBuilder: (context) => periods.map((p) => PopupMenuItem<int>(
+        value: p.number,
+        child: Text(
+          p.name,
+          style: TextStyle(
+            fontSize: Dimensions.sizeBody,
+            fontWeight: Dimensions.bold,
+            color: AppColors.white,
+          ),
+        ),
+      )).toList(),
+    );
+  }
+}
+
+/// Placeholder shown in a hero slot when the selected period has no player.
+/// Keeps the period selector visible so the user can switch periods.
+class _EmptyHeroCard extends StatelessWidget {
+  final MvpType type;
+  final Widget? action;
+
+  const _EmptyHeroCard({required this.type, this.action});
+
+  @override
+  Widget build(BuildContext context) {
+    final label = type == MvpType.week
+        ? "WEEK"
+        : type == MvpType.month
+            ? "MONTH"
+            : "SEASON";
+
+    return Container(
+      padding: EdgeInsets.all(Dimensions.xl),
+      decoration: BoxDecoration(
+        color: AppColors.white.withOpacity(AppColors.opacity4),
+        borderRadius: Dimensions.borderCard,
+        border: Border.all(color: AppColors.glassBorder),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                label,
+                style: TextStyle(
+                  fontSize: Dimensions.sizeCaption,
+                  fontWeight: Dimensions.black,
+                  color: AppColors.textMuted,
+                  letterSpacing: 1.2,
+                ),
+              ),
+              if (action != null) Flexible(child: Align(alignment: Alignment.centerRight, child: action!)),
+            ],
+          ),
+          SizedBox(height: Dimensions.massive),
+          Center(
+            child: Text(
+              "No data for this period",
+              style: TextStyle(fontSize: Dimensions.sizeSmall, color: AppColors.textMuted),
+            ),
+          ),
+          SizedBox(height: Dimensions.massive),
+        ],
+      ),
     );
   }
 }

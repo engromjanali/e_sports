@@ -8,6 +8,7 @@ class MatchEntryModel {
   final bool hattrick;
   final bool cleanSheet;
   final bool motm;
+  final int? seasonId;
 
   const MatchEntryModel({
     required this.id,
@@ -19,6 +20,7 @@ class MatchEntryModel {
     required this.hattrick,
     required this.cleanSheet,
     required this.motm,
+    this.seasonId,
   });
 
   factory MatchEntryModel.fromJson(Map<String, dynamic> json) {
@@ -35,6 +37,7 @@ class MatchEntryModel {
       hattrick: ((json['hattricks'] as num?)?.toInt() ?? 0) > 0,
       cleanSheet: json['cleansheet'] as bool? ?? false,
       motm: json['motm'] as bool? ?? false,
+      seasonId: (json['season_id'] as num?)?.toInt(),
     );
   }
 }

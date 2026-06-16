@@ -66,7 +66,8 @@ Future<void> init() async {
   // Player feature dependencies
   Get.lazyPut<PlayerRepositoryInterface>(() => PlayerRepository(), fenix: true);
   Get.lazyPut<PlayerServiceInterface>(() => PlayerService(playerRepositoryInterface: Get.find()), fenix: true);
-  Get.put(PlayerController(playerServiceInterface: Get.find(), sharedPreferences: Get.find()), permanent: true);
+  // Lazy: created (and data loaded) only when first read post-login, not at startup.
+  Get.lazyPut<PlayerController>(() => PlayerController(playerServiceInterface: Get.find(), sharedPreferences: Get.find()), fenix: true);
 
   // Splash feature dependencies
   Get.lazyPut<SplashRepositoryInterface>(() => SplashRepository(backendDataController: Get.find()), fenix: true);
@@ -81,7 +82,8 @@ Future<void> init() async {
   // Profile feature dependencies
   Get.lazyPut<ProfileRepositoryInterface>(() => ProfileRepository(), fenix: true);
   Get.lazyPut<ProfileServiceInterface>(() => ProfileService(profileRepositoryInterface: Get.find()), fenix: true);
-  Get.put(ProfileController(profileServiceInterface: Get.find()), permanent: true);
+  // Lazy: profile is fetched only when first read post-login, not at startup.
+  Get.lazyPut<ProfileController>(() => ProfileController(profileServiceInterface: Get.find()), fenix: true);
 
   // Matches feature dependencies
   Get.lazyPut<MatchRepositoryInterface>(() => MatchRepository(supabase: Get.find()), fenix: true);

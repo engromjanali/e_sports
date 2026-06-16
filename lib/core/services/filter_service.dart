@@ -30,10 +30,37 @@ class FilterService {
         break;
     }
 
-    // Filter all entries by date
+    // Filter all entries by date (legacy exclusive-start semantics)
     final filteredEntries = allEntries.where((e) => e.date.isAfter(startDate)).toList();
+    return _rankFromEntries(players, filteredEntries);
+  }
 
-    // Map each player to their computed stats for this period
+  /// Full ranking for entries whose match date is in `[start, end)`.
+  /// [end] defaults to "now" (ongoing season). When [seasonId] is provided,
+  /// only entries from that season are counted — prevents bleed across seasons
+  /// whose date ranges might overlap.
+  static List<ComputedPlayerStats> getRankedPlayersInRange({
+    required List<PlayerModel> players,
+    required List<MatchEntryModel> allEntries,
+    required DateTime start,
+    DateTime? end,
+    int? seasonId,
+  }) {
+    final s = start.toUtc();
+    final e = (end ?? DateTime.now()).toUtc();
+    final filtered = allEntries.where((entry) {
+      if (seasonId != null && entry.seasonId != seasonId) return false;
+      final d = entry.date.toUtc();
+      return !d.isBefore(s) && d.isBefore(e); // [s, e)
+    }).toList();
+    return _rankFromEntries(players, filtered);
+  }
+
+  // Shared: map players → computed stats → sort (pts, goals, GD) → assign rank.
+  static List<ComputedPlayerStats> _rankFromEntries(
+    List<PlayerModel> players,
+    List<MatchEntryModel> filteredEntries,
+  ) {
     List<ComputedPlayerStats> stats = players.map((p) {
       final playerEntries = filteredEntries.where((e) => e.playerId == p.id).toList();
       return StatsService.computeStats(p, playerEntries);
