@@ -13,7 +13,7 @@ class AppConstants {
   static const String googleServerClientId = '491987943015-agln6biv84krpnngdphj87jkko7r9lb8.apps.googleusercontent.com';
   static const String pusherBroadcustUrl = '/api/v1/broadcasting/user-auth';
 
-  static const String baseUrl = 'https://foatball.vercel.app';
+  static const String baseUrl = 'http://127.0.0.1:8000';
 
   // Supabase
   static const String supabaseUrl = 'https://ttietyuwaamuiziwzmst.supabase.co';
@@ -30,6 +30,11 @@ class AppConstants {
   // config
   static const String configUri = "/api/user/config";
 
+  // player
+  static const String players = "/api/user/players";
+  static const String matchEntries = "/api/user/match-entries";
+  static const String myRank = "/api/user/my-rank";
+  
   // matchs
   static const String homeMatch = "/api/user/home-match";
   static const String matches = "/api/user/matches";
@@ -37,10 +42,6 @@ class AppConstants {
   // news
   static const String news = "/api/user/news";
 
-  // player
-  static const String players = "/api/user/players";
-  static const String matchEntries = "/api/user/match-entries";
-  static const String myRank = "/api/user/my-rank";
 
   // rank (legacy — home spotlight)
   static const String scorerOfTheWeekAndMonth = "/api/user/scorer-of-the-week-and-month";

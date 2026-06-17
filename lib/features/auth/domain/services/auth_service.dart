@@ -11,7 +11,7 @@ class AuthService implements AuthServiceInterface {
   AuthService({required this.authRepositoryInterface});
 
   @override
-  Future<AuthLoginResult> login(String? email, String password, ) async {
+  Future<AuthLoginResult> login(String email, String password, ) async {
     try {
       final Map<String, dynamic> response = await authRepositoryInterface.login(email, password);
       final token = _readToken(response);

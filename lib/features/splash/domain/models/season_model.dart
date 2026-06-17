@@ -41,12 +41,8 @@ class SeasonModel {
       status: json['status'] as bool? ?? true,
       startDate: start,
       endDate: end,
-      weeks: start == null
-          ? const []
-          : SeasonPeriodBuilder.buildWeeks(start: start, end: effectiveEnd),
-      months: start == null
-          ? const []
-          : SeasonPeriodBuilder.buildMonths(start: start, end: effectiveEnd),
+      weeks: start == null ? const [] : SeasonPeriodBuilder.buildWeeks(start: start, end: effectiveEnd),
+      months: start == null ? const [] : SeasonPeriodBuilder.buildMonths(start: start, end: effectiveEnd),
     );
   }
 

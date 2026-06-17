@@ -59,8 +59,9 @@ class ApiClient extends GetxService {
         log('====> API Call[get]: $uri\nHeader: ${headers ?? _mainHeaders}');
       }
       response = await http.get(Uri.parse(appBaseUrl + uri), headers: headers ?? _mainHeaders).timeout(Duration(seconds: timeoutInSeconds));
-    }catch (e) {
-      response = http.Response(jsonEncode({'message': noInternetMessage}), 1, headers: headers ?? _mainHeaders);
+    } catch (e) {
+      if (kDebugMode) log('====> API Error [get]: $uri\n$e');
+      throw NetworkException(noInternetMessage);
     }
     return handleResponse(response, uri, handleError);
   }
@@ -78,8 +79,8 @@ class ApiClient extends GetxService {
         body: jsonEncode(body), headers: headers ?? _mainHeaders).timeout(Duration(seconds: timeout ?? timeoutInSeconds)
       );
     } catch (e) {
-      printer("----> error: $e ");
-      response = http.Response(jsonEncode({'message': noInternetMessage}), 1, headers: headers ?? _mainHeaders);
+      if (kDebugMode) log('====> API Error [post]: $uri\n$e');
+      throw NetworkException(noInternetMessage);
     }
     return handleResponse(response, uri, handleError);
   }
@@ -141,7 +142,8 @@ class ApiClient extends GetxService {
       request.fields.addAll(body);
       response = await http.Response.fromStream(await request.send());
     } catch (e) {
-      response = http.Response(jsonEncode({'message': noInternetMessage}), 1, headers: headers ?? _mainHeaders);
+      if (kDebugMode) log('====> API Error: $uri\n$e');
+      throw NetworkException(noInternetMessage);
     }
     return handleResponse(response, uri, handleError);
   }
@@ -157,7 +159,8 @@ class ApiClient extends GetxService {
       }
       response = await http.put(Uri.parse(appBaseUrl + uri), body: jsonEncode(body), headers: headers ?? _mainHeaders).timeout(Duration(seconds: timeoutInSeconds));
     } catch (e) {
-      response = http.Response(jsonEncode({'message': noInternetMessage}), 1, headers: headers ?? _mainHeaders);
+      if (kDebugMode) log('====> API Error: $uri\n$e');
+      throw NetworkException(noInternetMessage);
     }
     return handleResponse(response, uri, handleError);
   }
@@ -176,7 +179,8 @@ class ApiClient extends GetxService {
           .delete(Uri.parse(appBaseUrl + uri), headers: headers ?? _mainHeaders)
           .timeout(Duration(seconds: timeoutInSeconds));
     } catch (e) {
-      response = http.Response(jsonEncode({'message': noInternetMessage}), 1, headers: headers ?? _mainHeaders);
+      if (kDebugMode) log('====> API Error: $uri\n$e');
+      throw NetworkException(noInternetMessage);
     }
     return handleResponse(response, uri, handleError);
   }

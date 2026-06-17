@@ -6,6 +6,9 @@ import 'package:get/get.dart';
 class ApiChecker {
 
   static void checkUnauthorized() async{
+    // A 401 only means "session expired" if there was a session. During login
+    // (no token yet) a 401 is just wrong credentials — don't force a redirect.
+    if (!Get.find<AuthController>().isLoggedIn()) return;
     await Future.delayed(Duration(seconds: 2));
     Get.find<AuthController>().clearUserToken().then((_) {
       Get.offAllNamed(RouteHelper.getInitialRoute());

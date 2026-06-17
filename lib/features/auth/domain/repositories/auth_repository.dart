@@ -1,8 +1,5 @@
 import 'package:e_sports/core/api/api_client.dart';
-import 'package:e_sports/core/beckend_service/controller/backend_data_controller.dart';
 import 'package:e_sports/core/constants/app_constants.dart';
-import 'package:e_sports/core/error/exception/app_exception.dart';
-import 'package:e_sports/core/helper/app_helper.dart';
 import 'package:e_sports/features/auth/domain/repositories/auth_repository_interface.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -14,16 +11,16 @@ class AuthRepository implements AuthRepositoryInterface {
   AuthRepository({required this.apiClient, required this.sharedPreferences});
 
   @override
-  Future<Map<String, dynamic>> login(String? email, String password) async {
-    final playerId = await Get.find<BackendDataController>().postData(
+  Future<Map<String, dynamic>> login(String email, String password) async {
+    // Django POST /api/user/signin → {"token": "<player-uuid>"} on success,
+    // 401 on bad credentials (rethrown as UnauthorizedException for the service
+    // layer to map; handleError:false keeps it from being swallowed).
+    final response = await apiClient.postData(
       AppConstants.loginUri,
-      payload1: {'email': email?.trim() ?? '', 'password': password},
-      season: AppHelper.season,
-    ) as String?;
-    if (playerId == null || playerId.isEmpty) {
-      throw const UnauthorizedException('Invalid email or password.');
-    }
-    return {'token': playerId};
+      {'email': email.trim(), 'password': password},
+      handleError: false,
+    );
+    return response.body as Map<String, dynamic>;
   }
 
   @override

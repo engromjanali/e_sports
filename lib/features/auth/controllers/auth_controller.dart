@@ -9,7 +9,7 @@ class AuthController extends GetxController implements GetxService {
   bool _isLoading = false;
   bool get isLoading => _isLoading;
 
-  Future<AuthLoginResult> login(String? email, String password) async {
+  Future<AuthLoginResult> login(String email, String password) async {
     _isLoading = true;
     update();
     final AuthLoginResult responseModel = await authServiceInterface.login(email, password);
