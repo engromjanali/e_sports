@@ -59,16 +59,10 @@ class BackendDataController extends GetxService{
         return fetchSeasonalTopThreeScorer(season: season);
 
       // ── Server-driven rank: MVP cards (6) ──
-      case AppConstants.weekMvpPlayer:
-        return fetchWeekMvpPlayer(payload1 as Map<String, dynamic>);
       case AppConstants.weekMvpScorer:
         return fetchWeekMvpScorer(payload1 as Map<String, dynamic>);
-      case AppConstants.monthMvpPlayer:
-        return fetchMonthMvpPlayer(payload1 as Map<String, dynamic>);
       case AppConstants.monthMvpScorer:
         return fetchMonthMvpScorer(payload1 as Map<String, dynamic>);
-      case AppConstants.seasonMvpPlayer:
-        return fetchSeasonMvpPlayer(payload1 as Map<String, dynamic>);
       case AppConstants.seasonMvpScorer:
         return fetchSeasonMvpScorer(payload1 as Map<String, dynamic>);
 
@@ -303,30 +297,6 @@ class BackendDataController extends GetxService{
     return data;
   }
 
-/// ===================== my rank ===========================
-
-  Future<Map<String, dynamic>?> fetchMyRank({required String playerId, required int seasonId}) async {
-    final data = await supabase
-        .from('player_season_stats')
-        .select()
-        .eq('season_id', seasonId);
-
-    final rows = (data as List).cast<Map<String, dynamic>>();
-
-    // Sort all rows by pts descending (same formula used everywhere)
-    rows.sort((a, b) => _ptsFromMap(b).compareTo(_ptsFromMap(a)));
-
-    final idx = rows.indexWhere((r) => r['player_id']?.toString() == playerId);
-    if (idx == -1) {
-      printer("GET myRank: player $playerId not found in season $seasonId stats");
-      return null;
-    }
-
-    // Return the matched row with the server-computed rank + pts attached.
-    final result = {...rows[idx], 'rank': idx + 1, 'pts': _ptsFromMap(rows[idx])};
-    printer("GET myRank: rank=${result['rank']} pts=${result['pts']} for player $playerId");
-    return result;
-  }
 
 /// ===================== rank home ===========================
 
@@ -491,11 +461,8 @@ class BackendDataController extends GetxService{
   // overall:bool?, player_id:String?, limit:int?.
 
   // ── MVP wrappers (6): each returns the single top player map, or null. ──
-  Future<Map<String, dynamic>?> fetchWeekMvpPlayer(Map<String, dynamic> p)   => _topRankInRange(p, byGoals: false);
   Future<Map<String, dynamic>?> fetchWeekMvpScorer(Map<String, dynamic> p)   => _topRankInRange(p, byGoals: true);
-  Future<Map<String, dynamic>?> fetchMonthMvpPlayer(Map<String, dynamic> p)  => _topRankInRange(p, byGoals: false);
   Future<Map<String, dynamic>?> fetchMonthMvpScorer(Map<String, dynamic> p)  => _topRankInRange(p, byGoals: true);
-  Future<Map<String, dynamic>?> fetchSeasonMvpPlayer(Map<String, dynamic> p) => _topRankInRange(p, byGoals: false);
   Future<Map<String, dynamic>?> fetchSeasonMvpScorer(Map<String, dynamic> p) => _topRankInRange(p, byGoals: true);
 
   Future<Map<String, dynamic>?> _topRankInRange(Map<String, dynamic> p, {required bool byGoals}) async {

@@ -63,28 +63,43 @@ class RankingViewWidget extends StatelessWidget {
                   onSelected: controller.setMvpMonth,
                 );
 
-                // A hero card, or an empty-state placeholder (still showing the
-                // period selector) when the period has no player. [detailSeason]
-                // is the season passed to the detail screen (null = overall).
+                // A hero card. When the period has no player it falls back to a
+                // demo placeholder (non-tappable). While loading, a spinner is
+                // overlaid on top of the card. [detailSeason] is the season
+                // passed to the detail screen (null = overall).
                 Widget hero(MvpType type, RankMvpModel? player, Widget? action, int? detailSeason, bool loading) {
-                  if (player == null) {
-                    if (loading) {
-                      return SizedBox(
-                        height: compact ? 150 : 180,
-                        child: Center(
-                          child: SizedBox(
-                            height: Dimensions.iconMd,
-                            width: Dimensions.iconMd,
-                            child: CircularProgressIndicator(strokeWidth: Dimensions.borderMedium, color: AppColors.neonGold),
+                  final model = player ?? RankMvpModel.demo();
+                  final card = PremiumHeroCard(type: type, player: model, isScorer: isScorer, action: action, compact: compact);
+
+                  // Demo placeholder has no real player to open.
+                  Widget content = model.isDemo
+                      ? card
+                      : GestureDetector(
+                          onTap: () => Get.toNamed(RouteHelper.getRankDetailRoute(model.id, seasonId: detailSeason)),
+                          child: card,
+                        );
+
+                  if (!loading) return content;
+
+                  // Loading: keep the card visible with a spinner overlaid on top.
+                  return Stack(
+                    children: [
+                      content,
+                      Positioned.fill(
+                        child: ClipRRect(
+                          borderRadius: Dimensions.borderHero,
+                          child: Container(
+                            color: AppColors.bg.withOpacity(AppColors.opacity60),
+                            alignment: Alignment.center,
+                            child: SizedBox(
+                              height: Dimensions.iconMd,
+                              width: Dimensions.iconMd,
+                              child: CircularProgressIndicator(strokeWidth: Dimensions.borderMedium, color: AppColors.neonGold),
+                            ),
                           ),
                         ),
-                      );
-                    }
-                    return _EmptyHeroCard(type: type, action: action, compact: compact);
-                  }
-                  return GestureDetector(
-                    onTap: () => Get.toNamed(RouteHelper.getRankDetailRoute(player.id, seasonId: detailSeason)),
-                    child: PremiumHeroCard(type: type, player: player, isScorer: isScorer, action: action, compact: compact),
+                      ),
+                    ],
                   );
                 }
 
@@ -424,60 +439,3 @@ class _PeriodSelector extends StatelessWidget {
   }
 }
 
-/// Placeholder shown in a hero slot when the selected period has no player.
-/// Keeps the period selector visible so the user can switch periods.
-class _EmptyHeroCard extends StatelessWidget {
-  final MvpType type;
-  final Widget? action;
-  final bool compact;
-
-  const _EmptyHeroCard({required this.type, this.action, this.compact = false});
-
-  @override
-  Widget build(BuildContext context) {
-    final label = type == MvpType.week
-        ? "WEEK"
-        : type == MvpType.month
-            ? "MONTH"
-            : "SEASON";
-
-    final vGap = compact ? Dimensions.xl : Dimensions.massive;
-
-    return Container(
-      padding: EdgeInsets.all(compact ? Dimensions.lg : Dimensions.xl),
-      decoration: BoxDecoration(
-        color: AppColors.white.withOpacity(AppColors.opacity4),
-        borderRadius: Dimensions.borderCard,
-        border: Border.all(color: AppColors.glassBorder),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                label,
-                style: TextStyle(
-                  fontSize: Dimensions.sizeCaption,
-                  fontWeight: Dimensions.black,
-                  color: AppColors.textMuted,
-                  letterSpacing: 1.2,
-                ),
-              ),
-              if (action != null) Flexible(child: Align(alignment: Alignment.centerRight, child: action!)),
-            ],
-          ),
-          SizedBox(height: vGap),
-          Center(
-            child: Text(
-              "No data for this period",
-              style: TextStyle(fontSize: Dimensions.sizeSmall, color: AppColors.textMuted),
-            ),
-          ),
-          SizedBox(height: vGap),
-        ],
-      ),
-    );
-  }
-}

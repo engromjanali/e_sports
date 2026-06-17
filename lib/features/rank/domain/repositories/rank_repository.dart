@@ -1,3 +1,4 @@
+import 'package:e_sports/core/api/api_client.dart';
 import 'package:e_sports/core/beckend_service/controller/backend_data_controller.dart';
 import 'package:e_sports/core/constants/app_constants.dart';
 import 'package:e_sports/core/helper/app_helper.dart';
@@ -77,13 +78,26 @@ class RankRepository implements RankRepositoryInterface {
 
   // ── Server-driven rank ──
 
-  Future<RankMvpModel?> _mvp(String endpoint, Map<String, dynamic> payload) async {
-    final data = await Get.find<BackendDataController>().getData(
-      endpoint,
-      payload1: payload,
-      season: AppHelper.season,
-    );
-    return data == null ? null : RankMvpModel.fromJson(data as Map<String, dynamic>);
+  // Single filtered MVP endpoint: GET /api/user/rank/mvp?type=&start=&end=&overall=&season=
+  Future<RankMvpModel?> _mvp({
+    required bool isScorer,
+    required DateTime start,
+    required DateTime end,
+    int? seasonId,
+    bool overall = false,
+  }) async {
+    final params = <String, String>{
+      'type': isScorer ? 'scorer' : 'player',
+      'start': start.toIso8601String(),
+      'end': end.toIso8601String(),
+      'overall': overall.toString(),
+      if (!overall && seasonId != null) 'season': seasonId.toString(),
+    };
+    final uri = Uri.parse(AppConstants.rankMvp).replace(queryParameters: params).toString();
+    final response = await Get.find<ApiClient>().getData(uri, handleError: false);
+    final body = response.body;
+    if (body is! Map<String, dynamic>) return null;
+    return RankMvpModel.fromJson(body);
   }
 
   Future<List<RankListItemModel>> _list(String endpoint, Map<String, dynamic> payload) async {
@@ -97,27 +111,17 @@ class RankRepository implements RankRepositoryInterface {
 
   @override
   Future<RankMvpModel?> getWeekMvp({required int seasonId, required DateTime start, required DateTime end, required bool isScorer}) {
-    return _mvp(isScorer ? AppConstants.weekMvpScorer : AppConstants.weekMvpPlayer, {
-      'season_id': seasonId, 'start': start.toIso8601String(), 'end': end.toIso8601String(),
-      'type': isScorer ? 'scorer' : 'player',
-    });
+    return _mvp(isScorer: isScorer, start: start, end: end, seasonId: seasonId);
   }
 
   @override
   Future<RankMvpModel?> getMonthMvp({required int seasonId, required DateTime start, required DateTime end, required bool isScorer}) {
-    return _mvp(isScorer ? AppConstants.monthMvpScorer : AppConstants.monthMvpPlayer, {
-      'season_id': seasonId, 'start': start.toIso8601String(), 'end': end.toIso8601String(),
-      'type': isScorer ? 'scorer' : 'player',
-    });
+    return _mvp(isScorer: isScorer, start: start, end: end, seasonId: seasonId);
   }
 
   @override
   Future<RankMvpModel?> getSeasonMvp({required bool overall, int? seasonId, required DateTime start, required DateTime end, required bool isScorer}) {
-    return _mvp(isScorer ? AppConstants.seasonMvpScorer : AppConstants.seasonMvpPlayer, {
-      'season_id': seasonId, 'overall': overall,
-      'start': start.toIso8601String(), 'end': end.toIso8601String(),
-      'type': isScorer ? 'scorer' : 'player',
-    });
+    return _mvp(isScorer: isScorer, start: start, end: end, seasonId: seasonId, overall: overall);
   }
 
   @override

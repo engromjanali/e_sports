@@ -51,7 +51,10 @@ class AppConstants {
   static const String overAllTopThreeScorer = "/api/user/overall-top-three-scorer";
   static const String seasonalTopThreeScorer = "/api/user/seasonal-top-three-scorer";
 
-  // rank — server-driven MVP cards (period × player/scorer)
+  // rank — server-driven MVP card (filtered: type + date range + season/overall)
+  static const String rankMvp = "/api/user/rank/mvp";
+
+  // rank — legacy server-driven MVP cards (period × player/scorer)
   static const String weekMvpPlayer    = "/api/user/rank/week-mvp-player";
   static const String weekMvpScorer    = "/api/user/rank/week-mvp-scorer";
   static const String monthMvpPlayer   = "/api/user/rank/month-mvp-player";

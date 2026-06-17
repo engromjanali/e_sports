@@ -33,6 +33,29 @@ class RankMvpModel {
     required this.pts,
   });
 
+  /// Placeholder shown on the rank cards when a period has no ranked player.
+  factory RankMvpModel.demo() {
+    return const RankMvpModel(
+      id: '',
+      name: 'mr xyz',
+      short: 'xyz',
+      image: '',
+      tags: ['xyz'],
+      rank: 0,
+      matches: 0,
+      wins: 0,
+      draws: 0,
+      losses: 0,
+      goals: 0,
+      gf: 0,
+      ga: 0,
+      pts: 0,
+    );
+  }
+
+  /// Whether this is the synthetic demo placeholder (no real player behind it).
+  bool get isDemo => id.isEmpty;
+
   factory RankMvpModel.fromJson(Map<String, dynamic> json) {
     return RankMvpModel(
       id: json['id']?.toString() ?? '',
