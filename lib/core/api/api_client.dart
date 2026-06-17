@@ -25,10 +25,12 @@ class ApiClient extends GetxService {
   final int timeoutInSeconds = 40;
 
   String? token;
+  int? seasonId;
   late Map<String, String> _mainHeaders;
 
   ApiClient({required this.appBaseUrl, required this.sharedPreferences}) {
     token = sharedPreferences.getString(AppConstants.token);
+    seasonId = sharedPreferences.getInt(AppConstants.seasonId);
     if (kDebugMode) {
       printer('Token: $token');
     }
@@ -46,10 +48,25 @@ class ApiClient extends GetxService {
       'Accept': 'application/json',
       'Authorization': 'Bearer $token',
     });
-    
+
+    // Set once after config loads; sent on every request so callers don't repeat it.
+    if (seasonId != null) {
+      header['X-Season-Id'] = seasonId.toString();
+    }
+
     _mainHeaders = header;
 
     return header;
+  }
+
+  /// Sets the current season sent as `X-Season-Id` on all subsequent requests.
+  /// Call once after the config is fetched.
+  void updateSeasonHeader(int? season) {
+    seasonId = season;
+    if (season != null) {
+      sharedPreferences.setInt(AppConstants.seasonId, season);
+    }
+    updateHeader(token);
   }
 
   Future<Response> getData(String uri, {Map<String, dynamic>? query, Map<String, String>? headers, bool handleError = true,}) async {

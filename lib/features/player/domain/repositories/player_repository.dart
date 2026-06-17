@@ -1,3 +1,4 @@
+import 'package:e_sports/core/api/api_client.dart';
 import 'package:e_sports/core/beckend_service/controller/backend_data_controller.dart';
 import 'package:e_sports/core/constants/app_constants.dart';
 import 'package:e_sports/core/helper/app_helper.dart';
@@ -29,14 +30,10 @@ class PlayerRepository implements PlayerRepositoryInterface {
   }
 
   @override
-  Future<MyRankModel?> getMyRank({required String playerId, required int seasonId}) async {
-    final data = await Get.find<BackendDataController>().getData(
-      AppConstants.myRank,
-      payload1: playerId,
-      season: seasonId,
-    );
-    if (data == null) return null;
-    final m = data as Map<String, dynamic>;
-    return MyRankModel.fromJson(m, rank: m['rank'] as int, pts: m['pts'] as int);
+  Future<MyRankModel?> getMyRank() async {
+    final response = await Get.find<ApiClient>().getData(AppConstants.myRank, handleError: false);
+    final body = response.body;
+    if (body is! Map<String, dynamic>) return null;
+    return MyRankModel.fromJson(body);
   }
 }

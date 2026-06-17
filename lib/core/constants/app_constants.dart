@@ -97,6 +97,7 @@ class AppConstants {
 
   // keys
   static const token = 'token';
+  static const seasonId = 'x_season_id';
 
   ///Rental Type
   static const String hourly = 'hourly';

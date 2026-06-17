@@ -38,9 +38,9 @@ class PlayerService implements PlayerServiceInterface {
   }
 
   @override
-  Future<MyRankModel?> getMyRank({required String playerId, required int seasonId}) async {
+  Future<MyRankModel?> getMyRank() async {
     try {
-      return await playerRepositoryInterface.getMyRank(playerId: playerId, seasonId: seasonId);
+      return await playerRepositoryInterface.getMyRank();
     } on AppException catch (e) {
       printer('[PlayerService.getMyRank] ${e.message}');
       return null;

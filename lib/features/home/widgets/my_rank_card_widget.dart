@@ -10,7 +10,7 @@ class MyRankCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Obx(() {
       final player = Get.find<PlayerController>();
-      final me = player.selectedPlayer ?? player.rankedPlayers.firstOrNull;
+      final me = player.myRank.value;
       if (me == null) return const SizedBox.shrink();
       String rank = "${me.rank}";
       return Container(
@@ -107,7 +107,7 @@ class MyRankCard extends StatelessWidget {
                               ),
                             ),
                             Text(
-                              "@${me.short.toLowerCase()}",
+                              "@${me.sortName.toLowerCase()}",
                               style: TextStyle(
                                 fontSize: Dimensions.sizeSmall,
                                 color: AppColors.white.withOpacity(AppColors.opacity40),

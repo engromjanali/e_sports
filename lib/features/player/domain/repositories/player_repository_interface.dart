@@ -5,5 +5,5 @@ import 'package:e_sports/core/data/models/player_model.dart';
 abstract class PlayerRepositoryInterface {
   Future<List<PlayerModel>> getPlayers();
   Future<List<MatchEntryModel>> getMatchEntries();
-  Future<MyRankModel?> getMyRank({required String playerId, required int seasonId});
+  Future<MyRankModel?> getMyRank();
 }

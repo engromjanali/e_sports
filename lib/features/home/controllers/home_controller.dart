@@ -32,12 +32,8 @@ class HomeController extends GetxController {
   }
 
   Future<void> _refreshMyRank() async {
-    final playerCtrl = Get.find<PlayerController>();
-    final seasonId = Get.find<SplashController>().configModel?.currentSeason;
-    if (seasonId == null || playerCtrl.selectedPlayerId.isEmpty) return;
-    await playerCtrl.fetchMyRank(
-      playerId: playerCtrl.selectedPlayerId,
-      seasonId: seasonId,
-    );
+    // Season is sent via the X-Season-Id header (set after config loads).
+    if (Get.find<SplashController>().configModel?.currentSeason == null) return;
+    await Get.find<PlayerController>().fetchMyRank();
   }
 }

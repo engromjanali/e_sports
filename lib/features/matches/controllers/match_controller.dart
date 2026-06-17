@@ -43,7 +43,7 @@ class MatchController extends GetxController {
 
   // Per-category cache so switching back to a previously viewed category
   // doesn't refetch, plus a "server still has more offsets" flag and the current
-  // 0-based offset per category.
+  // 1-based page number per category.
   final Map<String, List<MatchModel>> _cache = {};
   final Map<String, bool> _hasMore = {};
   final Map<String, int> _offset = {};
@@ -106,11 +106,11 @@ class MatchController extends GetxController {
       final result = await matchServiceInterface.getMatches(
         type: MatchFilter.values.byName(category),
         limit: offsetSize,
-        offset: 0,
+        offset: 1,
         season: _selectedSeasonId.value,
       );
       _cache[category] = result;
-      _offset[category] = 0;
+      _offset[category] = 1;
       _hasMore[category] = result.length == offsetSize;
       matches.assignAll(result);
     } finally {

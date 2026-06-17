@@ -51,9 +51,8 @@ class PlayerController extends GetxController {
   void setSelectedPlayer(String id) {
     _selectedPlayerId.value = id;
     sharedPreferences.setString(_selectedPlayerKey, id);
-    // Refresh rank immediately if the season is already known.
-    final season = _currentSeasonId;
-    if (season != null) fetchMyRank(playerId: id, seasonId: season);
+    // Refresh rank immediately if the season is already known (header is set).
+    if (_currentSeasonId != null) fetchMyRank();
   }
 
   int? get _currentSeasonId {
@@ -64,14 +63,10 @@ class PlayerController extends GetxController {
     }
   }
 
-  Future<void> fetchMyRank({required String playerId, required int seasonId}) async {
-    if (playerId.isEmpty) return;
+  Future<void> fetchMyRank() async {
     isMyRankLoading.value = true;
     try {
-      myRank.value = await playerServiceInterface.getMyRank(
-        playerId: playerId,
-        seasonId: seasonId,
-      );
+      myRank.value = await playerServiceInterface.getMyRank();
       printer('[PlayerController] myRank fetched: rank=${myRank.value?.rank} pts=${myRank.value?.pts}');
     } finally {
       isMyRankLoading.value = false;

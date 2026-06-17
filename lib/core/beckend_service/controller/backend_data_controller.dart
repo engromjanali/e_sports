@@ -37,9 +37,6 @@ class BackendDataController extends GetxService{
       case AppConstants.matchEntries:
         return fetchMatchEntries();
 
-      case AppConstants.myRank:
-        return fetchMyRank(playerId: payload1 as String, seasonId: season);
-
       case AppConstants.profileUri:
         return fetchProfile(id: payload1 as String);
 

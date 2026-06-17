@@ -33,8 +33,8 @@ class NewsController extends GetxController {
   final _hasMore = true.obs;
   bool get hasMore => _hasMore.value;
 
-  // Current 0-based offset of the loaded news list.
-  int _offset = 0;
+  // Current 1-based page number of the loaded news list (page 1 = first page).
+  int _offset = 1;
 
   bool get isEmpty => _news.isEmpty;
 
@@ -49,7 +49,7 @@ class NewsController extends GetxController {
 
   // Loads the latest news for the home banner, independent of the search list.
   Future<void> getNewsHome() async {
-    final home = await newsServiceInterface.getNews(limit: homeLimit, offset: 0);
+    final home = await newsServiceInterface.getNews(limit: homeLimit, offset: 1);
     newsHome.assignAll(home);
   }
 
@@ -65,7 +65,7 @@ class NewsController extends GetxController {
   Future<void> loadNews() async {
     isLoading.value = true;
     try {
-      _offset = 0;
+      _offset = 1;
       final result = await newsServiceInterface.getNews(
         limit: offsetSize,
         offset: _offset,

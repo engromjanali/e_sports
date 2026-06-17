@@ -7,7 +7,7 @@ abstract class MatchServiceInterface {
   Future<List<MatchModel>> getMatches({
     MatchFilter type = MatchFilter.all,
     int limit = 10,
-    int offset = 0,
+    int offset = 1,
     required int season,
   });
 }

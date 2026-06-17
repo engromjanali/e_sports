@@ -1,3 +1,4 @@
+import 'package:e_sports/core/api/api_client.dart';
 import 'package:e_sports/core/constants/app_constants.dart';
 import 'package:e_sports/features/splash/domain/models/config_model.dart';
 import 'package:e_sports/features/splash/domain/services/splash_service_interface.dart';
@@ -21,6 +22,7 @@ class SplashController extends GetxController implements GetxService {
     _isLoading = true;
     update();
     _configModel = await splashServiceInterface.getConfig();
+    Get.find<ApiClient>().updateSeasonHeader(_configModel?.currentSeason);
     _isLoading = false;
     update();
     return _configModel != null;

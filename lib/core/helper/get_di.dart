@@ -87,7 +87,7 @@ Future<void> init() async {
   Get.lazyPut<ProfileController>(() => ProfileController(profileServiceInterface: Get.find()), fenix: true);
 
   // Matches feature dependencies
-  Get.lazyPut<MatchRepositoryInterface>(() => MatchRepository(supabase: Get.find()), fenix: true);
+  Get.lazyPut<MatchRepositoryInterface>(() => MatchRepository(), fenix: true);
   Get.lazyPut<MatchServiceInterface>(() => MatchService(matchRepositoryInterface: Get.find()), fenix: true);
   Get.lazyPut<MatchController>(() => MatchController(matchServiceInterface: Get.find()), fenix: true);
 
@@ -95,7 +95,7 @@ Future<void> init() async {
   Get.lazyPut<HomeController>(() => HomeController(matchServiceInterface: Get.find()), fenix: true);
 
   // News feature dependencies
-  Get.lazyPut<NewsRepositoryInterface>(() => NewsRepository(supabase: Get.find()), fenix: true);
+  Get.lazyPut<NewsRepositoryInterface>(() => NewsRepository(), fenix: true);
   Get.lazyPut<NewsServiceInterface>(() => NewsService(newsRepositoryInterface: Get.find()), fenix: true);
   Get.lazyPut<NewsController>(() => NewsController(newsServiceInterface: Get.find()), fenix: true);
 
