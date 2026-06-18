@@ -2,97 +2,41 @@ import 'package:e_sports/core/api/api_client.dart';
 import 'package:e_sports/core/beckend_service/controller/backend_data_controller.dart';
 import 'package:e_sports/core/constants/app_constants.dart';
 import 'package:e_sports/core/helper/app_helper.dart';
-import 'package:e_sports/features/rank/domain/model/leader_board_player_model.dart';
-import 'package:e_sports/features/rank/domain/model/player_of_the_week_and_month_model.dart';
 import 'package:e_sports/features/rank/domain/model/rank_mvp_model.dart';
 import 'package:e_sports/features/rank/domain/model/rank_list_item_model.dart';
 import 'package:e_sports/features/rank/domain/model/player_rank_detail_model.dart';
 import 'package:e_sports/features/rank/domain/repositories/rank_repository_interface.dart';
 import 'package:get/get.dart';
-import 'package:supabase/supabase.dart';
 
 class RankRepository implements RankRepositoryInterface {
-  final SupabaseClient supabase;
-
-  RankRepository({required this.supabase});
-
-  // Route through the getData switch by endpoint, like MatchRepository.
-
-  @override
-  Future<PlayerOfTheWeekAndMonthModel?> getPlayerOfTheWeekAndMonth() async {
-    final data = await Get.find<BackendDataController>().getData(
-      AppConstants.playerOfTheWeekAndMonth,
-      season: AppHelper.season,
-    );
-    return data == null
-        ? null
-        : PlayerOfTheWeekAndMonthModel.fromJson(data as Map<String, dynamic>);
-  }
-
-  @override
-  Future<PlayerOfTheWeekAndMonthModel?> getScorerOfTheWeekAndMonth() async {
-    final data = await Get.find<BackendDataController>().getData(
-      AppConstants.scorerOfTheWeekAndMonth,
-      season: AppHelper.season,
-    );
-    return data == null
-        ? null
-        : PlayerOfTheWeekAndMonthModel.fromJson(data as Map<String, dynamic>);
-  }
-
-  @override
-  Future<List<LeaderboardPlayerModel>> getOverAllTopThreePlayer() async {
-    final data = await Get.find<BackendDataController>().getData(
-      AppConstants.overAllTopThreePlayer,
-      season: AppHelper.season,
-    );
-    return (data as List).map((e) => _toLeaderboard(e as Map<String, dynamic>)).toList();
-  }
-
-  @override
-  Future<List<LeaderboardPlayerModel>> getSeasonalTopThreePlayer() async {
-    final data = await Get.find<BackendDataController>().getData(
-      AppConstants.seasonalTopThreePlayer,
-      season: AppHelper.season,
-    );
-    return (data as List).map((e) => _toLeaderboard(e as Map<String, dynamic>)).toList();
-  }
-
-  @override
-  Future<List<LeaderboardPlayerModel>> getOverAllTopThreeScorer() async {
-    final data = await Get.find<BackendDataController>().getData(
-      AppConstants.overAllTopThreeScorer,
-      season: AppHelper.season,
-    );
-    return (data as List).map((e) => _toLeaderboard(e as Map<String, dynamic>)).toList();
-  }
-
-  @override
-  Future<List<LeaderboardPlayerModel>> getSeasonalTopThreeScorer() async {
-    final data = await Get.find<BackendDataController>().getData(
-      AppConstants.seasonalTopThreeScorer,
-      season: AppHelper.season,
-    );
-    return (data as List).map((e) => _toLeaderboard(e as Map<String, dynamic>)).toList();
-  }
-
-  // ── Server-driven rank ──
-
-  // Single filtered MVP endpoint: GET /api/user/rank/mvp?type=&start=&end=&overall=&season=
-  Future<RankMvpModel?> _mvp({
+  // Shared query params for the rank/mvp and rank/list endpoints.
+  Map<String, String> _filterParams({
     required bool isScorer,
     required DateTime start,
     required DateTime end,
     int? seasonId,
-    bool overall = false,
-  }) async {
-    final params = <String, String>{
+    required bool overall,
+  }) {
+    return <String, String>{
       'type': isScorer ? 'scorer' : 'player',
       'start': start.toIso8601String(),
       'end': end.toIso8601String(),
       'overall': overall.toString(),
       if (!overall && seasonId != null) 'season': seasonId.toString(),
     };
+  }
+
+  @override
+  Future<RankMvpModel?> getRankMvp({
+    required bool isScorer,
+    required DateTime start,
+    required DateTime end,
+    int? seasonId,
+    bool overall = false,
+  }) async {
+    final params = _filterParams(
+      isScorer: isScorer, start: start, end: end, seasonId: seasonId, overall: overall,
+    );
     final uri = Uri.parse(AppConstants.rankMvp).replace(queryParameters: params).toString();
     final response = await Get.find<ApiClient>().getData(uri, handleError: false);
     final body = response.body;
@@ -100,57 +44,39 @@ class RankRepository implements RankRepositoryInterface {
     return RankMvpModel.fromJson(body);
   }
 
-  Future<List<RankListItemModel>> _list(String endpoint, Map<String, dynamic> payload) async {
-    final data = await Get.find<BackendDataController>().getData(
-      endpoint,
-      payload1: payload,
-      season: AppHelper.season,
+  @override
+  Future<List<RankListItemModel>> getRankList({
+    required bool isScorer,
+    required DateTime start,
+    required DateTime end,
+    int? seasonId,
+    bool overall = false,
+    int? limit,
+    int offset = 1,
+  }) async {
+    final params = _filterParams(
+      isScorer: isScorer, start: start, end: end, seasonId: seasonId, overall: overall,
     );
-    return (data as List).map((e) => RankListItemModel.fromJson(e as Map<String, dynamic>)).toList();
+    if (limit != null) {
+      params['limit'] = limit.toString();
+      params['offset'] = offset.toString();
+    }
+    final uri = Uri.parse(AppConstants.rankList).replace(queryParameters: params).toString();
+    final response = await Get.find<ApiClient>().getData(uri, handleError: false);
+    final body = response.body;
+    if (body is! List) return [];
+    return body.map((e) => RankListItemModel.fromJson(e as Map<String, dynamic>)).toList();
   }
 
   @override
-  Future<RankMvpModel?> getWeekMvp({required int seasonId, required DateTime start, required DateTime end, required bool isScorer}) {
-    return _mvp(isScorer: isScorer, start: start, end: end, seasonId: seasonId);
-  }
-
-  @override
-  Future<RankMvpModel?> getMonthMvp({required int seasonId, required DateTime start, required DateTime end, required bool isScorer}) {
-    return _mvp(isScorer: isScorer, start: start, end: end, seasonId: seasonId);
-  }
-
-  @override
-  Future<RankMvpModel?> getSeasonMvp({required bool overall, int? seasonId, required DateTime start, required DateTime end, required bool isScorer}) {
-    return _mvp(isScorer: isScorer, start: start, end: end, seasonId: seasonId, overall: overall);
-  }
-
-  @override
-  Future<List<RankListItemModel>> getWeeklyRanks({required int seasonId, required DateTime start, required DateTime end, required bool isScorer}) {
-    return _list(AppConstants.weeklyRanks, {
-      'season_id': seasonId, 'start': start.toIso8601String(), 'end': end.toIso8601String(),
-      'type': isScorer ? 'scorer' : 'player',
-    });
-  }
-
-  @override
-  Future<List<RankListItemModel>> getMonthlyRanks({required int seasonId, required DateTime start, required DateTime end, required bool isScorer}) {
-    return _list(AppConstants.monthlyRanks, {
-      'season_id': seasonId, 'start': start.toIso8601String(), 'end': end.toIso8601String(),
-      'type': isScorer ? 'scorer' : 'player',
-    });
-  }
-
-  @override
-  Future<List<RankListItemModel>> getSeasonStandings({required bool overall, int? seasonId, required DateTime start, required DateTime end, required bool isScorer}) {
-    return _list(AppConstants.seasonStandings, {
-      'season_id': seasonId, 'overall': overall,
-      'start': start.toIso8601String(), 'end': end.toIso8601String(),
-      'type': isScorer ? 'scorer' : 'player',
-    });
-  }
-
-  @override
-  Future<PlayerRankDetailModel?> getPlayerRankDetail({required String playerId, required bool overall, int? seasonId, required DateTime start, required DateTime end}) async {
+  Future<PlayerRankDetailModel?> getPlayerRankDetail({
+    required String playerId,
+    required bool overall,
+    int? seasonId,
+    required DateTime start,
+    required DateTime end,
+  }) async {
+    // Still Supabase-backed via BackendDataController (not yet migrated).
     final data = await Get.find<BackendDataController>().getData(
       AppConstants.playerRankDetail,
       payload1: {
@@ -160,23 +86,5 @@ class RankRepository implements RankRepositoryInterface {
       season: AppHelper.season,
     );
     return data == null ? null : PlayerRankDetailModel.fromJson(data as Map<String, dynamic>);
-  }
-
-  // Build a leaderboard model from the flat raw map the backend emits
-  // (tags/pts already computed server-side).
-  LeaderboardPlayerModel _toLeaderboard(Map<String, dynamic> m) {
-    return LeaderboardPlayerModel(
-      id:      m['id']?.toString() ?? '',
-      name:    m['name']?.toString() ?? '',
-      short:   m['short']?.toString() ?? '',
-      image:   m['image']?.toString() ?? '',
-      tags:    List<String>.from(m['tags'] ?? const []),
-      matches: (m['matches'] as num?)?.toInt() ?? 0,
-      wins:    (m['wins']    as num?)?.toInt() ?? 0,
-      draws:   (m['draws']   as num?)?.toInt() ?? 0,
-      losses:  (m['losses']  as num?)?.toInt() ?? 0,
-      goals:   (m['goals']   as num?)?.toInt() ?? 0,
-      pts:     (m['pts']     as num?)?.toInt() ?? 0,
-    );
   }
 }

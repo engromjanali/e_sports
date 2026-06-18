@@ -10,6 +10,7 @@ import '../domain/model/rank_list_item_model.dart';
 import '../../splash/domain/models/season_model.dart';
 import '../../splash/domain/models/season_period.dart';
 import '../controllers/rank_controller.dart';
+import '../controllers/rank_list_view_controller.dart';
 import 'premium_hero_card.dart';
 import 'mini_player_card.dart';
 
@@ -30,6 +31,23 @@ class RankingViewWidget extends StatelessWidget {
       final lWeek = controller.weeklyList;
       final lMonth = controller.monthlyList;
       final lSeason = controller.seasonList;
+
+      // Opens the full, paginated list for a section using its current filters.
+      void openAll(RankPeriod period, String title) {
+        final a = controller.listArgsFor(period);
+        if (a == null) return;
+        Get.toNamed(
+          RouteHelper.rankListView,
+          arguments: RankListViewArgs(
+            title: title,
+            isScorer: isScorer,
+            start: a.start,
+            end: a.end,
+            seasonId: a.seasonId,
+            overall: a.overall,
+          ),
+        );
+      }
 
       // Season id passed to the detail screen (null = overall).
       final weekDetailSeason = controller.currentSeasonId;
@@ -143,6 +161,7 @@ class RankingViewWidget extends StatelessWidget {
               isScorer: isScorer,
               loading: controller.weeklyLoading.value,
               detailSeason: controller.weeklySeasonId,
+              onViewAll: () => openAll(RankPeriod.week, isScorer ? "Weekly Scorers" : "Weekly Rankings"),
               trailing: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
@@ -169,6 +188,7 @@ class RankingViewWidget extends StatelessWidget {
               isScorer: isScorer,
               loading: controller.monthlyLoading.value,
               detailSeason: controller.currentSeasonId,
+              onViewAll: () => openAll(RankPeriod.month, isScorer ? "Monthly Scorers" : "Monthly Rankings"),
               trailing: _PeriodSelector(
                 periods: controller.months,
                 selectedNumber: controller.selectedMonthNumber,
@@ -184,6 +204,7 @@ class RankingViewWidget extends StatelessWidget {
               isScorer: isScorer,
               loading: controller.seasonLoading.value,
               detailSeason: controller.listSeasonOverall ? null : controller.listSeasonId,
+              onViewAll: () => openAll(RankPeriod.season, isScorer ? "Season Top Scorers" : "Season Standings"),
               trailing: _SeasonFilter(
                 seasons: controller.seasons,
                 overall: controller.listSeasonOverall,
@@ -207,6 +228,7 @@ class _ListSection extends StatelessWidget {
   final Widget? trailing;
   final bool loading;
   final int? detailSeason;
+  final VoidCallback? onViewAll;
 
   const _ListSection({
     required this.title,
@@ -215,6 +237,7 @@ class _ListSection extends StatelessWidget {
     this.trailing,
     this.loading = false,
     this.detailSeason,
+    this.onViewAll,
   });
 
   @override
@@ -256,6 +279,22 @@ class _ListSection extends StatelessWidget {
                 player: players[i],
                 isScorer: isScorer,
               ),
+            ),
+          ),
+        if (onViewAll != null && players.isNotEmpty)
+          Align(
+            alignment: Alignment.centerRight,
+            child: TextButton.icon(
+              onPressed: onViewAll,
+              icon: Text(
+                "View all",
+                style: TextStyle(
+                  color: AppColors.neonGold,
+                  fontWeight: Dimensions.extraBold,
+                  fontSize: Dimensions.sizeSmall,
+                ),
+              ),
+              label: Icon(Icons.chevron_right, color: AppColors.neonGold, size: Dimensions.iconSm),
             ),
           ),
       ],

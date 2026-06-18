@@ -2,7 +2,7 @@ import 'package:e_sports/core/utils/dimensions.dart';
 import 'package:e_sports/core/helper/responsive_helper.dart';
 import 'package:e_sports/features/matches/controllers/match_controller.dart';
 import 'package:e_sports/features/news/controllers/news_controller.dart';
-import 'package:e_sports/features/rank/controllers/rank_controller.dart';
+import 'package:e_sports/features/home/controllers/home_spotlight_controller.dart';
 import 'package:e_sports/features/splash/controllers/splash_controller.dart';
 import '../../player/controllers/player_controller.dart';
 import '../controllers/home_controller.dart';
@@ -59,7 +59,7 @@ class HomeScreen extends StatelessWidget {
         ]);
       }
 
-      return GetBuilder<RankController>(
+      return GetBuilder<HomeSpotlightController>(
         builder: (rankController) {
           return Column(children: [
             AppHeader(
@@ -184,9 +184,9 @@ class HomeScreen extends StatelessWidget {
                     // ── TSOTW/M ──
                     SectionHeadingWidget(title: "⭐ Top Score of The Week & Month", sub: "Season 2025 spotlight"),
                     Row(children: [
-                      Expanded(child: TopScorerCard(player: rankController.socrerOfTheWeekAndMonthModel?.weekModel, label: "TSOTW · THIS WEEK", badge: "👑", gradient: AppColors.blueHeroGradient)),
+                      Expanded(child: TopScorerCard(player: rankController.scorerOfTheWeekAndMonthModel?.weekModel, label: "TSOTW · THIS WEEK", badge: "👑", gradient: AppColors.blueHeroGradient)),
                       SizedBox(width: Dimensions.lg),
-                      Expanded(child: TopScorerCard(player: rankController.socrerOfTheWeekAndMonthModel?.monthModel, label: "TSOTM · DECEMBER", badge: "🏆", gradient: AppColors.orangeHeroGradient)),
+                      Expanded(child: TopScorerCard(player: rankController.scorerOfTheWeekAndMonthModel?.monthModel, label: "TSOTM · DECEMBER", badge: "🏆", gradient: AppColors.orangeHeroGradient)),
                     ]),
                     SizedBox(height: Dimensions.xxxl),
           

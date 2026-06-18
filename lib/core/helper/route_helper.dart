@@ -20,6 +20,7 @@ import 'package:e_sports/features/news/screens/news_list_screen.dart';
 import 'package:e_sports/features/profile/screens/profile_screen.dart';
 import 'package:e_sports/features/rank/controllers/rank_detail_controller.dart';
 import 'package:e_sports/features/rank/screens/rank_detail_screen.dart';
+import 'package:e_sports/features/rank/screens/rank_list_view_screen.dart';
 import 'package:e_sports/features/splash/controllers/splash_controller.dart';
 import 'package:e_sports/features/splash/screens/maintenance_screen.dart';
 import 'package:e_sports/features/splash/screens/splash_screen.dart';
@@ -42,6 +43,7 @@ class RouteHelper {
   static const String profile = '/profile';
   static const String playerProfile = '/profile/:id';
   static const String rankDetail = '/rank-detail/:id';
+  static const String rankListView = '/rank/list-view';
   static const String menu = '/menu';
   static const String compare = '/compare';
   static const String news = '/news';
@@ -249,6 +251,11 @@ class RouteHelper {
         final seasonId = seasonStr == null ? null : int.tryParse(seasonStr);
         Get.find<RankDetailController>().load(playerId: id, seasonId: seasonId);
       }),
+      middlewares: authMiddleware,
+    ),
+    GetPage(
+      name: rankListView,
+      page: () => const RankListViewScreen(),
       middlewares: authMiddleware,
     ),
     GetPage(name: RouteHelper.otpVerification, page: () => const OtpVerificationPage()),

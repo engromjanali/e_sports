@@ -1,30 +1,31 @@
-import 'package:e_sports/features/rank/domain/model/leader_board_player_model.dart';
-import 'package:e_sports/features/rank/domain/model/player_of_the_week_and_month_model.dart';
 import 'package:e_sports/features/rank/domain/model/rank_mvp_model.dart';
 import 'package:e_sports/features/rank/domain/model/rank_list_item_model.dart';
 import 'package:e_sports/features/rank/domain/model/player_rank_detail_model.dart';
 
 abstract class RankServiceInterface {
-  Future<PlayerOfTheWeekAndMonthModel?> getPlayerOfTheWeekAndMonth();
+  Future<RankMvpModel?> getRankMvp({
+    required bool isScorer,
+    required DateTime start,
+    required DateTime end,
+    int? seasonId,
+    bool overall,
+  });
 
-  Future<PlayerOfTheWeekAndMonthModel?> getScorerOfTheWeekAndMonth();
+  Future<List<RankListItemModel>> getRankList({
+    required bool isScorer,
+    required DateTime start,
+    required DateTime end,
+    int? seasonId,
+    bool overall,
+    int? limit,
+    int offset,
+  });
 
-  Future<List<LeaderboardPlayerModel>> getOverAllTopThreePlayer();
-
-  Future<List<LeaderboardPlayerModel>> getSeasonalTopThreePlayer();
-
-  Future<List<LeaderboardPlayerModel>> getOverAllTopThreeScorer();
-
-  Future<List<LeaderboardPlayerModel>> getSeasonalTopThreeScorer();
-
-  // ── Server-driven rank ──
-  Future<RankMvpModel?> getWeekMvp({required int seasonId, required DateTime start, required DateTime end, required bool isScorer});
-  Future<RankMvpModel?> getMonthMvp({required int seasonId, required DateTime start, required DateTime end, required bool isScorer});
-  Future<RankMvpModel?> getSeasonMvp({required bool overall, int? seasonId, required DateTime start, required DateTime end, required bool isScorer});
-
-  Future<List<RankListItemModel>> getWeeklyRanks({required int seasonId, required DateTime start, required DateTime end, required bool isScorer});
-  Future<List<RankListItemModel>> getMonthlyRanks({required int seasonId, required DateTime start, required DateTime end, required bool isScorer});
-  Future<List<RankListItemModel>> getSeasonStandings({required bool overall, int? seasonId, required DateTime start, required DateTime end, required bool isScorer});
-
-  Future<PlayerRankDetailModel?> getPlayerRankDetail({required String playerId, required bool overall, int? seasonId, required DateTime start, required DateTime end});
+  Future<PlayerRankDetailModel?> getPlayerRankDetail({
+    required String playerId,
+    required bool overall,
+    int? seasonId,
+    required DateTime start,
+    required DateTime end,
+  });
 }
