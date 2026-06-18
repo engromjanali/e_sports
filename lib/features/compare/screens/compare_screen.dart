@@ -1,8 +1,12 @@
+import 'dart:async';
 import 'package:e_sports/core/utils/dimensions.dart';
-import '../../player/controllers/player_controller.dart';
 import '../../../core/data/models/computed_player_stats.dart';
+import '../../../core/data/models/player_model.dart';
 import '../../../core/helper/route_helper.dart';
 import '../../../core/widgets/app_header_widget.dart';
+import '../../player/domain/services/player_service_interface.dart';
+import '../../splash/controllers/splash_controller.dart';
+import '../../splash/domain/models/season_model.dart';
 import '../widgets/compare_radar_chart.dart';
 import '../widgets/compare_bar_charts.dart';
 import 'package:flutter/material.dart';
@@ -16,21 +20,70 @@ class CompareScreen extends StatefulWidget {
 }
 
 class _CompareScreenState extends State<CompareScreen> {
+  // Selected players (identity only — no season/stats).
+  PlayerModel? _sel1;
+  PlayerModel? _sel2;
+  // Their fetched stats for the chosen season (drives the charts).
   ComputedPlayerStats? _p1;
   ComputedPlayerStats? _p2;
+  int? _seasonId;
   bool _isComparing = false;
+  bool _loading = false;
+
+  @override
+  void initState() {
+    super.initState();
+    try {
+      _seasonId = Get.find<SplashController>().configModel?.currentSeason;
+    } catch (_) {}
+  }
+
+  List<SeasonModel> get _seasons {
+    try {
+      return Get.find<SplashController>().configModel?.seasons.where((s) => s.status).toList() ?? const [];
+    } catch (_) {
+      return const [];
+    }
+  }
 
   void _selectPlayer(int index) async {
-    final player = await showSearch<ComputedPlayerStats>(
+    final player = await showSearch<PlayerModel?>(
       context: context,
-      delegate: PlayerSelectDelegate(Get.find<PlayerController>().rankedPlayers),
+      delegate: PlayerSelectDelegate(),
     );
     if (player != null) {
       setState(() {
-        if (index == 1) _p1 = player; else _p2 = player;
-        _isComparing = false; // Reset comparison on new selection
+        if (index == 1) _sel1 = player; else _sel2 = player;
+        // New selection invalidates the current comparison.
+        _isComparing = false;
+        _p1 = null;
+        _p2 = null;
       });
     }
+  }
+
+  // Fetches both players' stats for the selected season, then shows the charts.
+  Future<void> _runCompare() async {
+    if (_sel1 == null || _sel2 == null) return;
+    setState(() => _loading = true);
+    final service = Get.find<PlayerServiceInterface>();
+    final results = await Future.wait([
+      service.getPlayerStats(playerId: _sel1!.id, seasonId: _seasonId),
+      service.getPlayerStats(playerId: _sel2!.id, seasonId: _seasonId),
+    ]);
+    if (!mounted) return;
+    setState(() {
+      _p1 = results[0];
+      _p2 = results[1];
+      _isComparing = _p1 != null && _p2 != null;
+      _loading = false;
+    });
+  }
+
+  void _setSeason(int id) {
+    if (_seasonId == id) return;
+    setState(() => _seasonId = id);
+    if (_sel1 != null && _sel2 != null) _runCompare(); // refresh stats for the new season
   }
 
   @override
@@ -53,19 +106,26 @@ class _CompareScreenState extends State<CompareScreen> {
                     // ── Selection Area ──
                     Row(
                       children: [
-                        Expanded(child: _buildSelectorTile(1, _p1, AppColors.neonBlue)),
+                        Expanded(child: _buildSelectorTile(1, _sel1, _p1, AppColors.neonBlue)),
                         SizedBox(width: Dimensions.lg),
                         _buildVS(),
                         SizedBox(width: Dimensions.lg),
-                        Expanded(child: _buildSelectorTile(2, _p2, AppColors.neonRed)),
+                        Expanded(child: _buildSelectorTile(2, _sel2, _p2, AppColors.neonRed)),
                       ],
                     ),
+
+                    // ── Season filter ──
+                    if (_seasons.isNotEmpty) ...[
+                      SizedBox(height: Dimensions.xl),
+                      _buildSeasonFilter(),
+                    ],
+
                     SizedBox(height: Dimensions.massive),
 
                     // ── Compare Button ──
-                    if (_p1 != null && _p2 != null)
+                    if (_sel1 != null && _sel2 != null)
                       _buildCompareButton(),
-                    
+
                     if (_isComparing) ...[
                       SizedBox(height: Dimensions.massive),
                       _buildComparisonContent(),
@@ -80,7 +140,7 @@ class _CompareScreenState extends State<CompareScreen> {
     );
   }
 
-  Widget _buildSelectorTile(int index, ComputedPlayerStats? p, Color accent) {
+  Widget _buildSelectorTile(int index, PlayerModel? p, ComputedPlayerStats? stats, Color accent) {
     return GestureDetector(
       onTap: () => _selectPlayer(index),
       child: Container(
@@ -152,10 +212,10 @@ class _CompareScreenState extends State<CompareScreen> {
                           shape: BoxShape.circle,
                           border: Border.all(color: accent.withOpacity(0.5), width: 1),
                         ),
-                        child: p.player.imageUrl.isNotEmpty
+                        child: p.imageUrl.isNotEmpty
                             ? ClipOval(
                                 child: Image.network(
-                                  p.player.imageUrl,
+                                  p.imageUrl,
                                   width: 70, height: 70,
                                   fit: BoxFit.cover,
                                   errorBuilder: (_, __, ___) => CircleAvatar(
@@ -172,7 +232,7 @@ class _CompareScreenState extends State<CompareScreen> {
                               ),
                       ),
                       SizedBox(height: Dimensions.md),
-                      Text(p.short.toUpperCase(), 
+                      Text(p.sortName.toUpperCase(),
                         style: TextStyle(color: AppColors.white, fontWeight: Dimensions.black, fontSize: 16, letterSpacing: 0.5)
                       ),
                       SizedBox(height: 2),
@@ -190,8 +250,8 @@ class _CompareScreenState extends State<CompareScreen> {
                   ),
                 ),
               
-              // Rank Tag
-              if (p != null)
+              // Rank Tag (only once stats are loaded for the season)
+              if (stats != null)
                 Positioned(
                   top: 10, right: 10,
                   child: Container(
@@ -201,7 +261,7 @@ class _CompareScreenState extends State<CompareScreen> {
                       borderRadius: Dimensions.borderSm,
                       border: Border.all(color: AppColors.neonGold.withOpacity(0.3)),
                     ),
-                    child: Text("RANK #${p.rank}", 
+                    child: Text("RANK #${stats.rank}",
                       style: TextStyle(color: AppColors.neonGold, fontSize: 7, fontWeight: Dimensions.black)
                     ),
                   ),
@@ -240,7 +300,7 @@ class _CompareScreenState extends State<CompareScreen> {
 
   Widget _buildCompareButton() {
     return GestureDetector(
-      onTap: () => setState(() => _isComparing = true),
+      onTap: _loading ? null : _runCompare,
       child: Container(
         width: double.infinity,
         padding: EdgeInsets.symmetric(vertical: Dimensions.lg),
@@ -250,9 +310,54 @@ class _CompareScreenState extends State<CompareScreen> {
           boxShadow: [BoxShadow(color: AppColors.neonGold.withOpacity(0.3), blurRadius: 15, offset: Offset(0, 5))],
         ),
         child: Center(
-          child: Text("COMPARE STATS", style: TextStyle(color: AppColors.goldDeep, fontWeight: Dimensions.black, letterSpacing: 1.5)),
+          child: _loading
+              ? SizedBox(
+                  height: Dimensions.iconMd, width: Dimensions.iconMd,
+                  child: CircularProgressIndicator(strokeWidth: Dimensions.borderMedium, color: AppColors.goldDeep),
+                )
+              : Text("COMPARE STATS", style: TextStyle(color: AppColors.goldDeep, fontWeight: Dimensions.black, letterSpacing: 1.5)),
         ),
       ),
+    );
+  }
+
+  // Season selector for the comparison (defaults to current season).
+  Widget _buildSeasonFilter() {
+    final seasons = _seasons;
+    final selected = seasons.firstWhereOrNull((s) => s.id == _seasonId) ?? seasons.last;
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Text("SEASON", style: TextStyle(color: AppColors.textMuted, fontSize: 10, fontWeight: Dimensions.bold, letterSpacing: 1)),
+        SizedBox(width: Dimensions.md),
+        PopupMenuButton<int>(
+          tooltip: "Season",
+          onSelected: _setSeason,
+          color: AppColors.bgCard,
+          shape: RoundedRectangleBorder(borderRadius: Dimensions.borderCard),
+          itemBuilder: (_) => seasons
+              .map((s) => PopupMenuItem<int>(
+                    value: s.id,
+                    child: Text(s.name, style: TextStyle(color: AppColors.white)),
+                  ))
+              .toList(),
+          child: Container(
+            padding: EdgeInsets.symmetric(horizontal: Dimensions.md, vertical: Dimensions.xs),
+            decoration: BoxDecoration(
+              color: AppColors.neonGold.withOpacity(0.1),
+              borderRadius: Dimensions.borderPill,
+              border: Border.all(color: AppColors.neonGold.withOpacity(0.3)),
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(selected.name, style: TextStyle(color: AppColors.neonGold, fontWeight: Dimensions.bold)),
+                Icon(Icons.arrow_drop_down, color: AppColors.neonGold, size: 18),
+              ],
+            ),
+          ),
+        ),
+      ],
     );
   }
 
@@ -603,9 +708,10 @@ class _CompareScreenState extends State<CompareScreen> {
   }
 }
 
-class PlayerSelectDelegate extends SearchDelegate<ComputedPlayerStats> {
-  final List<ComputedPlayerStats> players;
-  PlayerSelectDelegate(this.players);
+/// Server-backed player picker: debounced search + infinite-scroll pagination.
+/// Identity only (no season/stats) — the compare screen fetches stats later.
+class PlayerSelectDelegate extends SearchDelegate<PlayerModel?> {
+  final PlayerServiceInterface _service = Get.find<PlayerServiceInterface>();
 
   @override
   ThemeData appBarTheme(BuildContext context) {
@@ -622,70 +728,201 @@ class PlayerSelectDelegate extends SearchDelegate<ComputedPlayerStats> {
   @override
   Widget? buildLeading(BuildContext context) => IconButton(
     icon: const Icon(Icons.arrow_back),
-    onPressed: () => close(context, players.first),
+    onPressed: () => close(context, null),
   );
 
   @override
-  Widget buildResults(BuildContext context) => _buildList(context);
+  Widget buildResults(BuildContext context) => _results(context);
 
   @override
-  Widget buildSuggestions(BuildContext context) => _buildList(context);
+  Widget buildSuggestions(BuildContext context) => _results(context);
 
-  Widget _buildList(BuildContext context) {
-    final results = players.where((p) => p.name.toLowerCase().contains(query.toLowerCase())).toList();
-    if (results.isEmpty) {
-      return Center(child: Text("No players found", style: TextStyle(color: AppColors.textMuted)));
+  Widget _results(BuildContext context) => _PlayerSearchResults(
+        service: _service,
+        query: query,
+        onPick: (p) => close(context, p),
+      );
+}
+
+/// Loads a player page from the server for the current [query], debouncing
+/// query changes and paginating on scroll.
+class _PlayerSearchResults extends StatefulWidget {
+  final PlayerServiceInterface service;
+  final String query;
+  final ValueChanged<PlayerModel> onPick;
+
+  const _PlayerSearchResults({
+    required this.service,
+    required this.query,
+    required this.onPick,
+  });
+
+  @override
+  State<_PlayerSearchResults> createState() => _PlayerSearchResultsState();
+}
+
+class _PlayerSearchResultsState extends State<_PlayerSearchResults> {
+  static const int _pageSize = 20;
+
+  final List<PlayerModel> _items = [];
+  final ScrollController _scroll = ScrollController();
+  Timer? _debounce;
+  bool _loading = false;
+  bool _loadingMore = false;
+  bool _hasMore = true;
+  int _page = 1;
+
+  @override
+  void initState() {
+    super.initState();
+    _scroll.addListener(_onScroll);
+    _reload();
+  }
+
+  @override
+  void didUpdateWidget(covariant _PlayerSearchResults old) {
+    super.didUpdateWidget(old);
+    if (old.query != widget.query) {
+      _debounce?.cancel();
+      // Show the loader right away while we wait out the debounce + fetch.
+      _loading = true;
+      _debounce = Timer(const Duration(milliseconds: 350), _reload);
     }
+  }
+
+  void _onScroll() {
+    if (_scroll.position.pixels >= _scroll.position.maxScrollExtent - 300) {
+      _loadMore();
+    }
+  }
+
+  Future<void> _reload() async {
+    setState(() => _loading = true);
+    _page = 1;
+    final result = await widget.service.searchPlayers(
+      search: widget.query, limit: _pageSize, offset: _page,
+    );
+    if (!mounted) return;
+    setState(() {
+      _items..clear()..addAll(result);
+      _hasMore = result.length == _pageSize;
+      _loading = false;
+    });
+  }
+
+  Future<void> _loadMore() async {
+    if (!_hasMore || _loading || _loadingMore) return;
+    setState(() => _loadingMore = true);
+    final next = _page + 1;
+    final result = await widget.service.searchPlayers(
+      search: widget.query, limit: _pageSize, offset: next,
+    );
+    if (!mounted) return;
+    setState(() {
+      _items.addAll(result);
+      _page = next;
+      _hasMore = result.length == _pageSize;
+      _loadingMore = false;
+    });
+  }
+
+  @override
+  void dispose() {
+    _debounce?.cancel();
+    _scroll.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Container(
       color: AppColors.bg,
-      child: ListView.separated(
-        padding: EdgeInsets.all(Dimensions.xxxl),
-        itemCount: results.length,
-        separatorBuilder: (_, __) => SizedBox(height: Dimensions.md),
-        itemBuilder: (context, i) {
-          final p = results[i];
-          return GestureDetector(
-            onTap: () => close(context, p),
-            child: Container(
-              padding: EdgeInsets.all(Dimensions.md),
-              decoration: BoxDecoration(
-                color: AppColors.bgCard.withOpacity(0.5),
-                borderRadius: Dimensions.borderLg,
-                border: Border.all(color: AppColors.glassBorder),
-              ),
-              child: Row(
+      child: Column(
+        children: [
+          // Thin loader over existing results while (re)searching.
+          SizedBox(
+            height: 2,
+            child: (_loading && _items.isNotEmpty)
+                ? LinearProgressIndicator(color: AppColors.neonGold, backgroundColor: Colors.transparent)
+                : null,
+          ),
+          Expanded(child: _body()),
+        ],
+      ),
+    );
+  }
+
+  Widget _body() {
+    if (_loading && _items.isEmpty) {
+      return Center(child: CircularProgressIndicator(color: AppColors.neonGold));
+    }
+    if (_items.isEmpty) {
+      return Center(child: Text("No players found", style: TextStyle(color: AppColors.textMuted)));
+    }
+    return ListView.separated(
+      controller: _scroll,
+      padding: EdgeInsets.all(Dimensions.xxxl),
+      itemCount: _items.length + (_hasMore ? 1 : 0),
+      separatorBuilder: (_, _) => SizedBox(height: Dimensions.md),
+      itemBuilder: (context, i) {
+        if (i >= _items.length) {
+          return Padding(
+            padding: EdgeInsets.symmetric(vertical: Dimensions.lg),
+            child: Center(
+              child: _loadingMore
+                  ? SizedBox(
+                      height: Dimensions.iconMd, width: Dimensions.iconMd,
+                      child: CircularProgressIndicator(strokeWidth: Dimensions.borderMedium, color: AppColors.neonGold),
+                    )
+                  : const SizedBox.shrink(),
+            ),
+          );
+        }
+        return _PlayerRow(player: _items[i], onTap: () => widget.onPick(_items[i]));
+      },
+    );
+  }
+}
+
+class _PlayerRow extends StatelessWidget {
+  final PlayerModel player;
+  final VoidCallback onTap;
+  const _PlayerRow({required this.player, required this.onTap});
+
+  @override
+  Widget build(BuildContext context) {
+    final p = player;
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: EdgeInsets.all(Dimensions.md),
+        decoration: BoxDecoration(
+          color: AppColors.bgCard.withOpacity(0.5),
+          borderRadius: Dimensions.borderLg,
+          border: Border.all(color: AppColors.glassBorder),
+        ),
+        child: Row(
+          children: [
+            CircleAvatar(
+              radius: 24,
+              backgroundColor: AppColors.neonGold.withOpacity(0.1),
+              backgroundImage: p.imageUrl.isNotEmpty ? NetworkImage(p.imageUrl) : null,
+              child: p.imageUrl.isNotEmpty
+                  ? null
+                  : Text(p.name.isNotEmpty ? p.name[0] : '?', style: TextStyle(color: AppColors.neonGold, fontWeight: FontWeight.bold)),
+            ),
+            SizedBox(width: Dimensions.md),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  CircleAvatar(
-                    radius: 24,
-                    backgroundColor: AppColors.neonGold.withOpacity(0.1),
-                    child: Text(p.name[0], style: TextStyle(color: AppColors.neonGold, fontWeight: FontWeight.bold)),
-                  ),
-                  SizedBox(width: Dimensions.md),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(p.name, style: TextStyle(color: AppColors.white, fontWeight: Dimensions.bold, fontSize: 14)),
-                        Row(
-                          children: [
-                            Text("#${p.jerseyNumber}", style: TextStyle(color: AppColors.textMuted, fontSize: 10)),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: [
-                      Text("RANK", style: TextStyle(color: AppColors.textMuted, fontSize: 8, fontWeight: FontWeight.bold)),
-                      Text("#${p.rank}", style: TextStyle(color: AppColors.neonGold, fontWeight: Dimensions.black, fontSize: 14)),
-                    ],
-                  ),
+                  Text(p.name, style: TextStyle(color: AppColors.white, fontWeight: Dimensions.bold, fontSize: 14)),
+                  Text("#${p.jerseyNumber}", style: TextStyle(color: AppColors.textMuted, fontSize: 10)),
                 ],
               ),
             ),
-          );
-        },
+          ],
+        ),
       ),
     );
   }

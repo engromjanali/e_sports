@@ -65,6 +65,7 @@ CREATE TABLE public.players (
   jerseynumber integer,
   createdat timestamp with time zone DEFAULT now(),
   email text UNIQUE,
+  password
   CONSTRAINT players_pkey PRIMARY KEY (id)
 );
 

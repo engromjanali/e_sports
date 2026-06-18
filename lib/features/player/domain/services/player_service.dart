@@ -1,3 +1,4 @@
+import 'package:e_sports/core/data/models/computed_player_stats.dart';
 import 'package:e_sports/core/data/models/match_entry_model.dart';
 import 'package:e_sports/core/data/models/my_rank_model.dart';
 import 'package:e_sports/core/data/models/player_model.dart';
@@ -46,6 +47,38 @@ class PlayerService implements PlayerServiceInterface {
       return null;
     } catch (e) {
       printer('[PlayerService.getMyRank] Unexpected: $e');
+      return null;
+    }
+  }
+
+  @override
+  Future<List<PlayerModel>> searchPlayers({
+    String? search,
+    int limit = 20,
+    int offset = 1,
+  }) async {
+    try {
+      return await playerRepositoryInterface.searchPlayers(
+        search: search, limit: limit, offset: offset,
+      );
+    } on AppException catch (e) {
+      printer('[PlayerService.searchPlayers] ${e.message}');
+      return [];
+    } catch (e) {
+      printer('[PlayerService.searchPlayers] Unexpected: $e');
+      return [];
+    }
+  }
+
+  @override
+  Future<ComputedPlayerStats?> getPlayerStats({required String playerId, int? seasonId}) async {
+    try {
+      return await playerRepositoryInterface.getPlayerStats(playerId: playerId, seasonId: seasonId);
+    } on AppException catch (e) {
+      printer('[PlayerService.getPlayerStats] ${e.message}');
+      return null;
+    } catch (e) {
+      printer('[PlayerService.getPlayerStats] Unexpected: $e');
       return null;
     }
   }
