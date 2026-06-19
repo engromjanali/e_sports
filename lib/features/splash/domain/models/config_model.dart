@@ -5,6 +5,7 @@ class ConfigModel {
   final String? version;
   final bool verifyEmail;
   final bool maintenanceMode;
+  final bool userSelfRegistration;
   final int? currentSeason;
   final List<SeasonModel> seasons;
 
@@ -12,6 +13,7 @@ class ConfigModel {
     this.version,
     required this.verifyEmail,
     required this.maintenanceMode,
+    this.userSelfRegistration = true,
     this.currentSeason,
     this.seasons = const [],
   });
@@ -21,6 +23,10 @@ class ConfigModel {
       version: json['version']?.toString(),
       verifyEmail: TypeConverterHelper.readBool(json['verify_email']),
       maintenanceMode: TypeConverterHelper.readBool(json['maintenance_mode']),
+      // Absent/null → allow registration (don't lock users out on old configs).
+      userSelfRegistration: json['user_self_registration'] == null
+          ? true
+          : TypeConverterHelper.readBool(json['user_self_registration']),
       currentSeason: TypeConverterHelper.readInt(json['current_season']),
       seasons: (json['seasons'] as List?)
               ?.map((s) => SeasonModel.fromJson(s as Map<String, dynamic>))

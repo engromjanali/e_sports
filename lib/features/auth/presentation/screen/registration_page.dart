@@ -2,6 +2,7 @@ import 'package:e_sports/core/helper/route_helper.dart';
 import 'package:e_sports/core/utils/dimensions.dart';
 import 'package:e_sports/core/helper/responsive_helper.dart';
 import 'package:e_sports/features/auth/controllers/auth_controller.dart';
+import 'package:e_sports/features/auth/helper/registration_access.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -36,6 +37,9 @@ class _RegistrationPageState extends State<RegistrationPage> {
   }
 
   Future<void> _register(AuthController authController) async {
+    // Safety net: refuse if self-registration was disabled meanwhile.
+    if (!ensureRegistrationAllowed()) return;
+
     final name = _nameController.text.trim();
     final email = _emailController.text.trim();
     final password = _passwordController.text;
@@ -76,6 +80,11 @@ class _RegistrationPageState extends State<RegistrationPage> {
 
   @override
   Widget build(BuildContext context) {
+    // If an admin disabled self sign-up, show a message instead of the form.
+    if (!isSelfRegistrationEnabled()) {
+      return const _RegistrationDisabledView();
+    }
+
     final authController = Get.find<AuthController>();
     final bool isDesktop = ResponsiveHelper.isDesktop(context);
     final double topGap = isDesktop ? 72 : 42;
@@ -280,6 +289,92 @@ class _InputShell extends StatelessWidget {
         border: Border.all(color: AppColors.glassBorder),
       ),
       child: child,
+    );
+  }
+}
+
+/// Shown when the admin has turned off user self-registration.
+class _RegistrationDisabledView extends StatelessWidget {
+  const _RegistrationDisabledView();
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: AppColors.bg,
+      body: SafeArea(
+        child: Center(
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 420),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 28),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(22),
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: AppColors.neonGold.withValues(alpha: 0.1),
+                      border: Border.all(
+                        color: AppColors.neonGold.withValues(alpha: 0.3),
+                      ),
+                    ),
+                    child: const Icon(Icons.lock_outline,
+                        color: AppColors.neonGold, size: 40),
+                  ),
+                  const SizedBox(height: 28),
+                  Text(
+                    "Sign-ups Closed",
+                    textAlign: TextAlign.center,
+                    style: Dimensions.statsGiant(context, color: AppColors.white)
+                        .copyWith(
+                      fontSize: 30,
+                      letterSpacing: 0,
+                      fontWeight: FontWeight.w900,
+                      height: 1.1,
+                    ),
+                  ),
+                  const SizedBox(height: 14),
+                  Text(
+                    kRegistrationDisabledMessage,
+                    textAlign: TextAlign.center,
+                    style: Dimensions.mutedText(context).copyWith(
+                      fontSize: 14,
+                      height: 1.5,
+                    ),
+                  ),
+                  const SizedBox(height: 36),
+                  SizedBox(
+                    width: double.infinity,
+                    height: 56,
+                    child: ElevatedButton(
+                      onPressed: () => Get.offNamed(RouteHelper.login),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: AppColors.neonGold,
+                        foregroundColor: Colors.black,
+                        elevation: 0,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: Dimensions.borderLg,
+                        ),
+                      ),
+                      child: Text(
+                        "BACK TO SIGN IN",
+                        style: Dimensions.labelUppercase(context,
+                                color: Colors.black)
+                            .copyWith(
+                          fontSize: 15,
+                          fontWeight: FontWeight.w900,
+                          letterSpacing: 1.2,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
     );
   }
 }

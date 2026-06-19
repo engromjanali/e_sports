@@ -29,6 +29,8 @@ class _LoginPageState extends State<LoginPage> {
   @override
   void initState() {
     super.initState();
+    // Always open the registration screen; it shows the form when self sign-up
+    // is enabled, or a "Sign-ups Closed" message when the admin has disabled it.
     _registrationRecognizer = TapGestureRecognizer()..onTap = () => Get.toNamed(RouteHelper.registration);
   }
 
