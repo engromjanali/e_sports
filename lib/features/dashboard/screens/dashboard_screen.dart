@@ -2,10 +2,10 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../auth/controllers/auth_controller.dart';
-import '../../player/controllers/player_controller.dart';
+import '../../player/widgets/player_select_delegate.dart';
+import '../../../core/data/models/player_model.dart';
 import '../../profile/controllers/profile_controller.dart';
 import '../../news/controllers/news_controller.dart';
-import '../../../core/data/models/computed_player_stats.dart';
 import '../../../core/helper/route_helper.dart';
 import 'package:e_sports/core/utils/dimensions.dart';
 import 'package:e_sports/core/helper/responsive_helper.dart';
@@ -93,11 +93,16 @@ class _GameArenaScreenState extends State<DashboardScreen> with SingleTickerProv
     );
   }
 
-  void _openSearch() {
-    showSearch(
+  void _openSearch() async {
+    // Same server-backed player picker the compare screen uses; on selection,
+    // open that player's profile.
+    final player = await showSearch<PlayerModel?>(
       context: context,
-      delegate: PlayerSearchDelegate(Get.find<PlayerController>().rankedPlayers),
+      delegate: PlayerSelectDelegate(),
     );
+    if (player != null) {
+      Get.toNamed(RouteHelper.getPlayerProfileRoute(player.id));
+    }
   }
 
   void _openMyProfile() {
@@ -324,62 +329,3 @@ class _TabDef {
   const _TabDef({required this.icon, required this.label});
 }
 
-class PlayerSearchDelegate extends SearchDelegate {
-  final List<ComputedPlayerStats> players;
-  PlayerSearchDelegate(this.players);
-
-  @override
-  ThemeData appBarTheme(BuildContext context) {
-    return Theme.of(context).copyWith(
-      appBarTheme: const AppBarTheme(backgroundColor: AppColors.bgCard),
-      inputDecorationTheme: const InputDecorationTheme(
-        hintStyle: TextStyle(color: AppColors.textMuted),
-      ),
-    );
-  }
-
-  @override
-  List<Widget>? buildActions(BuildContext context) => [
-        IconButton(icon: const Icon(Icons.clear, color: AppColors.white), onPressed: () => query = ""),
-      ];
-
-  @override
-  Widget? buildLeading(BuildContext context) => IconButton(
-        icon: const Icon(Icons.arrow_back, color: AppColors.white),
-        onPressed: () => close(context, null),
-      );
-
-  @override
-  Widget buildResults(BuildContext context) => _buildList(context);
-
-  @override
-  Widget buildSuggestions(BuildContext context) => _buildList(context);
-
-  Widget _buildList(BuildContext context) {
-    final results = players.where((p) => p.name.toLowerCase().contains(query.toLowerCase())).toList();
-    if (results.isEmpty) {
-      return Center(child: Text("No players found", style: TextStyle(color: AppColors.textMuted)));
-    }
-    return Container(
-      color: AppColors.bg,
-      child: ListView.builder(
-        itemCount: results.length,
-        itemBuilder: (context, i) {
-          final p = results[i];
-          return ListTile(
-            leading: CircleAvatar(
-              backgroundColor: AppColors.neonGold.withOpacity(0.1),
-              child: Text(p.name[0], style: TextStyle(color: AppColors.neonGold)),
-            ),
-            title: Text(p.name, style: TextStyle(color: AppColors.white)),
-            subtitle: Text("@${p.short.toLowerCase()}", style: TextStyle(color: AppColors.textMuted)),
-            onTap: () {
-              close(context, null);
-              Get.toNamed(RouteHelper.getPlayerProfileRoute(p.id));
-            },
-          );
-        },
-      ),
-    );
-  }
-}
