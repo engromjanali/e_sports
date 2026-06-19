@@ -1,5 +1,4 @@
 import 'package:e_sports/core/api/api_client.dart';
-import 'package:e_sports/core/beckend_service/controller/backend_data_controller.dart';
 import 'package:e_sports/core/constants/app_constants.dart';
 import 'package:e_sports/core/controllers/theme_controller.dart';
 import 'package:e_sports/features/auth/controllers/auth_controller.dart';
@@ -56,7 +55,6 @@ import 'package:e_sports/features/splash/domain/services/splash_service.dart';
 import 'package:e_sports/features/splash/domain/services/splash_service_interface.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:supabase/supabase.dart';
 
 Future<void> init() async {
 
@@ -69,10 +67,6 @@ Future<void> init() async {
 
   // Core API dependency
   Get.lazyPut<ApiClient>(() => ApiClient(appBaseUrl: AppConstants.baseUrl, sharedPreferences: Get.find()), fenix: true);
-
-  // Supabase client — must be registered before BackendDataController
-  Get.put<SupabaseClient>(SupabaseClient(AppConstants.supabaseUrl, AppConstants.supabaseAnonKey), permanent: true);
-  Get.lazyPut<BackendDataController>(() => BackendDataController(supabase: Get.find()), fenix: true);
 
   // Player feature dependencies
   Get.lazyPut<PlayerRepositoryInterface>(() => PlayerRepository(), fenix: true);

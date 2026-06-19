@@ -11,14 +11,20 @@ import '../../../core/widgets/section_heading_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../player/controllers/player_controller.dart';
+import '../../player/domain/services/player_service_interface.dart';
+import '../../player/widgets/player_select_delegate.dart';
 import '../controllers/profile_controller.dart';
 import '../../../core/data/models/computed_player_stats.dart';
+import '../../../core/data/models/player_model.dart';
 import '../widgets/profile_analytics_tab.dart';
 import '../models/player_performance.dart';
 import '../../../core/data/models/achievement_generator.dart';
 
 class ProfileScreen extends StatefulWidget {
   final ComputedPlayerStats? player;
+  // When [player] isn't provided, the screen loads this player's stats from the
+  // server by id (so any player picked from search opens, not only cached ones).
+  final String? playerId;
   final bool isSubScreen;
   final VoidCallback? onSearchTap;
   final VoidCallback? onProfileTap;
@@ -27,6 +33,7 @@ class ProfileScreen extends StatefulWidget {
   const ProfileScreen({
     super.key,
     this.player,
+    this.playerId,
     this.isSubScreen = false,
     this.onSearchTap,
     this.onProfileTap,
@@ -38,19 +45,65 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
+  // Stats fetched from the server when navigating to a player by id.
+  ComputedPlayerStats? _serverPlayer;
+  bool _loading = false;
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.player == null && widget.playerId != null && widget.playerId!.isNotEmpty) {
+      _loadFromServer(widget.playerId!);
+    }
+  }
+
+  Future<void> _loadFromServer(String id) async {
+    setState(() => _loading = true);
+    final stats = await Get.find<PlayerServiceInterface>().getPlayerStats(playerId: id);
+    if (!mounted) return;
+    setState(() {
+      _serverPlayer = stats;
+      _loading = false;
+    });
+  }
+
+  // Default header actions when the host screen doesn't supply its own. Search
+  // opens the shared server-backed player picker; tapping the avatar opens the
+  // logged-in user's profile.
+  Future<void> _openSearch(BuildContext context) async {
+    final picked = await showSearch<PlayerModel?>(
+      context: context,
+      delegate: PlayerSelectDelegate(),
+    );
+    if (picked != null) {
+      Get.toNamed(RouteHelper.getPlayerProfileRoute(picked.id));
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final player = Get.find<PlayerController>();
     // For "My Profile" use the logged-in user's id from ProfileController;
-    // otherwise show the player passed via navigation.
+    // otherwise show the player passed via navigation, or the one loaded from
+    // the server by id.
     final myId = Get.find<ProfileController>().userId;
     final p = widget.player
-        ?? player.rankedPlayers.firstWhereOrNull((s) => s.id == myId)
-        ?? player.rankedPlayers.firstOrNull;
+        ?? _serverPlayer
+        ?? (widget.playerId != null
+            ? null
+            : player.rankedPlayers.firstWhereOrNull((s) => s.id == myId)
+                ?? player.rankedPlayers.firstOrNull);
     if (p == null) {
+      // Spinner while loading (local or server); once a server load finishes
+      // empty, show a not-found message instead of an endless spinner.
+      final Widget body = (_loading || widget.playerId == null)
+          ? const Center(child: CircularProgressIndicator())
+          : Center(
+              child: Text("Player not found", style: TextStyle(color: AppColors.textMuted)),
+            );
       return widget.isSubScreen
-          ? const Scaffold(backgroundColor: AppColors.bg, body: Center(child: CircularProgressIndicator()))
-          : const Center(child: CircularProgressIndicator());
+          ? Scaffold(backgroundColor: AppColors.bg, body: body)
+          : body;
     }
     final last20 = p.last20;
     final maxStats = player.maxStats;
@@ -62,8 +115,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
           AppHeader(
             sub: widget.player != null ? "Player Details" : "My Profile",
             onBack: widget.isSubScreen ? () => Get.key.currentState?.canPop() == true ? Get.back() : Get.offNamed(widget.player != null ? RouteHelper.ranks : RouteHelper.home) : null,
-            onSearchTap: widget.onSearchTap,
-            onProfileTap: widget.onProfileTap,
+            onSearchTap: widget.onSearchTap ?? () => _openSearch(context),
+            onProfileTap: widget.onProfileTap ?? () => Get.toNamed(RouteHelper.profile),
             onMenuTap: widget.onMenuTap,
           ),
 

@@ -1,20 +1,24 @@
-import 'package:e_sports/core/beckend_service/controller/backend_data_controller.dart';
+import 'package:e_sports/core/api/api_client.dart';
 import 'package:e_sports/core/constants/app_constants.dart';
-import 'package:e_sports/core/helper/app_helper.dart';
 import 'package:e_sports/features/home/domain/repositories/home_spotlight_repository_interface.dart';
 import 'package:e_sports/features/rank/domain/model/leader_board_player_model.dart';
 import 'package:e_sports/features/rank/domain/model/player_of_the_week_and_month_model.dart';
 import 'package:get/get.dart';
 
 class HomeSpotlightRepository implements HomeSpotlightRepositoryInterface {
+  // Season is sent automatically by ApiClient via the X-Season-Id header.
   Future<PlayerOfTheWeekAndMonthModel?> _potwm(String endpoint) async {
-    final data = await Get.find<BackendDataController>().getData(endpoint, season: AppHelper.season);
-    return data == null ? null : PlayerOfTheWeekAndMonthModel.fromJson(data as Map<String, dynamic>);
+    final response = await Get.find<ApiClient>().getData(endpoint, handleError: false);
+    final body = response.body;
+    if (body is! Map<String, dynamic>) return null;
+    return PlayerOfTheWeekAndMonthModel.fromJson(body);
   }
 
   Future<List<LeaderboardPlayerModel>> _topThree(String endpoint) async {
-    final data = await Get.find<BackendDataController>().getData(endpoint, season: AppHelper.season);
-    return (data as List).map((e) => _toLeaderboard(e as Map<String, dynamic>)).toList();
+    final response = await Get.find<ApiClient>().getData(endpoint, handleError: false);
+    final body = response.body;
+    if (body is! List) return [];
+    return body.map((e) => _toLeaderboard(e as Map<String, dynamic>)).toList();
   }
 
   @override

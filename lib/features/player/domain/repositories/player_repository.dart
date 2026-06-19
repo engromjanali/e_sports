@@ -1,7 +1,5 @@
 import 'package:e_sports/core/api/api_client.dart';
-import 'package:e_sports/core/beckend_service/controller/backend_data_controller.dart';
 import 'package:e_sports/core/constants/app_constants.dart';
-import 'package:e_sports/core/helper/app_helper.dart';
 import 'package:e_sports/core/data/models/computed_player_stats.dart';
 import 'package:e_sports/core/data/models/match_entry_model.dart';
 import 'package:e_sports/core/data/models/my_rank_model.dart';
@@ -10,24 +8,20 @@ import 'package:e_sports/features/player/domain/repositories/player_repository_i
 import 'package:get/get.dart';
 
 class PlayerRepository implements PlayerRepositoryInterface {
-  // Route through the getData switch by endpoint, like the other repos.
-
   @override
   Future<List<PlayerModel>> getPlayers() async {
-    final data = await Get.find<BackendDataController>().getData(
-      AppConstants.players,
-      season: AppHelper.season,
-    );
-    return (data as List).map((e) => PlayerModel.fromJson(e as Map<String, dynamic>)).toList();
+    final response = await Get.find<ApiClient>().getData(AppConstants.players, handleError: false);
+    final body = response.body;
+    if (body is! List) return [];
+    return body.map((e) => PlayerModel.fromJson(e as Map<String, dynamic>)).toList();
   }
 
   @override
   Future<List<MatchEntryModel>> getMatchEntries() async {
-    final data = await Get.find<BackendDataController>().getData(
-      AppConstants.matchEntries,
-      season: AppHelper.season,
-    );
-    return (data as List).map((e) => MatchEntryModel.fromJson(e as Map<String, dynamic>)).toList();
+    final response = await Get.find<ApiClient>().getData(AppConstants.matchEntries, handleError: false);
+    final body = response.body;
+    if (body is! List) return [];
+    return body.map((e) => MatchEntryModel.fromJson(e as Map<String, dynamic>)).toList();
   }
 
   @override
@@ -72,7 +66,7 @@ class PlayerRepository implements PlayerRepositoryInterface {
     return _toComputed(body);
   }
 
-  // Maps a player-stats row into the ComputedPlayerStats the compare UI reads.
+  // Maps a player-stats row into the ComputedPlayerStats the compare/profile UI reads.
   ComputedPlayerStats _toComputed(Map<String, dynamic> m) {
     int field(String k) => (m[k] as num?)?.toInt() ?? 0;
     final goals = field('goals');
@@ -83,6 +77,7 @@ class PlayerRepository implements PlayerRepositoryInterface {
         sortName: m['sort_name']?.toString() ?? '',
         jerseyNumber: field('jerseynumber'),
         imageUrl: m['image']?.toString() ?? '',
+        playerRoles: List<String>.from(m['tags'] ?? const []),
       ),
       matches: field('matches'),
       wins: field('wins'),
@@ -96,6 +91,10 @@ class PlayerRepository implements PlayerRepositoryInterface {
       motm: field('motm'),
       hattricks: field('hattricks'),
       pts: field('pts'),
+      last20: List<String>.from(m['last20'] ?? const []),
+      matchHistory: (m['match_history'] as List? ?? const [])
+          .map((e) => MatchEntryModel.fromJson(e as Map<String, dynamic>))
+          .toList(),
     );
   }
 }

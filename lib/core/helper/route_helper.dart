@@ -1,5 +1,3 @@
-import 'package:e_sports/features/player/controllers/player_controller.dart';
-import 'package:e_sports/core/data/models/computed_player_stats.dart';
 import 'package:e_sports/features/news/domain/model/news_model.dart';
 import 'package:e_sports/core/widgets/route_not_found_screen.dart';
 import 'package:e_sports/features/auth/controllers/auth_controller.dart';
@@ -246,8 +244,11 @@ class RouteHelper {
     GetPage(
       name: playerProfile,
       page: () {
-        final player = _playerFromRoute();
-        return player == null ? const RouteNotFoundScreen() : ProfileScreen(player: player, isSubScreen: true);
+        final id = Get.parameters['id'];
+        if (id == null || id.isEmpty) return const RouteNotFoundScreen();
+        // Always load the player from the server by id, so any player opens —
+        // not only the ones currently cached/ranked locally.
+        return ProfileScreen(playerId: id, isSubScreen: true);
       },
       middlewares: authMiddleware,
     ),
@@ -282,13 +283,6 @@ class RouteHelper {
     if (id == null || id.isEmpty || !Get.isRegistered<NewsController>()) return null;
     final controller = Get.find<NewsController>();
     final data = [...controller.newsList, ...controller.newsHome].where((item) => item.id == id);
-    return data.isEmpty ? null : data.first;
-  }
-
-  static ComputedPlayerStats? _playerFromRoute() {
-    final id = Get.parameters['id'];
-    if (id == null || id.isEmpty || !Get.isRegistered<PlayerController>()) return null;
-    final data = Get.find<PlayerController>().rankedPlayers.where((item) => item.id == id);
     return data.isEmpty ? null : data.first;
   }
 }

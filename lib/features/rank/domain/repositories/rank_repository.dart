@@ -1,7 +1,5 @@
 import 'package:e_sports/core/api/api_client.dart';
-import 'package:e_sports/core/beckend_service/controller/backend_data_controller.dart';
 import 'package:e_sports/core/constants/app_constants.dart';
-import 'package:e_sports/core/helper/app_helper.dart';
 import 'package:e_sports/features/rank/domain/model/rank_mvp_model.dart';
 import 'package:e_sports/features/rank/domain/model/rank_list_item_model.dart';
 import 'package:e_sports/features/rank/domain/model/player_rank_detail_model.dart';
@@ -76,15 +74,18 @@ class RankRepository implements RankRepositoryInterface {
     required DateTime start,
     required DateTime end,
   }) async {
-    // Still Supabase-backed via BackendDataController (not yet migrated).
-    final data = await Get.find<BackendDataController>().getData(
-      AppConstants.playerRankDetail,
-      payload1: {
-        'player_id': playerId, 'season_id': seasonId, 'overall': overall,
-        'start': start.toIso8601String(), 'end': end.toIso8601String(),
-      },
-      season: AppHelper.season,
-    );
-    return data == null ? null : PlayerRankDetailModel.fromJson(data as Map<String, dynamic>);
+    final params = <String, String>{
+      'player_id': playerId,
+      'overall': overall.toString(),
+      'start': start.toIso8601String(),
+      'end': end.toIso8601String(),
+      if (!overall && seasonId != null) 'season': seasonId.toString(),
+    };
+    final uri = Uri.parse(AppConstants.playerRankDetail)
+        .replace(queryParameters: params).toString();
+    final response = await Get.find<ApiClient>().getData(uri, handleError: false);
+    final body = response.body;
+    if (body is! Map<String, dynamic>) return null;
+    return PlayerRankDetailModel.fromJson(body);
   }
 }
