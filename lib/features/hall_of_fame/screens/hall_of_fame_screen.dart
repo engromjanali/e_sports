@@ -1,4 +1,6 @@
 import 'package:e_sports/core/utils/dimensions.dart';
+import 'package:e_sports/features/hall_of_fame/controllers/hall_of_fame_controller.dart';
+import 'package:e_sports/features/hall_of_fame/domain/model/hall_of_fame_model.dart';
 import '../../../core/helper/route_helper.dart';
 import '../../../core/widgets/app_header_widget.dart';
 import '../../../core/widgets/glass_card_widget.dart';
@@ -7,68 +9,18 @@ import '../../../core/widgets/player_avater.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-// ─── Mock Data Models ────────────────────────────────────────────────────────
-
-class _HofEntry {
-  final String season;
-  final String name;
-  final String team;
-  final String detail;
-  final bool isTbd;
-  final bool soloOnly; // hides team + detail rows (Solo tournament)
-
-  const _HofEntry({
-    required this.season,
-    required this.name,
-    required this.team,
-    required this.detail,
-    this.isTbd = false,
-    this.soloOnly = false,
-  });
-}
-
-// ─── Mock Data ────────────────────────────────────────────────────────────────
-
-const _ballonDorData = [
-  _HofEntry(season: "Season 1", name: "Aryan Bhuiyan", team: "Empire FC", detail: "PTS: 142 · Wins: 18"),
-  _HofEntry(season: "Season 2", name: "Shariq Ul Baari", team: "Legends", detail: "PTS: 138 · Wins: 16"),
-  _HofEntry(season: "Season 3", name: "TBD", team: "—", detail: "Season ongoing", isTbd: true),
-];
-
-const _goldenBootData = [
-  _HofEntry(season: "Season 1", name: "Owasikur Rahman", team: "Brothers", detail: "Goals: 24 · Hat-tricks: 3"),
-  _HofEntry(season: "Season 2", name: "Asif Reza", team: "Vikings", detail: "Goals: 21 · Hat-tricks: 2"),
-  _HofEntry(season: "Season 3", name: "TBD", team: "—", detail: "Season ongoing", isTbd: true),
-];
-
-// Bid: detail shows MVP + Top Scorer — no W/D/L
-const _intraBidData = [
-  _HofEntry(season: "Season 1", name: "Empire FC",     team: "Captain: Aryan Bhuiyan",    detail: "MVP: Aryan Bhuiyan · Top Scorer: Owasikur Rahman"),
-  _HofEntry(season: "Season 2", name: "Vikings",       team: "Captain: Asif Reza",         detail: "MVP: Asif Reza · Top Scorer: Farhan Ahmed"),
-  _HofEntry(season: "Season 3", name: "Brothers",      team: "Captain: Owasikur Rahman",   detail: "MVP: Owasikur Rahman · Top Scorer: Tanvir Hasan"),
-  _HofEntry(season: "Season 4", name: "Legends FC",    team: "Captain: Shariq Ul Baari",   detail: "MVP: Shariq Ul Baari · Top Scorer: Zubair Hashmi"),
-  _HofEntry(season: "Season 5", name: "PBCC Warriors", team: "Captain: Suran Lohani",      detail: "MVP: Suran Lohani · Top Scorer: Ahsan Abir"),
-  _HofEntry(season: "Season 6", name: "TBD",           team: "—",                          detail: "Season ongoing", isTbd: true),
-];
-
-
-// ─── Category Config ─────────────────────────────────────────────────────────
-class _CategoryConfig {
-  final String emoji;
-  final String title;
-  final String sub;
-  final String badge;
-  final Color accentColor;
-  final List<_HofEntry> entries;
-
-  const _CategoryConfig({
-    required this.emoji,
-    required this.title,
-    required this.sub,
-    required this.badge,
-    required this.accentColor,
-    required this.entries,
-  });
+// ─── Accent mapping ──────────────────────────────────────────────────────────
+// The API sends a named accent per category; resolve it to the app's palette.
+Color _accentFromName(String name) {
+  switch (name) {
+    case 'neonOrange':
+      return AppColors.neonOrange;
+    case 'neonCyan':
+      return AppColors.neonCyan;
+    case 'neonGold':
+    default:
+      return AppColors.neonGold;
+  }
 }
 
 // ─── Screen ───────────────────────────────────────────────────────────────────
@@ -76,35 +28,9 @@ class _CategoryConfig {
 class HallOfFameScreen extends StatelessWidget {
   const HallOfFameScreen({super.key});
 
-  static final List<_CategoryConfig> _categories = [
-    _CategoryConfig(
-      emoji: "🏆",
-      title: "Ballon d'Or",
-      sub: "Best Overall Player",
-      badge: "👑",
-      accentColor: AppColors.neonGold,
-      entries: _ballonDorData,
-    ),
-    _CategoryConfig(
-      emoji: "⚽",
-      title: "Golden Boot",
-      sub: "Top Goal Scorer",
-      badge: "⚽",
-      accentColor: AppColors.neonOrange,
-      entries: _goldenBootData,
-    ),
-    _CategoryConfig(
-      emoji: "🎖️",
-      title: "Intra Bid Tournament",
-      sub: "Team Champions",
-      badge: "🏅",
-      accentColor: AppColors.neonCyan,
-      entries: _intraBidData,
-    ),
-  ];
-
   @override
   Widget build(BuildContext context) {
+    final controller = Get.find<HallOfFameController>();
     return Scaffold(
       backgroundColor: AppColors.bg,
       body: SafeArea(
@@ -116,31 +42,91 @@ class HallOfFameScreen extends StatelessWidget {
               onBack: () => Get.key.currentState?.canPop() == true ? Get.back() : Get.offNamed(RouteHelper.home),
             ),
             Expanded(
-              child: SingleChildScrollView(
-                padding: EdgeInsets.fromLTRB(
-                  Dimensions.screenPadding,
-                  Dimensions.xxxl,
-                  Dimensions.screenPadding,
-                  Dimensions.massive + 16,
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    // ── Hero Banner ──
-                    _HofHeroBanner(),
-                    const SizedBox(height: Dimensions.massive),
+              child: Obx(() {
+                if (controller.loading && controller.categories.isEmpty) {
+                  return const Center(
+                    child: CircularProgressIndicator(color: AppColors.neonGold),
+                  );
+                }
+                return RefreshIndicator(
+                  color: AppColors.neonGold,
+                  backgroundColor: AppColors.bgSurface,
+                  onRefresh: controller.loadHallOfFame,
+                  child: SingleChildScrollView(
+                    physics: const AlwaysScrollableScrollPhysics(),
+                    padding: EdgeInsets.fromLTRB(
+                      Dimensions.screenPadding,
+                      Dimensions.xxxl,
+                      Dimensions.screenPadding,
+                      Dimensions.massive + 16,
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        // ── Hero Banner ──
+                        const _HofHeroBanner(),
+                        const SizedBox(height: Dimensions.massive),
 
-                    // ── All Award Categories ──
-                    ..._categories.asMap().entries.map((entry) {
-                      final i = entry.key;
-                      final cat = entry.value;
-                      return Padding(
-                        padding: const EdgeInsets.only(bottom: Dimensions.xxxl),
-                        child: _AwardSection(config: cat, index: i),
-                      );
-                    }),
-                  ],
-                ),
+                        if (controller.isEmpty)
+                          const _HofEmptyState()
+                        else
+                          // ── All Award Categories ──
+                          ...controller.categories.asMap().entries.map((entry) {
+                            final i = entry.key;
+                            final cat = entry.value;
+                            return Padding(
+                              padding: const EdgeInsets.only(bottom: Dimensions.xxxl),
+                              child: _AwardSection(category: cat, index: i),
+                            );
+                          }),
+                      ],
+                    ),
+                  ),
+                );
+              }),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+// ─── Empty State ──────────────────────────────────────────────────────────────
+
+class _HofEmptyState extends StatelessWidget {
+  const _HofEmptyState();
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: Dimensions.massive),
+      child: Center(
+        child: Column(
+          children: [
+            Text(
+              "🏆",
+              style: TextStyle(
+                fontSize: 48,
+                color: AppColors.textMuted.withOpacity(0.5),
+              ),
+            ),
+            const SizedBox(height: Dimensions.lg),
+            const Text(
+              "No inductees yet",
+              style: TextStyle(
+                fontSize: Dimensions.sizeBody,
+                fontWeight: Dimensions.bold,
+                color: AppColors.textSecondary,
+              ),
+            ),
+            const SizedBox(height: Dimensions.xs),
+            const Text(
+              "Champions will appear here once seasons conclude.",
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: Dimensions.sizeCaption,
+                color: AppColors.textMuted,
               ),
             ),
           ],
@@ -250,30 +236,28 @@ class _HofHeroBanner extends StatelessWidget {
 // ─── Award Section ────────────────────────────────────────────────────────────
 
 class _AwardSection extends StatelessWidget {
-  final _CategoryConfig config;
+  final HofCategoryModel category;
   final int index;
 
-  const _AwardSection({required this.config, required this.index});
+  const _AwardSection({required this.category, required this.index});
 
   @override
   Widget build(BuildContext context) {
+    final accentColor = _accentFromName(category.accent);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _buildSectionHeader(),
+        _buildSectionHeader(accentColor),
         const SizedBox(height: Dimensions.lg),
 
-        // All entries — every non-TBD gets the champ badge
-        ...config.entries.asMap().entries.map((e) {
-          final entryIndex = e.key;
-          final entry = e.value;
+        // All entries — every inductee is a champion
+        ...category.entries.map((entry) {
           return Padding(
             padding: const EdgeInsets.only(bottom: Dimensions.md),
             child: _AwardEntryCard(
               entry: entry,
-              badge: config.badge,
-              accentColor: config.accentColor,
-              isFirst: entryIndex == 0 && !entry.isTbd,
+              badge: category.badge,
+              accentColor: accentColor,
             ),
           );
         }),
@@ -281,7 +265,7 @@ class _AwardSection extends StatelessWidget {
     );
   }
 
-  Widget _buildSectionHeader() {
+  Widget _buildSectionHeader(Color accentColor) {
     return Row(
       children: [
         Container(
@@ -291,7 +275,7 @@ class _AwardSection extends StatelessWidget {
             gradient: LinearGradient(
               begin: Alignment.topCenter,
               end: Alignment.bottomCenter,
-              colors: [config.accentColor, config.accentColor.withOpacity(0.3)],
+              colors: [accentColor, accentColor.withOpacity(0.3)],
             ),
             borderRadius: Dimensions.borderXxs,
           ),
@@ -303,12 +287,12 @@ class _AwardSection extends StatelessWidget {
             Row(
               children: [
                 Text(
-                  config.emoji,
+                  category.emoji,
                   style: const TextStyle(fontSize: Dimensions.sizeTitle),
                 ),
                 const SizedBox(width: Dimensions.xs),
                 Text(
-                  config.title.toUpperCase(),
+                  category.title.toUpperCase(),
                   style: TextStyle(
                     fontSize: Dimensions.sizeTitle,
                     fontWeight: Dimensions.extraBold,
@@ -319,7 +303,7 @@ class _AwardSection extends StatelessWidget {
               ],
             ),
             Text(
-              config.sub,
+              category.subtitle,
               style: const TextStyle(
                 fontSize: Dimensions.sizeSmall,
                 color: AppColors.textSecondary,
@@ -335,49 +319,38 @@ class _AwardSection extends StatelessWidget {
 // ─── Award Entry Card ─────────────────────────────────────────────────────────
 
 class _AwardEntryCard extends StatelessWidget {
-  final _HofEntry entry;
+  final HofEntryModel entry;
   final String badge;
   final Color accentColor;
-  final bool isFirst;
 
   const _AwardEntryCard({
     required this.entry,
     required this.badge,
     required this.accentColor,
-    required this.isFirst,
   });
 
   @override
   Widget build(BuildContext context) {
-    final color = entry.isTbd ? AppColors.textMuted : accentColor;
-    final isChamp = !entry.isTbd;
-
     return GlassCardWidget(
       padding: const EdgeInsets.all(Dimensions.cardInnerPadding),
-      borderColor: entry.isTbd
-          ? AppColors.glassBorder
-          : accentColor.withOpacity(0.35),
-      shadows: !entry.isTbd
-          ? [
-              BoxShadow(
-                color: accentColor.withOpacity(0.14),
-                blurRadius: 16,
-                spreadRadius: 1,
-                offset: const Offset(0, 4),
-              ),
-            ]
-          : null,
-      gradient: !entry.isTbd
-          ? LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: [
-                accentColor.withOpacity(0.10),
-                accentColor.withOpacity(0.03),
-                Colors.transparent,
-              ],
-            )
-          : null,
+      borderColor: accentColor.withOpacity(0.35),
+      shadows: [
+        BoxShadow(
+          color: accentColor.withOpacity(0.14),
+          blurRadius: 16,
+          spreadRadius: 1,
+          offset: const Offset(0, 4),
+        ),
+      ],
+      gradient: LinearGradient(
+        begin: Alignment.topLeft,
+        end: Alignment.bottomRight,
+        colors: [
+          accentColor.withOpacity(0.10),
+          accentColor.withOpacity(0.03),
+          Colors.transparent,
+        ],
+      ),
       child: Stack(
         children: [
           Positioned(
@@ -388,7 +361,7 @@ class _AwardEntryCard extends StatelessWidget {
               style: TextStyle(
                 fontSize: 42,
                 fontWeight: Dimensions.black,
-                color: color.withOpacity(0.05),
+                color: accentColor.withOpacity(0.05),
                 height: Dimensions.lineHeightCompact,
               ),
             ),
@@ -396,14 +369,12 @@ class _AwardEntryCard extends StatelessWidget {
 
           Row(
             children: [
-              if (!entry.isTbd)
-                PlayerAvatarWidget(
-                  name: entry.name,
-                  size: Dimensions.avatarMd,
-                  borderColor: accentColor.withOpacity(0.65),
-                )
-              else
-                const _TbdAvatar(),
+              PlayerAvatarWidget(
+                name: entry.name,
+                imageUrl: entry.image,
+                size: Dimensions.avatarMd,
+                borderColor: accentColor.withOpacity(0.65),
+              ),
 
               const SizedBox(width: Dimensions.lg),
 
@@ -413,33 +384,27 @@ class _AwardEntryCard extends StatelessWidget {
                   children: [
                     Text(
                       entry.name,
-                      style: TextStyle(
-                        color: entry.isTbd
-                            ? AppColors.textSecondary
-                            : AppColors.white,
+                      style: const TextStyle(
+                        color: AppColors.white,
                         fontWeight: Dimensions.black,
-                        fontSize: entry.soloOnly
-                            ? Dimensions.sizeSubtitle
-                            : Dimensions.sizeBody,
+                        fontSize: Dimensions.sizeBody,
                         letterSpacing: Dimensions.trackingNormal,
                       ),
                     ),
 
-                    if (!entry.soloOnly && entry.team.isNotEmpty) ...[
+                    if (entry.team.isNotEmpty) ...[
                       const SizedBox(height: Dimensions.xxs),
                       Text(
                         entry.team,
                         style: TextStyle(
-                          color: entry.isTbd
-                              ? AppColors.textMuted
-                              : accentColor.withOpacity(0.75),
+                          color: accentColor.withOpacity(0.75),
                           fontSize: Dimensions.sizeCaption,
                           fontWeight: Dimensions.semiBold,
                         ),
                       ),
                     ],
 
-                    if (!entry.soloOnly && entry.detail.isNotEmpty) ...[
+                    if (entry.detail.isNotEmpty) ...[
                       const SizedBox(height: Dimensions.xxs + 1),
                       Text(
                         entry.detail,
@@ -460,7 +425,7 @@ class _AwardEntryCard extends StatelessWidget {
                   Text(
                     entry.season.toUpperCase(),
                     style: TextStyle(
-                      color: color,
+                      color: accentColor,
                       fontWeight: Dimensions.extraBold,
                       fontSize: Dimensions.sizeTiny,
                       letterSpacing: Dimensions.trackingWidest,
@@ -468,97 +433,57 @@ class _AwardEntryCard extends StatelessWidget {
                   ),
                   const SizedBox(height: Dimensions.xxs),
 
-                  if (isChamp)
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: Dimensions.xs,
-                        vertical: Dimensions.xxs,
-                      ),
-                      decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                          colors: [
-                            accentColor.withOpacity(0.95),
-                            accentColor,
-                          ],
-                          begin: Alignment.topLeft,
-                          end: Alignment.bottomRight,
-                        ),
-                        borderRadius: Dimensions.borderXs,
-                        boxShadow: [
-                          BoxShadow(
-                            color: accentColor.withOpacity(0.35),
-                            blurRadius: 8,
-                            spreadRadius: 1,
-                            offset: const Offset(0, 2),
-                          ),
-                        ],
-                      ),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Text(
-                            badge,
-                            style: const TextStyle(
-                              fontSize: Dimensions.sizeBody,
-                            ),
-                          ),
-                          const SizedBox(width: Dimensions.xxs),
-                          Text(
-                            "CHAMPIONS",
-                            style: TextStyle(
-                              fontSize: Dimensions.sizeTiny,
-                              fontWeight: Dimensions.black,
-                              letterSpacing: Dimensions.trackingWider,
-                              color: AppColors.bg,
-                            ),
-                          ),
-                        ],
-                      ),
-                    )
-                  else
-                    Text(
-                      badge,
-                      style: TextStyle(
-                        fontSize: Dimensions.sizeTitle,
-                        color: AppColors.textMuted,
-                      ),
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: Dimensions.xs,
+                      vertical: Dimensions.xxs,
                     ),
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        colors: [
+                          accentColor.withOpacity(0.95),
+                          accentColor,
+                        ],
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                      ),
+                      borderRadius: Dimensions.borderXs,
+                      boxShadow: [
+                        BoxShadow(
+                          color: accentColor.withOpacity(0.35),
+                          blurRadius: 8,
+                          spreadRadius: 1,
+                          offset: const Offset(0, 2),
+                        ),
+                      ],
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          badge,
+                          style: const TextStyle(
+                            fontSize: Dimensions.sizeBody,
+                          ),
+                        ),
+                        const SizedBox(width: Dimensions.xxs),
+                        Text(
+                          "CHAMPIONS",
+                          style: TextStyle(
+                            fontSize: Dimensions.sizeTiny,
+                            fontWeight: Dimensions.black,
+                            letterSpacing: Dimensions.trackingWider,
+                            color: AppColors.bg,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
                 ],
               ),
             ],
           ),
         ],
-      ),
-    );
-  }
-}
-
-// ─── TBD Avatar ───────────────────────────────────────────────────────────────
-
-class _TbdAvatar extends StatelessWidget {
-  const _TbdAvatar();
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: Dimensions.avatarMd,
-      height: Dimensions.avatarMd,
-      decoration: BoxDecoration(
-        shape: BoxShape.circle,
-        color: AppColors.bgSurface,
-        border: Border.all(
-          color: AppColors.glassBorder,
-          width: Dimensions.borderThick,
-        ),
-      ),
-      alignment: Alignment.center,
-      child: const Text(
-        "?",
-        style: TextStyle(
-          color: AppColors.textMuted,
-          fontSize: Dimensions.sizeHeading,
-          fontWeight: Dimensions.black,
-        ),
       ),
     );
   }

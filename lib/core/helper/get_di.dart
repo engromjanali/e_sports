@@ -39,6 +39,11 @@ import 'package:e_sports/features/rank/domain/repositories/rank_repository.dart'
 import 'package:e_sports/features/rank/domain/repositories/rank_repository_interface.dart';
 import 'package:e_sports/features/rank/domain/services/rank_service.dart';
 import 'package:e_sports/features/rank/domain/services/rank_service_interface.dart';
+import 'package:e_sports/features/hall_of_fame/controllers/hall_of_fame_controller.dart';
+import 'package:e_sports/features/hall_of_fame/domain/repositories/hall_of_fame_repository.dart';
+import 'package:e_sports/features/hall_of_fame/domain/repositories/hall_of_fame_repository_interface.dart';
+import 'package:e_sports/features/hall_of_fame/domain/services/hall_of_fame_service.dart';
+import 'package:e_sports/features/hall_of_fame/domain/services/hall_of_fame_service_interface.dart';
 import 'package:e_sports/features/home/controllers/home_spotlight_controller.dart';
 import 'package:e_sports/features/home/domain/repositories/home_spotlight_repository.dart';
 import 'package:e_sports/features/home/domain/repositories/home_spotlight_repository_interface.dart';
@@ -114,6 +119,11 @@ Future<void> init() async {
   Get.lazyPut<RankServiceInterface>(() => RankService(rankRepositoryInterface: Get.find()), fenix: true);
   Get.lazyPut<RankController>(() => RankController(rankServiceInterface: Get.find()), fenix: true);
   Get.lazyPut<RankDetailController>(() => RankDetailController(rankServiceInterface: Get.find()), fenix: true);
+
+  // Hall of Fame feature dependencies
+  Get.lazyPut<HallOfFameRepositoryInterface>(() => HallOfFameRepository(), fenix: true);
+  Get.lazyPut<HallOfFameServiceInterface>(() => HallOfFameService(hallOfFameRepositoryInterface: Get.find()), fenix: true);
+  Get.lazyPut<HallOfFameController>(() => HallOfFameController(hallOfFameServiceInterface: Get.find()), fenix: true);
 
   // Home spotlight (Player/Scorer of week & month + top-three) — relocated from RankController.
   Get.lazyPut<HomeSpotlightRepositoryInterface>(() => HomeSpotlightRepository(), fenix: true);

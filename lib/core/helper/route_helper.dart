@@ -8,6 +8,7 @@ import 'package:e_sports/features/auth/presentation/screen/otp_verification_scre
 import 'package:e_sports/features/auth/presentation/screen/registration_page.dart';
 import 'package:e_sports/features/compare/screens/compare_screen.dart';
 import 'package:e_sports/features/dashboard/screens/dashboard_screen.dart';
+import 'package:e_sports/features/hall_of_fame/controllers/hall_of_fame_controller.dart';
 import 'package:e_sports/features/hall_of_fame/screens/hall_of_fame_screen.dart';
 import 'package:e_sports/features/matches/screens/matches_screen.dart';
 import 'package:e_sports/features/menu/screens/edit_profile_screen.dart';
@@ -198,7 +199,16 @@ class RouteHelper {
     GetPage(name: menu, page: () => const DashboardScreen(initialTab: 3), middlewares: authMiddleware),
     GetPage(name: compare, page: () => const CompareScreen(), middlewares: authMiddleware),
     GetPage(name: news, page: () => const NewsListScreen(), middlewares: authMiddleware),
-    GetPage(name: hallOfFame, page: () => const HallOfFameScreen(), middlewares: authMiddleware),
+    GetPage(
+      name: hallOfFame,
+      page: () => const HallOfFameScreen(),
+      binding: BindingsBuilder(() {
+        if (!Get.isRegistered<HallOfFameController>()) {
+          Get.find<HallOfFameController>();
+        }
+      }),
+      middlewares: authMiddleware,
+    ),
     GetPage(name: editProfile, page: () => const EditProfileScreen(), middlewares: authMiddleware),
     GetPage(
       name: faq,

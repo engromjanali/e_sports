@@ -75,6 +75,9 @@ class AppConstants {
   // faq
   static const String faqs = "/api/user/faqs";
 
+  // hall of fame
+  static const String hallOfFame = "/api/user/hall-of-fame";
+
   // current active season
   static const int currentSeason = 4;
 
