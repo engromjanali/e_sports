@@ -51,19 +51,8 @@ const _intraBidData = [
   _HofEntry(season: "Season 6", name: "TBD",           team: "—",                          detail: "Season ongoing", isTbd: true),
 ];
 
-// Solo: soloOnly=true → only bold name is shown, nothing below
-const _intraSoloData = [
-  _HofEntry(season: "Season 1", name: "Aryan Bhuiyan",  team: "", detail: "", soloOnly: true),
-  _HofEntry(season: "Season 2", name: "Farhan Ahmed",   team: "", detail: "", soloOnly: true),
-  _HofEntry(season: "Season 3", name: "Tanvir Hasan",   team: "", detail: "", soloOnly: true),
-  _HofEntry(season: "Season 4", name: "Zubair Hashmi",  team: "", detail: "", soloOnly: true),
-  _HofEntry(season: "Season 5", name: "Ahsan Abir",     team: "", detail: "", soloOnly: true),
-  _HofEntry(season: "Season 6", name: "Mehedi Hassan",  team: "", detail: "", soloOnly: true),
-  _HofEntry(season: "Season 7", name: "TBD",            team: "—", detail: "Season ongoing", isTbd: true),
-];
 
 // ─── Category Config ─────────────────────────────────────────────────────────
-
 class _CategoryConfig {
   final String emoji;
   final String title;
@@ -91,7 +80,7 @@ class HallOfFameScreen extends StatelessWidget {
     _CategoryConfig(
       emoji: "🏆",
       title: "Ballon d'Or",
-      sub: "${_ballonDorData.length} Seasons · Best Overall Player",
+      sub: "Best Overall Player",
       badge: "👑",
       accentColor: AppColors.neonGold,
       entries: _ballonDorData,
@@ -99,7 +88,7 @@ class HallOfFameScreen extends StatelessWidget {
     _CategoryConfig(
       emoji: "⚽",
       title: "Golden Boot",
-      sub: "${_goldenBootData.length} Seasons · Top Goal Scorer",
+      sub: "Top Goal Scorer",
       badge: "⚽",
       accentColor: AppColors.neonOrange,
       entries: _goldenBootData,
@@ -107,18 +96,10 @@ class HallOfFameScreen extends StatelessWidget {
     _CategoryConfig(
       emoji: "🎖️",
       title: "Intra Bid Tournament",
-      sub: "${_intraBidData.length} Seasons · Team Champions",
+      sub: "Team Champions",
       badge: "🏅",
       accentColor: AppColors.neonCyan,
       entries: _intraBidData,
-    ),
-    _CategoryConfig(
-      emoji: "⭐",
-      title: "Intra Solo Tournament",
-      sub: "${_intraSoloData.length} Seasons · Individual Champions",
-      badge: "🎯",
-      accentColor: AppColors.neonPurple,
-      entries: _intraSoloData,
     ),
   ];
 
