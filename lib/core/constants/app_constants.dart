@@ -13,7 +13,7 @@ class AppConstants {
   static const String googleServerClientId = '491987943015-agln6biv84krpnngdphj87jkko7r9lb8.apps.googleusercontent.com';
   static const String pusherBroadcustUrl = '/api/v1/broadcasting/user-auth';
 
-  static const String baseUrl = 'http://127.0.0.1:8000';
+  static const String baseUrl = 'https://e-sports-backend-2ex9.vercel.app';
 
   // Supabase
   static const String supabaseUrl = 'https://ttietyuwaamuiziwzmst.supabase.co';
