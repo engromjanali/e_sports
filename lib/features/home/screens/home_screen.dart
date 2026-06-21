@@ -147,7 +147,7 @@ class HomeScreen extends StatelessWidget {
                     SectionHeadingWidget(
                       title: "⭐ Player of The Week & Month",
                       sub: "Season 2025 spotlight",
-                      onAll: () => Get.toNamed(RouteHelper.hallOfFame),
+                      onAll: () => Get.toNamed(RouteHelper.ranks),
                     ),
                     Row(children: [
                       Expanded(child: SpotlightCardWidget(player: rankController.playerOfTheWeekAndMonthModel?.weekModel, label: "POTW", badge: "👑",

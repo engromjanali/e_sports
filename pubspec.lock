@@ -313,14 +313,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.1"
-  dart_jsonwebtoken:
-    dependency: transitive
-    description:
-      name: dart_jsonwebtoken
-      sha256: ad84e60181696513d04d5f2078e0bbc20365b911f46f647797317414bdc88fbe
-      url: "https://pub.dev"
-    source: hosted
-    version: "3.4.1"
   dart_pusher_channels:
     dependency: "direct main"
     description:
@@ -872,14 +864,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.5.0"
-  functions_client:
-    dependency: transitive
-    description:
-      name: functions_client
-      sha256: "94bde5b8062b1c498795ce509cbe7e83417e171eb55c2c611da64c15034b7851"
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.6.0"
   geoclue:
     dependency: transitive
     description:
@@ -1064,14 +1048,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.1.3"
-  gotrue:
-    dependency: transitive
-    description:
-      name: gotrue
-      sha256: "22f0a6ea86c8024de6b164a49a213cfa60a23f19df26e5bca8d6eb7e087fdf17"
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.21.0"
   gsettings:
     dependency: transitive
     description:
@@ -1224,14 +1200,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.0.12"
-  jwt_decode:
-    dependency: transitive
-    description:
-      name: jwt_decode
-      sha256: d2e9f68c052b2225130977429d30f187aa1981d789c76ad104a32243cfdebfbb
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.3.1"
   leak_tracker:
     dependency: transitive
     description:
@@ -1616,14 +1584,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.10.3"
-  pointycastle:
-    dependency: transitive
-    description:
-      name: pointycastle
-      sha256: "92aa3841d083cc4b0f4709b5c74fd6409a3e6ba833ffc7dc6a8fee096366acf5"
-      url: "https://pub.dev"
-    source: hosted
-    version: "4.0.0"
   posix:
     dependency: transitive
     description:
@@ -1632,14 +1592,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "6.5.0"
-  postgrest:
-    dependency: transitive
-    description:
-      name: postgrest
-      sha256: "9d61b3d4a88fcf9424d400127c54d49ed1b56ec30838fc0a33a64f31d4e694cc"
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.7.0"
   provider:
     dependency: transitive
     description:
@@ -1672,14 +1624,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "4.1.0"
-  realtime_client:
-    dependency: transitive
-    description:
-      name: realtime_client
-      sha256: "7dfccf372d2f55aacfeefb6186f65a06f3ffae383fe042dbeef9d85d33487576"
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.7.3"
   rect_getter:
     dependency: "direct main"
     description:
@@ -1688,14 +1632,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.1.0"
-  retry:
-    dependency: transitive
-    description:
-      name: retry
-      sha256: "822e118d5b3aafed083109c72d5f484c6dc66707885e07c0fbcb8b986bba7efc"
-      url: "https://pub.dev"
-    source: hosted
-    version: "3.1.2"
   rxdart:
     dependency: transitive
     description:
@@ -1957,14 +1893,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.12.1"
-  storage_client:
-    dependency: transitive
-    description:
-      name: storage_client
-      sha256: c108351e9811f4c47afce1147ed3daef7f7647d095884101af16ad79bb2a8e9f
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.5.4"
   stream_channel:
     dependency: transitive
     description:
@@ -1989,14 +1917,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.4.1"
-  supabase:
-    dependency: "direct main"
-    description:
-      name: supabase
-      sha256: "3eeddc8fd654360aa4105e6d28ef5d027687bb40bfcffd9b1f2814640862bc91"
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.12.0"
   syncfusion_flutter_core:
     dependency: transitive
     description:
@@ -2357,14 +2277,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.1.3"
-  yet_another_json_isolate:
-    dependency: transitive
-    description:
-      name: yet_another_json_isolate
-      sha256: fe45897501fa156ccefbfb9359c9462ce5dec092f05e8a56109db30be864f01e
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.1.0"
   youtube_player_flutter:
     dependency: "direct main"
     description:

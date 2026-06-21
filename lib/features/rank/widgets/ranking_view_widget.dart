@@ -240,15 +240,61 @@ class _ListSection extends StatelessWidget {
     this.onViewAll,
   });
 
+  /// "View all" affordance — compact chevron on phones, full label on tab/desktop.
+  Widget _viewAllButton(BuildContext context) {
+    if (ResponsiveHelper.isMobile(context)) {
+      return GestureDetector(
+        onTap: onViewAll,
+        behavior: HitTestBehavior.opaque,
+        child: Padding(
+          padding: EdgeInsets.all(Dimensions.xs),
+          child: Icon(Icons.chevron_right,
+              color: AppColors.neonGold, size: Dimensions.iconMd),
+        ),
+      );
+    }
+    return TextButton.icon(
+      onPressed: onViewAll,
+      style: TextButton.styleFrom(
+        padding: EdgeInsets.symmetric(horizontal: Dimensions.sm),
+        minimumSize: Size.zero,
+        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+      ),
+      icon: Text(
+        "View all",
+        style: TextStyle(
+          color: AppColors.neonGold,
+          fontWeight: Dimensions.extraBold,
+          fontSize: Dimensions.sizeSmall,
+        ),
+      ),
+      label: Icon(Icons.chevron_right,
+          color: AppColors.neonGold, size: Dimensions.iconSm),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
+    final showViewAll = onViewAll != null && players.isNotEmpty;
+    // Keep the filter and the "View all" button together on the header row.
+    final Widget? headerTrailing = (trailing != null && showViewAll)
+        ? Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              trailing!,
+              SizedBox(width: Dimensions.xs),
+              _viewAllButton(context),
+            ],
+          )
+        : (trailing ?? (showViewAll ? _viewAllButton(context) : null));
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         SectionHeadingWidget(
           title: "🏆 $title",
           sub: "Full ranking order",
-          trailing: trailing,
+          trailing: headerTrailing,
         ),
         if (loading && players.isEmpty)
           Padding(
@@ -279,22 +325,6 @@ class _ListSection extends StatelessWidget {
                 player: players[i],
                 isScorer: isScorer,
               ),
-            ),
-          ),
-        if (onViewAll != null && players.isNotEmpty)
-          Align(
-            alignment: Alignment.centerRight,
-            child: TextButton.icon(
-              onPressed: onViewAll,
-              icon: Text(
-                "View all",
-                style: TextStyle(
-                  color: AppColors.neonGold,
-                  fontWeight: Dimensions.extraBold,
-                  fontSize: Dimensions.sizeSmall,
-                ),
-              ),
-              label: Icon(Icons.chevron_right, color: AppColors.neonGold, size: Dimensions.iconSm),
             ),
           ),
       ],

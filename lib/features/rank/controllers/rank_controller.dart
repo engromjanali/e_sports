@@ -6,14 +6,10 @@ import 'package:e_sports/features/splash/domain/models/season_model.dart';
 import 'package:e_sports/features/splash/domain/models/season_period.dart';
 import 'package:get/get.dart';
 
-/// The three time windows the rank screen ranks over.
 enum RankPeriod { week, month, season }
 
-/// Resolved query window for a rank request.
 typedef RankArgs = ({DateTime start, DateTime end, int? seasonId, bool overall});
 
-/// MVP hero state for one period. Player/scorer are cached separately so
-/// toggling the tab doesn't refetch.
 class _MvpSlot {
   final Rxn<RankMvpModel> player = Rxn<RankMvpModel>();
   final Rxn<RankMvpModel> scorer = Rxn<RankMvpModel>();
@@ -27,10 +23,6 @@ class _ListSlot {
   final RxBool loading = false.obs;
 }
 
-/// Drives the rank screen: Player/Scorer tabs, the three MVP hero cards, and the
-/// three preview lists (weekly / monthly / season). The full lists live behind
-/// "View all" (see RankListViewController). Legacy home-spotlight data moved to
-/// HomeSpotlightController.
 class RankController extends GetxController {
   final RankServiceInterface rankServiceInterface;
 
@@ -39,7 +31,6 @@ class RankController extends GetxController {
   /// Rows shown per section before "View all".
   static const int previewLimit = 10;
 
-  // ── Tab (0 = Players, 1 = Scorers) ─────────────────────────────────────────
   final _tabIndex = 0.obs;
   int get tabIndex => _tabIndex.value;
   bool get isScorer => _tabIndex.value == 1;
