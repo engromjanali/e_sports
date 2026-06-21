@@ -75,6 +75,9 @@ class AppConstants {
   // faq
   static const String faqs = "/api/user/faqs";
 
+  // privacy policy
+  static const String privacyPolicy = "/api/user/privacy-policy";
+
   // hall of fame
   static const String hallOfFame = "/api/user/hall-of-fame";
 

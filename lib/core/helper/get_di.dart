@@ -32,6 +32,11 @@ import 'package:e_sports/features/faq/repositories/faq_repository.dart';
 import 'package:e_sports/features/faq/repositories/faq_repository_interface.dart';
 import 'package:e_sports/features/faq/services/faq_service.dart';
 import 'package:e_sports/features/faq/services/faq_service_interface.dart';
+import 'package:e_sports/features/privacy_policy/controllers/privacy_policy_controller.dart';
+import 'package:e_sports/features/privacy_policy/repositories/privacy_policy_repository.dart';
+import 'package:e_sports/features/privacy_policy/repositories/privacy_policy_repository_interface.dart';
+import 'package:e_sports/features/privacy_policy/services/privacy_policy_service.dart';
+import 'package:e_sports/features/privacy_policy/services/privacy_policy_service_interface.dart';
 import 'package:e_sports/features/rank/controllers/rank_controller.dart';
 import 'package:e_sports/features/rank/controllers/rank_detail_controller.dart';
 import 'package:e_sports/features/rank/domain/repositories/rank_repository.dart';
@@ -107,6 +112,11 @@ Future<void> init() async {
   Get.lazyPut<FaqRepositoryInterface>(() => FaqRepository(), fenix: true);
   Get.lazyPut<FaqServiceInterface>(() => FaqService(faqRepositoryInterface: Get.find()), fenix: true);
   Get.lazyPut<FaqController>(() => FaqController(faqServiceInterface: Get.find()), fenix: true);
+
+  // Privacy Policy feature dependencies
+  Get.lazyPut<PrivacyPolicyRepositoryInterface>(() => PrivacyPolicyRepository(), fenix: true);
+  Get.lazyPut<PrivacyPolicyServiceInterface>(() => PrivacyPolicyService(privacyPolicyRepositoryInterface: Get.find()), fenix: true);
+  Get.lazyPut<PrivacyPolicyController>(() => PrivacyPolicyController(privacyPolicyServiceInterface: Get.find()), fenix: true);
 
   // Rank feature dependencies
   Get.lazyPut<RankRepositoryInterface>(() => RankRepository(), fenix: true);

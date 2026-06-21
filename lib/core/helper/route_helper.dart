@@ -12,6 +12,8 @@ import 'package:e_sports/features/matches/screens/matches_screen.dart';
 import 'package:e_sports/features/menu/screens/edit_profile_screen.dart';
 import 'package:e_sports/features/faq/controllers/faq_controller.dart';
 import 'package:e_sports/features/faq/screens/faq_screen.dart';
+import 'package:e_sports/features/privacy_policy/controllers/privacy_policy_controller.dart';
+import 'package:e_sports/features/privacy_policy/screens/privacy_policy_screen.dart';
 import 'package:e_sports/features/menu/screens/static_content_screen.dart';
 import 'package:e_sports/features/news/controllers/news_controller.dart';
 import 'package:e_sports/features/news/screens/news_detail_screen.dart';
@@ -93,24 +95,6 @@ class RouteHelper {
             StaticContentSection(
               heading: 'Gameplay & Rankings',
               body: 'Ranks, achievements, rewards, and recent performance are refreshed from the app data layer. If something looks off, check again after syncing your latest activity.',
-            ),
-          ],
-        );
-      case privacyPolicy:
-        return const StaticContentData(
-          title: 'Privacy Policy',
-          sections: [
-            StaticContentSection(
-              heading: 'Information We Show',
-              body: 'The app presents player profiles, rankings, rewards, and match-related activity needed to deliver the esports experience.',
-            ),
-            StaticContentSection(
-              heading: 'How Data Is Used',
-              body: 'Profile and activity data are used to personalize dashboards, calculate statistics, and improve the in-app experience.',
-            ),
-            StaticContentSection(
-              heading: 'Your Controls',
-              body: 'You can review profile details from the Profile area and use Edit Profile for basic account updates available in this build.',
             ),
           ],
         );
@@ -220,7 +204,12 @@ class RouteHelper {
     ),
     GetPage(
       name: privacyPolicy,
-      page: () => StaticContentScreen(data: staticContentDataFromRoute(privacyPolicy)),
+      page: () => const PrivacyPolicyScreen(),
+      binding: BindingsBuilder(() {
+        if (!Get.isRegistered<PrivacyPolicyController>()) {
+          Get.find<PrivacyPolicyController>();
+        }
+      }),
       middlewares: authMiddleware,
     ),
     GetPage(
