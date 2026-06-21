@@ -269,57 +269,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           children: [
                             SizedBox(height: Dimensions.xxxl),
                             SectionHeadingWidget(title: "📋 Last 20 Results"),
-                            GlassCardWidget(
-                              padding: EdgeInsets.all(Dimensions.massive),
-                              child: Wrap(
-                                alignment: WrapAlignment.start,
-                                spacing: Dimensions.sm,
-                                runSpacing: Dimensions.sm,
-                                children: List.generate(20, (i) {
-                                  final bool hasData = i < last20.length;
-                                  final r = hasData ? last20[i] : "na";
-                                  final color = !hasData
-                                      ? AppColors.textMuted
-                                      : r == "win"
-                                          ? AppColors.neonGreen
-                                          : r == "loss"
-                                              ? AppColors.neonRed
-                                              : AppColors.neonGold;
-
-                                  final totalSpacing = Dimensions.sm * 9;
-                                  final cardPadding = Dimensions.massive * 2;
-                                  final screenPadding = Dimensions.screenPadding * 2;
-                                  final availableWidth = MediaQuery.of(context)
-                                          .size
-                                          .width -
-                                      screenPadding -
-                                      cardPadding -
-                                      totalSpacing;
-                                  final itemWidth = availableWidth / 10 - 0.5;
-
-                                  return Container(
-                                    width: itemWidth,
-                                    height: itemWidth,
-                                    decoration: BoxDecoration(
-                                      color: color.withOpacity(AppColors.opacity15),
-                                      borderRadius: Dimensions.borderMd -
-                                          const BorderRadius.all(Radius.circular(2)),
-                                      border: Border.all(
-                                          color: color.withOpacity(AppColors.opacity40)),
-                                    ),
-                                    alignment: Alignment.center,
-                                    child: Text(
-                                        hasData ? r[0].toUpperCase() : "N/A",
-                                        style: TextStyle(
-                                          fontSize:
-                                              hasData ? Dimensions.sizeMicro : 6,
-                                          fontWeight: Dimensions.black,
-                                          color: color,
-                                        )),
-                                  );
-                                }),
-                              ),
-                            ),
+                            _buildLast20Results(context, last20),
                             SizedBox(height: Dimensions.xxxl),
                             // _buildAchievementsSection(context),
                             _buildAchievementsSection(context, p),
@@ -394,6 +344,154 @@ class _ProfileScreenState extends State<ProfileScreen> {
     return widget.isSubScreen
         ? Scaffold(backgroundColor: AppColors.bg, body: content)
         : content;
+  }
+
+  // ── Last 20 Results ──────────────────────────────────────────────
+  Widget _buildLast20Results(BuildContext context, List<String> last20) {
+    final wins = last20.where((r) => r == "win").length;
+    final losses = last20.where((r) => r == "loss").length;
+    final draws = last20.where((r) => r != "win" && r != "loss").length;
+
+    Color colorFor(String r) => r == "win"
+        ? AppColors.neonGreen
+        : r == "loss"
+            ? AppColors.neonRed
+            : AppColors.neonGold;
+
+    Widget summaryChip(String label, int count, Color color) {
+      return Expanded(
+        child: Container(
+          padding: EdgeInsets.symmetric(vertical: Dimensions.lg),
+          decoration: BoxDecoration(
+            color: color.withOpacity(AppColors.opacity10),
+            borderRadius: Dimensions.borderMd,
+            border: Border.all(color: color.withOpacity(AppColors.opacity25)),
+          ),
+          child: Column(
+            children: [
+              Text(
+                "$count",
+                style: TextStyle(
+                  fontSize: Dimensions.sizeTitleLarge,
+                  fontWeight: Dimensions.black,
+                  color: color,
+                  height: 1.0,
+                ),
+              ),
+              SizedBox(height: Dimensions.sm),
+              Text(
+                label,
+                style: TextStyle(
+                  fontSize: Dimensions.sizeTiny,
+                  fontWeight: Dimensions.bold,
+                  color: AppColors.textSecondary,
+                  letterSpacing: 1.0,
+                ),
+              ),
+            ],
+          ),
+        ),
+      );
+    }
+
+    return GlassCardWidget(
+      padding: EdgeInsets.all(Dimensions.massive),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Form summary
+          Row(
+            children: [
+              summaryChip("WINS", wins, AppColors.neonGreen),
+              SizedBox(width: Dimensions.md),
+              summaryChip("DRAWS", draws, AppColors.neonGold),
+              SizedBox(width: Dimensions.md),
+              summaryChip("LOSSES", losses, AppColors.neonRed),
+            ],
+          ),
+          SizedBox(height: Dimensions.massive),
+
+          // Aligned results grid
+          LayoutBuilder(
+            builder: (context, constraints) {
+              const perRow = 10;
+              const rows = 2;
+              final spacing = Dimensions.sm;
+              final itemSize =
+                  (constraints.maxWidth - spacing * (perRow - 1)) / perRow;
+
+              return Column(
+                children: List.generate(rows, (row) {
+                  return Padding(
+                    padding: EdgeInsets.only(
+                        bottom: row == rows - 1 ? 0 : spacing),
+                    child: Row(
+                      children: List.generate(perRow, (col) {
+                        final i = row * perRow + col;
+                        final bool hasData = i < last20.length;
+                        final color =
+                            hasData ? colorFor(last20[i]) : AppColors.textMuted;
+
+                        return Padding(
+                          padding: EdgeInsets.only(
+                              right: col == perRow - 1 ? 0 : spacing),
+                          child: Container(
+                            width: itemSize,
+                            height: itemSize,
+                            decoration: BoxDecoration(
+                              gradient: hasData
+                                  ? LinearGradient(
+                                      begin: Alignment.topLeft,
+                                      end: Alignment.bottomRight,
+                                      colors: [
+                                        color.withOpacity(AppColors.opacity25),
+                                        color.withOpacity(AppColors.opacity10),
+                                      ],
+                                    )
+                                  : null,
+                              color: hasData
+                                  ? null
+                                  : AppColors.white.withOpacity(0.03),
+                              borderRadius: Dimensions.borderSm,
+                              border: Border.all(
+                                color: color.withOpacity(
+                                    hasData ? AppColors.opacity40 : 0.10),
+                              ),
+                              boxShadow: hasData
+                                  ? [
+                                      BoxShadow(
+                                        color:
+                                            color.withOpacity(AppColors.opacity15),
+                                        blurRadius: 6,
+                                        offset: const Offset(0, 2),
+                                      ),
+                                    ]
+                                  : null,
+                            ),
+                            alignment: Alignment.center,
+                            child: Text(
+                              hasData ? last20[i][0].toUpperCase() : "·",
+                              style: TextStyle(
+                                fontSize: Dimensions.sizeSmall,
+                                fontWeight: Dimensions.black,
+                                color: hasData
+                                    ? color
+                                    : AppColors.textMuted
+                                        .withOpacity(AppColors.opacity50),
+                              ),
+                            ),
+                          ),
+                        );
+                      }),
+                    ),
+                  );
+                }),
+              );
+            },
+          ),
+        ],
+      ),
+    );
   }
 
   Widget _buildOfficialStats(
