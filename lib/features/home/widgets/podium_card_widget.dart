@@ -101,7 +101,26 @@ class _RankBox extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const double avatarSize = Dimensions.avatarPodium;
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final double w = constraints.maxWidth;
+        // Scale to the box's own width so 3-up podiums never overflow on phones.
+        final double avatarSize = w < 100
+            ? 52
+            : w < 130
+                ? 64
+                : Dimensions.avatarPodium;
+        final double nameSize =
+            w < 110 ? Dimensions.sizeBody2 : Dimensions.sizeSubtitle;
+        final double statSize =
+            w < 110 ? Dimensions.sizeHeading : Dimensions.sizeHeadingLg;
+        return _buildBox(context, avatarSize, nameSize, statSize);
+      },
+    );
+  }
+
+  Widget _buildBox(
+      BuildContext context, double avatarSize, double nameSize, double statSize) {
     const double overflowAmt = 10.0;
 
     final imageUrl = player.image;
@@ -164,9 +183,9 @@ class _RankBox extends StatelessWidget {
                       overflow: TextOverflow.ellipsis,
                       textAlign: TextAlign.center,
                       style: TextStyle(
-                        fontSize: Dimensions.sizeSubtitle,
+                        fontSize: nameSize,
                         fontWeight: Dimensions.bold,
-                        letterSpacing: Dimensions.trackingWider,
+                        letterSpacing: Dimensions.trackingWide,
                         color: gradientColors[2].withOpacity(0.95),
                       ),
                     ),
@@ -185,33 +204,36 @@ class _RankBox extends StatelessWidget {
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.end,
-                            children: [
-                              Text(
-                                statLabel == "GOALS" ? "${player.goals}" : "${player.pts}",
-                                style: TextStyle(
-                                  fontSize: Dimensions.sizeHeadingLg,
-                                  fontWeight: Dimensions.black,
-                                  color: gradientColors[1],
-                                  height: Dimensions.lineHeightCompact,
-                                ),
-                              ),
-                              SizedBox(width: Dimensions.xs),
-                              Padding(
-                                padding: EdgeInsets.only(bottom: Dimensions.xxs),
-                                child: Text(
-                                  statLabel,
+                          FittedBox(
+                            fit: BoxFit.scaleDown,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.end,
+                              children: [
+                                Text(
+                                  statLabel == "GOALS" ? "${player.goals}" : "${player.pts}",
                                   style: TextStyle(
-                                    fontSize: Dimensions.sizeTiny,
-                                    fontWeight: Dimensions.extraBold,
-                                    letterSpacing: Dimensions.trackingWider,
-                                    color: gradientColors[1].withOpacity(AppColors.opacity60),
+                                    fontSize: statSize,
+                                    fontWeight: Dimensions.black,
+                                    color: gradientColors[1],
+                                    height: Dimensions.lineHeightCompact,
                                   ),
                                 ),
-                              ),
-                            ],
+                                SizedBox(width: Dimensions.xs),
+                                Padding(
+                                  padding: EdgeInsets.only(bottom: Dimensions.xxs),
+                                  child: Text(
+                                    statLabel,
+                                    style: TextStyle(
+                                      fontSize: Dimensions.sizeTiny,
+                                      fontWeight: Dimensions.extraBold,
+                                      letterSpacing: Dimensions.trackingWider,
+                                      color: gradientColors[1].withOpacity(AppColors.opacity60),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
                           Padding(
                             padding: EdgeInsets.symmetric(horizontal: Dimensions.sm, vertical: Dimensions.xxs),
@@ -221,19 +243,22 @@ class _RankBox extends StatelessWidget {
                               color: gradientColors[1].withOpacity(AppColors.opacity12)
                             ),
                           ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              _buildMiniStat("M", player.matches, gradientColors[1]),
-                              _buildDivider(gradientColors[1]),
-                              _buildMiniStat("W", player.wins, gradientColors[1]),
-                              _buildDivider(gradientColors[1]),
-                              _buildMiniStat("D", player.draws, gradientColors[1]),
-                              _buildDivider(gradientColors[1]),
-                              _buildMiniStat("L", player.losses, gradientColors[1]),
-                              _buildDivider(gradientColors[1]),
-                              _buildMiniStat("G", player.goals, gradientColors[1]),
-                            ],
+                          FittedBox(
+                            fit: BoxFit.scaleDown,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                _buildMiniStat("M", player.matches, gradientColors[1]),
+                                _buildDivider(gradientColors[1]),
+                                _buildMiniStat("W", player.wins, gradientColors[1]),
+                                _buildDivider(gradientColors[1]),
+                                _buildMiniStat("D", player.draws, gradientColors[1]),
+                                _buildDivider(gradientColors[1]),
+                                _buildMiniStat("L", player.losses, gradientColors[1]),
+                                _buildDivider(gradientColors[1]),
+                                _buildMiniStat("G", player.goals, gradientColors[1]),
+                              ],
+                            ),
                           ),
                           SizedBox(height: Dimensions.xxs),
                         ],
