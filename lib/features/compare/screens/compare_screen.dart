@@ -1,8 +1,13 @@
-import '../../../core/theme/app_theme.dart';
-import '../../../core/controllers/app_data_controller.dart';
+import 'dart:async';
+import 'package:e_sports/core/utils/dimensions.dart';
 import '../../../core/data/models/computed_player_stats.dart';
+import '../../../core/data/models/player_model.dart';
 import '../../../core/helper/route_helper.dart';
 import '../../../core/widgets/app_header_widget.dart';
+import '../../player/domain/services/player_service_interface.dart';
+import '../../player/widgets/player_select_delegate.dart';
+import '../../splash/controllers/splash_controller.dart';
+import '../../splash/domain/models/season_model.dart';
 import '../widgets/compare_radar_chart.dart';
 import '../widgets/compare_bar_charts.dart';
 import 'package:flutter/material.dart';
@@ -16,21 +21,70 @@ class CompareScreen extends StatefulWidget {
 }
 
 class _CompareScreenState extends State<CompareScreen> {
+  // Selected players (identity only — no season/stats).
+  PlayerModel? _sel1;
+  PlayerModel? _sel2;
+  // Their fetched stats for the chosen season (drives the charts).
   ComputedPlayerStats? _p1;
   ComputedPlayerStats? _p2;
+  int? _seasonId;
   bool _isComparing = false;
+  bool _loading = false;
+
+  @override
+  void initState() {
+    super.initState();
+    try {
+      _seasonId = Get.find<SplashController>().configModel?.currentSeason;
+    } catch (_) {}
+  }
+
+  List<SeasonModel> get _seasons {
+    try {
+      return Get.find<SplashController>().configModel?.seasons.where((s) => s.status).toList() ?? const [];
+    } catch (_) {
+      return const [];
+    }
+  }
 
   void _selectPlayer(int index) async {
-    final player = await showSearch<ComputedPlayerStats>(
+    final player = await showSearch<PlayerModel?>(
       context: context,
-      delegate: PlayerSelectDelegate(Get.find<AppDataController>().rankedPlayers),
+      delegate: PlayerSelectDelegate(),
     );
     if (player != null) {
       setState(() {
-        if (index == 1) _p1 = player; else _p2 = player;
-        _isComparing = false; // Reset comparison on new selection
+        if (index == 1) _sel1 = player; else _sel2 = player;
+        // New selection invalidates the current comparison.
+        _isComparing = false;
+        _p1 = null;
+        _p2 = null;
       });
     }
+  }
+
+  // Fetches both players' stats for the selected season, then shows the charts.
+  Future<void> _runCompare() async {
+    if (_sel1 == null || _sel2 == null) return;
+    setState(() => _loading = true);
+    final service = Get.find<PlayerServiceInterface>();
+    final results = await Future.wait([
+      service.getPlayerStats(playerId: _sel1!.id, seasonId: _seasonId),
+      service.getPlayerStats(playerId: _sel2!.id, seasonId: _seasonId),
+    ]);
+    if (!mounted) return;
+    setState(() {
+      _p1 = results[0];
+      _p2 = results[1];
+      _isComparing = _p1 != null && _p2 != null;
+      _loading = false;
+    });
+  }
+
+  void _setSeason(int id) {
+    if (_seasonId == id) return;
+    setState(() => _seasonId = id);
+    if (_sel1 != null && _sel2 != null) _runCompare(); // refresh stats for the new season
   }
 
   @override
@@ -47,27 +101,34 @@ class _CompareScreenState extends State<CompareScreen> {
             ),
             Expanded(
               child: SingleChildScrollView(
-                padding: EdgeInsets.all(AppSpacing.xxxl),
+                padding: EdgeInsets.all(Dimensions.xxxl),
                 child: Column(
                   children: [
                     // ── Selection Area ──
                     Row(
                       children: [
-                        Expanded(child: _buildSelectorTile(1, _p1, AppColors.neonBlue)),
-                        SizedBox(width: AppSpacing.lg),
+                        Expanded(child: _buildSelectorTile(1, _sel1, _p1, AppColors.neonBlue)),
+                        SizedBox(width: Dimensions.lg),
                         _buildVS(),
-                        SizedBox(width: AppSpacing.lg),
-                        Expanded(child: _buildSelectorTile(2, _p2, AppColors.neonRed)),
+                        SizedBox(width: Dimensions.lg),
+                        Expanded(child: _buildSelectorTile(2, _sel2, _p2, AppColors.neonRed)),
                       ],
                     ),
-                    SizedBox(height: AppSpacing.massive),
+
+                    // ── Season filter ──
+                    if (_seasons.isNotEmpty) ...[
+                      SizedBox(height: Dimensions.xl),
+                      _buildSeasonFilter(),
+                    ],
+
+                    SizedBox(height: Dimensions.massive),
 
                     // ── Compare Button ──
-                    if (_p1 != null && _p2 != null)
+                    if (_sel1 != null && _sel2 != null)
                       _buildCompareButton(),
-                    
+
                     if (_isComparing) ...[
-                      SizedBox(height: AppSpacing.massive),
+                      SizedBox(height: Dimensions.massive),
                       _buildComparisonContent(),
                     ],
                   ],
@@ -80,14 +141,14 @@ class _CompareScreenState extends State<CompareScreen> {
     );
   }
 
-  Widget _buildSelectorTile(int index, ComputedPlayerStats? p, Color accent) {
+  Widget _buildSelectorTile(int index, PlayerModel? p, ComputedPlayerStats? stats, Color accent) {
     return GestureDetector(
       onTap: () => _selectPlayer(index),
       child: Container(
         height: 160,
         decoration: BoxDecoration(
           color: AppColors.bgCard.withOpacity(0.4),
-          borderRadius: AppRadius.borderXl,
+          borderRadius: Dimensions.borderXl,
           border: Border.all(
             color: p != null ? accent.withOpacity(0.6) : AppColors.glassBorder.withOpacity(0.2),
             width: 1.5,
@@ -98,7 +159,7 @@ class _CompareScreenState extends State<CompareScreen> {
           ] : [],
         ),
         child: ClipRRect(
-          borderRadius: AppRadius.borderXl,
+          borderRadius: Dimensions.borderXl,
           child: Stack(
             children: [
               // Background Gradient
@@ -121,7 +182,7 @@ class _CompareScreenState extends State<CompareScreen> {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Container(
-                        padding: EdgeInsets.all(AppSpacing.md),
+                        padding: EdgeInsets.all(Dimensions.md),
                         decoration: BoxDecoration(
                           color: accent.withOpacity(0.05),
                           shape: BoxShape.circle,
@@ -129,11 +190,11 @@ class _CompareScreenState extends State<CompareScreen> {
                         ),
                         child: Icon(Icons.add_rounded, color: accent, size: 28),
                       ),
-                      SizedBox(height: AppSpacing.sm),
+                      SizedBox(height: Dimensions.sm),
                       Text("SELECT PLAYER", 
                         style: TextStyle(
                           color: accent.withOpacity(0.8), 
-                          fontWeight: AppTypography.black, 
+                          fontWeight: Dimensions.black, 
                           fontSize: 9, 
                           letterSpacing: 1.2
                         )
@@ -152,57 +213,57 @@ class _CompareScreenState extends State<CompareScreen> {
                           shape: BoxShape.circle,
                           border: Border.all(color: accent.withOpacity(0.5), width: 1),
                         ),
-                        child: p.player.imageUrl.isNotEmpty
+                        child: p.imageUrl.isNotEmpty
                             ? ClipOval(
                                 child: Image.network(
-                                  p.player.imageUrl,
+                                  p.imageUrl,
                                   width: 70, height: 70,
                                   fit: BoxFit.cover,
                                   errorBuilder: (_, __, ___) => CircleAvatar(
                                     radius: 32,
                                     backgroundColor: accent.withOpacity(0.15),
-                                    child: Text(p.name[0], style: TextStyle(color: accent, fontSize: 28, fontWeight: AppTypography.black)),
+                                    child: Text(p.name[0], style: TextStyle(color: accent, fontSize: 28, fontWeight: Dimensions.black)),
                                   ),
                                 ),
                               )
                             : CircleAvatar(
                                 radius: 32,
                                 backgroundColor: accent.withOpacity(0.15),
-                                child: Text(p.name[0], style: TextStyle(color: accent, fontSize: 28, fontWeight: AppTypography.black)),
+                                child: Text(p.name[0], style: TextStyle(color: accent, fontSize: 28, fontWeight: Dimensions.black)),
                               ),
                       ),
-                      SizedBox(height: AppSpacing.md),
-                      Text(p.short.toUpperCase(), 
-                        style: TextStyle(color: AppColors.white, fontWeight: AppTypography.black, fontSize: 16, letterSpacing: 0.5)
+                      SizedBox(height: Dimensions.md),
+                      Text(p.sortName.toUpperCase(),
+                        style: TextStyle(color: AppColors.white, fontWeight: Dimensions.black, fontSize: 16, letterSpacing: 0.5)
                       ),
                       SizedBox(height: 2),
                       Container(
                         padding: EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                         decoration: BoxDecoration(
                           color: AppColors.white.withOpacity(0.05),
-                          borderRadius: AppRadius.borderPill,
+                          borderRadius: Dimensions.borderPill,
                         ),
-                        child: Text("${p.team} · #${p.jerseyNumber}", 
-                          style: TextStyle(color: AppColors.textMuted, fontSize: 9, fontWeight: AppTypography.bold)
+                        child: Text("#${p.jerseyNumber}",
+                          style: TextStyle(color: AppColors.textMuted, fontSize: 9, fontWeight: Dimensions.bold)
                         ),
                       ),
                     ],
                   ),
                 ),
               
-              // Rank Tag
-              if (p != null)
+              // Rank Tag (only once stats are loaded for the season)
+              if (stats != null)
                 Positioned(
                   top: 10, right: 10,
                   child: Container(
                     padding: EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                     decoration: BoxDecoration(
                       color: AppColors.neonGold.withOpacity(0.15),
-                      borderRadius: AppRadius.borderSm,
+                      borderRadius: Dimensions.borderSm,
                       border: Border.all(color: AppColors.neonGold.withOpacity(0.3)),
                     ),
-                    child: Text("RANK #${p.rank}", 
-                      style: TextStyle(color: AppColors.neonGold, fontSize: 7, fontWeight: AppTypography.black)
+                    child: Text("RANK #${stats.rank}",
+                      style: TextStyle(color: AppColors.neonGold, fontSize: 7, fontWeight: Dimensions.black)
                     ),
                   ),
                 ),
@@ -229,7 +290,7 @@ class _CompareScreenState extends State<CompareScreen> {
       child: Text("VS", 
         style: TextStyle(
           color: AppColors.neonGold, 
-          fontWeight: AppTypography.black, 
+          fontWeight: Dimensions.black, 
           fontSize: 14, 
           fontStyle: FontStyle.italic,
           letterSpacing: -1
@@ -240,19 +301,64 @@ class _CompareScreenState extends State<CompareScreen> {
 
   Widget _buildCompareButton() {
     return GestureDetector(
-      onTap: () => setState(() => _isComparing = true),
+      onTap: _loading ? null : _runCompare,
       child: Container(
         width: double.infinity,
-        padding: EdgeInsets.symmetric(vertical: AppSpacing.lg),
+        padding: EdgeInsets.symmetric(vertical: Dimensions.lg),
         decoration: BoxDecoration(
           gradient: AppColors.goldRibbonGradient,
-          borderRadius: AppRadius.borderLg,
+          borderRadius: Dimensions.borderLg,
           boxShadow: [BoxShadow(color: AppColors.neonGold.withOpacity(0.3), blurRadius: 15, offset: Offset(0, 5))],
         ),
         child: Center(
-          child: Text("COMPARE STATS", style: TextStyle(color: AppColors.goldDeep, fontWeight: AppTypography.black, letterSpacing: 1.5)),
+          child: _loading
+              ? SizedBox(
+                  height: Dimensions.iconMd, width: Dimensions.iconMd,
+                  child: CircularProgressIndicator(strokeWidth: Dimensions.borderMedium, color: AppColors.goldDeep),
+                )
+              : Text("COMPARE STATS", style: TextStyle(color: AppColors.goldDeep, fontWeight: Dimensions.black, letterSpacing: 1.5)),
         ),
       ),
+    );
+  }
+
+  // Season selector for the comparison (defaults to current season).
+  Widget _buildSeasonFilter() {
+    final seasons = _seasons;
+    final selected = seasons.firstWhereOrNull((s) => s.id == _seasonId) ?? seasons.last;
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Text("SEASON", style: TextStyle(color: AppColors.textMuted, fontSize: 10, fontWeight: Dimensions.bold, letterSpacing: 1)),
+        SizedBox(width: Dimensions.md),
+        PopupMenuButton<int>(
+          tooltip: "Season",
+          onSelected: _setSeason,
+          color: AppColors.bgCard,
+          shape: RoundedRectangleBorder(borderRadius: Dimensions.borderCard),
+          itemBuilder: (_) => seasons
+              .map((s) => PopupMenuItem<int>(
+                    value: s.id,
+                    child: Text(s.name, style: TextStyle(color: AppColors.white)),
+                  ))
+              .toList(),
+          child: Container(
+            padding: EdgeInsets.symmetric(horizontal: Dimensions.md, vertical: Dimensions.xs),
+            decoration: BoxDecoration(
+              color: AppColors.neonGold.withOpacity(0.1),
+              borderRadius: Dimensions.borderPill,
+              border: Border.all(color: AppColors.neonGold.withOpacity(0.3)),
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(selected.name, style: TextStyle(color: AppColors.neonGold, fontWeight: Dimensions.bold)),
+                Icon(Icons.arrow_drop_down, color: AppColors.neonGold, size: 18),
+              ],
+            ),
+          ),
+        ),
+      ],
     );
   }
 
@@ -275,7 +381,7 @@ class _CompareScreenState extends State<CompareScreen> {
               ),
             ),
             
-            SizedBox(width: AppSpacing.md),
+            SizedBox(width: Dimensions.md),
             
             // Bar Charts (Right)
             Expanded(
@@ -295,17 +401,17 @@ class _CompareScreenState extends State<CompareScreen> {
             ),
           ],
         ),
-        SizedBox(height: AppSpacing.massive),
+        SizedBox(height: Dimensions.massive),
 
         // ── Summary Card ──
         _buildLeaderSummary(),
-        SizedBox(height: AppSpacing.massive),
+        SizedBox(height: Dimensions.massive),
 
         // ── Performance Rates ──
         _buildSectionHeader("PERFORMANCE RATES"),
         _buildCompareStatBubbles(),
 
-        SizedBox(height: AppSpacing.massive),
+        SizedBox(height: Dimensions.massive),
 
         // ── Raw Stats ──
         _buildSectionHeader("LIFETIME RAW STATS"),
@@ -335,10 +441,10 @@ class _CompareScreenState extends State<CompareScreen> {
     ];
 
     return Container(
-      padding: EdgeInsets.symmetric(vertical: AppSpacing.lg),
+      padding: EdgeInsets.symmetric(vertical: Dimensions.lg),
       child: Column(
         children: stats.map((s) => Padding(
-          padding: EdgeInsets.only(bottom: AppSpacing.xl),
+          padding: EdgeInsets.only(bottom: Dimensions.xl),
           child: Row(
             children: [
               Expanded(
@@ -346,7 +452,7 @@ class _CompareScreenState extends State<CompareScreen> {
                   textAlign: TextAlign.end,
                   style: TextStyle(
                     color: AppColors.neonBlue, 
-                    fontWeight: AppTypography.black, 
+                    fontWeight: Dimensions.black, 
                     fontSize: 16,
                     decoration: s.$5 == 1 ? TextDecoration.underline : TextDecoration.none,
                     decorationColor: AppColors.neonBlue,
@@ -358,8 +464,8 @@ class _CompareScreenState extends State<CompareScreen> {
                 width: 140,
                 child: Column(
                   children: [
-                    Text(s.$2, style: TextStyle(fontSize: 8, fontWeight: AppTypography.bold, color: AppColors.textMuted, letterSpacing: 0.5)),
-                    SizedBox(height: AppSpacing.xs),
+                    Text(s.$2, style: TextStyle(fontSize: 8, fontWeight: Dimensions.bold, color: AppColors.textMuted, letterSpacing: 0.5)),
+                    SizedBox(height: Dimensions.xs),
                     Container(
                       width: 30, height: 30,
                       decoration: BoxDecoration(
@@ -378,7 +484,7 @@ class _CompareScreenState extends State<CompareScreen> {
                   textAlign: TextAlign.start,
                   style: TextStyle(
                     color: AppColors.neonRed, 
-                    fontWeight: AppTypography.black, 
+                    fontWeight: Dimensions.black, 
                     fontSize: 16,
                     decoration: s.$5 == 2 ? TextDecoration.underline : TextDecoration.none,
                     decorationColor: AppColors.neonRed,
@@ -416,31 +522,31 @@ class _CompareScreenState extends State<CompareScreen> {
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 2,
         childAspectRatio: 1.8,
-        mainAxisSpacing: AppSpacing.md,
-        crossAxisSpacing: AppSpacing.md,
+        mainAxisSpacing: Dimensions.md,
+        crossAxisSpacing: Dimensions.md,
       ),
       itemCount: rawStats.length,
       itemBuilder: (context, index) {
         final s = rawStats[index];
         return Container(
-          padding: EdgeInsets.all(AppSpacing.md),
+          padding: EdgeInsets.all(Dimensions.md),
           decoration: BoxDecoration(
             color: AppColors.white.withOpacity(0.03),
-            borderRadius: AppRadius.borderLg,
+            borderRadius: Dimensions.borderLg,
             border: Border.all(color: AppColors.glassBorder.withOpacity(0.1)),
           ),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text(s.$2, style: TextStyle(color: AppColors.textMuted, fontSize: 8, fontWeight: AppTypography.bold, letterSpacing: 0.8)),
-              SizedBox(height: AppSpacing.sm),
+              Text(s.$2, style: TextStyle(color: AppColors.textMuted, fontSize: 8, fontWeight: Dimensions.bold, letterSpacing: 0.8)),
+              SizedBox(height: Dimensions.sm),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   Text("${s.$3}", 
                     style: TextStyle(
                       color: AppColors.neonBlue, 
-                      fontWeight: AppTypography.black, 
+                      fontWeight: Dimensions.black, 
                       fontSize: 16,
                       decoration: s.$5 == 1 ? TextDecoration.underline : TextDecoration.none,
                       decorationColor: AppColors.neonBlue,
@@ -451,7 +557,7 @@ class _CompareScreenState extends State<CompareScreen> {
                   Text("${s.$4}", 
                     style: TextStyle(
                       color: AppColors.neonRed, 
-                      fontWeight: AppTypography.black, 
+                      fontWeight: Dimensions.black, 
                       fontSize: 16,
                       decoration: s.$5 == 2 ? TextDecoration.underline : TextDecoration.none,
                       decorationColor: AppColors.neonRed,
@@ -470,12 +576,12 @@ class _CompareScreenState extends State<CompareScreen> {
 
   Widget _buildSectionHeader(String title) {
     return Padding(
-      padding: EdgeInsets.only(bottom: AppSpacing.xl),
+      padding: EdgeInsets.only(bottom: Dimensions.xl),
       child: Row(
         children: [
           Container(width: 4, height: 16, color: AppColors.neonGold),
-          SizedBox(width: AppSpacing.md),
-          Text(title, style: TextStyle(color: AppColors.white, fontWeight: AppTypography.black, letterSpacing: 1.2, fontSize: 14)),
+          SizedBox(width: Dimensions.md),
+          Text(title, style: TextStyle(color: AppColors.white, fontWeight: Dimensions.black, letterSpacing: 1.2, fontSize: 14)),
         ],
       ),
     );
@@ -486,18 +592,18 @@ class _CompareScreenState extends State<CompareScreen> {
     final s2 = isPercent ? (v2 * 100).toStringAsFixed(1) + "%" : v2.toString() + suffix;
     
     return Padding(
-      padding: EdgeInsets.only(bottom: AppSpacing.lg),
+      padding: EdgeInsets.only(bottom: Dimensions.lg),
       child: Column(
         children: [
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(s1, style: TextStyle(color: AppColors.neonBlue, fontWeight: AppTypography.bold)),
+              Text(s1, style: TextStyle(color: AppColors.neonBlue, fontWeight: Dimensions.bold)),
               Text(label.toUpperCase(), style: TextStyle(color: AppColors.textMuted, fontSize: 10, fontWeight: FontWeight.bold)),
-              Text(s2, style: TextStyle(color: AppColors.neonRed, fontWeight: AppTypography.bold)),
+              Text(s2, style: TextStyle(color: AppColors.neonRed, fontWeight: Dimensions.bold)),
             ],
           ),
-          SizedBox(height: AppSpacing.xs),
+          SizedBox(height: Dimensions.xs),
           Row(
             children: [
               Expanded(
@@ -559,10 +665,10 @@ class _CompareScreenState extends State<CompareScreen> {
     final color = p1Leading ? AppColors.neonBlue : AppColors.neonRed;
 
     return Container(
-      padding: EdgeInsets.all(AppSpacing.xl),
+      padding: EdgeInsets.all(Dimensions.xl),
       decoration: BoxDecoration(
         color: color.withOpacity(0.1),
-        borderRadius: AppRadius.borderXl,
+        borderRadius: Dimensions.borderXl,
         border: Border.all(color: color, width: 2),
         boxShadow: [BoxShadow(color: color.withOpacity(0.2), blurRadius: 20)],
       ),
@@ -571,26 +677,26 @@ class _CompareScreenState extends State<CompareScreen> {
           Row(
             children: [
               Container(
-                padding: EdgeInsets.all(AppSpacing.md),
+                padding: EdgeInsets.all(Dimensions.md),
                 decoration: BoxDecoration(color: color.withOpacity(0.2), shape: BoxShape.circle),
                 child: Icon(Icons.analytics_rounded, color: color, size: 28),
               ),
-              SizedBox(width: AppSpacing.lg),
+              SizedBox(width: Dimensions.lg),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text("SUMMARY CARD", style: TextStyle(color: color, fontWeight: AppTypography.extraBold, fontSize: 10, letterSpacing: 1.2)),
-                    Text("${winner.name.toUpperCase()} LEADING", style: TextStyle(color: AppColors.white, fontWeight: AppTypography.black, fontSize: 18)),
+                    Text("SUMMARY CARD", style: TextStyle(color: color, fontWeight: Dimensions.extraBold, fontSize: 10, letterSpacing: 1.2)),
+                    Text("${winner.name.toUpperCase()} LEADING", style: TextStyle(color: AppColors.white, fontWeight: Dimensions.black, fontSize: 18)),
                   ],
                 ),
               ),
             ],
           ),
-          SizedBox(height: AppSpacing.lg),
+          SizedBox(height: Dimensions.lg),
           Container(
             padding: EdgeInsets.symmetric(vertical: 8, horizontal: 12),
-            decoration: BoxDecoration(color: AppColors.white.withOpacity(0.05), borderRadius: AppRadius.borderMd),
+            decoration: BoxDecoration(color: AppColors.white.withOpacity(0.05), borderRadius: Dimensions.borderMd),
             child: Text(
               "${winner.short} shows superior dominance in recent performance metrics.",
               textAlign: TextAlign.center,
@@ -603,92 +709,6 @@ class _CompareScreenState extends State<CompareScreen> {
   }
 }
 
-class PlayerSelectDelegate extends SearchDelegate<ComputedPlayerStats> {
-  final List<ComputedPlayerStats> players;
-  PlayerSelectDelegate(this.players);
-
-  @override
-  ThemeData appBarTheme(BuildContext context) {
-    return Theme.of(context).copyWith(
-      appBarTheme: const AppBarTheme(backgroundColor: AppColors.bgCard),
-    );
-  }
-
-  @override
-  List<Widget>? buildActions(BuildContext context) => [
-    IconButton(icon: const Icon(Icons.clear), onPressed: () => query = ""),
-  ];
-
-  @override
-  Widget? buildLeading(BuildContext context) => IconButton(
-    icon: const Icon(Icons.arrow_back),
-    onPressed: () => close(context, players.first),
-  );
-
-  @override
-  Widget buildResults(BuildContext context) => _buildList(context);
-
-  @override
-  Widget buildSuggestions(BuildContext context) => _buildList(context);
-
-  Widget _buildList(BuildContext context) {
-    final results = players.where((p) => p.name.toLowerCase().contains(query.toLowerCase())).toList();
-    if (results.isEmpty) {
-      return Center(child: Text("No players found", style: TextStyle(color: AppColors.textMuted)));
-    }
-    return Container(
-      color: AppColors.bg,
-      child: ListView.separated(
-        padding: EdgeInsets.all(AppSpacing.xxxl),
-        itemCount: results.length,
-        separatorBuilder: (_, __) => SizedBox(height: AppSpacing.md),
-        itemBuilder: (context, i) {
-          final p = results[i];
-          return GestureDetector(
-            onTap: () => close(context, p),
-            child: Container(
-              padding: EdgeInsets.all(AppSpacing.md),
-              decoration: BoxDecoration(
-                color: AppColors.bgCard.withOpacity(0.5),
-                borderRadius: AppRadius.borderLg,
-                border: Border.all(color: AppColors.glassBorder),
-              ),
-              child: Row(
-                children: [
-                  CircleAvatar(
-                    radius: 24,
-                    backgroundColor: AppColors.neonGold.withOpacity(0.1),
-                    child: Text(p.name[0], style: TextStyle(color: AppColors.neonGold, fontWeight: FontWeight.bold)),
-                  ),
-                  SizedBox(width: AppSpacing.md),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(p.name, style: TextStyle(color: AppColors.white, fontWeight: AppTypography.bold, fontSize: 14)),
-                        Row(
-                          children: [
-                            Text(p.team, style: TextStyle(color: AppColors.neonCyan, fontSize: 10, fontWeight: FontWeight.bold)),
-                            Text(" · ", style: TextStyle(color: AppColors.textMuted)),
-                            Text("#${p.jerseyNumber}", style: TextStyle(color: AppColors.textMuted, fontSize: 10)),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: [
-                      Text("RANK", style: TextStyle(color: AppColors.textMuted, fontSize: 8, fontWeight: FontWeight.bold)),
-                      Text("#${p.rank}", style: TextStyle(color: AppColors.neonGold, fontWeight: AppTypography.black, fontSize: 14)),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-          );
-        },
-      ),
-    );
-  }
-}
+// The server-backed player picker (PlayerSelectDelegate) lives in
+// lib/features/player/widgets/player_select_delegate.dart so it can be reused
+// by the home search and other entry points.

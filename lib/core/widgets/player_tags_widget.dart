@@ -1,4 +1,4 @@
-import '../theme/app_theme.dart';
+import 'package:e_sports/core/utils/dimensions.dart';
 import 'package:flutter/material.dart';
 
 class PlayerTagsWidget extends StatelessWidget {
@@ -18,8 +18,8 @@ class PlayerTagsWidget extends StatelessWidget {
     final accent = accentColor ?? AppColors.neonGold;
 
     return Wrap(
-      spacing: AppSpacing.xs,
-      runSpacing: AppSpacing.xxs,
+      spacing: Dimensions.xs,
+      runSpacing: Dimensions.xxs,
       children: tags.map((tag) {
         final isRank = tag.toUpperCase().contains("RANK") && showRankSpecial;
         
@@ -27,7 +27,7 @@ class PlayerTagsWidget extends StatelessWidget {
           return ClipRRect(
             borderRadius: BorderRadius.circular(4),
             child: Container(
-              padding: EdgeInsets.symmetric(horizontal: AppSpacing.md, vertical: 2),
+              padding: EdgeInsets.symmetric(horizontal: Dimensions.md, vertical: 2),
               decoration: BoxDecoration(
                 gradient: AppColors.goldRibbonGradient,
               ),
@@ -35,7 +35,7 @@ class PlayerTagsWidget extends StatelessWidget {
                 tag.toUpperCase(),
                 style: TextStyle(
                   fontSize: 8,
-                  fontWeight: AppTypography.black,
+                  fontWeight: Dimensions.black,
                   letterSpacing: 1.0,
                   color: AppColors.goldDeep,
                 ),
@@ -45,7 +45,7 @@ class PlayerTagsWidget extends StatelessWidget {
         }
 
         return Container(
-          padding: EdgeInsets.symmetric(horizontal: AppSpacing.md, vertical: 2),
+          padding: EdgeInsets.symmetric(horizontal: Dimensions.md, vertical: 2),
           decoration: BoxDecoration(
             color: accent.withOpacity(AppColors.opacity12),
             borderRadius: BorderRadius.circular(4),
@@ -55,7 +55,7 @@ class PlayerTagsWidget extends StatelessWidget {
             tag.toUpperCase(),
             style: TextStyle(
               fontSize: 8,
-              fontWeight: AppTypography.black,
+              fontWeight: Dimensions.black,
               color: accent.withOpacity(0.9),
               letterSpacing: 0.5,
             ),

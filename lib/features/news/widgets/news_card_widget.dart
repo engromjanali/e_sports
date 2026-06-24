@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 
-import '../../../core/theme/app_theme.dart';
+import 'package:e_sports/core/utils/dimensions.dart';
 import '../../../core/widgets/glass_card_widget.dart';
-import "../../../core/controllers/app_data_controller.dart";
-import "../../../core/data/models/news_model.dart";
+import "../domain/model/news_model.dart";
 import "package:get/get.dart";
 
 class NewsCardWidget extends StatelessWidget {
@@ -22,9 +21,9 @@ class NewsCardWidget extends StatelessWidget {
       onTap: onTap,
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 200),
-        margin: EdgeInsets.only(bottom: AppSpacing.lg),
+        margin: EdgeInsets.only(bottom: Dimensions.lg),
         child: GlassCardWidget(
-          radius: AppRadius.card,
+          radius: Dimensions.radiusCardValue,
           padding: EdgeInsets.zero,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -32,9 +31,9 @@ class NewsCardWidget extends StatelessWidget {
               // Thumbnail
               if (news.imageUrl != null)
                 AspectRatio(
-                  aspectRatio: 16 / 9,
+                  aspectRatio: 20 / 8,
                   child: ClipRRect(
-                    borderRadius: BorderRadius.vertical(top: Radius.circular(AppRadius.card)),
+                    borderRadius: BorderRadius.vertical(top: Radius.circular(Dimensions.radiusCardValue)),
                     child: Stack(
                       fit: StackFit.expand,
                       children: [
@@ -66,13 +65,13 @@ class NewsCardWidget extends StatelessWidget {
                         ),
                         // Tag
                         Positioned(
-                          top: AppSpacing.md,
-                          left: AppSpacing.md,
+                          top: Dimensions.md,
+                          left: Dimensions.md,
                           child: Container(
-                            padding: EdgeInsets.symmetric(horizontal: AppSpacing.sm, vertical: 4),
+                            padding: EdgeInsets.symmetric(horizontal: Dimensions.sm, vertical: 4),
                             decoration: BoxDecoration(
                               color: AppColors.neonBlue.withOpacity(0.8),
-                              borderRadius: AppRadius.borderPill,
+                              borderRadius: Dimensions.borderPill,
                               boxShadow: [
                                 BoxShadow(
                                   color: AppColors.neonBlue.withOpacity(0.3),
@@ -81,10 +80,10 @@ class NewsCardWidget extends StatelessWidget {
                               ],
                             ),
                             child: Text(
-                              news.tag.toUpperCase(),
+                              news.category.toUpperCase(),
                               style: TextStyle(
                                 fontSize: 8,
-                                fontWeight: AppTypography.black,
+                                fontWeight: Dimensions.black,
                                 color: AppColors.white,
                                 letterSpacing: 1.0,
                               ),
@@ -97,7 +96,7 @@ class NewsCardWidget extends StatelessWidget {
                 ),
 
               Padding(
-                padding: EdgeInsets.all(AppSpacing.lg),
+                padding: EdgeInsets.all(Dimensions.lg),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -105,47 +104,47 @@ class NewsCardWidget extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          news.tag,
+                          news.category,
                           style: TextStyle(
-                            fontSize: AppTypography.sizeTiny,
+                            fontSize: Dimensions.sizeTiny,
                             color: AppColors.neonCyan,
-                            fontWeight: AppTypography.bold,
+                            fontWeight: Dimensions.bold,
                             letterSpacing: 1.2,
                           ),
                         ),
                         Text(
                           news.time,
                           style: TextStyle(
-                            fontSize: AppTypography.sizeTiny,
+                            fontSize: Dimensions.sizeTiny,
                             color: AppColors.textMuted,
                           ),
                         ),
                       ],
                     ),
-                    SizedBox(height: AppSpacing.sm),
+                    SizedBox(height: Dimensions.sm),
                     Text(
                       news.title,
                       style: TextStyle(
-                        fontSize: AppTypography.sizeBody,
-                        fontWeight: AppTypography.black,
+                        fontSize: Dimensions.sizeBody,
+                        fontWeight: Dimensions.black,
                         color: AppColors.white,
                         height: 1.2,
                       ),
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                     ),
-                    SizedBox(height: AppSpacing.sm),
+                    SizedBox(height: Dimensions.sm),
                     Text(
-                      news.description,
+                      news.content,
                       style: TextStyle(
-                        fontSize: AppTypography.sizeCaption,
+                        fontSize: Dimensions.sizeCaption,
                         color: AppColors.white.withOpacity(0.6),
                         height: 1.4,
                       ),
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                     ),
-                    SizedBox(height: AppSpacing.lg),
+                    SizedBox(height: Dimensions.lg),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
@@ -153,7 +152,7 @@ class NewsCardWidget extends StatelessWidget {
                           "READ MORE",
                           style: TextStyle(
                             fontSize: 10,
-                            fontWeight: AppTypography.black,
+                            fontWeight: Dimensions.black,
                             color: AppColors.neonBlue,
                             letterSpacing: 1.5,
                           ),

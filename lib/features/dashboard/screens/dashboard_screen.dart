@@ -1,16 +1,19 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import '../../../core/controllers/app_data_controller.dart';
-import '../../../core/data/models/computed_player_stats.dart';
+import '../../auth/controllers/auth_controller.dart';
+import '../../player/widgets/player_select_delegate.dart';
+import '../../../core/data/models/player_model.dart';
+import '../../profile/controllers/profile_controller.dart';
+import '../../news/controllers/news_controller.dart';
 import '../../../core/helper/route_helper.dart';
-import '../../../core/theme/app_theme.dart';
+import 'package:e_sports/core/utils/dimensions.dart';
+import 'package:e_sports/core/helper/responsive_helper.dart';
+import '../../menu/screens/menu_screen.dart';
 import '../../home/screens/home_screen.dart';
 import '../../matches/screens/matches_screen.dart';
-import '../../profile/screens/profile_screen.dart';
 import '../../rank/screens/rank_screen.dart';
-import '../../rewards/screens/reward_screen.dart';
+
 
 class DashboardScreen extends StatefulWidget {
   final int initialTab;
@@ -21,6 +24,7 @@ class DashboardScreen extends StatefulWidget {
 }
 
 class _GameArenaScreenState extends State<DashboardScreen> with SingleTickerProviderStateMixin {
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   late int _tabIndex = widget.initialTab;
   int _newsBannerIndex = 0;
   Timer? _newsTimer;
@@ -29,9 +33,9 @@ class _GameArenaScreenState extends State<DashboardScreen> with SingleTickerProv
   void initState() {
     super.initState();
     _newsTimer = Timer.periodic(const Duration(milliseconds: 3800), (_) {
-      final newsList = Get.find<AppDataController>().news;
-      if (newsList.isNotEmpty) {
-        if (mounted) setState(() => _newsBannerIndex = (_newsBannerIndex + 1) % newsList.length);
+      final newsHome = Get.find<NewsController>().newsHome;
+      if (newsHome.isNotEmpty) {
+        if (mounted) setState(() => _newsBannerIndex = (_newsBannerIndex + 1) % newsHome.length);
       }
     });
   }
@@ -50,19 +54,22 @@ class _GameArenaScreenState extends State<DashboardScreen> with SingleTickerProv
     super.dispose();
   }
 
-  // ── 5 tabs — Fame removed ──────────────────────────────────────────────────
+  // ── 4 tabs — Fame & Rewards removed ────────────────────────────────────────
   static const _tabs = [
-    _TabDef(icon: "🏠", label: "Home"),
-    _TabDef(icon: "🎮", label: "Matches"),
-    _TabDef(icon: "📊", label: "Ranks"),
-    _TabDef(icon: "👤", label: "Profile"),
-    _TabDef(icon: "🪙", label: "Rewards"),
+    _TabDef(icon: Icons.home_outlined, label: "Home"),
+    _TabDef(icon: Icons.sports_esports_outlined, label: "Matches"),
+    _TabDef(icon: Icons.leaderboard_outlined, label: "Ranks"),
+    _TabDef(icon: Icons.menu_outlined, label: "Menu"),
   ];
 
   @override
   Widget build(BuildContext context) {
+    final isDesktop = ResponsiveHelper.isDesktop(context);
+
     return Scaffold(
+      key: _scaffoldKey,
       backgroundColor: AppColors.bg,
+      endDrawer: isDesktop ? _buildDesktopDrawer() : null,
       body: SafeArea(
         child: Column(
           children: [
@@ -79,22 +86,31 @@ class _GameArenaScreenState extends State<DashboardScreen> with SingleTickerProv
                 child: _buildScreen(_tabIndex),
               ),
             ),
-            _buildBottomNav(),
+            if (!isDesktop) _buildBottomNav(),
           ],
         ),
       ),
     );
   }
 
-  void _openSearch() {
-    showSearch(
+  void _openSearch() async {
+    // Same server-backed player picker the compare screen uses; on selection,
+    // open that player's profile.
+    final player = await showSearch<PlayerModel?>(
       context: context,
-      delegate: PlayerSearchDelegate(Get.find<AppDataController>().rankedPlayers),
+      delegate: PlayerSelectDelegate(),
     );
+    if (player != null) {
+      Get.toNamed(RouteHelper.getPlayerProfileRoute(player.id));
+    }
   }
 
   void _openMyProfile() {
-    Get.offNamed(RouteHelper.profile);
+    Get.toNamed(RouteHelper.profile);
+  }
+
+  void _openDesktopMenu() {
+    _scaffoldKey.currentState?.openEndDrawer();
   }
 
   void _navigateTab(int index) {
@@ -111,34 +127,135 @@ class _GameArenaScreenState extends State<DashboardScreen> with SingleTickerProv
           onNavigate: _navigateTab,
           onSearchTap: _openSearch,
           onProfileTap: _openMyProfile,
+          onMenuTap: ResponsiveHelper.isDesktop(context) ? _openDesktopMenu : null,
         );
       case 1:
         return MatchesScreen(
           key: const ValueKey(1),
           onSearchTap: _openSearch,
           onProfileTap: _openMyProfile,
+          onMenuTap: ResponsiveHelper.isDesktop(context) ? _openDesktopMenu : null,
         );
       case 2:
         return LeaderboardScreen(
           key: const ValueKey(2),
           onSearchTap: _openSearch,
           onProfileTap: _openMyProfile,
+          onMenuTap: ResponsiveHelper.isDesktop(context) ? _openDesktopMenu : null,
         );
       case 3:
-        return ProfileScreen(
+        return MenuScreen(
           key: const ValueKey(3),
           onSearchTap: _openSearch,
           onProfileTap: _openMyProfile,
-        );
-      case 4:
-        return RewardsScreen(
-          key: const ValueKey(4),
-          onSearchTap: _openSearch,
-          onProfileTap: _openMyProfile,
+          onMenuTap: ResponsiveHelper.isDesktop(context) ? _openDesktopMenu : null,
         );
       default:
         return const SizedBox.shrink();
     }
+  }
+
+  Widget _buildDesktopDrawer() {
+    return Drawer(
+      width: 320,
+      backgroundColor: AppColors.bgCard,
+      child: SafeArea(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding: EdgeInsets.all(Dimensions.screenPadding),
+              child: Text(
+                "Menu",
+                style: TextStyle(
+                  fontSize: Dimensions.sizeTitleLarge,
+                  fontWeight: Dimensions.black,
+                  color: AppColors.neonCyan,
+                ),
+              ),
+            ),
+            // Primary navigation
+            _buildDrawerItem(0, Icons.home_outlined, "Home"),
+            _buildDrawerItem(1, Icons.sports_esports_outlined, "Matches"),
+            _buildDrawerItem(2, Icons.leaderboard_outlined, "Ranks"),
+
+            Divider(color: AppColors.glassBorder, height: Dimensions.xl, indent: Dimensions.screenPadding, endIndent: Dimensions.screenPadding),
+
+            // Menu options (kept here instead of a separate Menu tab on desktop)
+            _buildDrawerLink(Icons.edit_outlined, "Edit Profile", AppColors.neonCyan, () => Get.toNamed(RouteHelper.editProfile)),
+            _buildDrawerLink(Icons.help_outline, "FAQ", AppColors.neonGreen, () => Get.toNamed(RouteHelper.faq)),
+            _buildDrawerLink(Icons.privacy_tip_outlined, "Privacy Policy", AppColors.neonPurple, () => Get.toNamed(RouteHelper.privacyPolicy)),
+            _buildDrawerLink(Icons.description_outlined, "Terms & Conditions", AppColors.neonBlue, () => Get.toNamed(RouteHelper.terms)),
+            _buildDrawerLink(Icons.support_agent_outlined, "Help & Support", AppColors.neonOrange, () => Get.toNamed(RouteHelper.support)),
+            _buildDrawerLink(Icons.logout, "Logout", AppColors.neonRed, _confirmLogout),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildDrawerLink(IconData icon, String title, Color iconColor, VoidCallback onTap) {
+    return ListTile(
+      leading: Icon(icon, color: iconColor),
+      title: Text(
+        title,
+        style: TextStyle(color: AppColors.white, fontWeight: Dimensions.medium),
+      ),
+      onTap: () {
+        Navigator.of(context).pop();
+        onTap();
+      },
+    );
+  }
+
+  void _confirmLogout() {
+    showDialog(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        backgroundColor: AppColors.bgCard,
+        shape: RoundedRectangleBorder(
+          borderRadius: Dimensions.borderLg,
+          side: BorderSide(color: AppColors.glassBorder),
+        ),
+        title: Text("Logout", style: TextStyle(color: AppColors.white, fontWeight: Dimensions.black)),
+        content: Text("Do you want to logout from the app?", style: TextStyle(color: AppColors.textMuted)),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(dialogContext).pop(),
+            child: Text("Cancel", style: TextStyle(color: AppColors.textMuted)),
+          ),
+          TextButton(
+            onPressed: () async {
+              Navigator.of(dialogContext).pop();
+              await Get.find<AuthController>().clearUserToken();
+              Get.find<ProfileController>().clear();
+              Get.offAllNamed(RouteHelper.login);
+            },
+            child: const Text("Logout", style: TextStyle(color: AppColors.neonRed)),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildDrawerItem(int index, IconData icon, String title) {
+    final active = _tabIndex == index;
+    return ListTile(
+      leading: Icon(icon, color: active ? AppColors.neonGold : AppColors.textMuted),
+      title: Text(
+        title,
+        style: TextStyle(
+          color: active ? AppColors.neonGold : AppColors.white,
+          fontWeight: active ? Dimensions.extraBold : Dimensions.medium,
+        ),
+      ),
+      selected: active,
+      selectedTileColor: AppColors.neonGold.withOpacity(AppColors.opacity10),
+      onTap: () {
+        Navigator.of(context).pop();
+        _navigateTab(index);
+      },
+    );
   }
 
   Widget _buildBottomNav() {
@@ -163,32 +280,31 @@ class _GameArenaScreenState extends State<DashboardScreen> with SingleTickerProv
               behavior: HitTestBehavior.opaque,
               child: AnimatedContainer(
                 duration: const Duration(milliseconds: 180),
-                padding: EdgeInsets.symmetric(vertical: AppSpacing.lg),
+                padding: EdgeInsets.symmetric(vertical: Dimensions.lg),
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Text(
+                    Icon(
                       _tabs[i].icon,
-                      style: TextStyle(
-                        fontSize: active ? AppTypography.sizeHeading : AppTypography.sizeTitleLarge,
-                      ),
+                      size: active ? Dimensions.sizeHeading : Dimensions.sizeTitleLarge,
+                      color: active ? AppColors.neonGold : AppColors.textMuted,
                     ),
-                    SizedBox(height: AppSpacing.xxs),
+                    SizedBox(height: Dimensions.xxs),
                     Text(
                       _tabs[i].label,
                       style: TextStyle(
-                        fontSize: AppTypography.sizeCaption,
-                        fontWeight: active ? AppTypography.extraBold : AppTypography.medium,
+                        fontSize: Dimensions.sizeCaption,
+                        fontWeight: active ? Dimensions.extraBold : Dimensions.medium,
                         color: active ? AppColors.neonGold : AppColors.textMuted,
                       ),
                     ),
                     AnimatedContainer(
                       duration: const Duration(milliseconds: 180),
-                      width: active ? AppSpacing.xxxl : 0,
-                      height: AppSizing.navIndicatorHeight,
-                      margin: EdgeInsets.only(top: AppSpacing.xs),
+                      width: active ? Dimensions.xxxl : 0,
+                      height: Dimensions.navIndicatorHeight,
+                      margin: EdgeInsets.only(top: Dimensions.xs),
                       decoration: BoxDecoration(
-                        borderRadius: AppRadius.borderXxs,
+                        borderRadius: Dimensions.borderXxs,
                         color: AppColors.neonGold,
                         boxShadow: active
                             ? [BoxShadow(color: AppColors.neonGold.withOpacity(AppColors.opacity60), blurRadius: 6)]
@@ -204,69 +320,12 @@ class _GameArenaScreenState extends State<DashboardScreen> with SingleTickerProv
       ),
     );
   }
+
 }
 
 class _TabDef {
-  final String icon, label;
+  final IconData icon;
+  final String label;
   const _TabDef({required this.icon, required this.label});
 }
 
-class PlayerSearchDelegate extends SearchDelegate {
-  final List<ComputedPlayerStats> players;
-  PlayerSearchDelegate(this.players);
-
-  @override
-  ThemeData appBarTheme(BuildContext context) {
-    return Theme.of(context).copyWith(
-      appBarTheme: const AppBarTheme(backgroundColor: AppColors.bgCard),
-      inputDecorationTheme: const InputDecorationTheme(
-        hintStyle: TextStyle(color: AppColors.textMuted),
-      ),
-    );
-  }
-
-  @override
-  List<Widget>? buildActions(BuildContext context) => [
-        IconButton(icon: const Icon(Icons.clear, color: AppColors.white), onPressed: () => query = ""),
-      ];
-
-  @override
-  Widget? buildLeading(BuildContext context) => IconButton(
-        icon: const Icon(Icons.arrow_back, color: AppColors.white),
-        onPressed: () => close(context, null),
-      );
-
-  @override
-  Widget buildResults(BuildContext context) => _buildList(context);
-
-  @override
-  Widget buildSuggestions(BuildContext context) => _buildList(context);
-
-  Widget _buildList(BuildContext context) {
-    final results = players.where((p) => p.name.toLowerCase().contains(query.toLowerCase())).toList();
-    if (results.isEmpty) {
-      return Center(child: Text("No players found", style: TextStyle(color: AppColors.textMuted)));
-    }
-    return Container(
-      color: AppColors.bg,
-      child: ListView.builder(
-        itemCount: results.length,
-        itemBuilder: (context, i) {
-          final p = results[i];
-          return ListTile(
-            leading: CircleAvatar(
-              backgroundColor: AppColors.neonGold.withOpacity(0.1),
-              child: Text(p.name[0], style: TextStyle(color: AppColors.neonGold)),
-            ),
-            title: Text(p.name, style: TextStyle(color: AppColors.white)),
-            subtitle: Text("@${p.short.toLowerCase()}", style: TextStyle(color: AppColors.textMuted)),
-            onTap: () {
-              close(context, null);
-              Get.toNamed(RouteHelper.getPlayerProfileRoute(p.id));
-            },
-          );
-        },
-      ),
-    );
-  }
-}

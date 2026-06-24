@@ -1,4 +1,4 @@
-import '../../../core/theme/app_theme.dart';
+import 'package:e_sports/core/utils/dimensions.dart';
 import '../../../core/data/models/computed_player_stats.dart';
 import 'package:flutter/material.dart';
 
@@ -21,23 +21,23 @@ class PotBannerWidget extends StatelessWidget {
 
     return Container(
       decoration: BoxDecoration(
-        borderRadius: AppRadius.borderXl,
+        borderRadius: Dimensions.borderXl,
         gradient: AppColors.goldGradient,
         border: Border.all(
           color: AppColors.neonGold.withOpacity(0.28),
-          width: AppSizing.borderThin,
+          width: Dimensions.borderThin,
         ),
-        boxShadow: AppElevation.accentGlow(AppColors.neonGold, opacity: AppColors.opacity15, blur: 20, offset: const Offset(0, 6)),
+        boxShadow: Dimensions.accentGlow(AppColors.neonGold, opacity: AppColors.opacity15, blur: 20, offset: const Offset(0, 6)),
       ),
       child: ClipRRect(
-        borderRadius: AppRadius.borderXl,
+        borderRadius: Dimensions.borderXl,
         child: Stack(
           children: [
             // Shimmer top bar
             Positioned(
               top: 0, left: 0, right: 0,
               child: Container(
-                height: AppSizing.shimmerHeight,
+                height: Dimensions.shimmerHeight,
                 decoration: BoxDecoration(
                   gradient: AppColors.shimmerGradient(color: AppColors.goldLight),
                 ),
@@ -50,16 +50,16 @@ class PotBannerWidget extends StatelessWidget {
               child: Text(
                 badge,
                 style: TextStyle(
-                  fontSize: AppTypography.sizeWatermark,
+                  fontSize: Dimensions.sizeWatermark,
                   color: AppColors.neonGold.withOpacity(0.05),
-                  height: AppTypography.lineHeightCompact,
+                  height: Dimensions.lineHeightCompact,
                 ),
               ),
             ),
 
             // Content
             Padding(
-              padding: EdgeInsets.all(AppSpacing.xxxl),
+              padding: EdgeInsets.all(Dimensions.xxxl),
               child: Column(
                 children: [
                   // Top: avatar + info
@@ -72,18 +72,18 @@ class PotBannerWidget extends StatelessWidget {
                         alignment: Alignment.topCenter,
                         children: [
                           Container(
-                            width: AppSizing.avatarXl,
-                            height: AppSizing.avatarXl,
+                            width: Dimensions.avatarXl,
+                            height: Dimensions.avatarXl,
                             decoration: BoxDecoration(
                               shape: BoxShape.circle,
-                              border: Border.all(color: AppColors.neonGold, width: AppSizing.borderAvatar),
-                              boxShadow: AppElevation.ringGlow(AppColors.neonGold, opacity: 0.42),
+                              border: Border.all(color: AppColors.neonGold, width: Dimensions.borderAvatar),
+                              boxShadow: Dimensions.ringGlow(AppColors.neonGold, opacity: 0.42),
                             ),
                             child: ClipOval(
                               child: Image.network(
                                 imageUrl,
-                                width: AppSizing.avatarXl,
-                                height: AppSizing.avatarXl,
+                                width: Dimensions.avatarXl,
+                                height: Dimensions.avatarXl,
                                 fit: BoxFit.cover,
                                 errorBuilder: (_, __, ___) => Container(
                                   color: AppColors.goldDeep,
@@ -93,8 +93,8 @@ class PotBannerWidget extends StatelessWidget {
                                         ? player.name[0].toUpperCase()
                                         : "?",
                                     style: TextStyle(
-                                      fontSize: AppTypography.sizeDisplay - 2,
-                                      fontWeight: AppTypography.black,
+                                      fontSize: Dimensions.sizeDisplay - 2,
+                                      fontWeight: Dimensions.black,
                                       color: AppColors.neonGold,
                                     ),
                                   ),
@@ -105,7 +105,7 @@ class PotBannerWidget extends StatelessWidget {
                         ],
                       ),
 
-                      SizedBox(width: AppSpacing.xxl),
+                      SizedBox(width: Dimensions.xxl),
 
                       // Name + label + badges
                       Expanded(
@@ -115,30 +115,30 @@ class PotBannerWidget extends StatelessWidget {
                             // Label pill
                             Container(
                               padding: EdgeInsets.symmetric(
-                                horizontal: AppSizing.dotLg,
-                                vertical: AppSpacing.xs,
+                                horizontal: Dimensions.dotLg,
+                                vertical: Dimensions.xs,
                               ),
                               decoration: BoxDecoration(
                                 color: AppColors.neonGold.withOpacity(AppColors.opacity10),
-                                borderRadius: AppRadius.borderSm,
+                                borderRadius: Dimensions.borderSm,
                                 border: Border.all(
                                   color: AppColors.neonGold.withOpacity(AppColors.opacity35),
-                                  width: AppSizing.borderThin,
+                                  width: Dimensions.borderThin,
                                 ),
                               ),
                               child: Text(
                                 label.toUpperCase(),
-                                style: AppTypography.pillLabel(context, letterSpacing: AppTypography.trackingWidest),
+                                style: Dimensions.pillLabel(context, letterSpacing: Dimensions.trackingWidest),
                               ),
                             ),
-                            SizedBox(height: AppSpacing.sm),
+                            SizedBox(height: Dimensions.sm),
 
                             // Player name
                             Text(
                               player.name,
                               style: TextStyle(
-                                fontSize: AppTypography.sizeTitleLarge,
-                                fontWeight: AppTypography.black,
+                                fontSize: Dimensions.sizeTitleLarge,
+                                fontWeight: Dimensions.black,
                                 color: AppColors.white,
                               ),
                             ),
@@ -147,9 +147,9 @@ class PotBannerWidget extends StatelessWidget {
                             Text(
                               "${player.matches} matches",
                               style: TextStyle(
-                                fontSize: AppTypography.sizeSmall,
+                                fontSize: Dimensions.sizeSmall,
                                 color: AppColors.white.withOpacity(AppColors.opacity40),
-                                letterSpacing: AppTypography.trackingTight,
+                                letterSpacing: Dimensions.trackingTight,
                               ),
                             ),
                           ],
@@ -158,17 +158,17 @@ class PotBannerWidget extends StatelessWidget {
                     ],
                   ),
 
-                  SizedBox(height: AppSpacing.xxl),
+                  SizedBox(height: Dimensions.xxl),
 
                   // Gold divider
                   Container(
-                    height: AppSizing.dividerHeight,
+                    height: Dimensions.dividerHeight,
                     decoration: BoxDecoration(
                       gradient: AppColors.dividerGradient(color: AppColors.neonGold, opacity: 0.22),
                     ),
                   ),
 
-                  SizedBox(height: AppSpacing.xl),
+                  SizedBox(height: Dimensions.xl),
 
                   // Stat chips
                   Row(
@@ -177,12 +177,12 @@ class PotBannerWidget extends StatelessWidget {
                           label: "Goals",
                           value: "${player.goals}",
                           color: AppColors.neonGold),
-                      SizedBox(width: AppSpacing.md),
+                      SizedBox(width: Dimensions.md),
                       _StatMiniWidget(
                           label: "Points",
                           value: "${player.pts}",
                           color: AppColors.neonGold),
-                      SizedBox(width: AppSpacing.md),
+                      SizedBox(width: Dimensions.md),
                       _StatMiniWidget(
                           label: "FA",
                           value: "${player.fa}",
@@ -214,25 +214,25 @@ class _StatMiniWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Expanded(
       child: Container(
-        padding: EdgeInsets.symmetric(vertical: AppSpacing.md),
+        padding: EdgeInsets.symmetric(vertical: Dimensions.md),
         decoration: BoxDecoration(
           color: AppColors.neonGold.withOpacity(AppColors.opacity7),
-          borderRadius: AppRadius.borderDef,
+          borderRadius: Dimensions.borderDef,
           border: Border.all(
             color: AppColors.neonGold.withOpacity(AppColors.opacity20),
-            width: AppSizing.borderThin,
+            width: Dimensions.borderThin,
           ),
         ),
         child: Column(
           children: [
             Text(
               value,
-              style: AppTypography.statValue(context, color: color),
+              style: Dimensions.statValue(context, color: color),
             ),
-            SizedBox(height: AppSpacing.xs),
+            SizedBox(height: Dimensions.xs),
             Text(
               label.toUpperCase(),
-              style: AppTypography.labelUppercase(context),
+              style: Dimensions.labelUppercase(context),
             ),
           ],
         ),

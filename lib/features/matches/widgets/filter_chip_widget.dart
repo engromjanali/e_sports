@@ -1,4 +1,4 @@
-import '../../../core/theme/app_theme.dart';
+import 'package:e_sports/core/utils/dimensions.dart';
 import 'package:flutter/material.dart';
 
 class FilterChipWidget extends StatelessWidget {
@@ -10,17 +10,17 @@ class FilterChipWidget extends StatelessWidget {
     onTap: onTap,
     child: AnimatedContainer(
       duration: const Duration(milliseconds: 180),
-      padding: AppSpacing.chipPadding,
+      padding: Dimensions.chipPadding,
       decoration: BoxDecoration(
         color: active ? color.withOpacity(AppColors.opacity15) : Colors.transparent,
-        borderRadius: AppRadius.borderPill,
+        borderRadius: Dimensions.borderPill,
         border: Border.all(color: active ? color : AppColors.glassBorder),
-        boxShadow: active ? AppElevation.subtleGlow(color) : AppElevation.none,
+        boxShadow: active ? Dimensions.subtleGlow(color) : Dimensions.none,
       ),
       child: Text(label, style: TextStyle(
         color: active ? color : AppColors.textMuted,
-        fontSize: AppTypography.sizeBody,
-        fontWeight: AppTypography.bold,
+        fontSize: Dimensions.sizeBody,
+        fontWeight: Dimensions.bold,
       )),
     ),
   );

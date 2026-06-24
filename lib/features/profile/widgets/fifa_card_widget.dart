@@ -1,9 +1,9 @@
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../../../core/theme/app_theme.dart';
+import 'package:e_sports/core/utils/dimensions.dart';
 import '../../../core/data/models/computed_player_stats.dart';
-import '../../../core/controllers/app_data_controller.dart';
+import '../../player/controllers/player_controller.dart';
 
 class FifaCardWidget extends StatelessWidget {
   final ComputedPlayerStats player;
@@ -12,8 +12,8 @@ class FifaCardWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final appData = Get.find<AppDataController>();
-    final max = appData.maxStats;
+    final playerController = Get.find<PlayerController>();
+    final max = playerController.maxStats;
 
     int r(num val, String key, [num fallback = 1]) {
       final m = (max[key] ?? 0) > 0 ? max[key]! : fallback;
@@ -163,18 +163,10 @@ class FifaCardWidget extends StatelessWidget {
                   Text(
                     player.name.toUpperCase(),
                     style: const TextStyle(
-                      fontSize: 18, 
-                      fontWeight: FontWeight.w900, 
+                      fontSize: 18,
+                      fontWeight: FontWeight.w900,
                       color: AppColors.white,
                       letterSpacing: 1.5,
-                    ),
-                  ),
-                  Text(
-                    player.team.toUpperCase(),
-                    style: TextStyle(
-                      fontSize: 12, 
-                      color: AppColors.white.withOpacity(0.6),
-                      fontWeight: FontWeight.bold,
                     ),
                   ),
                 ],

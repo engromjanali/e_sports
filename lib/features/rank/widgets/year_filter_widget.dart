@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../../core/theme/app_theme.dart';
+import 'package:e_sports/core/utils/dimensions.dart';
 
 class YearFilterWidget extends StatelessWidget {
   final String selected;
@@ -16,10 +16,10 @@ class YearFilterWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.all(AppSpacing.xs),
+      padding: EdgeInsets.all(Dimensions.xs),
       decoration: BoxDecoration(
         color: AppColors.bgSurface,
-        borderRadius: AppRadius.borderPill,
+        borderRadius: Dimensions.borderPill,
         border: Border.all(color: AppColors.glassBorder),
       ),
       child: Row(
@@ -31,21 +31,21 @@ class YearFilterWidget extends StatelessWidget {
             child: AnimatedContainer(
               duration: const Duration(milliseconds: 180),
               padding: EdgeInsets.symmetric(
-                horizontal: AppSpacing.md,
-                vertical: AppSpacing.xs + 1,
+                horizontal: Dimensions.md,
+                vertical: Dimensions.xs + 1,
               ),
               decoration: BoxDecoration(
                 color: isSelected ? AppColors.neonBlue.withOpacity(AppColors.opacity15) : Colors.transparent,
-                borderRadius: AppRadius.borderPill,
+                borderRadius: Dimensions.borderPill,
                 border: isSelected ? Border.all(color: AppColors.neonBlue.withOpacity(AppColors.opacity30)) : null,
               ),
               child: Text(
                 opt.toUpperCase(),
                 style: TextStyle(
                   fontSize: 9, // Extra small for header placement
-                  fontWeight: AppTypography.extraBold,
+                  fontWeight: Dimensions.extraBold,
                   color: isSelected ? AppColors.neonBlue : AppColors.textMuted,
-                  letterSpacing: AppTypography.trackingWider,
+                  letterSpacing: Dimensions.trackingWider,
                 ),
               ),
             ),

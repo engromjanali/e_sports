@@ -1,6 +1,5 @@
-import '../../../core/theme/app_theme.dart';
-import "../../../core/controllers/app_data_controller.dart";
-import "../../../core/data/models/news_model.dart";
+import 'package:e_sports/core/utils/dimensions.dart';
+import "../../news/domain/model/news_model.dart";
 import "package:get/get.dart";
 import '../../../core/widgets/glow_circle_widget.dart';
 import 'ring_widget.dart';
@@ -17,11 +16,11 @@ class NewsBannerWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: AppSizing.newsbannerHeight,
+      height: Dimensions.newsbannerHeight,
       decoration: BoxDecoration(
-        borderRadius: AppRadius.borderXxl,
+        borderRadius: Dimensions.borderXxl,
         gradient: AppColors.blueHeroGradient,
-        boxShadow: AppElevation.bannerShadow(AppColors.neonBlue, opacity: AppColors.opacity25),
+        boxShadow: Dimensions.bannerShadow(AppColors.neonBlue, opacity: AppColors.opacity25),
       ),
       clipBehavior: Clip.antiAlias,
       child: Stack(children: [
@@ -31,55 +30,55 @@ class NewsBannerWidget extends StatelessWidget {
         Positioned(bottom: -60, left: -40, child: GlowCircleWidget(size: 180, color: AppColors.white.withOpacity(0.03))),
 
         Padding(
-          padding: EdgeInsets.all(AppSpacing.huge),
+          padding: EdgeInsets.all(Dimensions.huge),
           child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            Text("${n.tag}  ·  ${n.time}",
-                style: AppTypography.tagLabel(context)),
-            SizedBox(height: AppSpacing.sm),
+            Text("${n.category}  ·  ${n.time}",
+                style: Dimensions.tagLabel(context)),
+            SizedBox(height: Dimensions.sm),
             Text("${n.emoji}  ${n.title}",
                 maxLines: 2, overflow: TextOverflow.ellipsis,
                 style: TextStyle(
-                  fontSize: AppTypography.sizeTitleLarge,
-                  fontWeight: AppTypography.black,
+                  fontSize: Dimensions.sizeTitleLarge,
+                  fontWeight: Dimensions.black,
                   color: AppColors.white,
                   height: 1.25,
                 )),
-            SizedBox(height: AppSpacing.lg),
+            SizedBox(height: Dimensions.lg),
             Row(children: [
               if (n.hot) Container(
                 padding: EdgeInsets.symmetric(
-                  horizontal: AppSpacing.lg,
-                  vertical: AppSpacing.xs,
+                  horizontal: Dimensions.lg,
+                  vertical: Dimensions.xs,
                 ),
                 decoration: BoxDecoration(
                   color: AppColors.neonRed,
-                  borderRadius: AppRadius.borderPill,
+                  borderRadius: Dimensions.borderPill,
                 ),
                 child: Text(
                   "🔥 BREAKING",
                   style: TextStyle(
-                    fontFamily: AppTypography.fontFamily,
-                    fontWeight: AppTypography.bold,
+                    fontFamily: Dimensions.fontFamily,
+                    fontWeight: Dimensions.bold,
                     color: AppColors.white,
-                    fontSize: AppTypography.sizeCaption,
+                    fontSize: Dimensions.sizeCaption,
                   ),
                 ),
               ),
-              if (n.hot) SizedBox(width: AppSpacing.iconGap),
+              if (n.hot) SizedBox(width: Dimensions.iconGap),
               Container(
                 padding: EdgeInsets.symmetric(
-                  horizontal: AppSpacing.xxl,
-                  vertical: AppSpacing.sm,
+                  horizontal: Dimensions.xxl,
+                  vertical: Dimensions.sm,
                 ),
                 decoration: BoxDecoration(
                   color: AppColors.white.withOpacity(AppColors.opacity15 - 0.01),
-                  borderRadius: AppRadius.borderPill,
+                  borderRadius: Dimensions.borderPill,
                 ),
                 child: Text("Read More →",
                     style: TextStyle(
                       color: AppColors.white,
-                      fontSize: AppTypography.sizeBody2,
-                      fontWeight: AppTypography.bold,
+                      fontSize: Dimensions.sizeBody2,
+                      fontWeight: Dimensions.bold,
                     )),
               ),
             ]),
@@ -87,16 +86,16 @@ class NewsBannerWidget extends StatelessWidget {
         ),
 
         // Dots
-        Positioned(bottom: AppSpacing.xl, right: AppSpacing.xxl,
+        Positioned(bottom: Dimensions.xl, right: Dimensions.xxl,
           child: Row(children: List.generate(news.length, (i) => GestureDetector(
             onTap: () => onDot(i),
             child: AnimatedContainer(
               duration: const Duration(milliseconds: 300),
-              width: i == index ? AppSpacing.xxxl : AppSpacing.sm,
-              height: AppSpacing.sm,
-              margin: EdgeInsets.only(left: AppSpacing.xs),
+              width: i == index ? Dimensions.xxxl : Dimensions.sm,
+              height: Dimensions.sm,
+              margin: EdgeInsets.only(left: Dimensions.xs),
               decoration: BoxDecoration(
-                borderRadius: AppRadius.borderXs - const BorderRadius.all(Radius.circular(1)),
+                borderRadius: Dimensions.borderXs - const BorderRadius.all(Radius.circular(1)),
                 color: i == index ? AppColors.white : AppColors.white.withOpacity(AppColors.opacity30),
               ),
             ),

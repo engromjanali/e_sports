@@ -73,9 +73,10 @@ class StatsService {
     int pts = 0;
     if (entry.result == 'win') pts += 3;
     if (entry.result == 'draw') pts += 1;
+    if (entry.result == 'loss') pts -= 1;
     pts += entry.goals;
-    if (entry.hattrick) pts += 3;
-    if (entry.cleanSheet) pts += 2;
+    pts -= entry.goalsConceded;
+    if (entry.hattrick) pts += 1;
     if (entry.motm) pts += 2;
     return pts;
   }

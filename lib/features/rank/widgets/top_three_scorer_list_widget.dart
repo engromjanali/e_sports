@@ -1,4 +1,4 @@
-import '../../../core/theme/app_theme.dart';
+import 'package:e_sports/core/utils/dimensions.dart';
 import '../../../core/data/models/computed_player_stats.dart';
 import 'package:flutter/material.dart';
 
@@ -13,24 +13,24 @@ class TopThreeScorersWidget extends StatelessWidget {
 
     return Container(
       decoration: BoxDecoration(
-        borderRadius: AppRadius.borderXl,
+        borderRadius: Dimensions.borderXl,
         gradient: AppColors.goldGradient,
-        border: Border.all(color: AppColors.neonGold.withOpacity(0.28), width: AppSizing.borderThin),
-        boxShadow: AppElevation.accentGlow(AppColors.neonGold, opacity: 0.14, blur: 20, offset: const Offset(0, 6)),
+        border: Border.all(color: AppColors.neonGold.withOpacity(0.28), width: Dimensions.borderThin),
+        boxShadow: Dimensions.accentGlow(AppColors.neonGold, opacity: 0.14, blur: 20, offset: const Offset(0, 6)),
       ),
       child: ClipRRect(
-        borderRadius: AppRadius.borderXl,
+        borderRadius: Dimensions.borderXl,
         child: Stack(
           children: [
             Positioned(
               top: 0, left: 0, right: 0,
               child: Container(
-                height: AppSizing.shimmerHeight,
+                height: Dimensions.shimmerHeight,
                 decoration: BoxDecoration(gradient: AppColors.shimmerGradient(color: AppColors.goldLight)),
               ),
             ),
             Padding(
-              padding: EdgeInsets.fromLTRB(AppSpacing.cardInnerPadding, AppSpacing.cardInnerPadding, AppSpacing.cardInnerPadding, AppSpacing.lg),
+              padding: EdgeInsets.fromLTRB(Dimensions.cardInnerPadding, Dimensions.cardInnerPadding, Dimensions.cardInnerPadding, Dimensions.lg),
               child: Column(
                 children: List.generate(players.length, (i) {
                   final p = players[i];
@@ -39,59 +39,59 @@ class TopThreeScorersWidget extends StatelessWidget {
                   final isFirst = i == 0;
 
                   return Container(
-                    margin: EdgeInsets.only(bottom: i < players.length - 1 ? AppSpacing.md : 0),
-                    padding: EdgeInsets.symmetric(vertical: AppSpacing.lg, horizontal: AppSpacing.lg),
+                    margin: EdgeInsets.only(bottom: i < players.length - 1 ? Dimensions.md : 0),
+                    padding: EdgeInsets.symmetric(vertical: Dimensions.lg, horizontal: Dimensions.lg),
                     decoration: BoxDecoration(
-                      borderRadius: AppRadius.borderLg,
+                      borderRadius: Dimensions.borderLg,
                       color: isFirst ? AppColors.neonGold.withOpacity(AppColors.opacity8) : AppColors.white.withOpacity(0.03),
-                      border: Border.all(color: accent.withOpacity(isFirst ? 0.38 : AppColors.opacity18), width: AppSizing.borderThin),
+                      border: Border.all(color: accent.withOpacity(isFirst ? 0.38 : AppColors.opacity18), width: Dimensions.borderThin),
                     ),
                     child: Row(children: [
                       ClipRRect(
-                        borderRadius: AppRadius.ribbonLeft,
+                        borderRadius: Dimensions.ribbonLeft,
                         child: Container(
-                          padding: EdgeInsets.fromLTRB(AppSpacing.iconGap, AppSpacing.xs, AppSpacing.iconGap, AppSpacing.xs + 1),
+                          padding: EdgeInsets.fromLTRB(Dimensions.iconGap, Dimensions.xs, Dimensions.iconGap, Dimensions.xs + 1),
                           decoration: BoxDecoration(
                             gradient: i == 0 ? AppColors.goldRibbonGradient : LinearGradient(colors: [accent.withOpacity(0.7), accent], begin: Alignment.topLeft, end: Alignment.bottomRight),
                           ),
-                          child: Text(rankLabels[i], style: TextStyle(fontSize: AppTypography.sizeTiny, fontWeight: AppTypography.black, letterSpacing: 1.3, color: i == 0 ? AppColors.goldDeep : AppColors.goldBgDark)),
+                          child: Text(rankLabels[i], style: TextStyle(fontSize: Dimensions.sizeTiny, fontWeight: Dimensions.black, letterSpacing: 1.3, color: i == 0 ? AppColors.goldDeep : AppColors.goldBgDark)),
                         ),
                       ),
-                      SizedBox(width: AppSpacing.lg),
+                      SizedBox(width: Dimensions.lg),
                       Container(
-                        width: AppSizing.avatarMd + 2, height: AppSizing.avatarMd + 2,
+                        width: Dimensions.avatarMd + 2, height: Dimensions.avatarMd + 2,
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
-                          border: Border.all(color: accent, width: isFirst ? AppSizing.borderAvatar : AppSizing.borderThick),
-                          boxShadow: AppElevation.subtleGlow(accent, opacity: isFirst ? 0.4 : 0.2, blur: isFirst ? 10 : 6),
+                          border: Border.all(color: accent, width: isFirst ? Dimensions.borderAvatar : Dimensions.borderThick),
+                          boxShadow: Dimensions.subtleGlow(accent, opacity: isFirst ? 0.4 : 0.2, blur: isFirst ? 10 : 6),
                         ),
                         child: ClipOval(
                           child: imageUrl.isNotEmpty
-                            ? Image.network(imageUrl, width: AppSizing.avatarMd + 2, height: AppSizing.avatarMd + 2, fit: BoxFit.cover,
+                            ? Image.network(imageUrl, width: Dimensions.avatarMd + 2, height: Dimensions.avatarMd + 2, fit: BoxFit.cover,
                                 errorBuilder: (_, __, ___) => Container(color: AppColors.goldDeep, alignment: Alignment.center,
-                                  child: Text(p.name.isNotEmpty ? p.name[0].toUpperCase() : "?", style: TextStyle(fontWeight: AppTypography.bold, color: accent, fontSize: AppTypography.sizeTitleLarge))))
+                                  child: Text(p.name.isNotEmpty ? p.name[0].toUpperCase() : "?", style: TextStyle(fontWeight: Dimensions.bold, color: accent, fontSize: Dimensions.sizeTitleLarge))))
                             : Container(color: AppColors.goldDeep, alignment: Alignment.center,
-                                child: Text(p.name.isNotEmpty ? p.name[0].toUpperCase() : "?", style: TextStyle(fontWeight: AppTypography.bold, color: accent, fontSize: AppTypography.sizeTitleLarge))),
+                                child: Text(p.name.isNotEmpty ? p.name[0].toUpperCase() : "?", style: TextStyle(fontWeight: Dimensions.bold, color: accent, fontSize: Dimensions.sizeTitleLarge))),
                         ),
                       ),
-                      SizedBox(width: AppSpacing.lg),
+                      SizedBox(width: Dimensions.lg),
                       Expanded(
                         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                          Text(p.name, style: TextStyle(fontSize: AppTypography.sizeBody, fontWeight: AppTypography.black, color: AppColors.white)),
-                          SizedBox(height: AppSpacing.xxs),
-                          Text("${p.matches}PL · ${p.wins}W", style: TextStyle(fontSize: AppTypography.sizeCaption, color: AppColors.white.withOpacity(0.38), letterSpacing: AppTypography.trackingTight)),
+                          Text(p.name, style: TextStyle(fontSize: Dimensions.sizeBody, fontWeight: Dimensions.black, color: AppColors.white)),
+                          SizedBox(height: Dimensions.xxs),
+                          Text("${p.matches}PL · ${p.wins}W", style: TextStyle(fontSize: Dimensions.sizeCaption, color: AppColors.white.withOpacity(0.38), letterSpacing: Dimensions.trackingTight)),
                         ]),
                       ),
                       Container(
-                        padding: EdgeInsets.symmetric(horizontal: AppSpacing.lg, vertical: AppSpacing.iconGap),
+                        padding: EdgeInsets.symmetric(horizontal: Dimensions.lg, vertical: Dimensions.iconGap),
                         decoration: BoxDecoration(
                           color: accent.withOpacity(AppColors.opacity10),
-                          borderRadius: AppRadius.borderDef,
-                          border: Border.all(color: accent.withOpacity(AppColors.opacity30), width: AppSizing.borderThin),
+                          borderRadius: Dimensions.borderDef,
+                          border: Border.all(color: accent.withOpacity(AppColors.opacity30), width: Dimensions.borderThin),
                         ),
                         child: Column(children: [
-                          Text("${p.goals}", style: AppTypography.statValue(context, color: accent)),
-                          Text("GOALS", style: AppTypography.labelUppercase(context)),
+                          Text("${p.goals}", style: Dimensions.statValue(context, color: accent)),
+                          Text("GOALS", style: Dimensions.labelUppercase(context)),
                         ]),
                       ),
                     ]),

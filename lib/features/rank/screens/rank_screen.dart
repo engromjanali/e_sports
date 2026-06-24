@@ -1,4 +1,4 @@
-import '../../../core/theme/app_theme.dart';
+import 'package:e_sports/core/utils/dimensions.dart';
 import '../../../core/widgets/app_header_widget.dart';
 import '../controllers/rank_controller.dart';
 import '../widgets/ranking_view_widget.dart';
@@ -10,11 +10,12 @@ import '../../../core/widgets/custom_segmented_toggle.dart';
 class LeaderboardScreen extends StatelessWidget {
   final VoidCallback? onSearchTap;
   final VoidCallback? onProfileTap;
-  const LeaderboardScreen({super.key, this.onSearchTap, this.onProfileTap});
+  final VoidCallback? onMenuTap;
+  const LeaderboardScreen({super.key, this.onSearchTap, this.onProfileTap, this.onMenuTap});
 
   @override
   Widget build(BuildContext context) {
-    final controller = Get.put(RankController());
+    final controller = Get.find<RankController>();
 
     return Column(
       children: [
@@ -22,20 +23,21 @@ class LeaderboardScreen extends StatelessWidget {
           sub: "Elite Performance Center",
           onSearchTap: onSearchTap,
           onProfileTap: onProfileTap,
+          onMenuTap: onMenuTap,
         ),
         
-        SizedBox(height: AppSpacing.md),
+        SizedBox(height: Dimensions.md),
 
         // Custom animated toggle
         Padding(
-          padding: EdgeInsets.symmetric(horizontal: AppSpacing.screenPadding),
+          padding: EdgeInsets.symmetric(horizontal: Dimensions.screenPadding),
           child: Obx(() => CustomSegmentedToggle(
             options: const ["PLAYER", "SCORER"],
             selectedIndex: controller.tabIndex,
             onSelected: controller.setTabIndex,
           )),
         ),
-        SizedBox(height: AppSpacing.md),
+        SizedBox(height: Dimensions.md),
 
         Expanded(
           child: Obx(() => AnimatedSwitcher(

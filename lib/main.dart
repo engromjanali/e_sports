@@ -1,15 +1,18 @@
 import 'dart:async';
 
 import 'package:app_links/app_links.dart';
+import 'package:e_sports/core/controllers/theme_controller.dart';
+import 'package:e_sports/core/helper/get_di.dart' as di;
+import 'package:e_sports/core/helper/route_helper.dart';
+import 'package:e_sports/core/utils/dimensions.dart';
+import 'package:e_sports/core/widgets/route_not_found_screen.dart';
+import 'package:e_sports/features/splash/controllers/splash_controller.dart';
+import 'package:e_sports/firebase_options.dart';
 import 'package:flutter/foundation.dart';
-import 'core/theme/app_theme.dart';
-import 'core/helper/route_helper.dart';
-import 'firebase_options.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_web_plugins/url_strategy.dart';
-import 'core/controllers/app_data_controller.dart';
 import 'package:get/get.dart';
 
 void main() async{
@@ -24,10 +27,13 @@ void main() async{
     options: DefaultFirebaseOptions.currentPlatform,
   );
   
-  // Start using Mock Data Source implicitly
-  
-  // Inject global data controller
-  Get.put(AppDataController());
+  await di.init();
+
+  // Load app config first so season, maintenance and auth state are ready
+  // before the first route is evaluated — works for cold start and web refresh.
+  try {
+    await Get.find<SplashController>().getConfig();
+  } catch (_) {}
 
   SystemChrome.setSystemUIOverlayStyle(
     const SystemUiOverlayStyle(
@@ -85,41 +91,26 @@ class _GameArenaAppState extends State<GameArenaApp> {
 
   @override
   Widget build(BuildContext context) {
-    return GetMaterialApp(
-      title: "House Of Elites",
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        brightness: Brightness.dark,
-        scaffoldBackgroundColor: AppColors.bg,
-        fontFamily: AppTypography.fontFamily,
-        fontFamilyFallback: const ['NotoSansBengali', 'NotoSans', 'Apple Color Emoji', 'Segoe UI Emoji', 'Noto Color Emoji'],
-        colorScheme: const ColorScheme.dark(
-          primary: AppColors.neonGold,
-          secondary: AppColors.neonCyan,
-          surface: AppColors.bgCard,
-        ),
-        textTheme: TextTheme(
-          bodyMedium: TextStyle(
-            color: AppColors.textPrimary,
-            fontFamily: AppTypography.fontFamily,
-          ),
-        ),
-        splashColor: Colors.transparent,
-        highlightColor: Colors.transparent,
+    return GetBuilder<ThemeController>(
+      builder: (themeController) => GetMaterialApp(
+        debugShowCheckedModeBanner: false,
+        theme: themeController.lightTheme,
+        darkTheme: themeController.darkTheme,
+        themeMode: themeController.themeMode,
+        initialRoute: RouteHelper.initial,
+        getPages: RouteHelper.routes,
+        unknownRoute: GetPage(name: '/not-found', page: () => const RouteNotFoundScreen(), middlewares: RouteHelper.authMiddleware),
+        builder: (context, child) {
+          return Container(
+            color: Theme.of(context).scaffoldBackgroundColor,
+            alignment: Alignment.topCenter,
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: Dimensions.webMaxWidth),
+              child: child ?? const SizedBox.shrink(),
+            ),
+          );
+        },
       ),
-      initialRoute: RouteHelper.login,
-      getPages: RouteHelper.routes,
-      unknownRoute: GetPage(name: '/not-found', page: () => const RouteNotFoundScreen()),
-      builder: (context, child) {
-        return Container(
-          color: AppColors.bg,
-          alignment: Alignment.topCenter,
-          child: ConstrainedBox(
-            constraints: const BoxConstraints(maxWidth: AppBreakpoints.webMaxWidth),
-            child: child ?? const SizedBox.shrink(),
-          ),
-        );
-      },
     );
   }
 }

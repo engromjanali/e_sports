@@ -1,32 +1,73 @@
+import 'package:e_sports/features/news/domain/model/news_model.dart';
+import 'package:e_sports/core/widgets/route_not_found_screen.dart';
+import 'package:e_sports/features/auth/controllers/auth_controller.dart';
+import 'package:e_sports/features/auth/presentation/screen/login_screen.dart';
+import 'package:e_sports/features/auth/presentation/screen/otp_verification_screen.dart';
+import 'package:e_sports/features/auth/presentation/screen/registration_page.dart';
+import 'package:e_sports/features/compare/screens/compare_screen.dart';
+import 'package:e_sports/features/dashboard/screens/dashboard_screen.dart';
+import 'package:e_sports/features/hall_of_fame/controllers/hall_of_fame_controller.dart';
+import 'package:e_sports/features/hall_of_fame/screens/hall_of_fame_screen.dart';
+import 'package:e_sports/features/matches/screens/matches_screen.dart';
+import 'package:e_sports/features/menu/screens/edit_profile_screen.dart';
+import 'package:e_sports/features/faq/controllers/faq_controller.dart';
+import 'package:e_sports/features/faq/screens/faq_screen.dart';
+import 'package:e_sports/features/privacy_policy/controllers/privacy_policy_controller.dart';
+import 'package:e_sports/features/privacy_policy/screens/privacy_policy_screen.dart';
+import 'package:e_sports/features/menu/screens/static_content_screen.dart';
+import 'package:e_sports/features/news/controllers/news_controller.dart';
+import 'package:e_sports/features/news/screens/news_detail_screen.dart';
+import 'package:e_sports/features/news/screens/news_list_screen.dart';
+import 'package:e_sports/features/profile/screens/profile_screen.dart';
+import 'package:e_sports/features/rank/controllers/rank_detail_controller.dart';
+import 'package:e_sports/features/rank/screens/rank_detail_screen.dart';
+import 'package:e_sports/features/rank/screens/rank_list_view_screen.dart';
+import 'package:e_sports/features/splash/controllers/splash_controller.dart';
+import 'package:e_sports/features/splash/screens/maintenance_screen.dart';
+import 'package:e_sports/features/splash/screens/splash_screen.dart';
+import 'package:e_sports/core/utils/dimensions.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../../features/auth/presentation/pages/login_page.dart';
-import '../../features/compare/screens/compare_screen.dart';
-import '../../features/dashboard/screens/dashboard_screen.dart';
-import '../../features/hall_of_fame/screens/hall_of_fame_screen.dart';
-import '../../features/news/screens/news_detail_screen.dart';
-import '../../features/news/screens/news_list_screen.dart';
-import '../../features/profile/screens/profile_screen.dart';
-import '../controllers/app_data_controller.dart';
-import '../data/models/computed_player_stats.dart';
-import '../data/models/news_model.dart';
-import '../theme/app_theme.dart';
 
 class RouteHelper {
-  static const String login = '/';
+  static const String initial = '/';
+  static const String splash = '/splash';
+  static const String maintenance = '/maintenance';
+  static const String login = '/login';
+  static const String registration = '/registration';
   static const String dashboard = '/dashboard';
   static const String home = '/home';
   static const String matches = '/matches';
+  static const String matchesScreen = '/matches-screen';
   static const String ranks = '/ranks';
   static const String profile = '/profile';
   static const String playerProfile = '/profile/:id';
-  static const String rewards = '/rewards';
+  static const String rankDetail = '/rank-detail/:id';
+  static const String rankListView = '/rank/list-view';
+  static const String menu = '/menu';
   static const String compare = '/compare';
   static const String news = '/news';
   static const String newsDetails = '/news/:id';
   static const String hallOfFame = '/hall-of-fame';
+  static const String editProfile = '/edit-profile';
+  static const String faq = '/faq';
+  static const String privacyPolicy = '/privacy-policy';
+  static const String terms = '/terms';
+  static const String support = '/support';
   static const String oldDashboard = '/DashboardScreen';
+  static const String otpVerification = '/otp-verification';
+
+  /// Route to return to after the splash screen restores app config — set when
+  /// an authed route is opened directly (e.g. a web refresh) before config loads.
+  static String? pendingRoute;
+
+
+  static List<GetMiddleware> get authMiddleware => [_AuthMiddleware()];
+
+  static String getInitialRoute({bool fromSplash = false, String? moduleId, bool fromDeeplink = false}) {
+    return initial;
+  }
 
   static String getDashboardRoute(int index) {
     switch (index) {
@@ -35,16 +76,81 @@ class RouteHelper {
       case 2:
         return ranks;
       case 3:
-        return profile;
-      case 4:
-        return rewards;
+        return menu;
       default:
         return home;
     }
   }
 
-  static String getNewsDetailsRoute(int id) => '/news/$id';
-  static String getPlayerProfileRoute(int id) => '/profile/$id';
+  static StaticContentData staticContentDataFromRoute(String route) {
+    switch (route) {
+      case faq:
+        return const StaticContentData(
+          title: 'FAQ',
+          sections: [
+            StaticContentSection(
+              heading: 'Account',
+              body: 'Use Edit Profile to keep your name, email, and gamer tag up to date. Logout is available from the Menu tab whenever you need to switch accounts.',
+            ),
+            StaticContentSection(
+              heading: 'Gameplay & Rankings',
+              body: 'Ranks, achievements, rewards, and recent performance are refreshed from the app data layer. If something looks off, check again after syncing your latest activity.',
+            ),
+          ],
+        );
+      case terms:
+        return const StaticContentData(
+          title: 'Terms & Conditions',
+          sections: [
+            StaticContentSection(
+              heading: 'Usage',
+              body: 'Use the platform responsibly and keep account details accurate. Activity inside the app should follow competition and community standards.',
+            ),
+            StaticContentSection(
+              heading: 'Rewards',
+              body: 'Reward views and rankings are informational in this build and may change as events, points, or eligibility rules are updated.',
+            ),
+            StaticContentSection(
+              heading: 'Availability',
+              body: 'Features may evolve over time. Continued use of the app means you accept updates to the product experience and related policies.',
+            ),
+          ],
+        );
+      case support:
+        return const StaticContentData(
+          title: 'Help & Support',
+          sections: [
+            StaticContentSection(
+              heading: 'Need Help?',
+              body: 'For account or gameplay questions, start with the FAQ section and then contact your support channel or tournament admin if the issue continues.',
+            ),
+            StaticContentSection(
+              heading: 'Common Checks',
+              body: 'Verify your profile details, internet connection, and latest activity status before reporting a mismatch in scores or rankings.',
+            ),
+            StaticContentSection(
+              heading: 'Response Scope',
+              body: 'Support requests are typically reviewed for account access, profile updates, leaderboard questions, and reward visibility issues.',
+            ),
+          ],
+        );
+      default:
+        return const StaticContentData(
+          title: 'Info',
+          sections: [
+            StaticContentSection(
+              heading: 'Coming Soon',
+              body: 'More policy and support details will be added here as this section grows.',
+            ),
+          ],
+        );
+    }
+  }
+
+  static String getNewsDetailsRoute(String id) => '/news/$id';
+  static String getPlayerProfileRoute(String id) => '/profile/$id';
+  static String getRankDetailRoute(String id, {int? seasonId}) =>
+      seasonId == null ? '/rank-detail/$id' : '/rank-detail/$id?season=$seasonId';
 
   static String? routeFromUri(Uri uri) {
     final String path = uri.scheme == 'esports' && uri.host.isNotEmpty ? '/${uri.host}${uri.path}' : uri.path;
@@ -53,78 +159,146 @@ class RouteHelper {
   }
 
   static List<GetPage> routes = [
+    GetPage(name: initial, page: () => const SplashScreen()),
+    GetPage(name: splash, page: () => const SplashScreen()),
+    GetPage(name: maintenance, page: () => const MaintenanceScreen()),
     GetPage(name: login, page: () => const LoginPage()),
-    GetPage(name: dashboard, page: () => const DashboardScreen()),
-    GetPage(name: oldDashboard, page: () => const DashboardScreen()),
-    GetPage(name: home, page: () => const DashboardScreen(initialTab: 0)),
-    GetPage(name: matches, page: () => const DashboardScreen(initialTab: 1)),
-    GetPage(name: ranks, page: () => const DashboardScreen(initialTab: 2)),
-    GetPage(name: profile, page: () => const DashboardScreen(initialTab: 3)),
-    GetPage(name: rewards, page: () => const DashboardScreen(initialTab: 4)),
-    GetPage(name: compare, page: () => const CompareScreen()),
-    GetPage(name: news, page: () => const NewsListScreen()),
-    GetPage(name: hallOfFame, page: () => const HallOfFameScreen()),
+    GetPage(name: registration, page: () => const RegistrationPage()),
+    GetPage(name: dashboard, page: () => const DashboardScreen(), middlewares: authMiddleware),
+    GetPage(name: oldDashboard, page: () => const DashboardScreen(), middlewares: authMiddleware),
+    GetPage(name: home, page: () => const DashboardScreen(initialTab: 0), middlewares: authMiddleware),
+    GetPage(name: matches, page: () => const DashboardScreen(initialTab: 1), middlewares: authMiddleware),
+    GetPage(
+      name: matchesScreen,
+      page: () => const Scaffold(
+        backgroundColor: AppColors.bg,
+        body: SafeArea(child: MatchesScreen()),
+      ),
+      middlewares: authMiddleware,
+    ),
+    GetPage(name: ranks, page: () => const DashboardScreen(initialTab: 2), middlewares: authMiddleware),
+    GetPage(name: profile, page: () => const ProfileScreen(isSubScreen: true), middlewares: authMiddleware),
+    GetPage(name: menu, page: () => const DashboardScreen(initialTab: 3), middlewares: authMiddleware),
+    GetPage(name: compare, page: () => const CompareScreen(), middlewares: authMiddleware),
+    GetPage(name: news, page: () => const NewsListScreen(), middlewares: authMiddleware),
+    GetPage(
+      name: hallOfFame,
+      page: () => const HallOfFameScreen(),
+      binding: BindingsBuilder(() {
+        if (!Get.isRegistered<HallOfFameController>()) {
+          Get.find<HallOfFameController>();
+        }
+      }),
+      middlewares: authMiddleware,
+    ),
+    GetPage(name: editProfile, page: () => const EditProfileScreen(), middlewares: authMiddleware),
+    GetPage(
+      name: faq,
+      page: () => const FaqScreen(),
+      binding: BindingsBuilder(() {
+        if (!Get.isRegistered<FaqController>()) {
+          Get.find<FaqController>();
+        }
+      }),
+      middlewares: authMiddleware,
+    ),
+    GetPage(
+      name: privacyPolicy,
+      page: () => const PrivacyPolicyScreen(),
+      binding: BindingsBuilder(() {
+        if (!Get.isRegistered<PrivacyPolicyController>()) {
+          Get.find<PrivacyPolicyController>();
+        }
+      }),
+      middlewares: authMiddleware,
+    ),
+    GetPage(
+      name: terms,
+      page: () => StaticContentScreen(data: staticContentDataFromRoute(terms)),
+      middlewares: authMiddleware,
+    ),
+    GetPage(
+      name: support,
+      page: () => StaticContentScreen(data: staticContentDataFromRoute(support)),
+      middlewares: authMiddleware,
+    ),
     GetPage(
       name: newsDetails,
       page: () {
         final newsItem = _newsFromRoute();
         return newsItem == null ? const RouteNotFoundScreen() : NewsDetailScreen(news: newsItem);
       },
+      middlewares: authMiddleware,
     ),
     GetPage(
       name: playerProfile,
       page: () {
-        final player = _playerFromRoute();
-        return player == null ? const RouteNotFoundScreen() : ProfileScreen(player: player, isSubScreen: true);
+        final id = Get.parameters['id'];
+        if (id == null || id.isEmpty) return const RouteNotFoundScreen();
+        // Always load the player from the server by id, so any player opens —
+        // not only the ones currently cached/ranked locally.
+        return ProfileScreen(playerId: id, isSubScreen: true);
       },
+      middlewares: authMiddleware,
     ),
+    GetPage(
+      name: rankDetail,
+      page: () => const RankDetailScreen(),
+      binding: BindingsBuilder(() {
+        final id = Get.parameters['id'];
+        if (id == null || id.isEmpty) return;
+        final seasonStr = Get.parameters['season'];
+        final seasonId = seasonStr == null ? null : int.tryParse(seasonStr);
+        Get.find<RankDetailController>().load(playerId: id, seasonId: seasonId);
+      }),
+      middlewares: authMiddleware,
+    ),
+    GetPage(
+      name: rankListView,
+      page: () => const RankListViewScreen(),
+      middlewares: authMiddleware,
+    ),
+    GetPage(name: RouteHelper.otpVerification, page: () => const OtpVerificationPage()),
+
   ];
 
   static NewsModel? _newsFromRoute() {
-    final id = int.tryParse(Get.parameters['id'] ?? '');
-    if (id == null || !Get.isRegistered<AppDataController>()) return null;
-    final data = Get.find<AppDataController>().news.where((item) => item.id == id);
-    return data.isEmpty ? null : data.first;
-  }
+    // Server news carry uuid ids that aren't in AppDataController, so prefer the
+    // model passed via navigation arguments.
+    final arg = Get.arguments;
+    if (arg is NewsModel) return arg;
 
-  static ComputedPlayerStats? _playerFromRoute() {
-    final id = int.tryParse(Get.parameters['id'] ?? '');
-    if (id == null || !Get.isRegistered<AppDataController>()) return null;
-    final data = Get.find<AppDataController>().rankedPlayers.where((item) => item.id == id);
+    final id = Get.parameters['id'];
+    if (id == null || id.isEmpty || !Get.isRegistered<NewsController>()) return null;
+    final controller = Get.find<NewsController>();
+    final data = [...controller.newsList, ...controller.newsHome].where((item) => item.id == id);
     return data.isEmpty ? null : data.first;
   }
 }
 
-class RouteNotFoundScreen extends StatelessWidget {
-  const RouteNotFoundScreen({super.key});
-
+class _AuthMiddleware extends GetMiddleware {
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppColors.bg,
-      body: Center(
-        child: Padding(
-          padding: AppSpacing.screenAll,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(
-                'Link not found',
-                style: TextStyle(
-                  color: AppColors.white,
-                  fontSize: AppTypography.sizeHeading,
-                  fontWeight: AppTypography.black,
-                ),
-              ),
-              SizedBox(height: AppSpacing.md),
-              TextButton(
-                onPressed: () => Get.offAllNamed(RouteHelper.home),
-                child: const Text('Go to home'),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
+  RouteSettings? redirect(String? route) {
+    // 1) Config must be loaded first. It's loaded in main(), but if it failed
+    //    (e.g. no network) bounce through splash to (re)load it with retry UI,
+    //    remembering the route to return to afterwards.
+    if (!Get.isRegistered<SplashController>() || Get.find<SplashController>().configModel == null) {
+      if (route != null && route != RouteHelper.splash && route != RouteHelper.initial) {
+        RouteHelper.pendingRoute = route;
+      }
+      return const RouteSettings(name: RouteHelper.initial);
+    }
+
+    // 2) Maintenance / forced update takes priority once config is known.
+    if (Get.find<SplashController>().shouldShowMaintenance) {
+      return const RouteSettings(name: RouteHelper.maintenance);
+    }
+
+    // 3) Authorization — not logged in → login.
+    if (Get.isRegistered<AuthController>() && !Get.find<AuthController>().isLoggedIn()) {
+      return const RouteSettings(name: RouteHelper.login);
+    }
+
+    return null; // config loaded + not in maintenance + authorized → allow.
   }
 }

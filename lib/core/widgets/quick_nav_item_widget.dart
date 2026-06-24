@@ -1,4 +1,4 @@
-import '../theme/app_theme.dart';
+import 'package:e_sports/core/utils/dimensions.dart';
 import 'glass_card_widget.dart';
 import 'package:flutter/material.dart';
 
@@ -20,31 +20,31 @@ class QuickNavItem extends StatelessWidget {
       onTap: onTap,
       child: GlassCardWidget(
           padding: EdgeInsets.symmetric(
-            vertical: AppSpacing.body2,
-            horizontal: AppSpacing.xs + 1,
+            vertical: Dimensions.body2,
+            horizontal: Dimensions.xs + 1,
           ),
           borderColor: color.withOpacity(AppColors.opacity20),
           child: Column(children: [
             Container(
-              width: AppSizing.quickNavIconSize,
-              height: AppSizing.quickNavIconSize,
+              width: Dimensions.quickNavIconSize,
+              height: Dimensions.quickNavIconSize,
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(AppRadius.def + 1),
+                borderRadius: BorderRadius.circular(Dimensions.radiusDefValue + 1),
                 color: color.withOpacity(AppColors.opacity12),
                 border: Border.all(color: color.withOpacity(AppColors.opacity20)),
               ),
               alignment: Alignment.center,
-              child: Text(icon, style: TextStyle(fontSize: AppTypography.sizeHeading)),
+              child: Text(icon, style: TextStyle(fontSize: Dimensions.sizeHeading)),
             ),
-            SizedBox(height: AppSpacing.sm),
+            SizedBox(height: Dimensions.sm),
             Text(label,
                 style: TextStyle(
-                    fontSize: AppTypography.sizeSmall,
-                    fontWeight: AppTypography.bold,
+                    fontSize: Dimensions.sizeSmall,
+                    fontWeight: Dimensions.bold,
                     color: AppColors.textPrimary)),
             Text(sub,
                 style: TextStyle(
-                  fontSize: AppTypography.sizeTiny,
+                  fontSize: Dimensions.sizeTiny,
                   color: AppColors.textMuted,
                 )),
           ]),

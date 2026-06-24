@@ -1,6 +1,5 @@
-import '../../../core/theme/app_theme.dart';
-import "../../../core/controllers/app_data_controller.dart";
-import "../../../core/data/models/match_model.dart";
+import 'package:e_sports/core/utils/dimensions.dart';
+import "../domain/model/match_model.dart";
 import "package:get/get.dart";
 import '../../../core/widgets/glass_card_widget.dart';
 import 'package:flutter/material.dart';
@@ -12,17 +11,20 @@ class FullMatchCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isLive = match.status == "live";
-    final isCompleted = match.status == "completed" || match.status == "finished";
+    final isCompleted = match.status == "finished";
+    final isCancelled = match.status == "cancelled";
     Color statusColor = isLive
         ? AppColors.neonRed
         : isCompleted
         ? AppColors.neonGreen
+        : isCancelled
+        ? AppColors.textMuted
         : AppColors.neonBlue;
 
     return GlassCardWidget(
-      padding: EdgeInsets.all(AppSpacing.cardInnerPadding),
+      padding: EdgeInsets.all(Dimensions.cardInnerPadding),
       borderColor: isLive ? AppColors.neonRed.withOpacity(AppColors.opacity30) : AppColors.glassBorder,
-      shadows: AppElevation.accentGlow(
+      shadows: Dimensions.accentGlow(
         isLive ? AppColors.neonRed : Colors.black,
         opacity: AppColors.opacity20,
         blur: 16,
@@ -32,35 +34,35 @@ class FullMatchCard extends StatelessWidget {
         // Status row
         Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
           Text("${match.date} · ${match.time}",
-              style: TextStyle(fontSize: AppTypography.sizeSmall, color: AppColors.textMuted)),
+              style: TextStyle(fontSize: Dimensions.sizeSmall, color: AppColors.textMuted)),
           Container(
             padding: EdgeInsets.symmetric(
-              horizontal: AppSpacing.lg,
-              vertical: AppSpacing.xs,
+              horizontal: Dimensions.lg,
+              vertical: Dimensions.xs,
             ),
             decoration: BoxDecoration(
               color: statusColor.withOpacity(AppColors.opacity12),
-              borderRadius: AppRadius.borderPill,
+              borderRadius: Dimensions.borderPill,
               border: Border.all(color: statusColor.withOpacity(AppColors.opacity30)),
             ),
             child: Row(mainAxisSize: MainAxisSize.min, children: [
               if (isLive)
                 Container(
-                  width: AppSizing.dotMd,
-                  height: AppSizing.dotMd,
-                  margin: EdgeInsets.only(right: AppSpacing.xs + 1),
+                  width: Dimensions.dotMd,
+                  height: Dimensions.dotMd,
+                  margin: EdgeInsets.only(right: Dimensions.xs + 1),
                   decoration: BoxDecoration(shape: BoxShape.circle, color: statusColor),
                 ),
               Text(match.status.toUpperCase(),
                   style: TextStyle(
                     color: statusColor,
-                    fontSize: AppTypography.sizeCaption,
-                    fontWeight: AppTypography.extraBold,
+                    fontSize: Dimensions.sizeCaption,
+                    fontWeight: Dimensions.extraBold,
                   )),
             ]),
           ),
         ]),
-        SizedBox(height: AppSpacing.xl),
+        SizedBox(height: Dimensions.xl),
 
         // Teams row
         Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
@@ -69,24 +71,24 @@ class FullMatchCard extends StatelessWidget {
                 const Text("⚽", style: TextStyle(fontSize: 28)),
                 Text(match.team1,
                     style: TextStyle(
-                        fontSize: AppTypography.sizeSubtitle,
-                        fontWeight: AppTypography.extraBold,
+                        fontSize: Dimensions.sizeSubtitle,
+                        fontWeight: Dimensions.extraBold,
                         color: AppColors.textPrimary)),
               ])),
           Container(
             padding: EdgeInsets.symmetric(
-              horizontal: AppSpacing.xxxl,
-              vertical: AppSpacing.iconGap,
+              horizontal: Dimensions.xxxl,
+              vertical: Dimensions.iconGap,
             ),
             decoration: BoxDecoration(
               color: AppColors.bgSurface,
-              borderRadius: AppRadius.borderMd + const BorderRadius.all(Radius.circular(4)),
+              borderRadius: Dimensions.borderMd + const BorderRadius.all(Radius.circular(4)),
               border: Border.all(color: AppColors.glassBorder),
             ),
-            child: Text(isCompleted ? ("${match.score1} - ${match.score2}") : "VS",
+            child: Text(isCompleted ? ("${match.score1} - ${match.score2}") : isCancelled ? "–" : "VS",
                 style: TextStyle(
-                    fontSize: AppTypography.sizeTitleLarge,
-                    fontWeight: AppTypography.black,
+                    fontSize: Dimensions.sizeTitleLarge,
+                    fontWeight: Dimensions.black,
                     color: AppColors.textPrimary)),
           ),
           Expanded(
@@ -94,30 +96,30 @@ class FullMatchCard extends StatelessWidget {
                 const Text("⚽", style: TextStyle(fontSize: 28)),
                 Text(match.team2,
                     style: TextStyle(
-                        fontSize: AppTypography.sizeSubtitle,
-                        fontWeight: AppTypography.extraBold,
+                        fontSize: Dimensions.sizeSubtitle,
+                        fontWeight: Dimensions.extraBold,
                         color: AppColors.textPrimary)),
               ])),
         ]),
 
         if (isCompleted && match.resultLabel != null) ...[
-          SizedBox(height: AppSpacing.lg),
+          SizedBox(height: Dimensions.lg),
           Container(
             width: double.infinity,
-            padding: EdgeInsets.symmetric(vertical: AppSizing.dotLg),
+            padding: EdgeInsets.symmetric(vertical: Dimensions.dotLg),
             decoration: BoxDecoration(
               color: match.resultType == "win"
                   ? AppColors.neonGreen.withOpacity(AppColors.opacity10)
                   : match.resultType == "loss"
                   ? AppColors.neonRed.withOpacity(AppColors.opacity10)
                   : AppColors.neonGold.withOpacity(AppColors.opacity10),
-              borderRadius: AppRadius.borderDef,
+              borderRadius: Dimensions.borderDef,
             ),
             child: Text(match.resultLabel!,
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                  fontSize: AppTypography.sizeBody,
-                  fontWeight: AppTypography.extraBold,
+                  fontSize: Dimensions.sizeBody,
+                  fontWeight: Dimensions.extraBold,
                   color: match.resultType == "win"
                       ? AppColors.neonGreen
                       : match.resultType == "loss"
@@ -127,11 +129,31 @@ class FullMatchCard extends StatelessWidget {
           ),
         ],
 
-        if (!isCompleted && match.slots != null) ...[
-          SizedBox(height: AppSpacing.md),
+        if (isCancelled) ...[
+          SizedBox(height: Dimensions.lg),
+          Container(
+            width: double.infinity,
+            padding: EdgeInsets.symmetric(vertical: Dimensions.dotLg),
+            decoration: BoxDecoration(
+              color: AppColors.textMuted.withOpacity(AppColors.opacity10),
+              borderRadius: Dimensions.borderDef,
+              border: Border.all(color: AppColors.textMuted.withOpacity(AppColors.opacity20)),
+            ),
+            child: Text("MATCH CANCELLED",
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: Dimensions.sizeBody,
+                  fontWeight: Dimensions.extraBold,
+                  color: AppColors.textMuted,
+                )),
+          ),
+        ],
+
+        if (!isCompleted && !isCancelled && match.slots != null) ...[
+          SizedBox(height: Dimensions.md),
           Row(mainAxisAlignment: MainAxisAlignment.center, children: [
             Text("👥 ${match.slots} players joined",
-                style: TextStyle(fontSize: AppTypography.sizeSmall, color: AppColors.textMuted)),
+                style: TextStyle(fontSize: Dimensions.sizeSmall, color: AppColors.textMuted)),
           ]),
         ],
       ]),

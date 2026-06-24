@@ -1,0 +1,1 @@
+enum MatchFilter {live, upcoming, finished, cancelled, all}

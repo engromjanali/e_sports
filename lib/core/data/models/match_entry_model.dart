@@ -1,6 +1,6 @@
 class MatchEntryModel {
   final String id;
-  final int playerId;
+  final String playerId;
   final DateTime date;
   final String result; // 'win', 'loss', 'draw'
   final int goals;
@@ -8,6 +8,7 @@ class MatchEntryModel {
   final bool hattrick;
   final bool cleanSheet;
   final bool motm;
+  final int? seasonId;
 
   const MatchEntryModel({
     required this.id,
@@ -19,5 +20,24 @@ class MatchEntryModel {
     required this.hattrick,
     required this.cleanSheet,
     required this.motm,
+    this.seasonId,
   });
+
+  factory MatchEntryModel.fromJson(Map<String, dynamic> json) {
+    final matchDate = (json['matches'] as Map<String, dynamic>?)?['date']?.toString()
+        ?? json['created_at']?.toString()
+        ?? '';
+    return MatchEntryModel(
+      id: json['id']?.toString() ?? '',
+      playerId: json['playerid']?.toString() ?? '',
+      date: DateTime.tryParse(matchDate) ?? DateTime(2000),
+      result: json['result']?.toString() ?? 'draw',
+      goals: (json['goals'] as num?)?.toInt() ?? 0,
+      goalsConceded: (json['goalsconceded'] as num?)?.toInt() ?? 0,
+      hattrick: ((json['hattricks'] as num?)?.toInt() ?? 0) > 0,
+      cleanSheet: json['cleansheet'] as bool? ?? false,
+      motm: json['motm'] as bool? ?? false,
+      seasonId: (json['season_id'] as num?)?.toInt(),
+    );
+  }
 }

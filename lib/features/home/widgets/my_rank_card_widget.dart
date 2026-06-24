@@ -1,34 +1,34 @@
-import '../../../core/theme/app_theme.dart';
-import '../../../core/controllers/app_data_controller.dart';
+import 'package:e_sports/core/utils/dimensions.dart';
+import '../../player/controllers/player_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class MyRankCard extends StatelessWidget {
+  const MyRankCard({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Obx(() {
-      final appData = Get.find<AppDataController>();
-      if (appData.rankedPlayers.isEmpty) return const SizedBox.shrink();
-      
-      final me = appData.rankedPlayers.first; // Default authenticated player
-      String wlabel = "${me.rank}";
-      
+      final player = Get.find<PlayerController>();
+      final me = player.myRank.value;
+      if (me == null) return const SizedBox.shrink();
+      String rank = "${me.rank}";
       return Container(
       decoration: BoxDecoration(
-        borderRadius: AppRadius.borderXl,
+        borderRadius: Dimensions.borderXl,
         gradient: AppColors.goldGradient,
-        border: Border.all(color: AppColors.neonGold.withOpacity(0.28), width: AppSizing.borderThin),
-        boxShadow: AppElevation.accentGlow(AppColors.neonGold, opacity: 0.16, blur: 22, offset: const Offset(0, 7)),
+        border: Border.all(color: AppColors.neonGold.withOpacity(0.28), width: Dimensions.borderThin),
+        boxShadow: Dimensions.accentGlow(AppColors.neonGold, opacity: 0.16, blur: 22, offset: const Offset(0, 7)),
       ),
       child: ClipRRect(
-        borderRadius: AppRadius.borderXl,
+        borderRadius: Dimensions.borderXl,
         child: Stack(
           children: [
             // Shimmer top bar
             Positioned(
               top: 0, left: 0, right: 0,
               child: Container(
-                height: AppSizing.shimmerHeight,
+                height: Dimensions.shimmerHeight,
                 decoration: BoxDecoration(
                   gradient: AppColors.shimmerGradient(color: AppColors.goldLight),
                 ),
@@ -41,13 +41,13 @@ class MyRankCard extends StatelessWidget {
               child: SizedBox(
                 width: 300,
                 child: Text(
-                  "#$wlabel",
+                  "#$rank",
                   textAlign: TextAlign.right,
                   style: TextStyle(
-                    fontSize: wlabel.length > 5 ? 60 : 80,
-                    fontWeight: AppTypography.black,
+                    fontSize: rank.length > 5 ? 60 : 80,
+                    fontWeight: Dimensions.black,
                     color: AppColors.neonGold.withOpacity(AppColors.opacity7),
-                    height: AppTypography.lineHeightCompact,
+                    height: Dimensions.lineHeightCompact,
                     overflow: TextOverflow.ellipsis,
                   ),
                 ),
@@ -56,7 +56,7 @@ class MyRankCard extends StatelessWidget {
 
             // Content
             Padding(
-              padding: EdgeInsets.all(AppSpacing.xxxl),
+              padding: EdgeInsets.all(Dimensions.xxxl),
               child: Column(
                 children: [
                   // Top row: avatar left, rank center, tier right
@@ -65,33 +65,33 @@ class MyRankCard extends StatelessWidget {
                     children: [
                       // Network Avatar
                       Container(
-                        width: AppSizing.avatarLg,
-                        height: AppSizing.avatarLg,
+                        width: Dimensions.avatarLg,
+                        height: Dimensions.avatarLg,
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
-                          border: Border.all(color: AppColors.neonGold, width: AppSizing.borderAvatar),
-                          boxShadow: AppElevation.ringGlow(AppColors.neonGold, opacity: AppColors.opacity40),
+                          border: Border.all(color: AppColors.neonGold, width: Dimensions.borderAvatar),
+                          boxShadow: Dimensions.ringGlow(AppColors.neonGold, opacity: AppColors.opacity40),
                         ),
                         child: ClipOval(
                           child: Image.network(
-                            "https://i.pravatar.cc/150?img=8",
-                            width: AppSizing.avatarLg,
-                            height: AppSizing.avatarLg,
+                            me.image,
+                            width: Dimensions.avatarLg,
+                            height: Dimensions.avatarLg,
                             fit: BoxFit.cover,
                             errorBuilder: (_, __, ___) => Container(
                               color: AppColors.goldDeep,
                               alignment: Alignment.center,
-                              child: Text("A",
+                              child: Text(me.name.isNotEmpty ? me.name[0] : 'I',
                                   style: TextStyle(
-                                    fontSize: AppTypography.sizeDisplay - 2,
-                                    fontWeight: AppTypography.black,
+                                    fontSize: Dimensions.sizeDisplay - 2,
+                                    fontWeight: Dimensions.black,
                                     color: AppColors.neonGold,
                                   )),
                             ),
                           ),
                         ),
                       ),
-                      SizedBox(width: AppSpacing.xxl),
+                      SizedBox(width: Dimensions.xxl),
 
                       // Name + handle + badges
                       Expanded(
@@ -101,92 +101,93 @@ class MyRankCard extends StatelessWidget {
                             Text(
                               me.name,
                               style: TextStyle(
-                                fontSize: AppTypography.sizeTitleLarge,
-                                fontWeight: AppTypography.black,
+                                fontSize: Dimensions.sizeTitleLarge,
+                                fontWeight: Dimensions.black,
                                 color: AppColors.white,
                               ),
                             ),
                             Text(
-                              "@${me.short.toLowerCase()}",
+                              "@${me.sortName.toLowerCase()}",
                               style: TextStyle(
-                                fontSize: AppTypography.sizeSmall,
+                                fontSize: Dimensions.sizeSmall,
                                 color: AppColors.white.withOpacity(AppColors.opacity40),
-                                letterSpacing: AppTypography.trackingTight,
+                                letterSpacing: Dimensions.trackingTight,
                               ),
                             ),
-                            SizedBox(height: AppSizing.dotLg),
-                            Row(
-                              children: [
-                                // Ribbon rank badge
-                                ClipRRect(
-                                  borderRadius: AppRadius.ribbonLeft,
-                                  child: Container(
-                                    padding: EdgeInsets.fromLTRB(
-                                      AppSpacing.md, AppSpacing.xs,
-                                      AppSpacing.md, AppSpacing.xs + 1,
-                                    ),
-                                    decoration: BoxDecoration(
-                                      gradient: AppColors.goldRibbonGradient,
-                                    ),
-                                    child: Text(
-                                      "RANK #1",
-                                      style: TextStyle(
-                                        fontSize: AppTypography.sizeTiny,
-                                        fontWeight: AppTypography.black,
-                                        letterSpacing: 1.4,
-                                        color: AppColors.goldDeep,
+                            SizedBox(height: Dimensions.dotLg),
+                            if (me.tags.isNotEmpty)
+                              Wrap(
+                                spacing: Dimensions.iconGap,
+                                runSpacing: Dimensions.xs,
+                                crossAxisAlignment: WrapCrossAlignment.center,
+                                children: [
+                                  for (int i = 0; i < me.tags.length; i++)
+                                    (i == 0) ? ClipRRect(
+                                      borderRadius: Dimensions.ribbonLeft,
+                                      child: Container(
+                                        padding: EdgeInsets.fromLTRB(
+                                          Dimensions.md, Dimensions.xs,
+                                          Dimensions.md, Dimensions.xs + 1,
+                                        ),
+                                        decoration: BoxDecoration(
+                                          gradient: AppColors.goldRibbonGradient,
+                                        ),
+                                        child: Text(
+                                          me.tags[i],
+                                          style: TextStyle(
+                                            fontSize: Dimensions.sizeTiny,
+                                            fontWeight: Dimensions.black,
+                                            letterSpacing: 1.4,
+                                            color: AppColors.goldDeep,
+                                          ),
+                                        ),
+                                      ),
+                                    ) : Container(
+                                      padding: Dimensions.pillPadding,
+                                      decoration: BoxDecoration(
+                                        color: AppColors.neonGold.withOpacity(AppColors.opacity10),
+                                        borderRadius: Dimensions.borderSm,
+                                        border: Border.all(
+                                          color: AppColors.neonGold.withOpacity(AppColors.opacity35),
+                                          width: Dimensions.borderThin,
+                                        ),
+                                      ),
+                                      child: Text(
+                                        me.tags[i],
+                                        style: Dimensions.pillLabel(context,
+                                          color: AppColors.goldLight.withOpacity(AppColors.opacity90),
+                                        ),
                                       ),
                                     ),
-                                  ),
-                                ),
-                                SizedBox(width: AppSpacing.iconGap),
-                                // Elite ghost pill
-                                Container(
-                                  padding: AppSpacing.pillPadding,
-                                  decoration: BoxDecoration(
-                                    color: AppColors.neonGold.withOpacity(AppColors.opacity10),
-                                    borderRadius: AppRadius.borderSm,
-                                    border: Border.all(
-                                      color: AppColors.neonGold.withOpacity(AppColors.opacity35),
-                                      width: AppSizing.borderThin,
-                                    ),
-                                  ),
-                                  child: Text(
-                                    "ELITE GAMER",
-                                    style: AppTypography.pillLabel(context,
-                                      color: AppColors.goldLight.withOpacity(AppColors.opacity90),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
+                                ],
+                              ),
                           ],
                         ),
                       ),
                     ],
                   ),
 
-                  SizedBox(height: AppSpacing.xxl),
+                  SizedBox(height: Dimensions.xxl),
 
                   // Gold divider
                   Container(
-                    height: AppSizing.dividerHeight,
+                    height: Dimensions.dividerHeight,
                     decoration: BoxDecoration(
                       gradient: AppColors.dividerGradient(color: AppColors.neonGold, opacity: AppColors.opacity25),
                     ),
                   ),
 
-                  SizedBox(height: AppSpacing.xxl),
+                  SizedBox(height: Dimensions.xxl),
 
                   // Stat chips row
                   Row(
                     children: [
                       _StatChip(label: "PTS", value: "${me.pts}"),
-                      SizedBox(width: AppSpacing.md),
+                      SizedBox(width: Dimensions.md),
                       _StatChip(label: "GOALS", value: "${me.goals}"),
-                      SizedBox(width: AppSpacing.md),
+                      SizedBox(width: Dimensions.md),
                       _StatChip(label: "WINS", value: "${me.wins}"),
-                      SizedBox(width: AppSpacing.md),
+                      SizedBox(width: Dimensions.md),
                       _StatChip(label: "MATCHES", value: "${me.matches}"),
                     ],
                   ),
@@ -213,25 +214,25 @@ class _StatChip extends StatelessWidget {
   Widget build(BuildContext context) {
     return Expanded(
       child: Container(
-        padding: EdgeInsets.symmetric(vertical: AppSpacing.md),
+        padding: EdgeInsets.symmetric(vertical: Dimensions.md),
         decoration: BoxDecoration(
           color: AppColors.neonGold.withOpacity(AppColors.opacity7),
-          borderRadius: AppRadius.borderDef,
+          borderRadius: Dimensions.borderDef,
           border: Border.all(
             color: AppColors.neonGold.withOpacity(0.22),
-            width: AppSizing.borderThin,
+            width: Dimensions.borderThin,
           ),
         ),
         child: Column(
           children: [
             Text(
               value,
-              style: AppTypography.statValue(context),
+              style: Dimensions.statValue(context),
             ),
-            SizedBox(height: AppSpacing.xs),
+            SizedBox(height: Dimensions.xs),
             Text(
               label,
-              style: AppTypography.labelUppercase(context),
+              style: Dimensions.labelUppercase(context),
             ),
           ],
         ),

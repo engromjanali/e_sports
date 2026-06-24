@@ -1,19 +1,43 @@
 class PlayerModel {
-  final int id;
+  final String id;
   final String name;
-  final String short;
-  final String team;
+  final String sortName;
   final int jerseyNumber;
+  final List<String> playerRoles;
   final List<String> tags;
   final String imageUrl;
+  final String email;
 
   const PlayerModel({
     required this.id,
     required this.name,
-    required this.short,
-    required this.team,
+    required this.sortName,
     required this.jerseyNumber,
-    required this.tags,
+    this.playerRoles = const [],
+    this.tags = const [],
     this.imageUrl = '',
+    this.email = '',
   });
+
+  factory PlayerModel.fromJson(Map<String, dynamic> json) {
+    return PlayerModel(
+      id: json['id']?.toString() ?? '',
+      name: json['name'] ?? '',
+      sortName: json['sort_name'] ?? '',
+      jerseyNumber: (json['jerseynumber'] as num?)?.toInt() ?? 0,
+      playerRoles: _extractNames(json['player_player_roles'], 'player_role'),
+      tags: _extractNames(json['player_custom_tags'], 'custom_tags'),
+      imageUrl: json['profileimageurl'] ?? '',
+      email: json['email']?.toString() ?? '',
+    );
+  }
+
+  static List<String> _extractNames(dynamic list, String key) {
+    if (list is! List) return const [];
+    return list
+        .map((item) =>
+            (item[key] as Map<String, dynamic>?)?['name']?.toString() ?? '')
+        .where((n) => n.isNotEmpty)
+        .toList();
+  }
 }

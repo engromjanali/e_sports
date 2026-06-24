@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../../core/theme/app_theme.dart';
+import 'package:e_sports/core/utils/dimensions.dart';
 import '../../../core/data/models/computed_player_stats.dart';
 import '../../../core/widgets/player_avater.dart';
 
@@ -25,15 +25,15 @@ class PlayerRankCard extends StatelessWidget {
     final gradient = isScorer ? AppColors.blueDeepHeroGradient : AppColors.goldHeroGradient;
 
     return Container(
-      padding: AppSpacing.hugePadding,
+      padding: Dimensions.hugePadding,
       decoration: BoxDecoration(
         gradient: gradient,
-        borderRadius: AppRadius.borderXl,
+        borderRadius: Dimensions.borderXl,
         border: Border.all(color: accentColor.withOpacity(AppColors.opacity20)),
         boxShadow: [
           BoxShadow(
             color: accentColor.withOpacity(AppColors.opacity20),
-            blurRadius: AppElevation.blurXl,
+            blurRadius: Dimensions.blurXl,
           )
         ],
       ),
@@ -56,24 +56,24 @@ class PlayerRankCard extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Container(
-                    padding: EdgeInsets.symmetric(horizontal: AppSpacing.md, vertical: AppSpacing.xs + 1),
+                    padding: EdgeInsets.symmetric(horizontal: Dimensions.md, vertical: Dimensions.xs + 1),
                     decoration: BoxDecoration(
                       color: accentColor.withOpacity(AppColors.opacity15),
-                      borderRadius: AppRadius.borderSm,
+                      borderRadius: Dimensions.borderSm,
                       border: Border.all(color: accentColor.withOpacity(AppColors.opacity30)),
                     ),
                     child: Text(
                       label,
                       style: TextStyle(
-                        fontSize: AppTypography.sizeCaption,
-                        fontWeight: AppTypography.extraBold,
+                        fontSize: Dimensions.sizeCaption,
+                        fontWeight: Dimensions.extraBold,
                         color: accentColor,
-                        letterSpacing: AppTypography.trackingWider,
+                        letterSpacing: Dimensions.trackingWider,
                       ),
                     ),
                   ),
                   Container(
-                    padding: EdgeInsets.all(AppSpacing.sm),
+                    padding: EdgeInsets.all(Dimensions.sm),
                     decoration: BoxDecoration(
                       color: AppColors.bgSurface.withOpacity(AppColors.opacity40),
                       shape: BoxShape.circle,
@@ -82,23 +82,23 @@ class PlayerRankCard extends StatelessWidget {
                     child: Text(
                       "#${player.rank}",
                       style: TextStyle(
-                        fontSize: AppTypography.sizeCaption,
-                        fontWeight: AppTypography.black,
+                        fontSize: Dimensions.sizeCaption,
+                        fontWeight: Dimensions.black,
                         color: AppColors.white,
                       ),
                     ),
                   ),
                 ],
               ),
-              SizedBox(height: AppSpacing.xl),
+              SizedBox(height: Dimensions.xl),
               Row(
                 children: [
                   PlayerAvatarWidget(
                     name: player.name,
                     imageUrl: player.player.imageUrl,
-                    size: AppSizing.avatarHero,
+                    size: Dimensions.avatarHero,
                   ),
-                  SizedBox(width: AppSpacing.xl),
+                  SizedBox(width: Dimensions.xl),
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -106,21 +106,21 @@ class PlayerRankCard extends StatelessWidget {
                         Text(
                           player.name,
                           style: TextStyle(
-                            fontSize: AppTypography.sizeHeading,
-                            fontWeight: AppTypography.black,
+                            fontSize: Dimensions.sizeHeading,
+                            fontWeight: Dimensions.black,
                             color: AppColors.white,
                           ),
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                         ),
-                        SizedBox(height: AppSpacing.xs),
+                        SizedBox(height: Dimensions.xs),
                         Text(
                           isMonth ? "MTD PERFORMANCE" : "WEEKLY STATS",
                           style: TextStyle(
-                            fontSize: AppTypography.sizeTiny,
-                            fontWeight: AppTypography.bold,
+                            fontSize: Dimensions.sizeTiny,
+                            fontWeight: Dimensions.bold,
                             color: AppColors.white.withOpacity(AppColors.opacity55),
-                            letterSpacing: AppTypography.trackingWidest,
+                            letterSpacing: Dimensions.trackingWidest,
                           ),
                         ),
                       ],
@@ -128,7 +128,7 @@ class PlayerRankCard extends StatelessWidget {
                   ),
                 ],
               ),
-              SizedBox(height: AppSpacing.xl),
+              SizedBox(height: Dimensions.xl),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
@@ -178,12 +178,12 @@ class _StatItem extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             Text(icon, style: const TextStyle(fontSize: 12)),
-            SizedBox(width: AppSpacing.xs),
+            SizedBox(width: Dimensions.xs),
             Text(
               value,
               style: TextStyle(
-                fontSize: AppTypography.sizeSubtitle,
-                fontWeight: AppTypography.black,
+                fontSize: Dimensions.sizeSubtitle,
+                fontWeight: Dimensions.black,
                 color: AppColors.white,
               ),
             ),
@@ -192,9 +192,9 @@ class _StatItem extends StatelessWidget {
         Text(
           label,
           style: TextStyle(
-            fontSize: AppTypography.sizeTiny,
+            fontSize: Dimensions.sizeTiny,
             color: AppColors.white.withOpacity(AppColors.opacity50),
-            fontWeight: AppTypography.bold,
+            fontWeight: Dimensions.bold,
           ),
         ),
       ],
